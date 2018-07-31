@@ -6,13 +6,8 @@
 	objectVersion = 50;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		CD4715FB21104EF200401169 /* MPMAttendance.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4715F921104EF200401169 /* MPMAttendance.h */; settings = {ATTRIBUTES = (Public, ); }; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		CD4715F621104EF200401169 /* MPMAttendance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPMAttendance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CD4715F921104EF200401169 /* MPMAttendance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPMAttendance.h; sourceTree = "<group>"; };
 		CD4715FA21104EF200401169 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -46,10 +41,41 @@
 		CD4715F821104EF200401169 /* MPMAttendance */ = {
 			isa = PBXGroup;
 			children = (
-				CD4715F921104EF200401169 /* MPMAttendance.h */,
+				CD4716012110529A00401169 /* ThirdPards */,
 				CD4715FA21104EF200401169 /* Info.plist */,
 			);
 			path = MPMAttendance;
+			sourceTree = "<group>";
+		};
+		CD4716012110529A00401169 /* ThirdPards */ = {
+			isa = PBXGroup;
+			children = (
+				CD471604211052B900401169 /* Masonry */,
+				CD471603211052B100401169 /* SVProgressHUD */,
+				CD471602211052A800401169 /* AFNetworking */,
+			);
+			path = ThirdPards;
+			sourceTree = "<group>";
+		};
+		CD471602211052A800401169 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		CD471603211052B100401169 /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+		CD471604211052B900401169 /* Masonry */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Masonry;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,7 +85,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD4715FB21104EF200401169 /* MPMAttendance.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +282,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = ST6DF8EBB7;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -270,6 +296,12 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-Objc",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jifenzhi.MPMAttendanceSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -282,6 +314,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = ST6DF8EBB7;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -294,6 +327,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-Objc",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jifenzhi.MPMAttendanceSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
