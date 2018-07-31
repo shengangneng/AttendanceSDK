@@ -1,13 +1,13 @@
 //
-//  PrefixHeader.pch
-//  MPMAtendence
+//  MPMAttendanceHeader.h
+//  MPMAttendance
 //
-//  Created by gangneng shen on 2018/4/13.
-//  Copyright © 2018年 gangneng shen. All rights reserved.
+//  Created by shengangneng on 2018/7/31.
+//  Copyright © 2018年 MPMAttendanceSDK. All rights reserved.
 //
 
-#ifndef PrefixHeader_pch
-#define PrefixHeader_pch
+#ifndef MPMAttendanceHeader_h
+#define MPMAttendanceHeader_h
 
 #import "ColorConstant.h"
 #import "Masonry.h"
@@ -18,16 +18,16 @@
 /************************************************************************************************************************/
 /***** 环境变量 *****/
 /**  测试环境 */
-    #define MPMHost @"http://attendance.jifenzhi.com:8091/"
+#define MPMHost @"http://attendance.jifenzhi.com:8091/"
 /**/
 
 /**  生产环境V1.1 *
-    #define MPMHost @"http://47.97.112.161:8091/"
-**/
+ #define MPMHost @"http://47.97.112.161:8091/"
+ **/
 
 /**  开发环境  *
-    #define MPMHost @"http://47.97.98.80:8090/"
-**/
+ #define MPMHost @"http://47.97.98.80:8090/"
+ **/
 
 /**  小伟环境  *
  #define MPMHost @"http://192.168.1.63:8090/"
@@ -39,7 +39,7 @@
 
 /**  测试环境2 *
  #define MPMHost @"http://121.43.182.192:8091/"
-**/
+ **/
 
 /**  生产环境  *
  #define MPMHost @"http://183.95.85.84:8091/"
@@ -113,9 +113,4 @@
 #define kScreenHeight   kScreenBounds.size.height
 
 
-
-
-
-
-
-#endif /* PrefixHeader_pch */
+#endif /* MPMAttendanceHeader_h */

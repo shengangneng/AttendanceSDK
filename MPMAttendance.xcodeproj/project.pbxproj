@@ -235,7 +235,6 @@
 		CD47180E2110536400401169 /* MPMIntergralConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4717182110536300401169 /* MPMIntergralConfig.h */; };
 		CD47180F2110536400401169 /* ColorConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4717192110536300401169 /* ColorConstant.h */; };
 		CD4718102110536400401169 /* MPMApplyAdditionConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47171A2110536300401169 /* MPMApplyAdditionConfig.h */; };
-		CD4718112110536400401169 /* PrefixHeader.pch in Headers */ = {isa = PBXBuildFile; fileRef = CD47171B2110536300401169 /* PrefixHeader.pch */; };
 		CD4718122110536400401169 /* MPMImageTouchView.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47171D2110536400401169 /* MPMImageTouchView.h */; };
 		CD4718132110536400401169 /* MPMImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47171F2110536400401169 /* MPMImageView.m */; };
 		CD4718142110536400401169 /* MPMTableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4717202110536400401169 /* MPMTableHeaderView.h */; };
@@ -250,7 +249,7 @@
 		CD47181D2110536400401169 /* MPMImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47172A2110536400401169 /* MPMImageView.h */; };
 		CD47181E2110536400401169 /* MPMTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47172B2110536400401169 /* MPMTableHeaderView.m */; };
 		CD47181F2110536400401169 /* MPMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47172C2110536400401169 /* MPMButton.m */; };
-		CD4718222110536C00401169 /* MPMLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718202110536C00401169 /* MPMLoginViewController.h */; };
+		CD4718222110536C00401169 /* MPMLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718202110536C00401169 /* MPMLoginViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CD4718232110536C00401169 /* MPMLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4718212110536C00401169 /* MPMLoginViewController.m */; };
 		CD4718252110538900401169 /* AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718242110538900401169 /* AFNetworking.h */; };
 		CD47182A2110539100401169 /* AFURLSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718262110539100401169 /* AFURLSessionManager.h */; };
@@ -319,6 +318,7 @@
 		CD4718A6211053DE00401169 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47189E211053DD00401169 /* SVProgressHUD.m */; };
 		CD4718A7211053DE00401169 /* SVProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47189F211053DD00401169 /* SVProgressHUD.h */; };
 		CD4718A9211053E900401169 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CD4718A8211053E900401169 /* SVProgressHUD.bundle */; };
+		CD4718AB2110545900401169 /* MPMAttendanceHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718AA2110545900401169 /* MPMAttendanceHeader.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -552,7 +552,6 @@
 		CD4717182110536300401169 /* MPMIntergralConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMIntergralConfig.h; sourceTree = "<group>"; };
 		CD4717192110536300401169 /* ColorConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorConstant.h; sourceTree = "<group>"; };
 		CD47171A2110536300401169 /* MPMApplyAdditionConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApplyAdditionConfig.h; sourceTree = "<group>"; };
-		CD47171B2110536300401169 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		CD47171D2110536400401169 /* MPMImageTouchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMImageTouchView.h; sourceTree = "<group>"; };
 		CD47171F2110536400401169 /* MPMImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMImageView.m; sourceTree = "<group>"; };
 		CD4717202110536400401169 /* MPMTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMTableHeaderView.h; sourceTree = "<group>"; };
@@ -636,6 +635,7 @@
 		CD47189E211053DD00401169 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		CD47189F211053DD00401169 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		CD4718A8211053E900401169 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		CD4718AA2110545900401169 /* MPMAttendanceHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPMAttendanceHeader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1391,7 +1391,7 @@
 				CD4717182110536300401169 /* MPMIntergralConfig.h */,
 				CD4717192110536300401169 /* ColorConstant.h */,
 				CD47171A2110536300401169 /* MPMApplyAdditionConfig.h */,
-				CD47171B2110536300401169 /* PrefixHeader.pch */,
+				CD4718AA2110545900401169 /* MPMAttendanceHeader.h */,
 			);
 			path = Globals;
 			sourceTree = "<group>";
@@ -1440,6 +1440,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD4718222110536C00401169 /* MPMLoginViewController.h in Headers */,
 				CD47182A2110539100401169 /* AFURLSessionManager.h in Headers */,
 				CD47177B2110536400401169 /* MPMAttendenceModel.h in Headers */,
 				CD47188F211053CF00401169 /* Masonry.h in Headers */,
@@ -1515,6 +1516,7 @@
 				CD4717F72110536400401169 /* MPMAttendenceBaseTableViewCell.h in Headers */,
 				CD4717322110536400401169 /* MPMShareUser.h in Headers */,
 				CD4717842110536400401169 /* MPMAttendenceTableViewCell.h in Headers */,
+				CD4718AB2110545900401169 /* MPMAttendanceHeader.h in Headers */,
 				CD4717552110536400401169 /* MPMCausationDetailModel.h in Headers */,
 				CD4718192110536400401169 /* MPMCustomDatePickerView.h in Headers */,
 				CD4717BB2110536400401169 /* MPMSchedulingDepartmentsModel.h in Headers */,
@@ -1548,11 +1550,9 @@
 				CD4717C62110536400401169 /* MPMSettingSwitchTableViewCell.h in Headers */,
 				CD471880211053CF00401169 /* MASUtilities.h in Headers */,
 				CD4718152110536400401169 /* MPMDatePickerView.h in Headers */,
-				CD4718112110536400401169 /* PrefixHeader.pch in Headers */,
 				CD47182D2110539100401169 /* AFHTTPSessionManager.h in Headers */,
 				CD4718142110536400401169 /* MPMTableHeaderView.h in Headers */,
 				CD47185D211053C100401169 /* UIImage+AFNetworking.h in Headers */,
-				CD4718222110536C00401169 /* MPMLoginViewController.h in Headers */,
 				CD47188B211053CF00401169 /* MASConstraint+Private.h in Headers */,
 				CD4717602110536400401169 /* MPMCommomDealingTableViewCell.h in Headers */,
 				CD4717E82110536400401169 /* MPMAuthorityModel.h in Headers */,
@@ -1965,10 +1965,7 @@
 				);
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-Objc",
-				);
+				OTHER_LDFLAGS = "-Objc";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jifenzhi.MPMAttendanceSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1997,10 +1994,7 @@
 				);
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = (
-					"-all_load",
-					"-Objc",
-				);
+				OTHER_LDFLAGS = "-Objc";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jifenzhi.MPMAttendanceSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MPMAttendanceHeader.h"
+
 @class MPMGetPeopleModel;
 @protocol MPMHiddenTabelViewDelegate<NSObject>
 

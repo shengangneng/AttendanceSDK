@@ -7,6 +7,7 @@
 //
 
 #import "MPMTableHeaderView.h"
+#import "MPMAttendanceHeader.h"
 
 @implementation MPMTableHeaderView
 

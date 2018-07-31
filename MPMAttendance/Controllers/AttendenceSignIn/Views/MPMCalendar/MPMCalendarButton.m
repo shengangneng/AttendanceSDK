@@ -7,6 +7,7 @@
 //
 
 #import "MPMCalendarButton.h"
+#import "MPMAttendanceHeader.h"
 
 @implementation MPMCalendarButton
 

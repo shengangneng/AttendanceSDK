@@ -8,6 +8,7 @@
 
 #import "MPMSiderDrawerCollectionViewTimeCell.h"
 #import "MPMButton.h"
+#import "MPMAttendanceHeader.h"
 
 @interface MPMSiderDrawerCollectionViewTimeCell()
 

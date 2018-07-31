@@ -7,6 +7,7 @@
 //
 
 #import "MPMIntergralDefaultData.h"
+#import "MPMAttendanceHeader.h"
 
 #define type0IDsArray @[@"0",@"5",@"4",@"1",@"2",@"3"]
 #define type1IDsArray @[@"0",@"1",@"14",@"3",@"2",@"11"]

@@ -8,6 +8,7 @@
 
 #import "MPMAttendencePickerView.h"
 #import "MPMButton.h"
+#import "MPMAttendanceHeader.h"
 
 #define PickerViewRowHeight 50.0f
 #define PickerRowCount      3

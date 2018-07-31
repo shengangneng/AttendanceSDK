@@ -7,6 +7,7 @@
 //
 
 #import "MPMImageView.h"
+#import "MPMAttendanceHeader.h"
 
 @implementation MPMImageView
 

@@ -8,6 +8,7 @@
 
 #import "MPMIntergralScoreView.h"
 #import "MPMCheckRegexTool.h"
+#import "MPMAttendanceHeader.h"
 
 @interface MPMIntergralScoreView () <UITextFieldDelegate>
 

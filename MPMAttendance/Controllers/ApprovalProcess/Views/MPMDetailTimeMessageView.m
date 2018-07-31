@@ -8,6 +8,8 @@
 
 #import "MPMDetailTimeMessageView.h"
 #import "NSDateFormatter+MPMExtention.h"
+#import "MPMAttendanceHeader.h"
+
 @interface MPMDetailTimeMessageView()
 
 @property (nonatomic, copy) NSString *typeName;

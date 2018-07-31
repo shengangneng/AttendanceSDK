@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MPMAttendanceHeader.h"
 
 @interface MPMBaseModel : NSObject
 

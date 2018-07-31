@@ -8,6 +8,7 @@
 
 #import "MPMSiderDrawerCollectionViewButtonCell.h"
 #import "MPMButton.h"
+#import "MPMAttendanceHeader.h"
 
 @implementation MPMSiderDrawerCollectionViewButtonCell
 

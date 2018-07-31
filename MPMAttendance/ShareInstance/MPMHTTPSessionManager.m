@@ -9,7 +9,7 @@
 #import "MPMHTTPSessionManager.h"
 #import "MPMLoginViewController.h"
 #import "MPMShareUser.h"
-#import "AppDelegate.h"
+#import "MPMAttendanceHeader.h"
 
 static MPMHTTPSessionManager *instance;
 @interface MPMHTTPSessionManager()
@@ -67,7 +67,7 @@ static MPMHTTPSessionManager *instance;
                 if ([errorMessage containsString:@"用户信息已失效"]) {
                     [SVProgressHUD dismiss];
 //                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
-                    [((AppDelegate *)[UIApplication sharedApplication].delegate) tokenExpireToAutoLogin];
+                    [[[MPMLoginViewController alloc] init] autoLogin];
                 } else {
                     [SVProgressHUD showErrorWithStatus:errorMessage];
                 }
@@ -97,7 +97,7 @@ static MPMHTTPSessionManager *instance;
                 if ([errorMessage containsString:@"用户信息已失效"]) {
                     [SVProgressHUD dismiss];
 //                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
-                    [((AppDelegate *)[UIApplication sharedApplication].delegate) tokenExpireToAutoLogin];
+                    [[[MPMLoginViewController alloc] init] autoLogin];
                 } else {
                     [SVProgressHUD showErrorWithStatus:errorMessage];
                 }
@@ -126,7 +126,7 @@ static MPMHTTPSessionManager *instance;
                 if ([errorMessage containsString:@"用户信息已失效"]) {
                     [SVProgressHUD dismiss];
 //                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
-                    [((AppDelegate *)[UIApplication sharedApplication].delegate) tokenExpireToAutoLogin];
+                    [[[MPMLoginViewController alloc] init] autoLogin];
                 }
             }
         } else {
@@ -150,7 +150,7 @@ static MPMHTTPSessionManager *instance;
                 if ([errorMessage containsString:@"用户信息已失效"]) {
                     [SVProgressHUD dismiss];
 //                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
-                    [((AppDelegate *)[UIApplication sharedApplication].delegate) tokenExpireToAutoLogin];
+                    [[[MPMLoginViewController alloc] init] autoLogin];
                 }
             }
         } else {

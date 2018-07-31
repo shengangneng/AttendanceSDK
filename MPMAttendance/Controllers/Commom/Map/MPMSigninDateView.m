@@ -7,6 +7,7 @@
 //
 
 #import "MPMSigninDateView.h"
+#import "MPMAttendanceHeader.h"
 
 @interface MPMSigninDateView ()
 

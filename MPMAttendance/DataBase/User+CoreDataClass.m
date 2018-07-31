@@ -11,6 +11,7 @@
 #import "MPMCoreDataManager.h"
 #import <CoreData/CoreData.h>
 #import <objc/runtime.h>
+#import "MPMAttendanceHeader.h"
 
 @implementation User
 

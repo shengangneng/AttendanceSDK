@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MPMAttendanceHeader.h"
 
 @interface MPMBaseTableViewCell : UITableViewCell
 

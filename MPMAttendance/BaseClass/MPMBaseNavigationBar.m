@@ -7,6 +7,7 @@
 //
 
 #import "MPMBaseNavigationBar.h"
+#import "MPMAttendanceHeader.h"
 
 @implementation MPMBaseNavigationBar
 

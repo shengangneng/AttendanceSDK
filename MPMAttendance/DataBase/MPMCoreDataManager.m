@@ -7,6 +7,7 @@
 //
 
 #import "MPMCoreDataManager.h"
+#import "MPMAttendanceHeader.h"
 
 static MPMCoreDataManager *coreDataManager;
 @interface MPMCoreDataManager ()

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MPMAttendanceHeader.h"
 
 typedef NS_ENUM(NSInteger, BarButtonItemType) {
     forBarButtonTypeTitle,

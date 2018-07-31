@@ -7,6 +7,7 @@
 //
 
 #import "MPMSiderDrawerCollectionReusableView.h"
+#import "MPMAttendanceHeader.h"
 
 @interface MPMSiderDrawerCollectionReusableView()
 

@@ -10,6 +10,7 @@
 #import "MPMCalendarWeekView.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import "MPMAttendenceOneMonthModel.h"
+#import "MPMAttendanceHeader.h"
 
 #define kOneWeekInterval 604800
 

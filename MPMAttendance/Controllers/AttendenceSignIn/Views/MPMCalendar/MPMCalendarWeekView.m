@@ -9,6 +9,7 @@
 #import "MPMCalendarWeekView.h"
 #import "MPMCalendarButton.h"
 #import "MPMAttendenceOneMonthModel.h"
+#import "MPMAttendanceHeader.h"
 
 #define kViewBounds             (kScreenWidth / 7)
 #define kMPMCalendarButtonTag   999
