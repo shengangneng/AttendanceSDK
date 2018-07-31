@@ -95,6 +95,8 @@
 }
 
 - (void)setupAttributes {
+    [SVProgressHUD setMaximumDismissTimeInterval:0.5];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     self.view.backgroundColor = kWhiteColor;
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBackgroud:)]];
     // Target Action

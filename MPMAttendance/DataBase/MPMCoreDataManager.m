@@ -81,7 +81,9 @@ static MPMCoreDataManager *coreDataManager;
 
 - (NSManagedObjectModel *)model {
     if (!_model) {
-        NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"MPMAtendence" withExtension:@"momd"];
+        NSString *bundlepath = [[NSBundle mainBundle] pathForResource:@"MPMAttendanceBundle" ofType:@"bundle"];
+        NSBundle *realBundle = [NSBundle bundleWithPath:bundlepath];
+        NSURL *modelURL = [NSURL URLWithString:[realBundle pathForResource:@"MPMAtendence" ofType:@"momd"]];
         _model = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     }
     return _model;
