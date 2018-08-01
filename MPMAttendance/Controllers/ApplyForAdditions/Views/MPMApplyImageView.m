@@ -25,13 +25,13 @@
         self.detailMessageLabel.text = detailMessage;
         [self addSubview:self.titleLable];
         [self addSubview:self.detailMessageLabel];
-        [self.titleLable mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.mas_leading).offset(20);
-            make.top.equalTo(self.mas_top).offset(30);
+        [self.titleLable mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.mpm_leading).offset(20);
+            make.top.equalTo(self.mpm_top).offset(30);
         }];
-        [self.detailMessageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.titleLable.mas_leading);
-            make.top.equalTo(self.titleLable.mas_bottom).offset(5);
+        [self.detailMessageLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.titleLable.mpm_leading);
+            make.top.equalTo(self.titleLable.mpm_bottom).offset(5);
             make.width.equalTo(@200);
         }];
     }

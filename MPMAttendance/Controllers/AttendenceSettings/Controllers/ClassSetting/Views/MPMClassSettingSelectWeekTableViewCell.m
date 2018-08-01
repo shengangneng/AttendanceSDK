@@ -18,10 +18,10 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.accessoryType = UITableViewCellAccessoryNone;
         [self addSubview:self.checkButton];
-        [self.checkButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.checkButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.width.height.equalTo(@25);
-            make.centerY.equalTo(self.mas_centerY);
-            make.trailing.equalTo(self.mas_trailing).offset(-15);
+            make.centerY.equalTo(self.mpm_centerY);
+            make.trailing.equalTo(self.mpm_trailing).offset(-15);
         }];
     }
     return self;

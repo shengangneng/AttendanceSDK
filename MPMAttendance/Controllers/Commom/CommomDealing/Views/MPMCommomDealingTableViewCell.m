@@ -43,22 +43,22 @@
 }
 
 - (void)setupConstraints {
-    [self.startIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.startIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.centerY.equalTo(self);
         make.width.equalTo(@(PX_W(11)));
         make.height.equalTo(@(PX_H(12)));
-        make.trailing.equalTo(self.txLabel.mas_leading).offset(-4);
+        make.trailing.equalTo(self.txLabel.mpm_leading).offset(-4);
     }];
-    [self.txLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(20);
-        make.centerY.equalTo(self.mas_centerY);
+    [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(20);
+        make.centerY.equalTo(self.mpm_centerY);
     }];
-    [self.detailTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.detailTextField mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.bottom.equalTo(self);
-        make.trailing.equalTo(self.mas_trailing).offset(-10);
-        make.leading.equalTo(self.txLabel.mas_trailing).offset(10);
+        make.trailing.equalTo(self.mpm_trailing).offset(-10);
+        make.leading.equalTo(self.txLabel.mpm_trailing).offset(10);
     }];
-    [self.deleteCellButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.deleteCellButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.trailing.equalTo(self);
         make.width.equalTo(@16.5);
         make.height.equalTo(@14);

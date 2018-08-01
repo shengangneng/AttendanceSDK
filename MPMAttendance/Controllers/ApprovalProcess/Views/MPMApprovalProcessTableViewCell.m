@@ -42,81 +42,81 @@
 }
 
 - (void)setupConstaints {
-    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.containerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.contentView).offset(12);
         make.top.equalTo(self.contentView).offset(6);
         make.trailing.equalTo(self.contentView).offset(-12);
         make.bottom.equalTo(self.contentView).offset(-6);
     }];
-    [self.flagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.contentView.mas_leading).offset(6);
-        make.top.equalTo(self.contentView.mas_top).offset(7.5);
+    [self.flagImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.contentView.mpm_leading).offset(6);
+        make.top.equalTo(self.contentView.mpm_top).offset(7.5);
         make.width.equalTo(@110);
         make.height.equalTo(@35);
     }];
-    [self.flagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.flagIcon.mas_trailing).offset(12);
-        make.bottom.equalTo(self.flagImageView.mas_bottom);
-        make.trailing.equalTo(self.flagImageView.mas_trailing).offset(-2);
+    [self.flagLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.flagIcon.mpm_trailing).offset(12);
+        make.bottom.equalTo(self.flagImageView.mpm_bottom);
+        make.trailing.equalTo(self.flagImageView.mpm_trailing).offset(-2);
         make.height.equalTo(@30);
     }];
-    [self.flagIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.flagLabel.mas_centerY);
+    [self.flagIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerY.equalTo(self.flagLabel.mpm_centerY);
         make.width.height.equalTo(@23);
-        make.leading.equalTo(self.flagImageView.mas_leading).offset(12.5);
+        make.leading.equalTo(self.flagImageView.mpm_leading).offset(12.5);
     }];
-    [self.applyPersonLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.flagLabel.mas_leading);
-        make.top.equalTo(self.flagImageView.mas_bottom);
-        make.trailing.equalTo(self.flagLabel.mas_trailing);
+    [self.applyPersonLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.flagLabel.mpm_leading);
+        make.top.equalTo(self.flagImageView.mpm_bottom);
+        make.trailing.equalTo(self.flagLabel.mpm_trailing);
         make.height.equalTo(@22);
     }];
-    [self.applyPersonMessageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.applyPersonLabel.mas_trailing).offset(10);
-        make.top.equalTo(self.flagImageView.mas_bottom);
-        make.trailing.equalTo(self.containerView.mas_trailing);
+    [self.applyPersonMessageLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.applyPersonLabel.mpm_trailing).offset(10);
+        make.top.equalTo(self.flagImageView.mpm_bottom);
+        make.trailing.equalTo(self.containerView.mpm_trailing);
         make.height.equalTo(@22);
     }];
-    [self.extraApplyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.flagLabel.mas_leading);
-        make.trailing.equalTo(self.flagLabel.mas_trailing);
-        make.top.equalTo(self.applyPersonLabel.mas_bottom);
+    [self.extraApplyLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.flagLabel.mpm_leading);
+        make.trailing.equalTo(self.flagLabel.mpm_trailing);
+        make.top.equalTo(self.applyPersonLabel.mpm_bottom);
         make.height.equalTo(@22);
     }];
-    [self.extraApplyMessageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.extraApplyLabel.mas_trailing).offset(10);
-        make.top.equalTo(self.applyPersonLabel.mas_bottom);
-        make.trailing.equalTo(self.containerView.mas_trailing);
+    [self.extraApplyMessageLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.extraApplyLabel.mpm_trailing).offset(10);
+        make.top.equalTo(self.applyPersonLabel.mpm_bottom);
+        make.trailing.equalTo(self.containerView.mpm_trailing);
         make.height.equalTo(@22);
     }];
-    [self.applyDetailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.flagLabel.mas_leading);
-        make.trailing.equalTo(self.flagLabel.mas_trailing);
-        make.top.equalTo(self.extraApplyLabel.mas_bottom);
+    [self.applyDetailLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.flagLabel.mpm_leading);
+        make.trailing.equalTo(self.flagLabel.mpm_trailing);
+        make.top.equalTo(self.extraApplyLabel.mpm_bottom);
         make.height.equalTo(@22);
     }];
-    [self.applyDetailMessageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.applyDetailLabel.mas_trailing).offset(10);
-        make.top.equalTo(self.applyDetailLabel.mas_top).offset(2.5);
-        make.trailing.equalTo(self.containerView.mas_trailing).offset(-10);
-//        make.height.mas_greaterThanOrEqualTo(22);
+    [self.applyDetailMessageLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.applyDetailLabel.mpm_trailing).offset(10);
+        make.top.equalTo(self.applyDetailLabel.mpm_top).offset(2.5);
+        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
+//        make.height.mpm_greaterThanOrEqualTo(22);
     }];
-    [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.line mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.containerView);
-        make.top.equalTo(self.applyDetailMessageLabel.mas_bottom).offset(PX_W(5));
+        make.top.equalTo(self.applyDetailMessageLabel.mpm_bottom).offset(PX_W(5));
         make.height.equalTo(@0.5);
     }];
-    [self.seeMoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.flagLabel.mas_leading);
-        make.trailing.equalTo(self.flagLabel.mas_trailing);
-        make.top.equalTo(self.line.mas_bottom);
-        make.bottom.equalTo(self.containerView.mas_bottom);
+    [self.seeMoreLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.flagLabel.mpm_leading);
+        make.trailing.equalTo(self.flagLabel.mpm_trailing);
+        make.top.equalTo(self.line.mpm_bottom);
+        make.bottom.equalTo(self.containerView.mpm_bottom);
         make.height.equalTo(@30);
     }];
-    [self.dateButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.trailing.equalTo(self.containerView.mas_trailing).offset(-8);
-        make.top.equalTo(self.line.mas_bottom);
-        make.bottom.equalTo(self.containerView.mas_bottom);
+    [self.dateButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-8);
+        make.top.equalTo(self.line.mpm_bottom);
+        make.bottom.equalTo(self.containerView.mpm_bottom);
         make.height.equalTo(@30);
         make.width.equalTo(@120);
     }];

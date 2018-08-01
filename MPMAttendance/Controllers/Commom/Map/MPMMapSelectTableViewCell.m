@@ -33,10 +33,10 @@
 }
 
 - (void)setupConstraints {
-    [self.checkLocationImage mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.checkLocationImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.height.equalTo(@25);
-        make.centerY.equalTo(self.mas_centerY);
-        make.trailing.equalTo(self.mas_trailing).offset(-15);
+        make.centerY.equalTo(self.mpm_centerY);
+        make.trailing.equalTo(self.mpm_trailing).offset(-15);
     }];
 }
 

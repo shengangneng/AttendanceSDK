@@ -31,15 +31,15 @@
 }
 
 - (void)setupConstaints {
-    [self.imageIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(13);
-        make.centerY.equalTo(self.mas_centerY);
+    [self.imageIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(13);
+        make.centerY.equalTo(self.mpm_centerY);
         make.width.equalTo(@20);
         make.height.equalTo(@20);
     }];
-    [self.txLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.imageIcon.mas_trailing).offset(10);
-        make.centerY.equalTo(self.mas_centerY);
+    [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.imageIcon.mpm_trailing).offset(10);
+        make.centerY.equalTo(self.mpm_centerY);
         make.top.bottom.equalTo(self);
     }];
 }

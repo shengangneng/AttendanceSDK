@@ -10,8 +10,8 @@
 #define MPMAttendanceHeader_h
 
 #import "ColorConstant.h"
-#import "Masonry.h"
-#import "SVProgressHUD.h"
+#import "MPMMasonry.h"
+#import "MPMProgressHUD.h"
 #import "MPMIntergralConfig.h"
 #import "MPMApplyAdditionConfig.h"
 

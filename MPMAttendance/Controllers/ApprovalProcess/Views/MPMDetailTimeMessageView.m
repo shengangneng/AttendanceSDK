@@ -89,91 +89,91 @@
 }
 
 - (void)setupConstaints {
-    [self.contentTimeLeftBar mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.contentTimeLeftBar mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.leading.bottom.equalTo(self);
         make.width.equalTo(@4);
     }];
     if (kIsNilString(self.typeName) || self.model.causationtypeNo.integerValue == 1) {
-        [self.contentTimeLeaveTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.mas_leading);
-            make.top.equalTo(self.mas_top).offset(12);
+        [self.contentTimeLeaveTypeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.mpm_leading);
+            make.top.equalTo(self.mpm_top).offset(12);
             make.width.equalTo(@0);
             make.height.equalTo(@0);
         }];
-        [self.contentTimeLeaveTypeMessage mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.contentTimeLeaveTypeLabel.mas_trailing).offset(5);
-            make.top.equalTo(self.contentTimeLeaveTypeLabel.mas_top);
-            make.height.equalTo(self.contentTimeLeaveTypeLabel.mas_height);
-            make.trailing.equalTo(self.mas_trailing).offset(-5);
+        [self.contentTimeLeaveTypeMessage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.contentTimeLeaveTypeLabel.mpm_trailing).offset(5);
+            make.top.equalTo(self.contentTimeLeaveTypeLabel.mpm_top);
+            make.height.equalTo(self.contentTimeLeaveTypeLabel.mpm_height);
+            make.trailing.equalTo(self.mpm_trailing).offset(-5);
         }];
     } else {
-        [self.contentTimeLeaveTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.mas_leading);
-            make.top.equalTo(self.mas_top).offset(12);
+        [self.contentTimeLeaveTypeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.mpm_leading);
+            make.top.equalTo(self.mpm_top).offset(12);
             make.width.equalTo(@87);
             make.height.equalTo(@(22));
         }];
-        [self.contentTimeLeaveTypeMessage mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.contentTimeLeaveTypeLabel.mas_trailing).offset(5);
-            make.top.equalTo(self.contentTimeLeaveTypeLabel.mas_top);
-            make.height.equalTo(self.contentTimeLeaveTypeLabel.mas_height);
-            make.trailing.equalTo(self.mas_trailing).offset(-5);
+        [self.contentTimeLeaveTypeMessage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.contentTimeLeaveTypeLabel.mpm_trailing).offset(5);
+            make.top.equalTo(self.contentTimeLeaveTypeLabel.mpm_top);
+            make.height.equalTo(self.contentTimeLeaveTypeLabel.mpm_height);
+            make.trailing.equalTo(self.mpm_trailing).offset(-5);
         }];
     }
     
     // 行程地点
-    MASViewAttribute *lastAttribute = self.contentTimeLeaveTypeLabel.mas_bottom;
+    MPMViewAttribute *lastAttribute = self.contentTimeLeaveTypeLabel.mpm_bottom;
     if (self.detailModel && !kIsNilString(self.detailModel.address)) {
-        [self.contentAddressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.mas_leading);
-            make.top.equalTo(self.contentTimeLeaveTypeLabel.mas_bottom);
+        [self.contentAddressLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.mpm_leading);
+            make.top.equalTo(self.contentTimeLeaveTypeLabel.mpm_bottom);
             make.width.equalTo(@87);
             make.height.equalTo(@22);
         }];
-        [self.contentAddressMessageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.contentAddressLabel.mas_trailing).offset(5);
-            make.top.equalTo(self.contentTimeLeaveTypeLabel.mas_bottom);
+        [self.contentAddressMessageLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.contentAddressLabel.mpm_trailing).offset(5);
+            make.top.equalTo(self.contentTimeLeaveTypeLabel.mpm_bottom);
             make.height.equalTo(@22);
-            make.trailing.equalTo(self.mas_trailing).offset(-5);
+            make.trailing.equalTo(self.mpm_trailing).offset(-5);
         }];
-        lastAttribute = self.contentAddressLabel.mas_bottom;
+        lastAttribute = self.contentAddressLabel.mpm_bottom;
     }
     
-    [self.contentTimeBeginTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading);
+    [self.contentTimeBeginTimeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading);
         make.top.equalTo(lastAttribute);
         make.width.equalTo(@87);
         make.height.equalTo(@22);
     }];
-    [self.contentTimeBeginTimeMessage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.contentTimeBeginTimeLabel.mas_trailing).offset(5);
+    [self.contentTimeBeginTimeMessage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.contentTimeBeginTimeLabel.mpm_trailing).offset(5);
         make.top.equalTo(lastAttribute);
         make.height.equalTo(@22);
-        make.trailing.equalTo(self.mas_trailing).offset(-5);
+        make.trailing.equalTo(self.mpm_trailing).offset(-5);
     }];
-    [self.contentTimeendTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading);
-        make.top.equalTo(self.contentTimeBeginTimeLabel.mas_bottom);
+    [self.contentTimeendTimeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading);
+        make.top.equalTo(self.contentTimeBeginTimeLabel.mpm_bottom);
         make.width.equalTo(@87);
         make.height.equalTo(@22);
     }];
-    [self.contentTimeendTimeMessage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.contentTimeendTimeLabel.mas_trailing).offset(5);
-        make.top.equalTo(self.contentTimeendTimeLabel.mas_top);
+    [self.contentTimeendTimeMessage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.contentTimeendTimeLabel.mpm_trailing).offset(5);
+        make.top.equalTo(self.contentTimeendTimeLabel.mpm_top);
         make.height.equalTo(@22);
-        make.trailing.equalTo(self.mas_trailing).offset(-5);
+        make.trailing.equalTo(self.mpm_trailing).offset(-5);
     }];
-    [self.contentTimeIntervalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading);
-        make.top.equalTo(self.contentTimeendTimeLabel.mas_bottom);
+    [self.contentTimeIntervalLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading);
+        make.top.equalTo(self.contentTimeendTimeLabel.mpm_bottom);
         make.width.equalTo(@(87));
         make.height.equalTo(@(22));
     }];
-    [self.contentTimeIntervalMessage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.contentTimeIntervalLabel.mas_trailing).offset(5);
-        make.top.equalTo(self.contentTimeIntervalLabel.mas_top);
+    [self.contentTimeIntervalMessage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.contentTimeIntervalLabel.mpm_trailing).offset(5);
+        make.top.equalTo(self.contentTimeIntervalLabel.mpm_top);
         make.height.equalTo(@22);
-        make.trailing.equalTo(self.mas_trailing).offset(-5);
+        make.trailing.equalTo(self.mpm_trailing).offset(-5);
     }];
 }
 

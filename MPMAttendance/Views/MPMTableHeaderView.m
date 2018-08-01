@@ -16,8 +16,8 @@
     if (self) {
         self.backgroundColor = kTableViewBGColor;
         [self addSubview:self.headerTextLabel];
-        [self.headerTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.mas_leading).offset(15);
+        [self.headerTextLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.mpm_leading).offset(15);
             make.top.bottom.trailing.equalTo(self);
         }];
     }
@@ -27,8 +27,8 @@
 #pragma mark - Public Method
 /** 重设headerTextLabel的leading offset */
 - (void)resetTextLabelLeadingOffser:(NSInteger)offset {
-    [self.headerTextLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(offset);
+    [self.headerTextLabel mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(offset);
         make.top.bottom.trailing.equalTo(self);
     }];
 }

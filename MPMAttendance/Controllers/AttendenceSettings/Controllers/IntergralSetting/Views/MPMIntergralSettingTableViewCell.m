@@ -74,45 +74,45 @@
 }
 
 - (void)setupConstraints {
-    [self.bgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).offset(5);
-        make.bottom.equalTo(self.mas_bottom).offset(-5);
-        make.leading.equalTo(self.mas_leading).offset(10);
-        make.trailing.equalTo(self.mas_trailing).offset(-10);
+    [self.bgroundView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.mpm_top).offset(5);
+        make.bottom.equalTo(self.mpm_bottom).offset(-5);
+        make.leading.equalTo(self.mpm_leading).offset(10);
+        make.trailing.equalTo(self.mpm_trailing).offset(-10);
     }];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.bgroundView.mas_top).offset(6);
+    [self.titleLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.bgroundView.mpm_top).offset(6);
         make.height.equalTo(@20);
-        make.leading.equalTo(self.bgroundView.mas_leading).offset(15);
+        make.leading.equalTo(self.bgroundView.mpm_leading).offset(15);
     }];
-    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.titleLabel.mas_bottom).offset(4);
+    [self.subTitleLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.titleLabel.mpm_bottom).offset(4);
         make.height.equalTo(@15);
-        make.leading.equalTo(self.bgroundView.mas_leading).offset(15);
+        make.leading.equalTo(self.bgroundView.mpm_leading).offset(15);
     }];
-    [self.ticketButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.bgroundView.mas_top).offset(12.5);
+    [self.ticketButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.bgroundView.mpm_top).offset(12.5);
         make.width.equalTo(@75);
         make.height.equalTo(@25);
-        make.trailing.equalTo(self.bgroundView.mas_trailing).offset(-15);
+        make.trailing.equalTo(self.bgroundView.mpm_trailing).offset(-15);
     }];
-    [self.seperateLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bgroundView.mas_leading).offset(15);
-        make.trailing.equalTo(self.bgroundView.mas_trailing);
+    [self.seperateLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bgroundView.mpm_leading).offset(15);
+        make.trailing.equalTo(self.bgroundView.mpm_trailing);
         make.height.equalTo(@1);
-        make.centerY.equalTo(self.bgroundView.mas_centerY);
+        make.centerY.equalTo(self.bgroundView.mpm_centerY);
     }];
-    [self.intergralView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bgroundView.mas_leading).offset(15);
+    [self.intergralView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bgroundView.mpm_leading).offset(15);
         make.height.equalTo(@26);
         make.width.equalTo(@79.5);
-        make.bottom.equalTo(self.bgroundView.mas_bottom).offset(-12);
+        make.bottom.equalTo(self.bgroundView.mpm_bottom).offset(-12);
     }];
-    [self.selectionButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.bgroundView.mas_bottom).offset(-12);
+    [self.selectionButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.bgroundView.mpm_bottom).offset(-12);
         make.height.equalTo(@26);
         make.width.equalTo(@79.5);
-        make.trailing.equalTo(self.bgroundView.mas_trailing).offset(-15);
+        make.trailing.equalTo(self.bgroundView.mpm_trailing).offset(-15);
     }];
 }
 

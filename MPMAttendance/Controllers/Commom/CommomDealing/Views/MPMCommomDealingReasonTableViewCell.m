@@ -44,34 +44,34 @@
 
 - (void)setupConstraints {
     
-    [self.startIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.txLabel.mas_centerY);
+    [self.startIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerY.equalTo(self.txLabel.mpm_centerY);
         make.width.equalTo(@(PX_W(11)));
         make.height.equalTo(@(PX_H(12)));
-        make.trailing.equalTo(self.txLabel.mas_leading).offset(-4);
+        make.trailing.equalTo(self.txLabel.mpm_leading).offset(-4);
     }];
     
-    [self.txLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.equalTo(self);
-        make.leading.equalTo(self.mas_leading).offset(20);
+        make.leading.equalTo(self.mpm_leading).offset(20);
         make.height.equalTo(@(50));
     }];
     
-    [self.detailTextView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.txLabel.mas_trailing).offset(5);
-        make.top.equalTo(self.mas_top).offset(7);
-        make.bottom.equalTo(self.mas_bottom).offset(-7);
-        make.trailing.equalTo(self.mas_trailing);
+    [self.detailTextView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.txLabel.mpm_trailing).offset(5);
+        make.top.equalTo(self.mpm_top).offset(7);
+        make.bottom.equalTo(self.mpm_bottom).offset(-7);
+        make.trailing.equalTo(self.mpm_trailing);
     }];
-    [self.textViewTotalLength mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.mas_bottom).offset(-7);
-        make.trailing.equalTo(self.mas_trailing).offset(-15);
+    [self.textViewTotalLength mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.mpm_bottom).offset(-7);
+        make.trailing.equalTo(self.mpm_trailing).offset(-15);
         make.height.equalTo(@39);
     }];
-    [self.textViewClearButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.textViewClearButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.height.equalTo(@(12.5));
-        make.centerY.equalTo(self.textViewTotalLength.mas_centerY);
-        make.trailing.equalTo(self.textViewTotalLength.mas_leading).offset(-5);
+        make.centerY.equalTo(self.textViewTotalLength.mpm_centerY);
+        make.trailing.equalTo(self.textViewTotalLength.mpm_leading).offset(-5);
     }];
 }
 

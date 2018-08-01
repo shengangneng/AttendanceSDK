@@ -154,9 +154,9 @@
     NSInteger tag = sender.tag;
     // 修改蓝色跟随线位置
     UIButton *btn = [self getButtonFromIndex:[NSString stringWithFormat:@"%ld",tag]];
-    [self.firstUnderBlueLine mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(btn.mas_bottom).offset(-3);
-        make.centerX.equalTo(btn.mas_centerX);
+    [self.firstUnderBlueLine mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(btn.mpm_bottom).offset(-3);
+        make.centerX.equalTo(btn.mpm_centerX);
         make.height.equalTo(@(2));
         CGSize size = [@"我的申请" sizeWithAttributes:@{NSFontAttributeName:SystemFont(18)}];
         make.width.equalTo(@(size.width));
@@ -165,8 +165,8 @@
     UIView *firstView = self.secondSectionViewsArray.firstObject;
     UIView *currentView = [self getViewFromIndex:[NSString stringWithFormat:@"%ld",tag]];
     NSInteger currentIndex = [self.secondSectionViewsArray indexOfObject:currentView];
-    [firstView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.secondSectionView.mas_leading).offset(-kScreenWidth * currentIndex);
+    [firstView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.secondSectionView.mpm_leading).offset(-kScreenWidth * currentIndex);
         make.top.bottom.equalTo(self.secondSectionView);
         make.width.equalTo(@(kScreenWidth));
     }];
@@ -295,32 +295,32 @@
 - (void)setupUI {
     // 一级导航视图
     [self addSubview:self.firstSectionView];
-    [self.firstSectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.firstSectionView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self);
-        make.top.equalTo(self.mas_top).offset(-10);
+        make.top.equalTo(self.mpm_top).offset(-10);
         make.height.equalTo(@(65));
     }];
     // 根据传入的一级导航数据来设置一级导航列表
     int width = (kScreenWidth - 45)/self.firstSectionArray.count;
-    MASViewAttribute *lastAttr = self.firstSectionView.mas_leading;
+    MPMViewAttribute *lastAttr = self.firstSectionView.mpm_leading;
     for (int i = 0; i < self.firstSectionButtonsArray.count; i++) {
         MPMApprovalFirstSectionModel *model = self.firstSectionArray[i];
         UIButton *btn = self.firstSectionButtonsArray[i];
         [btn setTitle:model.perimissionname forState:UIControlStateNormal];
         [btn setTitle:model.perimissionname forState:UIControlStateHighlighted];
         [self.firstSectionView addSubview:btn];
-        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+        [btn mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.leading.equalTo(lastAttr);
-            make.centerY.equalTo(self.firstSectionView.mas_centerY);
+            make.centerY.equalTo(self.firstSectionView.mpm_centerY);
             make.height.equalTo(@(45));
             make.width.equalTo(@(width));
         }];
-        lastAttr = btn.mas_trailing;
+        lastAttr = btn.mpm_trailing;
         UIView *line = [[UIView alloc] init];line.backgroundColor = kSeperateColor;
         [self.firstSectionView addSubview:line];
-        [line mas_makeConstraints:^(MASConstraintMaker *make) {
+        [line mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.trailing.equalTo(lastAttr).offset(-1);
-            make.centerY.equalTo(self.firstSectionView.mas_centerY);
+            make.centerY.equalTo(self.firstSectionView.mpm_centerY);
             make.height.equalTo(@(35));
             make.width.equalTo(@(1));
         }];
@@ -328,16 +328,16 @@
     
     // 一级导航的筛选按钮和底部的蓝色跟随线
     [self.firstSectionView addSubview:self.firstFillterButton];
-    [self.firstFillterButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.trailing.equalTo(self.firstSectionView.mas_trailing).offset(-13.5);
-        make.centerY.equalTo(self.firstSectionView.mas_centerY);
+    [self.firstFillterButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.trailing.equalTo(self.firstSectionView.mpm_trailing).offset(-13.5);
+        make.centerY.equalTo(self.firstSectionView.mpm_centerY);
         make.height.width.equalTo(@(18));
     }];
     [self.firstSectionView addSubview:self.firstUnderBlueLine];
     
-    [self.firstUnderBlueLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.firstSectionButtonsArray.firstObject.mas_bottom).offset(-3);
-        make.centerX.equalTo(self.firstSectionButtonsArray.firstObject.mas_centerX);
+    [self.firstUnderBlueLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.firstSectionButtonsArray.firstObject.mpm_bottom).offset(-3);
+        make.centerX.equalTo(self.firstSectionButtonsArray.firstObject.mpm_centerX);
         make.height.equalTo(@(2));
         CGSize size = [@"我的申请" sizeWithAttributes:@{NSFontAttributeName:SystemFont(18)}];
         make.width.equalTo(@(size.width));
@@ -345,22 +345,22 @@
     
     // 二级导航视图
     [self addSubview:self.secondSectionView];
-    [self.secondSectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.secondSectionView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self);
-        make.top.equalTo(self.firstSectionView.mas_bottom).offset(-10);
+        make.top.equalTo(self.firstSectionView.mpm_bottom).offset(-10);
         make.height.equalTo(@(40));
     }];
     
-    lastAttr = self.secondSectionView.mas_leading;
+    lastAttr = self.secondSectionView.mpm_leading;
     for (int i = 0; i < self.secondSectionViewsArray.count; i++) {
         UIView *view = self.secondSectionViewsArray[i];
         [self.secondSectionView addSubview:view];
-        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        [view mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.leading.equalTo(lastAttr);
             make.top.bottom.equalTo(self.secondSectionView);
             make.width.equalTo(@(kScreenWidth));
         }];
-        lastAttr = view.mas_trailing;
+        lastAttr = view.mpm_trailing;
     }
     
     // 二级导航”我的申请“
@@ -369,28 +369,28 @@
     [self.secondMyApplyView addSubview:self.secondMyApplyRejectApplyButton];
     [self.secondMyApplyView addSubview:self.secondMyApplyCancelApplyButton];
     [self.secondMyApplyView addSubview:self.secondMyApplyDraftApplyButton];
-    [self.secondMyApplyDeedApplyButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.secondMyApplyDeedApplyButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.secondMyApplyView);
         make.top.bottom.equalTo(self.secondMyApplyView);
         make.width.equalTo(@(kScreenWidth/5));
     }];
-    [self.secondMyApplyAreadyApplyButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.secondMyApplyDeedApplyButton.mas_trailing);
+    [self.secondMyApplyAreadyApplyButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.secondMyApplyDeedApplyButton.mpm_trailing);
         make.top.bottom.equalTo(self.secondMyApplyView);
         make.width.equalTo(@(kScreenWidth/5));
     }];
-    [self.secondMyApplyRejectApplyButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.secondMyApplyAreadyApplyButton.mas_trailing);
+    [self.secondMyApplyRejectApplyButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.secondMyApplyAreadyApplyButton.mpm_trailing);
         make.top.bottom.equalTo(self.secondMyApplyView);
         make.width.equalTo(@(kScreenWidth/5));
     }];
-    [self.secondMyApplyCancelApplyButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.secondMyApplyRejectApplyButton.mas_trailing);
+    [self.secondMyApplyCancelApplyButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.secondMyApplyRejectApplyButton.mpm_trailing);
         make.top.bottom.equalTo(self.secondMyApplyView);
         make.width.equalTo(@(kScreenWidth/5));
     }];
-    [self.secondMyApplyDraftApplyButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.secondMyApplyCancelApplyButton.mas_trailing);
+    [self.secondMyApplyDraftApplyButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.secondMyApplyCancelApplyButton.mpm_trailing);
         make.top.bottom.equalTo(self.secondMyApplyView);
         make.width.equalTo(@(kScreenWidth/5));
     }];
@@ -398,31 +398,31 @@
     [self.secondMyApproveView addSubview:self.secondMyApproveNeedApproveButton];
     [self.secondMyApproveView addSubview:self.secondMyApprovePassApproveButton];
     [self.secondMyApproveView addSubview:self.secondMyApproveAreadyRejectButton];
-    [self.secondMyApproveNeedApproveButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.secondMyApproveNeedApproveButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.secondMyApproveView);
         make.top.bottom.equalTo(self.secondMyApproveView);
         make.width.equalTo(@(kScreenWidth/3));
     }];
-    [self.secondMyApprovePassApproveButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.secondMyApproveNeedApproveButton.mas_trailing);
+    [self.secondMyApprovePassApproveButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.secondMyApproveNeedApproveButton.mpm_trailing);
         make.top.bottom.equalTo(self.secondMyApproveView);
         make.width.equalTo(@(kScreenWidth/3));
     }];
-    [self.secondMyApproveAreadyRejectButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.secondMyApprovePassApproveButton.mas_trailing);
+    [self.secondMyApproveAreadyRejectButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.secondMyApprovePassApproveButton.mpm_trailing);
         make.top.bottom.equalTo(self.secondMyApproveView);
         make.width.equalTo(@(kScreenWidth/3));
     }];
     // 二级导航“抄送列表”
     [self.secondCCListView addSubview:self.secondCCListCCToMeButton];
     [self.secondCCListView addSubview:self.secondCCListMyCCButton];
-    [self.secondCCListCCToMeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.secondCCListCCToMeButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.secondCCListView);
         make.top.bottom.equalTo(self.secondCCListView);
         make.width.equalTo(@(kScreenWidth/2));
     }];
-    [self.secondCCListMyCCButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.secondCCListCCToMeButton.mas_trailing);
+    [self.secondCCListMyCCButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.secondCCListCCToMeButton.mpm_trailing);
         make.top.bottom.equalTo(self.secondCCListView);
         make.width.equalTo(@(kScreenWidth/2));
     }];

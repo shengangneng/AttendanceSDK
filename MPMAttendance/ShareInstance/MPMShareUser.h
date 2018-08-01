@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import <UIKit/UIKit.h>
 
 // 不使用MPMBaseModel，自己使用NSObject的分类调用字典转模型
 @interface MPMShareUser : NSObject
@@ -25,6 +26,7 @@
 @property (nonatomic, copy) NSString *companyName;
 
 @property (nonatomic, copy) NSArray *perimissionArray;
+@property (nonatomic, strong) UIViewController *lastRootViewController;/** 记录从其他系统条转过来时候的rootViewcontroller */
 
 + (instancetype)shareUser;
 /** 每次重新登录，将数据保存到数据库 */

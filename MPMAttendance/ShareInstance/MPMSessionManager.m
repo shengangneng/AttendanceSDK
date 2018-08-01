@@ -51,68 +51,68 @@ static MPMSessionManager *instance;
     });
 }
 
-/** 带有SVProgressHUD的请求 */
+/** 带有MPMProgressHUD的请求 */
 - (void)getRequestWithURL:(NSString *)url params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id))success failure:(void(^)(NSString *))failure {
-    [SVProgressHUD showWithStatus:loadingMessage];
+    [MPMProgressHUD showWithStatus:loadingMessage];
     [self.manager GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dic = responseObject;
             NSNumber *succ = dic[@"success"];
             if (succ.intValue == 1) {
-                [SVProgressHUD dismiss];
+                [MPMProgressHUD dismiss];
                 success(responseObject);
             } else {
                 NSString *errorMessage = [dic[@"message"] isKindOfClass:[NSNull class]] ? ([dic[@"dataObj"] isKindOfClass:[NSString class]] ? dic[@"dataObj"] : @"error") : dic[@"message"];
                 failure(errorMessage);
                 if ([errorMessage containsString:@"用户信息已失效"]) {
-                    [SVProgressHUD dismiss];
+                    [MPMProgressHUD dismiss];
 //                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
                     [[[MPMLoginViewController alloc] init] autoLogin];
                 } else {
-                    [SVProgressHUD showErrorWithStatus:errorMessage];
+                    [MPMProgressHUD showErrorWithStatus:errorMessage];
                 }
             }
         } else {
-            [SVProgressHUD dismiss];
+            [MPMProgressHUD dismiss];
             success(responseObject);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+        [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
         failure(error.localizedDescription);
     }];
 }
 
 - (void)postRequestWithURL:(NSString *)url params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id))success failure:(void(^)(NSString *))failure {
-    [SVProgressHUD showWithStatus:loadingMessage];
+    [MPMProgressHUD showWithStatus:loadingMessage];
     [self.manager POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dic = responseObject;
             NSNumber *succ = dic[@"success"];
             if (succ.intValue == 1) {
-                [SVProgressHUD dismiss];
+                [MPMProgressHUD dismiss];
                 success(responseObject);
             } else {
                 NSString *errorMessage = [dic[@"message"] isKindOfClass:[NSNull class]] ? ([dic[@"dataObj"] isKindOfClass:[NSString class]] ? dic[@"dataObj"] : @"error") : dic[@"message"];
                 failure(errorMessage);
                 if ([errorMessage containsString:@"用户信息已失效"]) {
-                    [SVProgressHUD dismiss];
+                    [MPMProgressHUD dismiss];
 //                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
                     [[[MPMLoginViewController alloc] init] autoLogin];
                 } else {
-                    [SVProgressHUD showErrorWithStatus:errorMessage];
+                    [MPMProgressHUD showErrorWithStatus:errorMessage];
                 }
             }
         } else {
-            [SVProgressHUD dismiss];
+            [MPMProgressHUD dismiss];
             success(responseObject);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+        [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
         failure(error.localizedDescription);
     }];
 }
 
-/** 不带SVProgressHUD的请求 */
+/** 不带MPMProgressHUD的请求 */
 - (void)getRequestWithURL:(NSString *)url params:(id)params success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
     [self.manager GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
@@ -124,7 +124,7 @@ static MPMSessionManager *instance;
                 NSString *errorMessage = [dic[@"message"] isKindOfClass:[NSNull class]] ? ([dic[@"dataObj"] isKindOfClass:[NSString class]] ? dic[@"dataObj"] : @"error") : dic[@"message"];
                 failure(errorMessage);
                 if ([errorMessage containsString:@"用户信息已失效"]) {
-                    [SVProgressHUD dismiss];
+                    [MPMProgressHUD dismiss];
 //                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
                     [[[MPMLoginViewController alloc] init] autoLogin];
                 }
@@ -148,7 +148,7 @@ static MPMSessionManager *instance;
                 NSString *errorMessage = [dic[@"message"] isKindOfClass:[NSNull class]] ? ([dic[@"dataObj"] isKindOfClass:[NSString class]] ? dic[@"dataObj"] : @"error") : dic[@"message"];
                 failure(errorMessage);
                 if ([errorMessage containsString:@"用户信息已失效"]) {
-                    [SVProgressHUD dismiss];
+                    [MPMProgressHUD dismiss];
 //                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
                     [[[MPMLoginViewController alloc] init] autoLogin];
                 }

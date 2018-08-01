@@ -54,20 +54,20 @@
         if (dataArray.count > 5) {
             self.operationButton.hidden = NO;
             self.operationButton.selected = NO;
-            [self.operationButton mas_updateConstraints:^(MASConstraintMaker *make) {
+            [self.operationButton mpm_updateConstraints:^(MPMConstraintMaker *make) {
                 make.width.equalTo(@(kScreenWidth));
                 make.height.equalTo(@20);
-                make.centerX.equalTo(self.peoplesView.mas_centerX);
-                make.bottom.equalTo(self.mas_bottom);
+                make.centerX.equalTo(self.peoplesView.mpm_centerX);
+                make.bottom.equalTo(self.mpm_bottom);
             }];
         } else {
             self.operationButton.hidden = YES;
             self.operationButton.selected = NO;
-            [self.operationButton mas_updateConstraints:^(MASConstraintMaker *make) {
+            [self.operationButton mpm_updateConstraints:^(MPMConstraintMaker *make) {
                 make.width.equalTo(@(kScreenWidth));
                 make.height.equalTo(@0);
-                make.centerX.equalTo(self.peoplesView.mas_centerX);
-                make.bottom.equalTo(self.mas_bottom);
+                make.centerX.equalTo(self.peoplesView.mpm_centerX);
+                make.bottom.equalTo(self.mpm_bottom);
             }];
         }
     } else {
@@ -77,11 +77,11 @@
             self.operationButton.hidden = YES;
         }
         self.operationButton.selected = YES;
-        [self.operationButton mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.operationButton mpm_updateConstraints:^(MPMConstraintMaker *make) {
             make.width.equalTo(@(kScreenWidth));
             make.height.equalTo(@(20));
-            make.centerX.equalTo(self.peoplesView.mas_centerX);
-            make.bottom.equalTo(self.mas_bottom);
+            make.centerX.equalTo(self.peoplesView.mpm_centerX);
+            make.bottom.equalTo(self.mpm_bottom);
         }];
     }
 }
@@ -124,31 +124,31 @@
 }
 
 - (void)setupConstraints {
-    [self.txLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(15);
+    [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(15);
         make.height.equalTo(@22.5);
-        make.top.equalTo(self.mas_top).offset(10);
+        make.top.equalTo(self.mpm_top).offset(10);
     }];
-    [self.detailTxLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(15);
-        make.top.equalTo(self.txLabel.mas_bottom);
+    [self.detailTxLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(15);
+        make.top.equalTo(self.txLabel.mpm_bottom);
         make.height.equalTo(@20);
     }];
-    [self.addPeopleButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.addPeopleButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.height.equalTo(@22);
-        make.trailing.equalTo(self.mas_trailing).offset(-15);
-        make.centerY.equalTo(self.mas_top).offset(30);
+        make.trailing.equalTo(self.mpm_trailing).offset(-15);
+        make.centerY.equalTo(self.mpm_top).offset(30);
     }];
-    [self.peoplesView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.peoplesView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self);
-        make.top.equalTo(self.detailTxLabel.mas_bottom).offset(7.5);
-        make.bottom.equalTo(self.mas_bottom);
+        make.top.equalTo(self.detailTxLabel.mpm_bottom).offset(7.5);
+        make.bottom.equalTo(self.mpm_bottom);
     }];
-    [self.operationButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.operationButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.equalTo(@(kScreenWidth));
         make.height.equalTo(@0);
-        make.centerX.equalTo(self.peoplesView.mas_centerX);
-        make.bottom.equalTo(self.mas_bottom);
+        make.centerX.equalTo(self.peoplesView.mpm_centerX);
+        make.bottom.equalTo(self.mpm_bottom);
     }];
 }
 

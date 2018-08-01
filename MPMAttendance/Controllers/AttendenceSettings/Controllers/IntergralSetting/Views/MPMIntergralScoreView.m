@@ -113,18 +113,18 @@
 }
 
 - (void)setupConstraints {
-    [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.imageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
-    [self.textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.textLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.bottom.equalTo(self);
-        make.leading.equalTo(self.mas_leading).offset(1);
+        make.leading.equalTo(self.mpm_leading).offset(1);
         make.width.equalTo(@33);
     }];
-    [self.textfield mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.textfield mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.bottom.equalTo(self);
-        make.top.equalTo(self.mas_top).offset(1);
-        make.trailing.equalTo(self.mas_trailing).offset(-1);
+        make.top.equalTo(self.mpm_top).offset(1);
+        make.trailing.equalTo(self.mpm_trailing).offset(-1);
         make.width.equalTo(@43);
     }];
 }

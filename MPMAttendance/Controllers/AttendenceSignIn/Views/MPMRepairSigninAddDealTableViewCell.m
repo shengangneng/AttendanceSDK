@@ -34,23 +34,23 @@
 }
 
 - (void)setupConstraints {
-    [self.signTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.signTypeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.top.bottom.equalTo(self);
         make.width.equalTo(@(60));
     }];
-    [self.signTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.signTimeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.bottom.equalTo(self);
-        make.leading.equalTo(self.signTypeLabel.mas_trailing);
+        make.leading.equalTo(self.signTypeLabel.mpm_trailing);
     }];
-    [self.signDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.signDateLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.centerX.top.bottom.equalTo(self);
         make.width.equalTo(@(130));
     }];
-    [self.signDealButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.signDealButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.equalTo(@(55));
         make.height.equalTo(@(30));
         make.centerY.equalTo(self);
-        make.trailing.equalTo(self.mas_trailing).offset(-10);
+        make.trailing.equalTo(self.mpm_trailing).offset(-10);
     }];
 }
 

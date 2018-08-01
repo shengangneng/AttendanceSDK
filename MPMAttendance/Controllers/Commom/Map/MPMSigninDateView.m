@@ -57,24 +57,24 @@
     [self addSubview:self.weakLabel];
 }
 - (void)setupConstraints {
-    [self.monthLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.monthLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.bottom.equalTo(self);
-        make.leading.equalTo(self.mas_leading).offset(12);
+        make.leading.equalTo(self.mpm_leading).offset(12);
     }];
-    [self.yearLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).offset(PX_H(6));
+    [self.yearLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.mpm_top).offset(PX_H(6));
         make.height.equalTo(@(PX_H(34)));
-        make.leading.equalTo(self.monthLabel.mas_trailing).offset(5);
+        make.leading.equalTo(self.monthLabel.mpm_trailing).offset(5);
     }];
-    [self.dayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.mas_bottom).offset(-PX_H(6));
+    [self.dayLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.mpm_bottom).offset(-PX_H(6));
         make.height.equalTo(@(PX_H(34)));
-        make.leading.equalTo(self.monthLabel.mas_trailing).offset(5);
+        make.leading.equalTo(self.monthLabel.mpm_trailing).offset(5);
     }];
-    [self.weakLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.mas_bottom).offset(-PX_H(6));
+    [self.weakLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.mpm_bottom).offset(-PX_H(6));
         make.height.equalTo(@(PX_H(34)));
-        make.leading.equalTo(self.dayLabel.mas_trailing).offset(5);
+        make.leading.equalTo(self.dayLabel.mpm_trailing).offset(5);
     }];
 }
 

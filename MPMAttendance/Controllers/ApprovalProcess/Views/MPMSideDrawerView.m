@@ -76,22 +76,22 @@
 }
 
 - (void)setupConstraints {
-    [self.contentViewCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView.mas_top).offset(12);
-        make.leading.equalTo(self.contentView.mas_leading).offset(6);
-        make.trailing.equalTo(self.contentView.mas_trailing).offset(-6);
+    [self.contentViewCollectionView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.contentView.mpm_top).offset(12);
+        make.leading.equalTo(self.contentView.mpm_leading).offset(6);
+        make.trailing.equalTo(self.contentView.mpm_trailing).offset(-6);
         make.height.equalTo(@(450));
     }];
-    [self.resetButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.contentView.mas_leading).offset(10);
-        make.bottom.equalTo(self.contentView.mas_bottom).offset(-BottomViewBottomMargin);
+    [self.resetButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.contentView.mpm_leading).offset(10);
+        make.bottom.equalTo(self.contentView.mpm_bottom).offset(-BottomViewBottomMargin);
         make.height.equalTo(@(35));
     }];
-    [self.doneButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.resetButton.mas_trailing).offset(10);
-        make.trailing.equalTo(self.contentView.mas_trailing).offset(-10);
-        make.bottom.equalTo(self.contentView.mas_bottom).offset(-BottomViewBottomMargin);
-        make.width.equalTo(self.resetButton.mas_width);
+    [self.doneButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.resetButton.mpm_trailing).offset(10);
+        make.trailing.equalTo(self.contentView.mpm_trailing).offset(-10);
+        make.bottom.equalTo(self.contentView.mpm_bottom).offset(-BottomViewBottomMargin);
+        make.width.equalTo(self.resetButton.mpm_width);
         make.height.equalTo(@(35));
     }];
 }

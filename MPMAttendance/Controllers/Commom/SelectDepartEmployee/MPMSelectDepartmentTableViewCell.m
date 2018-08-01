@@ -19,21 +19,21 @@
         [self addSubview:self.checkIconImage];
         [self addSubview:self.humanIconImage];
         [self addSubview:self.txLabel];
-        [self.checkIconImage mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.mas_leading).offset(12);
+        [self.checkIconImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.mpm_leading).offset(12);
             make.width.height.equalTo(@25);
-            make.centerY.equalTo(self.mas_centerY);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
-        [self.humanIconImage mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.checkIconImage.mas_trailing).offset(10);
+        [self.humanIconImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.checkIconImage.mpm_trailing).offset(10);
             make.width.height.equalTo(@30);
-            make.centerY.equalTo(self.mas_centerY);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
-        [self.txLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.humanIconImage.mas_trailing).offset(10);
-            make.trailing.equalTo(self.mas_trailing).offset(-35);
+        [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.humanIconImage.mpm_trailing).offset(10);
+            make.trailing.equalTo(self.mpm_trailing).offset(-35);
             make.top.bottom.equalTo(self);
-            make.centerY.equalTo(self.mas_centerY);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
     }
     return self;
@@ -43,18 +43,18 @@
     _isHuman = isHuman;
     if (isHuman && isHuman.integerValue == 1) {
         self.accessoryType = UITableViewCellAccessoryNone;
-        [self.humanIconImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.checkIconImage.mas_trailing).offset(10);
+        [self.humanIconImage mpm_updateConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.checkIconImage.mpm_trailing).offset(10);
             make.width.height.equalTo(@30);
-            make.centerY.equalTo(self.mas_centerY);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
     } else {
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        [self.humanIconImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.checkIconImage.mas_trailing).offset(0);
+        [self.humanIconImage mpm_updateConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.checkIconImage.mpm_trailing).offset(0);
             make.height.equalTo(@30);
             make.width.equalTo(@0);
-            make.centerY.equalTo(self.mas_centerY);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
     }
     [self layoutIfNeeded];

@@ -24,10 +24,10 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self.startNonSwitch addTarget:self action:@selector(startNonRest:) forControlEvents:UIControlEventValueChanged];
         [self addSubview:self.startNonSwitch];
-        [self.startNonSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.startNonSwitch mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.width.equalTo(@60);
-            make.trailing.equalTo(self.mas_trailing).offset(-15);
-            make.centerY.equalTo(self.mas_centerY);
+            make.trailing.equalTo(self.mpm_trailing).offset(-15);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
     }
     return self;

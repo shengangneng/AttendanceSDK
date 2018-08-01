@@ -43,11 +43,23 @@
 
 @implementation MPMLoginViewController
 
+- (instancetype)initWithUsername:(NSString *)username password:(NSString *)password companyCode:(NSString *)companyCode {
+    self = [super init];
+    if (self) {
+        [MPMShareUser shareUser].lastRootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+        if (kIsNilString(username) || kIsNilString(password) || kIsNilString(companyCode)) {
+            [self setupSubviews];
+            [self setupAttributes];
+            [self setupConstraints];
+        } else {
+            [self loginWithUsername:username password:password companyCode:companyCode];
+        }
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setupSubviews];
-    [self setupAttributes];
-    [self setupConstraints];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -57,7 +69,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-//    [self addHeaderIconAnimation];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -95,8 +106,8 @@
 }
 
 - (void)setupAttributes {
-    [SVProgressHUD setMaximumDismissTimeInterval:0.5];
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+    [MPMProgressHUD setMaximumDismissTimeInterval:0.5];
+    [MPMProgressHUD setDefaultMaskType:MPMProgressHUDMaskTypeBlack];
     self.view.backgroundColor = kWhiteColor;
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBackgroud:)]];
     // Target Action
@@ -107,137 +118,137 @@
 
 - (void)setupConstraints {
     
-    [self.headerIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.headerTitleLabel.mas_top).offset(-10);
-        make.centerX.equalTo(self.view.mas_centerX);
+    [self.headerIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.headerTitleLabel.mpm_top).offset(-10);
+        make.centerX.equalTo(self.view.mpm_centerX);
         make.width.equalTo(@(116));
         make.height.equalTo(@(120));
     }];
 
-    [self.headerTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middleBackgroundView.mas_top).offset(-25);
-        make.centerX.equalTo(self.view.mas_centerX);
+    [self.headerTitleLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middleBackgroundView.mpm_top).offset(-25);
+        make.centerX.equalTo(self.view.mpm_centerX);
         make.height.equalTo(@(PX_H(50)));
     }];
     
-    [self.middleBackgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.view.mas_centerX);
-        make.centerY.equalTo(self.view.mas_centerY).offset(45);
+    [self.middleBackgroundView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerX.equalTo(self.view.mpm_centerX);
+        make.centerY.equalTo(self.view.mpm_centerY).offset(45);
         make.width.equalTo(@(PX_W(641)));
         make.height.equalTo(@(PX_H(687)));// 实际(顶部14，底部34，左右23）
     }];
     
     // username
-    [self.middleUserView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middlePassView.mas_top).offset(-2);
-        make.leading.equalTo(self.middleLoginButton.mas_leading);
-        make.trailing.equalTo(self.middleLoginButton.mas_trailing);
+    [self.middleUserView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middlePassView.mpm_top).offset(-2);
+        make.leading.equalTo(self.middleLoginButton.mpm_leading);
+        make.trailing.equalTo(self.middleLoginButton.mpm_trailing);
         make.height.equalTo(@(PX_H(124)));
     }];
     
-    [self.middleUserIconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middleUserLine.mas_top).offset(-11);
-        make.leading.equalTo(self.middleUserView.mas_leading);
+    [self.middleUserIconView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middleUserLine.mpm_top).offset(-11);
+        make.leading.equalTo(self.middleUserView.mpm_leading);
         make.width.equalTo(@(PX_H(35)));
         make.height.equalTo(@(PX_H(34)));
     }];
     
-    [self.middleUserTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.middleUserIconView.mas_centerY);
-        make.bottom.equalTo(self.middleUserLine.mas_top).offset(-2);
-        make.leading.equalTo(self.middleUserIconView.mas_trailing).offset(PX_W(15));
-        make.trailing.equalTo(self.middleUserView.mas_trailing);
+    [self.middleUserTextField mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerY.equalTo(self.middleUserIconView.mpm_centerY);
+        make.bottom.equalTo(self.middleUserLine.mpm_top).offset(-2);
+        make.leading.equalTo(self.middleUserIconView.mpm_trailing).offset(PX_W(15));
+        make.trailing.equalTo(self.middleUserView.mpm_trailing);
     }];
     
-    [self.middleUserLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.middleUserView.mas_bottom).offset(-3.5);
-        make.leading.equalTo(self.middleLoginButton.mas_leading);
-        make.trailing.equalTo(self.middleLoginButton.mas_trailing);
+    [self.middleUserLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.middleUserView.mpm_bottom).offset(-3.5);
+        make.leading.equalTo(self.middleLoginButton.mpm_leading);
+        make.trailing.equalTo(self.middleLoginButton.mpm_trailing);
         make.height.equalTo(@0.5);
     }];
     
     // password
-    [self.middlePassView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middleCompView.mas_top).offset(-2);
-        make.leading.equalTo(self.middleLoginButton.mas_leading);
-        make.trailing.equalTo(self.middleLoginButton.mas_trailing);
+    [self.middlePassView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middleCompView.mpm_top).offset(-2);
+        make.leading.equalTo(self.middleLoginButton.mpm_leading);
+        make.trailing.equalTo(self.middleLoginButton.mpm_trailing);
         make.height.equalTo(@(PX_H(124)));
     }];
     
-    [self.middlePassIconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middlePassLine.mas_bottom).offset(-10);
-        make.leading.equalTo(self.middlePassView.mas_leading);
+    [self.middlePassIconView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middlePassLine.mpm_bottom).offset(-10);
+        make.leading.equalTo(self.middlePassView.mpm_leading);
         make.width.equalTo(@(PX_H(30)));
         make.height.equalTo(@(PX_H(36)));
     }];
     
-    [self.middlePassTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.middlePassIconView.mas_centerY);
-        make.bottom.equalTo(self.middlePassLine.mas_top).offset(-2);
-        make.leading.equalTo(self.middlePassIconView.mas_trailing).offset(PX_W(15));
-        make.trailing.equalTo(self.middlePassView.mas_trailing);
+    [self.middlePassTextField mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerY.equalTo(self.middlePassIconView.mpm_centerY);
+        make.bottom.equalTo(self.middlePassLine.mpm_top).offset(-2);
+        make.leading.equalTo(self.middlePassIconView.mpm_trailing).offset(PX_W(15));
+        make.trailing.equalTo(self.middlePassView.mpm_trailing);
     }];
     
-    [self.middlePassLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middlePassView.mas_bottom).offset(-3.5);
-        make.leading.equalTo(self.middlePassView.mas_leading);
-        make.trailing.equalTo(self.middlePassView.mas_trailing);
+    [self.middlePassLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middlePassView.mpm_bottom).offset(-3.5);
+        make.leading.equalTo(self.middlePassView.mpm_leading);
+        make.trailing.equalTo(self.middlePassView.mpm_trailing);
         make.height.equalTo(@0.5);
     }];
     
     // company
-    [self.middleCompView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middleLoginButton.mas_top).offset(-PX_H(75));
-        make.leading.equalTo(self.middleLoginButton.mas_leading);
-        make.trailing.equalTo(self.middleLoginButton.mas_trailing);
+    [self.middleCompView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middleLoginButton.mpm_top).offset(-PX_H(75));
+        make.leading.equalTo(self.middleLoginButton.mpm_leading);
+        make.trailing.equalTo(self.middleLoginButton.mpm_trailing);
         make.height.equalTo(@(PX_H(124)));
     }];
     
-    [self.middleCompIconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middleCompLine.mas_bottom).offset(-10);
-        make.leading.equalTo(self.middleLoginButton.mas_leading);
+    [self.middleCompIconView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middleCompLine.mpm_bottom).offset(-10);
+        make.leading.equalTo(self.middleLoginButton.mpm_leading);
         make.width.equalTo(@(PX_H(37)));
         make.height.equalTo(@(PX_H(36)));
     }];
     
-    [self.middleCompTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.middleCompIconView.mas_centerY);
-        make.bottom.equalTo(self.middleCompLine.mas_top).offset(-2);
-        make.leading.equalTo(self.middleCompIconView.mas_trailing).offset(PX_W(15));
-        make.trailing.equalTo(self.middleLoginButton.mas_trailing);
+    [self.middleCompTextField mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerY.equalTo(self.middleCompIconView.mpm_centerY);
+        make.bottom.equalTo(self.middleCompLine.mpm_top).offset(-2);
+        make.leading.equalTo(self.middleCompIconView.mpm_trailing).offset(PX_W(15));
+        make.trailing.equalTo(self.middleLoginButton.mpm_trailing);
     }];
     
-    [self.middleCompLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middleCompView.mas_bottom).offset(-3);
-        make.leading.equalTo(self.middleCompIconView.mas_leading);
-        make.trailing.equalTo(self.middleLoginButton.mas_trailing);
+    [self.middleCompLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middleCompView.mpm_bottom).offset(-3);
+        make.leading.equalTo(self.middleCompIconView.mpm_leading);
+        make.trailing.equalTo(self.middleLoginButton.mpm_trailing);
         make.height.equalTo(@0.5);
     }];
     
     // 快速注册、忘记密码
-    [self.middlefastRegisterButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.middleCompView.mas_bottom).offset((PX_W(15)));
-        make.leading.equalTo(self.middleLoginButton.mas_leading);
+    [self.middlefastRegisterButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.middleCompView.mpm_bottom).offset((PX_W(15)));
+        make.leading.equalTo(self.middleLoginButton.mpm_leading);
         make.width.equalTo(@(70));
         make.height.equalTo(@(PX_W(40)));
     }];
     
-    [self.middlefoggotenPassButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.middleCompView.mas_bottom).offset((PX_W(15)));
-        make.trailing.equalTo(self.middleLoginButton.mas_trailing);
+    [self.middlefoggotenPassButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.middleCompView.mpm_bottom).offset((PX_W(15)));
+        make.trailing.equalTo(self.middleLoginButton.mpm_trailing);
         make.width.equalTo(@70);
         make.height.equalTo(@(PX_W(40)));
     }];
     
-    [self.middleLoginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.middleBackgroundView.mas_bottom).offset(-PX_H(114));
-        make.centerX.equalTo(self.middleBackgroundView.mas_centerX);
+    [self.middleLoginButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.middleBackgroundView.mpm_bottom).offset(-PX_H(114));
+        make.centerX.equalTo(self.middleBackgroundView.mpm_centerX);
         make.height.equalTo(@(PX_H(80)));
-        make.leading.equalTo(self.middleBackgroundView.mas_leading).offset(PX_W(65));
-        make.trailing.equalTo(self.middleBackgroundView.mas_trailing).offset(-PX_W(65));
+        make.leading.equalTo(self.middleBackgroundView.mpm_leading).offset(PX_W(65));
+        make.trailing.equalTo(self.middleBackgroundView.mpm_trailing).offset(-PX_W(65));
     }];
     // bottom
-    [self.bottomImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.bottom.equalTo(self.view);
         make.height.equalTo(@120.5);
     }];
@@ -247,14 +258,14 @@
 - (void)login:(UIButton *)sender {
     [self.view endEditing:YES];
     if (kIsNilString(self.middleUserTextField.text)) {
-        [SVProgressHUD setMinimumDismissTimeInterval:0.5];
-        [SVProgressHUD showErrorWithStatus:@"请输入用户账号"];
+        [MPMProgressHUD setMinimumDismissTimeInterval:0.5];
+        [MPMProgressHUD showErrorWithStatus:@"请输入用户账号"];
         return;
     } else if (kIsNilString(self.middlePassTextField.text)) {
-        [SVProgressHUD showErrorWithStatus:@"请输入账户密码"];
+        [MPMProgressHUD showErrorWithStatus:@"请输入账户密码"];
         return;
     } else if (kIsNilString(self.middleCompTextField.text)) {
-        [SVProgressHUD showErrorWithStatus:@"请输入企业代码"];
+        [MPMProgressHUD showErrorWithStatus:@"请输入企业代码"];
         return;
     }
     NSString *url = [MPMHost stringByAppendingString:@"index"];
@@ -272,6 +283,25 @@
         [self getPerrimition];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+    }];
+}
+
+- (void)loginWithUsername:(NSString *)username password:(NSString *)password companyCode:(NSString *)companyCode {
+    NSString *url = [MPMHost stringByAppendingString:@"index"];
+    NSDictionary *params = @{@"userName":kSafeString(username),@"password":kSafeString(password),@"companyCode":kSafeString(companyCode)};
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+        NSDictionary *dic = response;
+        NSDictionary *data = dic[@"dataObj"];
+        // 登录后将数据存到user全局对象中。
+        [[MPMShareUser shareUser] convertModelWithDictionary:data];
+        [MPMShareUser shareUser].username = self.middleUserTextField.text;
+        [MPMShareUser shareUser].password = self.middlePassTextField.text;
+        [MPMShareUser shareUser].companyName = self.middleCompTextField.text;
+        [self getPerrimition];
+    } failure:^(NSString *error) {
+        [self setupSubviews];
+        [self setupAttributes];
+        [self setupConstraints];
     }];
 }
 

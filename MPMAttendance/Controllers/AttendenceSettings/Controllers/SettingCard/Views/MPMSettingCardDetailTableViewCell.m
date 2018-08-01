@@ -31,22 +31,22 @@
 }
 
 - (void)setupConstaints {
-    [self.imageIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(13);
-        make.centerY.equalTo(self.mas_centerY);
+    [self.imageIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(13);
+        make.centerY.equalTo(self.mpm_centerY);
         make.width.equalTo(@20);
         make.height.equalTo(@20);
     }];
-    [self.txLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.imageIcon.mas_trailing).offset(10);
-        make.trailing.equalTo(self.mas_trailing).offset(-10);
-        make.top.equalTo(self.mas_top);
+    [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.imageIcon.mpm_trailing).offset(10);
+        make.trailing.equalTo(self.mpm_trailing).offset(-10);
+        make.top.equalTo(self.mpm_top);
         make.height.equalTo(@25);
     }];
-    [self.txDetailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.imageIcon.mas_trailing).offset(10);
-        make.trailing.equalTo(self.mas_trailing).offset(-10);
-        make.top.equalTo(self.txLabel.mas_bottom);
+    [self.txDetailLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.imageIcon.mpm_trailing).offset(10);
+        make.trailing.equalTo(self.mpm_trailing).offset(-10);
+        make.top.equalTo(self.txLabel.mpm_bottom);
         make.height.equalTo(@25);
     }];
 }

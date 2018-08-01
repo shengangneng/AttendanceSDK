@@ -76,24 +76,24 @@
 
 - (void)setupConstraints {
     [super setupConstraints];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.tableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.top.trailing.equalTo(self.view);
-        make.bottom.equalTo(self.bottomView.mas_top);
+        make.bottom.equalTo(self.bottomView.mpm_top);
     }];
     
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.bottom.equalTo(self.view);
         make.height.equalTo(@(BottomViewHeight));
     }];
-    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.top.trailing.equalTo(self.bottomView);
         make.height.equalTo(@0.5);
     }];
-    [self.bottomSaveButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomView.mas_leading).offset(12);
-        make.trailing.equalTo(self.bottomView.mas_trailing).offset(-12);
-        make.top.equalTo(self.bottomView.mas_top).offset(BottomViewTopMargin);
-        make.bottom.equalTo(self.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+    [self.bottomSaveButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomView.mpm_leading).offset(12);
+        make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-12);
+        make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
+        make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
     }];
 }
 

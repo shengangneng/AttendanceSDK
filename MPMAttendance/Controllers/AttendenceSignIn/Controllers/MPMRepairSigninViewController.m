@@ -53,7 +53,7 @@
 
 - (void)setupConstraints {
     [super setupConstraints];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.tableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
 }

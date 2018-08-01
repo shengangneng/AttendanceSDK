@@ -195,31 +195,31 @@
     [self.bottomHiddenTableView reloadData];
     if (sender.selected) {
         [UIView animateWithDuration:0.3 animations:^{
-            [self.bottomUpButton mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.bottomView.mas_top).offset(-300);
-                make.centerX.equalTo(self.bottomView.mas_centerX);
+            [self.bottomUpButton mpm_updateConstraints:^(MPMConstraintMaker *make) {
+                make.bottom.equalTo(self.bottomView.mpm_top).offset(-300);
+                make.centerX.equalTo(self.bottomView.mpm_centerX);
                 make.height.equalTo(@(34));
                 make.width.equalTo(@(86));
             }];
-            [self.headerHiddenMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
+            [self.headerHiddenMaskView mpm_updateConstraints:^(MPMConstraintMaker *make) {
                 make.leading.trailing.equalTo(self.view);
                 make.height.equalTo(@(kScreenHeight - 300));
-                make.bottom.equalTo(self.view.mas_top).offset(kScreenHeight - 300 - kNavigationHeight - BottomViewHeight);
+                make.bottom.equalTo(self.view.mpm_top).offset(kScreenHeight - 300 - kNavigationHeight - BottomViewHeight);
             }];
             [self.view layoutIfNeeded];
         }];
     } else {
         [UIView animateWithDuration:0.3 animations:^{
-            [self.bottomUpButton mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.bottom.equalTo(self.bottomView.mas_top);
-                make.centerX.equalTo(self.bottomView.mas_centerX);
+            [self.bottomUpButton mpm_updateConstraints:^(MPMConstraintMaker *make) {
+                make.bottom.equalTo(self.bottomView.mpm_top);
+                make.centerX.equalTo(self.bottomView.mpm_centerX);
                 make.height.equalTo(@(34));
                 make.width.equalTo(@(86));
             }];
-            [self.headerHiddenMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
+            [self.headerHiddenMaskView mpm_updateConstraints:^(MPMConstraintMaker *make) {
                 make.leading.trailing.equalTo(self.view);
                 make.height.equalTo(@(kScreenHeight - 300));
-                make.bottom.equalTo(self.view.mas_top).offset(-kNavigationHeight);
+                make.bottom.equalTo(self.view.mpm_top).offset(-kNavigationHeight);
             }];
             [self.view layoutIfNeeded];
         }];
@@ -229,16 +229,16 @@
 - (void)hide:(UITapGestureRecognizer *)gesture {
     self.bottomUpButton.selected = NO;
     [UIView animateWithDuration:0.3 animations:^{
-        [self.bottomUpButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.bottomView.mas_top);
-            make.centerX.equalTo(self.bottomView.mas_centerX);
+        [self.bottomUpButton mpm_updateConstraints:^(MPMConstraintMaker *make) {
+            make.bottom.equalTo(self.bottomView.mpm_top);
+            make.centerX.equalTo(self.bottomView.mpm_centerX);
             make.height.equalTo(@(34));
             make.width.equalTo(@(86));
         }];
-        [self.headerHiddenMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.headerHiddenMaskView mpm_updateConstraints:^(MPMConstraintMaker *make) {
             make.leading.trailing.equalTo(self.view);
             make.height.equalTo(@(kScreenHeight - 300));
-            make.bottom.equalTo(self.view.mas_top).offset(-kNavigationHeight);
+            make.bottom.equalTo(self.view.mpm_top).offset(-kNavigationHeight);
         }];
         [self.view layoutIfNeeded];
     }];
@@ -474,61 +474,61 @@
 
 - (void)setupConstraints {
     [super setupConstraints];
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.view.mas_leading);
-        make.top.equalTo(self.view.mas_top);
-        make.trailing.equalTo(self.view.mas_trailing);
+    [self.headerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.view.mpm_leading);
+        make.top.equalTo(self.view.mpm_top);
+        make.trailing.equalTo(self.view.mpm_trailing);
         make.height.equalTo(@(52));
     }];
-    [self.headerSearchBar mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerSearchBar mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.headerView);
     }];
     
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.tableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.view);
-        make.top.equalTo(self.headerView.mas_bottom);
-        make.bottom.equalTo(self.bottomView.mas_top);
+        make.top.equalTo(self.headerView.mpm_bottom);
+        make.bottom.equalTo(self.bottomView.mpm_top);
     }];
     // bottom
     
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.bottom.trailing.equalTo(self.view);
         make.height.equalTo(@(BottomViewHeight));
     }];
-    [self.bottomTotalSelectedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.bottomView.mas_top).offset(BottomViewTopMargin);
-        make.bottom.equalTo(self.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
-        make.leading.equalTo(self.bottomView.mas_leading).offset(15);
-        make.trailing.equalTo(self.bottomSureButton.mas_leading).offset(-15);
+    [self.bottomTotalSelectedLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
+        make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
+        make.leading.equalTo(self.bottomView.mpm_leading).offset(15);
+        make.trailing.equalTo(self.bottomSureButton.mpm_leading).offset(-15);
     }];
-    [self.bottomSureButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.trailing.equalTo(self.bottomView.mas_trailing).offset(-15);
-        make.top.equalTo(self.bottomView.mas_top).offset(BottomViewTopMargin);
-        make.bottom.equalTo(self.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+    [self.bottomSureButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-15);
+        make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
+        make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
         make.width.equalTo(@(88.5));
     }];
-    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.top.equalTo(self.bottomView);
         make.height.equalTo(@0.5);
     }];
     
-    [self.bottomUpButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.bottomView.mas_top);
-        make.centerX.equalTo(self.bottomView.mas_centerX);
+    [self.bottomUpButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.bottomView.mpm_top);
+        make.centerX.equalTo(self.bottomView.mpm_centerX);
         make.height.equalTo(@(34));
         make.width.equalTo(@(86));
     }];
-    [self.bottomHiddenView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomHiddenView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.view);
-        make.top.equalTo(self.bottomUpButton.mas_bottom);
+        make.top.equalTo(self.bottomUpButton.mpm_bottom);
         make.height.equalTo(@300);
     }];
-    [self.headerHiddenMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerHiddenMaskView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.view);
         make.height.equalTo(@(kScreenHeight - 300));
-        make.bottom.equalTo(self.view.mas_top).offset(-kNavigationHeight);
+        make.bottom.equalTo(self.view.mpm_top).offset(-kNavigationHeight);
     }];
-    [self.bottomHiddenTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomHiddenTableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.bottomHiddenView);
     }];
 }

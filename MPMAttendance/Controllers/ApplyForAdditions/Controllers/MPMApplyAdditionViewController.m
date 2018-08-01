@@ -61,37 +61,37 @@
 - (void)setupConstraints {
     [super setupConstraints];
     
-    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.scrollView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.containerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.scrollView);
         make.width.equalTo(@(kScreenWidth));
         make.height.equalTo(@554);
     }];
-    [self.leaveImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.containerView.mas_leading).offset(10);
-        make.trailing.equalTo(self.containerView.mas_trailing).offset(-10);
-        make.centerX.equalTo(self.containerView.mas_centerX);
-        make.top.equalTo(self.containerView.mas_top).offset(2.5);
+    [self.leaveImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.containerView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.containerView.mpm_centerX);
+        make.top.equalTo(self.containerView.mpm_top).offset(2.5);
     }];
-    [self.evecationImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.containerView.mas_leading).offset(10);
-        make.trailing.equalTo(self.containerView.mas_trailing).offset(-10);
-        make.centerX.equalTo(self.containerView.mas_centerX);
-        make.top.equalTo(self.leaveImageView.mas_bottom).offset(-5);
+    [self.evecationImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.containerView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.containerView.mpm_centerX);
+        make.top.equalTo(self.leaveImageView.mpm_bottom).offset(-5);
     }];
-    [self.overtimeImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.containerView.mas_leading).offset(10);
-        make.trailing.equalTo(self.containerView.mas_trailing).offset(-10);
-        make.centerX.equalTo(self.containerView.mas_centerX);
-        make.top.equalTo(self.evecationImageView.mas_bottom).offset(-5);
+    [self.overtimeImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.containerView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.containerView.mpm_centerX);
+        make.top.equalTo(self.evecationImageView.mpm_bottom).offset(-5);
     }];
-    [self.goOutImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.containerView.mas_leading).offset(10);
-        make.trailing.equalTo(self.containerView.mas_trailing).offset(-10);
-        make.centerX.equalTo(self.containerView.mas_centerX);
-        make.top.equalTo(self.overtimeImageView.mas_bottom).offset(-5);
+    [self.goOutImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.containerView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.containerView.mpm_centerX);
+        make.top.equalTo(self.overtimeImageView.mpm_bottom).offset(-5);
     }];
 }
 

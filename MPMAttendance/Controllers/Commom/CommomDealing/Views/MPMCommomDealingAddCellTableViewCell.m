@@ -22,7 +22,7 @@
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
         [self.addTimeButton setTitle:btnTitle forState:UIControlStateNormal];
         [self addSubview:self.addTimeButton];
-        [self.addTimeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.addTimeButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.height.equalTo(self);
             make.center.equalTo(self);
             make.width.equalTo(@250);

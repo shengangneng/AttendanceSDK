@@ -208,90 +208,90 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 
 - (void)setupConstraints {
     [super setupConstraints];
-    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.scrollView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.containerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.scrollView);
         make.width.equalTo(@(kScreenWidth));
         make.height.equalTo(@(kScreenHeight - kNavigationHeight - kTabTotalHeight - 0.5));
     }];
-    [self.backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.backImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.equalTo(@(kScreenWidth));
-        make.centerX.equalTo(self.view.mas_centerX);
-        make.top.equalTo(self.containerView.mas_top);
+        make.centerX.equalTo(self.view.mpm_centerX);
+        make.top.equalTo(self.containerView.mpm_top);
         make.height.equalTo(@(167.5));
     }];
-    [self.personImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.containerView.mas_centerX);
-        make.top.equalTo(self.view.mas_top).offset(14);
+    [self.personImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerX.equalTo(self.containerView.mpm_centerX);
+        make.top.equalTo(self.view.mpm_top).offset(14);
         make.width.equalTo(@(80));
         make.height.equalTo(@(80));
     }];
-    [self.selectDateButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.personImageView.mas_top);
-        make.leading.equalTo(self.view.mas_leading).offset(13);
+    [self.selectDateButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.personImageView.mpm_top);
+        make.leading.equalTo(self.view.mpm_leading).offset(13);
         make.width.equalTo(@(80));
         make.height.equalTo(@(25));
     }];
     
-    [self.titleTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.backImageView.mas_centerX);
-        make.top.equalTo(self.personImageView.mas_bottom).offset(10);
+    [self.titleTextField mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerX.equalTo(self.backImageView.mpm_centerX);
+        make.top.equalTo(self.personImageView.mpm_bottom).offset(10);
         make.height.equalTo(@(25));
     }];
     ////////////////////////////////////////////////////////////////////////
-    [self.totalMessageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.backImageView.mas_bottom);
-        make.centerX.equalTo(self.view.mas_centerX);
-        make.width.equalTo(self.view.mas_width).offset(-18);
+    [self.totalMessageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerY.equalTo(self.backImageView.mpm_bottom);
+        make.centerX.equalTo(self.view.mpm_centerX);
+        make.width.equalTo(self.view.mpm_width).offset(-18);
         make.height.equalTo(@69);
     }];
     // 实际出勤天数
-    [self.totalDate mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.totalMessageView.mas_centerY).offset(1);
-        make.centerX.equalTo(self.totalMessageView.mas_centerX).offset(-(kScreenWidth - 24)/3);
+    [self.totalDate mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.totalMessageView.mpm_centerY).offset(1);
+        make.centerX.equalTo(self.totalMessageView.mpm_centerX).offset(-(kScreenWidth - 24)/3);
     }];
-    [self.totalDateTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.totalMessageView.mas_centerY).offset(-1);
-        make.centerX.equalTo(self.totalMessageView.mas_centerX).offset(-(kScreenWidth - 24)/3);
+    [self.totalDateTitle mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.totalMessageView.mpm_centerY).offset(-1);
+        make.centerX.equalTo(self.totalMessageView.mpm_centerX).offset(-(kScreenWidth - 24)/3);
     }];
     // 奖分
-    [self.totalScore mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.totalMessageView.mas_centerY).offset(1);
-        make.centerX.equalTo(self.totalMessageView.mas_centerX);
+    [self.totalScore mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.totalMessageView.mpm_centerY).offset(1);
+        make.centerX.equalTo(self.totalMessageView.mpm_centerX);
     }];
-    [self.totalScroeTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.totalMessageView.mas_centerY).offset(-1);
-        make.centerX.equalTo(self.totalMessageView.mas_centerX);
+    [self.totalScroeTitle mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.totalMessageView.mpm_centerY).offset(-1);
+        make.centerX.equalTo(self.totalMessageView.mpm_centerX);
     }];
     // 扣分
-    [self.totalDeScore mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.totalMessageView.mas_centerY).offset(1);
-        make.centerX.equalTo(self.totalMessageView.mas_centerX).offset((kScreenWidth - 24)/3);
+    [self.totalDeScore mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.totalMessageView.mpm_centerY).offset(1);
+        make.centerX.equalTo(self.totalMessageView.mpm_centerX).offset((kScreenWidth - 24)/3);
     }];
-    [self.totalDeScoreTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.totalMessageView.mas_centerY).offset(-1);
-        make.centerX.equalTo(self.totalMessageView.mas_centerX).offset((kScreenWidth - 24)/3);
+    [self.totalDeScoreTitle mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.totalMessageView.mpm_centerY).offset(-1);
+        make.centerX.equalTo(self.totalMessageView.mpm_centerX).offset((kScreenWidth - 24)/3);
     }];
-    [self.totalLine1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(self.totalMessageView.mas_height).offset(-40);
+    [self.totalLine1 mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.height.equalTo(self.totalMessageView.mpm_height).offset(-40);
         make.width.equalTo(@1);
-        make.centerY.equalTo(self.totalMessageView.mas_centerY);
-        make.centerX.equalTo(self.totalMessageView.mas_centerX).offset(-(kScreenWidth - 24)/6);
+        make.centerY.equalTo(self.totalMessageView.mpm_centerY);
+        make.centerX.equalTo(self.totalMessageView.mpm_centerX).offset(-(kScreenWidth - 24)/6);
     }];
-    [self.totalLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(self.totalMessageView.mas_height).offset(-40);
+    [self.totalLine2 mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.height.equalTo(self.totalMessageView.mpm_height).offset(-40);
         make.width.equalTo(@1);
-        make.centerY.equalTo(self.totalMessageView.mas_centerY);
-        make.centerX.equalTo(self.totalMessageView.mas_centerX).offset((kScreenWidth - 24)/6);
+        make.centerY.equalTo(self.totalMessageView.mpm_centerY);
+        make.centerX.equalTo(self.totalMessageView.mpm_centerX).offset((kScreenWidth - 24)/6);
     }];
     
     ////////////////////////////////////////////////////////////////////////
-    [self.bottomTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomTableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.containerView);
-        make.bottom.equalTo(self.containerView.mas_bottom);
-        make.top.equalTo(self.backImageView.mas_bottom);
+        make.bottom.equalTo(self.containerView.mpm_bottom);
+        make.top.equalTo(self.backImageView.mpm_bottom);
     }];
     
 }
@@ -310,8 +310,35 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 }
 
 - (void)logout:(UIButton *)sender {
-    kAppDelegate.window.rootViewController = [[MPMLoginViewController alloc] init];
+    UIViewController *lastRoot = [MPMShareUser shareUser].lastRootViewController;
+    if (lastRoot) {
+        kAppDelegate.window.rootViewController = lastRoot;
+        UIViewController *controller = [self getCurrentVCFromRoot:lastRoot];
+        [controller.navigationController popViewControllerAnimated:YES];
+    } else {
+        lastRoot = [[MPMLoginViewController alloc] initWithUsername:nil password:nil companyCode:nil];
+        kAppDelegate.window.rootViewController = lastRoot;
+    }
     [[MPMShareUser shareUser] clearData];
+}
+
+- (UIViewController *)getCurrentVCFromRoot:(UIViewController *)root {
+    UIViewController *currentVC;
+    if ([root presentedViewController]) {
+        // 视图是被presented出来的
+        root = [root presentedViewController];
+    }
+    if ([root isKindOfClass:[UITabBarController class]]) {
+        // 根视图为UITabBarController
+        currentVC = [self getCurrentVCFromRoot:[(UITabBarController *)root selectedViewController]];
+    } else if ([root isKindOfClass:[UINavigationController class]]){
+        // 根视图为UINavigationController
+        currentVC = [self getCurrentVCFromRoot:[(UINavigationController *)root visibleViewController]];
+    } else {
+        // 根视图为非导航类
+        currentVC = root;
+    }
+    return currentVC;
 }
 
 #pragma mark - MPMCustomDatePickerViewDelegate

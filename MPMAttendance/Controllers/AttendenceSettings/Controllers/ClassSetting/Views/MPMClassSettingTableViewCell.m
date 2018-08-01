@@ -17,11 +17,11 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self.segmentView addTarget:self action:@selector(segChange:) forControlEvents:UIControlEventValueChanged];
         [self addSubview:self.segmentView];
-        [self.segmentView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.trailing.equalTo(self.mas_trailing).offset(-15);
+        [self.segmentView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.trailing.equalTo(self.mpm_trailing).offset(-15);
             make.width.equalTo(@52);
             make.height.equalTo(@30);
-            make.centerY.equalTo(self.mas_centerY);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
     }
     return self;

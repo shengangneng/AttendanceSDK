@@ -27,65 +27,65 @@
     // 设置Cell底部的阴影
     self.bottomImageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, height - 42.5 - 10 - kShadowOffset/2, kScreenWidth - 20, kShadowOffset)].CGPath;
     
-    MASViewAttribute *preAttribute = self.headerImageView.mas_bottom;
+    MPMViewAttribute *preAttribute = self.headerImageView.mpm_bottom;
     // 范围
-    [self.workScopeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
-        make.trailing.equalTo(self.bottomImageView.mas_trailing);
+    [self.workScopeLabel mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.bottomImageView.mpm_trailing);
         make.top.equalTo(preAttribute).offset(8);
     }];
     if (model.schedulingDepartments.count > 0 || model.schedulingEmplyoees.count > 0) {
-        preAttribute = self.workScopeLabel.mas_bottom;
+        preAttribute = self.workScopeLabel.mpm_bottom;
     }
     
     // 班次
-    [self.classLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
+    [self.classLabel1 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
         make.top.equalTo(preAttribute).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
     if (model.slotTimeDtos.count >= 1) {
-        preAttribute = self.classLabel1.mas_bottom;
+        preAttribute = self.classLabel1.mpm_bottom;
     }
-    [self.classLabel2 mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
+    [self.classLabel2 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
         make.top.equalTo(preAttribute).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
     if (model.slotTimeDtos.count >= 2) {
-        preAttribute = self.classLabel2.mas_bottom;
+        preAttribute = self.classLabel2.mpm_bottom;
     }
-    [self.classLabel3 mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
+    [self.classLabel3 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
         make.top.equalTo(preAttribute).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
     if (model.slotTimeDtos.count >= 3) {
-        preAttribute = self.classLabel3.mas_bottom;
+        preAttribute = self.classLabel3.mpm_bottom;
     }
     
     // 考勤日期
-    [self.workDateLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
+    [self.workDateLabel mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
         make.trailing.equalTo(self.bottomImageView);
         make.top.equalTo(preAttribute).offset(8);
     }];
     if (!kIsNilString(model.cycle)) {
-        preAttribute = self.workDateLabel.mas_bottom;
+        preAttribute = self.workDateLabel.mpm_bottom;
     }
     
     // 地点
-    [self.workLocationLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
+    [self.workLocationLabel mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
         make.trailing.equalTo(self.bottomImageView);
-        make.top.equalTo(self.workDateLabel.mas_bottom).offset(8);
+        make.top.equalTo(self.workDateLabel.mpm_bottom).offset(8);
     }];
     if (!kIsNilString(model.address)) {
-        preAttribute = self.workLocationLabel.mas_bottom;
+        preAttribute = self.workLocationLabel.mpm_bottom;
     }
     // wifi名称
-    [self.workWifiLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(11);
+    [self.workWifiLabel mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(11);
         make.trailing.equalTo(self.bottomImageView);
         make.top.equalTo(preAttribute).offset(8);
     }];
@@ -103,10 +103,10 @@
         self.swipeShowBlock();
     }
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        [self.headerImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.mas_leading).offset(-90);
-            make.trailing.equalTo(self.mas_trailing).offset(-100);
-            make.top.equalTo(self.mas_top).offset(5);
+        [self.headerImageView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.mpm_leading).offset(-90);
+            make.trailing.equalTo(self.mpm_trailing).offset(-100);
+            make.top.equalTo(self.mpm_top).offset(5);
             make.height.equalTo(@44.5);
         }];
         [self layoutIfNeeded];
@@ -123,10 +123,10 @@
 
 - (void)dismissSwipeView {
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        [self.headerImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.mas_leading).offset(10);
-            make.trailing.equalTo(self.mas_trailing).offset(-10);
-            make.top.equalTo(self.mas_top).offset(5);
+        [self.headerImageView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.mpm_leading).offset(10);
+            make.trailing.equalTo(self.mpm_trailing).offset(-10);
+            make.top.equalTo(self.mpm_top).offset(5);
             make.height.equalTo(@44.5);
         }];
         [self layoutIfNeeded];
@@ -184,90 +184,90 @@
 }
 
 - (void)setupConstraints {
-    [self.headerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(10);
-        make.trailing.equalTo(self.mas_trailing).offset(-10);
-        make.top.equalTo(self.mas_top).offset(5);
+    [self.headerImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(10);
+        make.trailing.equalTo(self.mpm_trailing).offset(-10);
+        make.top.equalTo(self.mpm_top).offset(5);
         make.height.equalTo(@44.5);
     }];
-    [self.headerIconView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerIconView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.equalTo(@22);
         make.height.equalTo(@20.5);
-        make.leading.equalTo(self.headerImageView.mas_leading).offset(10);
-        make.centerY.equalTo(self.headerImageView.mas_centerY);
+        make.leading.equalTo(self.headerImageView.mpm_leading).offset(10);
+        make.centerY.equalTo(self.headerImageView.mpm_centerY);
     }];
-    [self.headerTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerTitleLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.height.equalTo(@20.5);
-        make.leading.equalTo(self.headerIconView.mas_trailing).offset(10);
-        make.centerY.equalTo(self.headerImageView.mas_centerY);
+        make.leading.equalTo(self.headerIconView.mpm_trailing).offset(10);
+        make.centerY.equalTo(self.headerImageView.mpm_centerY);
     }];
-    [self.headerEditButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerEditButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.equalTo(@19);
         make.height.equalTo(@19.5);
-        make.trailing.equalTo(self.headerImageView.mas_trailing).offset(-10);
-        make.centerY.equalTo(self.headerImageView.mas_centerY);
+        make.trailing.equalTo(self.headerImageView.mpm_trailing).offset(-10);
+        make.centerY.equalTo(self.headerImageView.mpm_centerY);
     }];
     
-    [self.bottomImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.headerImageView.mas_leading);
+    [self.bottomImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.headerImageView.mpm_leading);
         make.trailing.equalTo(self.headerImageView);
-        make.top.equalTo(self.headerImageView.mas_bottom).offset(-5);
-        make.bottom.equalTo(self.mas_bottom).offset(-5);
+        make.top.equalTo(self.headerImageView.mpm_bottom).offset(-5);
+        make.bottom.equalTo(self.mpm_bottom).offset(-5);
     }];
     
     // 范围
-    [self.workScopeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
-        make.trailing.equalTo(self.bottomImageView.mas_trailing);
-        make.top.equalTo(self.headerImageView.mas_bottom).offset(8);
+    [self.workScopeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.bottomImageView.mpm_trailing);
+        make.top.equalTo(self.headerImageView.mpm_bottom).offset(8);
     }];
     
     // 班次
-    [self.classLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
-        make.top.equalTo(self.workScopeLabel.mas_bottom).offset(8);
+    [self.classLabel1 mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
+        make.top.equalTo(self.workScopeLabel.mpm_bottom).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
-    [self.classLabel2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
-        make.top.equalTo(self.classLabel1.mas_bottom).offset(8);
+    [self.classLabel2 mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
+        make.top.equalTo(self.classLabel1.mpm_bottom).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
-    [self.classLabel3 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
-        make.top.equalTo(self.classLabel2.mas_bottom).offset(8);
+    [self.classLabel3 mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
+        make.top.equalTo(self.classLabel2.mpm_bottom).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
     
     // 考勤日期
-    [self.workDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
+    [self.workDateLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
         make.trailing.equalTo(self.bottomImageView);
-        make.top.equalTo(self.classLabel3.mas_bottom).offset(8);
+        make.top.equalTo(self.classLabel3.mpm_bottom).offset(8);
     }];
     
     // 地点
-    [self.workLocationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
+    [self.workLocationLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
         make.trailing.equalTo(self.bottomImageView);
-        make.top.equalTo(self.workDateLabel.mas_bottom).offset(8);
+        make.top.equalTo(self.workDateLabel.mpm_bottom).offset(8);
     }];
     // wifi名称
-    [self.workWifiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomImageView.mas_leading).offset(10);
+    [self.workWifiLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
         make.trailing.equalTo(self.bottomImageView);
-        make.top.equalTo(self.workLocationLabel.mas_bottom).offset(8);
+        make.top.equalTo(self.workLocationLabel.mpm_bottom).offset(8);
     }];
     // 左滑视图
-    [self.swipeView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.headerImageView.mas_trailing).offset(10);
+    [self.swipeView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.headerImageView.mpm_trailing).offset(10);
         make.width.equalTo(@80);
-        make.bottom.equalTo(self.mas_bottom).offset(-5);
-        make.top.equalTo(self.mas_top).offset(5);
+        make.bottom.equalTo(self.mpm_bottom).offset(-5);
+        make.top.equalTo(self.mpm_top).offset(5);
     }];
-    [self.swipeTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.swipeView.mas_centerX);
-        make.centerY.equalTo(self.swipeView.mas_centerY);
+    [self.swipeTitleLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerX.equalTo(self.swipeView.mpm_centerX);
+        make.centerY.equalTo(self.swipeView.mpm_centerY);
         make.width.equalTo(@80);
         make.height.equalTo(@30);
     }];

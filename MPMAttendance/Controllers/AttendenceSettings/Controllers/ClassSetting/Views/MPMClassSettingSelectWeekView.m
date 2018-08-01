@@ -57,31 +57,31 @@ typedef void(^CompleteBlock)(NSString *cycle);
 }
 
 - (void)setupConstaints {
-    [self.backMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.backMaskView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self);
     }];
-    [self.mainContentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(45);
-        make.trailing.equalTo(self.mas_trailing).offset(-45);
+    [self.mainContentView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(45);
+        make.trailing.equalTo(self.mpm_trailing).offset(-45);
         make.height.equalTo(@(kClassSettingTableViewHeight*7+61));
-        make.centerX.equalTo(self.mas_centerX);
-        make.centerY.equalTo(self.mas_centerY);
+        make.centerX.equalTo(self.mpm_centerX);
+        make.centerY.equalTo(self.mpm_centerY);
     }];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.tableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.height.equalTo(@(kClassSettingTableViewHeight*7));
         make.leading.trailing.top.equalTo(self.mainContentView);
     }];
-    [self.backButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mainContentView.mas_leading).offset(12);
-        make.top.equalTo(self.tableView.mas_bottom).offset(12);
-        make.bottom.equalTo(self.mainContentView.mas_bottom).offset(-12);
-        make.width.equalTo(self.sureButton.mas_width);
-        make.trailing.equalTo(self.sureButton.mas_leading).offset(-12);
+    [self.backButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mainContentView.mpm_leading).offset(12);
+        make.top.equalTo(self.tableView.mpm_bottom).offset(12);
+        make.bottom.equalTo(self.mainContentView.mpm_bottom).offset(-12);
+        make.width.equalTo(self.sureButton.mpm_width);
+        make.trailing.equalTo(self.sureButton.mpm_leading).offset(-12);
     }];
-    [self.sureButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.tableView.mas_bottom).offset(12);
-        make.bottom.equalTo(self.mainContentView.mas_bottom).offset(-12);
-        make.trailing.equalTo(self.mainContentView.mas_trailing).offset(-12);
+    [self.sureButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.tableView.mpm_bottom).offset(12);
+        make.bottom.equalTo(self.mainContentView.mpm_bottom).offset(-12);
+        make.trailing.equalTo(self.mainContentView.mpm_trailing).offset(-12);
     }];
 }
 
@@ -118,7 +118,7 @@ typedef void(^CompleteBlock)(NSString *cycle);
 
 - (void)sure:(UIButton *)sender {
     if (self.tableView.indexPathsForSelectedRows.count == 0) {
-        [SVProgressHUD showErrorWithStatus:@"请选择日期"];
+        [MPMProgressHUD showErrorWithStatus:@"请选择日期"];
         return;
     }
     NSString *cycle = [self translateDayToString:self.tableView.indexPathsForSelectedRows];

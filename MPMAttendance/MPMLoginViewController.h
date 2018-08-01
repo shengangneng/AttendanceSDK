@@ -10,6 +10,7 @@
 
 @interface MPMLoginViewController : UIViewController
 
-- (void)autoLogin;
+- (void)autoLogin;/** 仅供 */
+- (instancetype)initWithUsername:(NSString *)username password:(NSString *)password companyCode:(NSString *)companyCode;
 
 @end

@@ -232,7 +232,7 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
     [super setupSubViews];
     self.headerSectionView = [[MPMApprovalProcessHeaderSectionView alloc] initWithFirstSectionArray:self.firstSectionMessageArray];
     [self.view addSubview:self.headerSectionView];
-    [self.headerSectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerSectionView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.height.equalTo(@85);
         make.top.leading.trailing.equalTo(self.view);
     }];
@@ -255,11 +255,11 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
                         [strongself.bottomSingleRightButton setTitle:@"撤回" forState:UIControlStateNormal];
                         [strongself.bottomSingleRightButton setTitle:@"撤回" forState:UIControlStateHighlighted];
                         strongself.passToDetailTitles = @[@"撤回"];
-                        [strongself.bottomDoubleLeftButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomView.mas_leading);
+                        [strongself.bottomDoubleLeftButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomView.mpm_leading);
                             make.width.equalTo(@0);
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
                         [strongself setSelectIndexPath:indexPath forSectionType:forMyApplyType];
                     }break;
@@ -275,17 +275,17 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
                         [strongself.bottomSingleRightButton setTitle:@"提交" forState:UIControlStateNormal];
                         [strongself.bottomSingleRightButton setTitle:@"提交" forState:UIControlStateHighlighted];
                         strongself.passToDetailTitles = @[@"删除",@"编辑",@"提交"];
-                        [strongself.bottomDoubleLeftButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomView.mas_leading).offset(PX_H(23));
+                        [strongself.bottomDoubleLeftButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomView.mpm_leading).offset(PX_H(23));
                             make.width.equalTo(@((kScreenWidth - PX_H(69))/2));
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
-                        [strongself.bottomSingleRightButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomDoubleLeftButton.mas_trailing).offset(PX_H(23));
-                            make.trailing.equalTo(strongself.bottomView.mas_trailing).offset(-PX_H(23));
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                        [strongself.bottomSingleRightButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomDoubleLeftButton.mpm_trailing).offset(PX_H(23));
+                            make.trailing.equalTo(strongself.bottomView.mpm_trailing).offset(-PX_H(23));
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
                         [strongself setSelectIndexPath:indexPath forSectionType:forMyApplyType];
                     }break;
@@ -296,17 +296,17 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
                         [strongself.bottomSingleRightButton setTitle:@"提交" forState:UIControlStateNormal];
                         [strongself.bottomSingleRightButton setTitle:@"提交" forState:UIControlStateHighlighted];
                         strongself.passToDetailTitles = @[@"删除",@"编辑",@"提交"];
-                        [strongself.bottomDoubleLeftButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomView.mas_leading).offset(PX_H(23));
+                        [strongself.bottomDoubleLeftButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomView.mpm_leading).offset(PX_H(23));
                             make.width.equalTo(@((kScreenWidth - PX_H(69))/2));
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
-                        [strongself.bottomSingleRightButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomDoubleLeftButton.mas_trailing).offset(PX_H(23));
-                            make.trailing.equalTo(strongself.bottomView.mas_trailing).offset(-PX_H(23));
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                        [strongself.bottomSingleRightButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomDoubleLeftButton.mpm_trailing).offset(PX_H(23));
+                            make.trailing.equalTo(strongself.bottomView.mpm_trailing).offset(-PX_H(23));
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
                         [strongself setSelectIndexPath:indexPath forSectionType:forMyApplyType];
                     }break;
@@ -317,17 +317,17 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
                         [strongself.bottomSingleRightButton setTitle:@"提交" forState:UIControlStateNormal];
                         [strongself.bottomSingleRightButton setTitle:@"提交" forState:UIControlStateHighlighted];
                         strongself.passToDetailTitles = @[@"删除",@"编辑",@"提交"];
-                        [strongself.bottomDoubleLeftButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomView.mas_leading).offset(PX_H(23));
+                        [strongself.bottomDoubleLeftButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomView.mpm_leading).offset(PX_H(23));
                             make.width.equalTo(@((kScreenWidth - PX_H(69))/2));
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
-                        [strongself.bottomSingleRightButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomDoubleLeftButton.mas_trailing).offset(PX_H(23));
-                            make.trailing.equalTo(strongself.bottomView.mas_trailing).offset(-PX_H(23));
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                        [strongself.bottomSingleRightButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomDoubleLeftButton.mpm_trailing).offset(PX_H(23));
+                            make.trailing.equalTo(strongself.bottomView.mpm_trailing).offset(-PX_H(23));
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
                         [strongself setSelectIndexPath:indexPath forSectionType:forMyApplyType];
                     }break;
@@ -345,17 +345,17 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
                         [strongself.bottomSingleRightButton setTitle:@"驳回" forState:UIControlStateNormal];
                         [strongself.bottomSingleRightButton setTitle:@"驳回" forState:UIControlStateHighlighted];
                         strongself.passToDetailTitles = @[@"通过",@"驳回"];
-                        [strongself.bottomDoubleLeftButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomView.mas_leading).offset(PX_H(23));
+                        [strongself.bottomDoubleLeftButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomView.mpm_leading).offset(PX_H(23));
                             make.width.equalTo(@((kScreenWidth - PX_H(69))/2));
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
-                        [strongself.bottomSingleRightButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomDoubleLeftButton.mas_trailing).offset(PX_H(23));
-                            make.trailing.equalTo(strongself.bottomView.mas_trailing).offset(-PX_H(23));
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                        [strongself.bottomSingleRightButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomDoubleLeftButton.mpm_trailing).offset(PX_H(23));
+                            make.trailing.equalTo(strongself.bottomView.mpm_trailing).offset(-PX_H(23));
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
                         [strongself setSelectIndexPath:indexPath forSectionType:forMyApprovalType];
                     }break;
@@ -364,11 +364,11 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
                         [strongself.bottomSingleRightButton setTitle:@"驳回" forState:UIControlStateNormal];
                         [strongself.bottomSingleRightButton setTitle:@"驳回" forState:UIControlStateHighlighted];
                         strongself.passToDetailTitles = @[@"驳回"];
-                        [strongself.bottomDoubleLeftButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-                            make.leading.equalTo(strongself.bottomView.mas_leading);
+                        [strongself.bottomDoubleLeftButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                            make.leading.equalTo(strongself.bottomView.mpm_leading);
                             make.width.equalTo(@0);
-                            make.top.equalTo(strongself.bottomView.mas_top).offset(BottomViewTopMargin);
-                            make.bottom.equalTo(strongself.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+                            make.top.equalTo(strongself.bottomView.mpm_top).offset(BottomViewTopMargin);
+                            make.bottom.equalTo(strongself.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
                         }];
                         [strongself setSelectIndexPath:indexPath forSectionType:forMyApprovalType];
                     }
@@ -435,36 +435,36 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
     [super setupConstraints];
     
     // Bottom
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.tableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.bottom.equalTo(self.view);
-        make.top.equalTo(self.headerSectionView.mas_bottom);
+        make.top.equalTo(self.headerSectionView.mpm_bottom);
     }];
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(kAppDelegate.window);
         make.height.equalTo(@(BottomViewHeight));
-        make.top.equalTo(kAppDelegate.window.mas_bottom);
+        make.top.equalTo(kAppDelegate.window.mpm_bottom);
     }];
-    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.top.equalTo(self.bottomView);
         make.height.equalTo(@0.5);
     }];
-    [self.bottomDoubleLeftButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomView.mas_leading);
+    [self.bottomDoubleLeftButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomView.mpm_leading);
         make.width.equalTo(@0);
-        make.top.equalTo(self.bottomView.mas_top).offset(BottomViewTopMargin);
-        make.bottom.equalTo(self.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+        make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
+        make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
     }];
-    [self.bottomSingleRightButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.bottomDoubleLeftButton.mas_trailing).offset(12);
-        make.trailing.equalTo(self.bottomView.mas_trailing).offset(-12);
-        make.top.equalTo(self.bottomView.mas_top).offset(BottomViewTopMargin);
-        make.bottom.equalTo(self.bottomView.mas_bottom).offset(-BottomViewBottomMargin);
+    [self.bottomSingleRightButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.bottomDoubleLeftButton.mpm_trailing).offset(12);
+        make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-12);
+        make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
+        make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
     }];
-    [self.noMessageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.noMessageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.height.equalTo(@(190));
         make.width.equalTo(@(190));
-        make.centerY.equalTo(self.tableView.mas_centerY).offset(-10);
-        make.centerX.equalTo(self.tableView.mas_centerX);
+        make.centerY.equalTo(self.tableView.mpm_centerY).offset(-10);
+        make.centerX.equalTo(self.tableView.mpm_centerX);
     }];
 }
 
@@ -507,10 +507,10 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
     self.navigationItem.rightBarButtonItem.customView.hidden = NO;
     // 2、底部按钮消失
     [UIView animateWithDuration:0.5 animations:^{
-        [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.bottomView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
             make.leading.trailing.equalTo(kAppDelegate.window);
             make.height.equalTo(@(BottomViewHeight));
-            make.top.equalTo(kAppDelegate.window.mas_bottom);
+            make.top.equalTo(kAppDelegate.window.mpm_bottom);
         }];
         [self.view layoutIfNeeded];
     }];
@@ -526,10 +526,10 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
     self.navigationItem.rightBarButtonItem.customView.hidden = YES;
     // 2、底部弹出按钮
     [UIView animateWithDuration:0.5 animations:^{
-        [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.bottomView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
             make.leading.trailing.equalTo(kAppDelegate.window);
             make.height.equalTo(@(BottomViewHeight));
-            make.top.equalTo(kAppDelegate.window.mas_bottom).offset(-BottomViewHeight);
+            make.top.equalTo(kAppDelegate.window.mpm_bottom).offset(-BottomViewHeight);
         }];
         [self.view layoutIfNeeded];
     }];

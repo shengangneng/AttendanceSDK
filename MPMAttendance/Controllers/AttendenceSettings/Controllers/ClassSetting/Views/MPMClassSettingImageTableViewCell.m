@@ -16,16 +16,16 @@
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
         [self addSubview:self.detailImageView];
         [self addSubview:self.detailTxLabel];
-        [self.detailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.detailImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.width.equalTo(@20);
             make.height.equalTo(@18.5);
-            make.trailing.equalTo(self.mas_trailing).offset(-15);
-            make.centerY.equalTo(self.mas_centerY);
+            make.trailing.equalTo(self.mpm_trailing).offset(-15);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
-        [self.detailTxLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.detailTxLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.top.bottom.equalTo(self);
-            make.leading.equalTo(self.textLabel.mas_trailing).offset(5);
-            make.trailing.equalTo(self.detailImageView.mas_leading).offset(-5);
+            make.leading.equalTo(self.textLabel.mpm_trailing).offset(5);
+            make.trailing.equalTo(self.detailImageView.mpm_leading).offset(-5);
         }];
     }
     return self;

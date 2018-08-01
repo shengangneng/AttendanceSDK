@@ -33,19 +33,19 @@
 }
 
 - (void)setupConstraints {
-    [self.dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.dateLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self);
-        make.top.equalTo(self.mas_top).offset(PX_H(5));
-        make.height.equalTo(self.mas_height).multipliedBy(0.5);
+        make.top.equalTo(self.mpm_top).offset(PX_H(5));
+        make.height.equalTo(self.mpm_height).multipliedBy(0.5);
     }];
-    [self.workTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.workTypeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self);
-        make.bottom.equalTo(self.mas_bottom).offset(-PX_H(5));
-        make.height.equalTo(self.mas_height).multipliedBy(0.5);
+        make.bottom.equalTo(self.mpm_bottom).offset(-PX_H(5));
+        make.height.equalTo(self.mpm_height).multipliedBy(0.5);
     }];
-    [self.workStatusImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.dateLabel.mas_top);
-        make.centerX.equalTo(self.mas_centerX).offset(PX_H(25));
+    [self.workStatusImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.dateLabel.mpm_top);
+        make.centerX.equalTo(self.mpm_centerX).offset(PX_H(25));
         make.height.width.equalTo(@(PX_W(20)));
     }];
 }

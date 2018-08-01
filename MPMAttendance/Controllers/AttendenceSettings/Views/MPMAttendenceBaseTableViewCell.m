@@ -38,18 +38,18 @@
 }
 
 - (void)setupConstraints {
-    [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(13);
+    [self.iconView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.mpm_leading).offset(13);
         make.width.height.equalTo(@24);
-        make.centerY.equalTo(self.mas_centerY);
+        make.centerY.equalTo(self.mpm_centerY);
     }];
-    [self.txLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.iconView.mas_trailing).offset(13);
-        make.centerY.equalTo(self.mas_centerY);
+    [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.iconView.mpm_trailing).offset(13);
+        make.centerY.equalTo(self.mpm_centerY);
     }];
-    [self.signSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.trailing.equalTo(self.mas_trailing).offset(-15);
-        make.centerY.equalTo(self.mas_centerY);
+    [self.signSwitch mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.trailing.equalTo(self.mpm_trailing).offset(-15);
+        make.centerY.equalTo(self.mpm_centerY);
     }];
 }
 

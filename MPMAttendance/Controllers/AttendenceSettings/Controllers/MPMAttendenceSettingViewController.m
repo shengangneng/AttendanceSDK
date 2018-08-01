@@ -73,11 +73,11 @@
 
 - (void)setupConstraints {
     [super setupConstraints];
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.tableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
     [self.tableView setContentInset:UIEdgeInsetsMake(6, 0, 6, 0)];
-    [self.addClassButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.addClassButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.trailing.equalTo(self.view).offset(-12.5);
         make.bottom.equalTo(self.view).offset(-12);
         make.width.height.equalTo(@50);

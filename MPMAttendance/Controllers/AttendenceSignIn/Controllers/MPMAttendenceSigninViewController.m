@@ -174,66 +174,66 @@
 - (void)setupConstraints {
     [super setupConstraints];
     // header
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.top.equalTo(self.view);
         make.height.equalTo(@(PX_H(278)));
     }];
-    [self.headerDateView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerDateView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.equalTo(self.headerView);
-        make.leading.equalTo(self.headerView.mas_leading);
+        make.leading.equalTo(self.headerView.mpm_leading);
         make.height.equalTo(@(PX_H(80)));
         make.width.equalTo(@(kScreenWidth / 2));
     }];
-    [self.headerWeekView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerWeekView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.headerView);
-        make.top.equalTo(self.headerDateView.mas_bottom);
+        make.top.equalTo(self.headerDateView.mpm_bottom);
         make.height.equalTo(@(PX_H(50)));
     }];
-    [self.headerScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.headerScrollView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.view);
-        make.top.equalTo(self.headerWeekView.mas_bottom);
+        make.top.equalTo(self.headerWeekView.mpm_bottom);
         make.height.equalTo(@(PX_H(100)));
     }];
     // middle
-    [self.middleTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.middleTableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.view);
-        make.top.equalTo(self.headerView.mas_bottom);
-        make.bottom.equalTo(self.bottomView.mas_top);
+        make.top.equalTo(self.headerView.mpm_bottom);
+        make.bottom.equalTo(self.bottomView.mpm_top);
     }];
-    [self.tableViewLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.headerView.mas_bottom);
-        make.bottom.equalTo(self.bottomView.mas_top);
+    [self.tableViewLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.headerView.mpm_bottom);
+        make.bottom.equalTo(self.bottomView.mpm_top);
         make.width.equalTo(@1);
-        make.leading.equalTo(self.middleTableView.mas_leading).offset(29);
+        make.leading.equalTo(self.middleTableView.mpm_leading).offset(29);
     }];
-    [self.noMessageView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.noMessageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.equalTo(@150);
         make.height.equalTo(@150);
-        make.centerX.equalTo(self.middleTableView.mas_centerX);
-        make.centerY.equalTo(self.middleTableView.mas_centerY);
+        make.centerX.equalTo(self.middleTableView.mpm_centerX);
+        make.centerY.equalTo(self.middleTableView.mpm_centerY);
     }];
     // bottom
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.view.mas_leading);
-        make.trailing.equalTo(self.view.mas_trailing);
-        make.bottom.equalTo(self.view.mas_bottom);
+    [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.view.mpm_leading);
+        make.trailing.equalTo(self.view.mpm_trailing);
+        make.bottom.equalTo(self.view.mpm_bottom);
         make.height.equalTo(@(175));
     }];
-    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.top.equalTo(self.bottomView);
         make.height.equalTo(@6);
     }];
-    [self.bottomRoundButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.bottomView.mas_top).offset(29);
-        make.centerX.equalTo(self.view.mas_centerX);
+    [self.bottomRoundButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.bottomView.mpm_top).offset(29);
+        make.centerX.equalTo(self.view.mpm_centerX);
         make.width.height.equalTo(@94);
     }];
-    [self.bottomLocationButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view.mas_bottom).offset(-15);
-        make.centerX.equalTo(self.view.mas_centerX);
+    [self.bottomLocationButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.view.mpm_bottom).offset(-15);
+        make.centerX.equalTo(self.view.mpm_centerX);
         make.height.equalTo(@(17));
-        make.leading.greaterThanOrEqualTo(self.view.mas_leading).offset(30);
-        make.trailing.greaterThanOrEqualTo(self.view.mas_trailing).offset(-30);
+        make.leading.greaterThanOrEqualTo(self.view.mpm_leading).offset(30);
+        make.trailing.greaterThanOrEqualTo(self.view.mpm_trailing).offset(-30);
     }];
 }
 
@@ -542,28 +542,28 @@
     } else {
         params = @{@"address":address,@"brushDate":brushDate,@"brushDateCount":brushDateCount,@"employeeId":employeeId,@"status":status,@"type":type,@"schedulingEmployeeId":schedulingEmployeeId,@"schedulingEmployeeType":schedulingEmployeeType,@"signType":signType};
     }
-    [SVProgressHUD showWithStatus:@"正在打卡"];
+    [MPMProgressHUD showWithStatus:@"正在打卡"];
     
     [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
-        [SVProgressHUD dismiss];
+        [MPMProgressHUD dismiss];
         DLog(@"%@",response);
         id dataObj = response[@"dataObj"];
         if ([dataObj isKindOfClass:[NSNull class]] || ([dataObj isKindOfClass:[NSArray class]] && ((NSArray *)dataObj).count == 0)) {
-            [SVProgressHUD showErrorWithStatus:response[@"message"]];
+            [MPMProgressHUD showErrorWithStatus:response[@"message"]];
         } else {
             [self getDataWithDate:[NSDate date]];
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
         if ([error containsString:@"早退"]) {
-            [SVProgressHUD dismiss];
+            [MPMProgressHUD dismiss];
             __weak typeof (self) weakself = self;
             [self showAlertControllerToLogoutWithMessage:error sureAction:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
                 [strongself signForEarly:YES];
             } needCancleButton:YES];
         } else {
-            [SVProgressHUD showErrorWithStatus:error];
+            [MPMProgressHUD showErrorWithStatus:error];
         }
     }];
 }
