@@ -117,18 +117,22 @@
     } else {
         self.textViewClearButton.hidden = NO;
     }
-    if (textView.text.length > 30) {
-        textView.text = [textView.text substringToIndex:30];
-    }
-    self.textViewTotalLength.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%ld/30",textView.text.length]];
-    if (self.changeTextBlock) {
-        self.changeTextBlock(textView.text);
-    }
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-    if (textView.text.length == 0) {
+    NSString *callbackString = nil;
+    if (textView.text.length > 30) {
+        textView.text = [textView.text substringToIndex:30];
+        callbackString = textView.text;
+    } else if (textView.text.length == 0) {
         textView.text = @"请输入";
+        callbackString = @"";
+    } else {
+        callbackString = textView.text;
+    }
+    self.textViewTotalLength.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%ld/30",callbackString.length]];
+    if (self.changeTextBlock) {
+        self.changeTextBlock(callbackString);
     }
 }
 

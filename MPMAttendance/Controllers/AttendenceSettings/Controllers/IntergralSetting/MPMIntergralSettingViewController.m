@@ -427,6 +427,9 @@
 - (UITableView *)tableView {
     if (!_tableView) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        UITableViewController *tvc = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
+        [self addChildViewController:tvc];
+        _tableView = tvc.tableView;
         [_tableView setContentInset:UIEdgeInsetsMake(0, 0, 5, 0)];
         _tableView.delegate = self;
         _tableView.dataSource = self;
