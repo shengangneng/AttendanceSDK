@@ -12,7 +12,7 @@
 #import "MPMIntergralSettingViewController.h"
 #import "MPMAuthoritySettingViewController.h"
 #import "MPMShareUser.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMSettingSwitchValueModel.h"
 #import "MPMLoginViewController.h"
 #import "MPMApprovalFirstSectionModel.h"
@@ -53,7 +53,7 @@
 - (void)getData {
     // 获取“未关联排班时允许打卡”的信息
     NSString *url = [NSString stringWithFormat:@"%@kqCompanyConfigController/getKqCompanyConfig?token=%@",MPMHost,[MPMShareUser shareUser].token];
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
         if ([response[@"dataObj"] isKindOfClass:[NSDictionary class]]) {
             self.switchValueModel = [[MPMSettingSwitchValueModel alloc] initWithDictionary:response[@"dataObj"]];
         }
@@ -66,7 +66,7 @@
 - (void)getPermissionList {
     
     NSString *url = [NSString stringWithFormat:@"%@ApproveController/getPerimssionList?token=%@&employeeId=%@&perimissionId=%@",MPMHost,[MPMShareUser shareUser].token,[MPMShareUser shareUser].employeeId,PerimissionId];
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
         DLog(@"%@",response);
         if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
             NSArray *permission = response[@"dataObj"];
@@ -124,7 +124,7 @@
         __strong typeof (weakself) strongself = weakself;
         NSString *url = [NSString stringWithFormat:@"%@kqCompanyConfigController/kqCompanyConfigSet?token=%@",MPMHost,[MPMShareUser shareUser].token];
         NSDictionary *params = @{@"companyId":strongself.switchValueModel.companyId,@"id":strongself.switchValueModel.mpm_id,@"validAttend":(sender.isOn?@"1":@"0")};
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
             // 修改成功
             strongself.switchValueModel.validAttend = (sender.isOn?@"1":@"0");
             [strongself.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];

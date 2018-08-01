@@ -9,7 +9,7 @@
 #import "MPMLoginViewController.h"
 #import "MPMMainTabBarViewController.h"
 #import "MPMButton.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMDepartment.h"
 #import "NSObject+MPMExtention.h"
@@ -260,7 +260,7 @@
     NSString *url = [MPMHost stringByAppendingString:@"index"];
     NSDictionary *params = @{@"userName":self.middleUserTextField.text,@"password":self.middlePassTextField.text,@"companyCode":self.middleCompTextField.text};
     
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在登录" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在登录" success:^(id response) {
         DLog(@"%@",response);
         NSDictionary *dic = response;
         NSDictionary *data = dic[@"dataObj"];
@@ -277,8 +277,8 @@
 
 - (void)autoLogin {
     static BOOL canEnter = YES;
-    @synchronized(self){
-        if(canEnter){
+    @synchronized(self) {
+        if(canEnter) {
             canEnter = NO;
             if ([[MPMShareUser shareUser] getUserFromCoreData]) {
                 NSString *url = [MPMHost stringByAppendingString:@"index"];
@@ -287,7 +287,7 @@
                 NSString *companyName = [MPMShareUser shareUser].companyName;
                 NSDictionary *params = @{@"userName":username,@"password":password,@"companyCode":companyName};
                 
-                [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+                [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
                     canEnter = YES;
                     DLog(@"%@",response);
                     NSDictionary *dic = response;
@@ -316,7 +316,7 @@
 
 - (void)getPerrimition {
     NSString *url = [NSString stringWithFormat:@"%@ApproveController/getPerimssionList?employeeId=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,[MPMShareUser shareUser].token];
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
         [MPMShareUser shareUser].perimissionArray = response[@"dataObj"];
         [[MPMShareUser shareUser] saveOrUpdateUserToCoreData];
         kAppDelegate.window.rootViewController = [[MPMMainTabBarViewController alloc] init];

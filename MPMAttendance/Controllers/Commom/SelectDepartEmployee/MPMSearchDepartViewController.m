@@ -8,7 +8,7 @@
 
 #import "MPMSearchDepartViewController.h"
 #import "MPMSearchPopAnimate.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMDepartEmployeeHelper.h"
 #import "MPMDepartment.h"
@@ -337,7 +337,7 @@
     NSString *url = [NSString stringWithFormat:@"%@getQueryObject?token=%@&queryStr=%@",MPMHost,[MPMShareUser shareUser].token,text];
     NSString *encodingUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
     NSDictionary *params = @{@"token":[MPMShareUser shareUser].token,@"quertStr":text};
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:encodingUrl params:params success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:encodingUrl params:params success:^(id response) {
         DLog(@"%@",response);
         if (response[@"dataObj"] && [response[@"dataObj"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dataObj = response[@"dataObj"];

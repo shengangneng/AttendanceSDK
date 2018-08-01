@@ -7,7 +7,7 @@
 //
 
 #import "MPMAttendenceSettingViewController.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMAttendenceSettingModel.h"
 #import "MPMButton.h"
@@ -87,7 +87,7 @@
 - (void)getData {
     NSString *url  = [NSString stringWithFormat:@"%@schedulingSetting/getSchedulingByCompanyId?token=%@",MPMHost,[MPMShareUser shareUser].token];
     NSDictionary *params = @{@"companyId":[MPMShareUser shareUser].departmentId};
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
         NSArray *arr = response[@"dataObj"];
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
         for (int i = 0; i < arr.count; i++) {
@@ -272,7 +272,7 @@
 - (void)attendenceSetTableCellDidDeleteWithModel:(MPMAttendenceSettingModel *)model {
     [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"确定删除\"%@\"的排班信息吗",model.schedulingName] sureAction:^(UIAlertAction * _Nonnull action) {
         NSString *url = [NSString stringWithFormat:@"%@schedulingSetting/deleteScheduling?schedulingId=%@&token=%@",MPMHost,model.schedulingId,[MPMShareUser shareUser].token];
-        [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在删除" success:^(id response) {
+        [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在删除" success:^(id response) {
             [self getData];
             [self.lastCell dismissSwipeView];
         } failure:^(NSString *error) {

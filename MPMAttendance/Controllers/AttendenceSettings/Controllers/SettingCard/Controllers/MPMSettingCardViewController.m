@@ -13,7 +13,7 @@
 #import "MPMTableHeaderView.h"
 #import "MPMAttendencePickerView.h"
 #import "MPMShareUser.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMPlaceInfoModel.h"
 #import "MPMSettingCardAddressWifiModel.h"
 /** 地图 */
@@ -108,7 +108,7 @@
 
 - (void)getData {
     NSString *url = [NSString stringWithFormat:@"%@cardSettingController/getCardSettingBySchedulingId?schedulingId=%@&token=%@",MPMHost,self.schedulingId,[MPMShareUser shareUser].token];
-    [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
         NSArray *arr = response[@"dataObj"];
         if (arr && arr.count > 0) {
             for (int i = 0; i < arr.count; i++) {
@@ -151,7 +151,7 @@
                             @"schedulingId":kSafeString(self.schedulingId),
                             }];
     }
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
         __weak typeof(self) weakself = self;
         [self showAlertControllerToLogoutWithMessage:@"保存成功！" sureAction:^(UIAlertAction * _Nonnull action) {
             __strong typeof(weakself) strongself = weakself;

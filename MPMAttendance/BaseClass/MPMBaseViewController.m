@@ -8,7 +8,7 @@
 
 #import "MPMBaseViewController.h"
 #import "MPMButton.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 
 @interface MPMBaseViewController () <UIGestureRecognizerDelegate>
 
@@ -30,7 +30,7 @@
 
 /** 添加网络监控 */
 - (void)addNetworkMonitoring {
-    [[MPMHTTPSessionManager shareManager] startNetworkMonitoringWithStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+    [[MPMSessionManager shareManager] startNetworkMonitoringWithStatusChangeBlock:^(MPMNetworkReachabilityStatus status) {
         // 处理网络状态不可用的情况
     }];
 }

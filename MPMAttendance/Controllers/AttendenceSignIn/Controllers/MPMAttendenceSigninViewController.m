@@ -19,7 +19,7 @@
 #import "MPMAttendenceTableViewCell.h"
 #import "MPMCalendarWeekView.h"
 #import "MPMCalendarScrollView.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMAttendencePickerView.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import <CoreLocation/CoreLocation.h>
@@ -247,7 +247,7 @@
     NSString *dateString = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
     NSString *url = [NSString stringWithFormat:@"%@schedulingSetting/getPunchTheClockTime?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateString,[MPMShareUser shareUser].token];
     NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateString,@"token":[MPMShareUser shareUser].token};
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
         if ([response[@"dataObj"] isKindOfClass:[NSDictionary class]]) {
             // 清空之前的数据
             self.attendenceAddressArray = nil;
@@ -338,7 +338,7 @@
     NSString *dateString = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
     NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getExchangeWorkByApprover?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateString,[MPMShareUser shareUser].token];
     NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateString,@"token":[MPMShareUser shareUser].token};
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
         NSArray *dataObj = response[@"dataObj"];
         NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
         for (int i = 0; i < dataObj.count; i++) {
@@ -374,7 +374,7 @@
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
         NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getExchangeWorkByApprover?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateCurrentMonth,[MPMShareUser shareUser].token];
         NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateCurrentMonth,@"token":[MPMShareUser shareUser].token};
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
             NSArray *dataObj = response[@"dataObj"];
             NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
             for (int i = 0; i < dataObj.count; i++) {
@@ -393,7 +393,7 @@
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
         NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getExchangeWorkByApprover?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateLastMonth,[MPMShareUser shareUser].token];
         NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateLastMonth,@"token":[MPMShareUser shareUser].token};
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
             NSArray *dataObj = response[@"dataObj"];
             NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
             for (int i = 0; i < dataObj.count; i++) {
@@ -412,7 +412,7 @@
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
         NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getExchangeWorkByApprover?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateNextMonth,[MPMShareUser shareUser].token];
         NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateNextMonth,@"token":[MPMShareUser shareUser].token};
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
             NSArray *dataObj = response[@"dataObj"];
             NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
             for (int i = 0; i < dataObj.count; i++) {
@@ -544,7 +544,7 @@
     }
     [SVProgressHUD showWithStatus:@"正在打卡"];
     
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
         [SVProgressHUD dismiss];
         DLog(@"%@",response);
         id dataObj = response[@"dataObj"];

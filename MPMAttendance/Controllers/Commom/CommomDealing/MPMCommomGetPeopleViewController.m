@@ -10,7 +10,7 @@
 #import "MPMButton.h"
 #import "MPMGetPeopleTableViewCell.h"
 #import "MPMTableHeaderView.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMGetPeopleModel.h"
 #import "MPMHiddenTableViewDataSourceDelegate.h"
@@ -169,7 +169,7 @@
 
 - (void)getData {
     NSString *url = [NSString stringWithFormat:@"%@getPeopleList?code=%@&token=%@",MPMHost,self.code,[MPMShareUser shareUser].token];
-    [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
         if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
             NSArray *dataObj = response[@"dataObj"];
             NSMutableArray *temp = [NSMutableArray arrayWithCapacity:dataObj.count];

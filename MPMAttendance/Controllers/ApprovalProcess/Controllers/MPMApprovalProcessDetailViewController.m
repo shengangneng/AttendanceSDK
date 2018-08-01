@@ -12,7 +12,7 @@
 #import "MPMApprovalFetchDetailModel.h"
 #import "MPMApprovalProcessDetailTableViewCell.h"
 #import "MPMShareUser.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import "MPMDetailTimeMessageView.h"
 #import "MPMBaseDealingViewController.h"
@@ -93,7 +93,7 @@
 - (void)getDataOfExchangeId:(NSString *)exchangeId image:(NSString *)image text:(NSString *)text {
     NSString *url = [NSString stringWithFormat:@"%@ApproveController/getAttendanceApproveList?token=%@",MPMHost,[MPMShareUser shareUser].token];
     NSDictionary *params = @{@"exchangeId":kSafeString(exchangeId)};
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
         if ([response[@"dataObj"][@"obj"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dic = response[@"dataObj"][@"obj"];
             self.causation = [[MPMApprovalCausationModel alloc] initWithDictionary:dic];
@@ -354,7 +354,7 @@
         NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
         NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":@"",@"status":self.causation.status};
         [params addObject:dic];
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             // 需要跳回上一个页面
             [self.navigationController popViewControllerAnimated:YES];
         } failure:^(NSString *error) {
@@ -366,7 +366,7 @@
         NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
         NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":@"",@"status":self.causation.status};
         [params addObject:dic];
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             // 跳回上一个页面
             [self.navigationController popViewControllerAnimated:YES];
         } failure:^(NSString *error) {
@@ -423,7 +423,7 @@
         NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
         NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":@"",@"status":self.causation.status};
         [params addObject:dic];
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             // 跳回上一个页面
             [self.navigationController popViewControllerAnimated:YES];
         } failure:^(NSString *error) {
@@ -435,7 +435,7 @@
         NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
         NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":@"",@"status":self.causation.status};
         [params addObject:dic];
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             // 跳回上一个页面
             [self.navigationController popViewControllerAnimated:YES];
         } failure:^(NSString *error) {
@@ -451,7 +451,7 @@
             NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
             NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":kSafeString(self.causation.rejectReason),@"status":self.causation.status};
             [params addObject:dic];
-            [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+            [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
                 // 跳回上一个页面
                 [self.navigationController popViewControllerAnimated:YES];
             } failure:^(NSString *error) {

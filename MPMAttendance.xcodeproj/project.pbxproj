@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		CD47172D2110536400401169 /* MPMCheckRegexTool.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716062110536200401169 /* MPMCheckRegexTool.m */; };
 		CD47172E2110536400401169 /* MPMCheckRegexTool.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716072110536200401169 /* MPMCheckRegexTool.h */; };
-		CD47172F2110536400401169 /* MPMHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716092110536200401169 /* MPMHTTPSessionManager.h */; };
+		CD47172F2110536400401169 /* MPMSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716092110536200401169 /* MPMSessionManager.h */; };
 		CD4717302110536400401169 /* MPMShareUser.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47160A2110536200401169 /* MPMShareUser.m */; };
-		CD4717312110536400401169 /* MPMHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47160B2110536200401169 /* MPMHTTPSessionManager.m */; };
+		CD4717312110536400401169 /* MPMSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47160B2110536200401169 /* MPMSessionManager.m */; };
 		CD4717322110536400401169 /* MPMShareUser.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47160C2110536200401169 /* MPMShareUser.h */; };
 		CD4717332110536400401169 /* NSDateFormatter+MPMExtention.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47160E2110536200401169 /* NSDateFormatter+MPMExtention.h */; };
 		CD4717342110536400401169 /* UIImage+MPMExtention.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47160F2110536200401169 /* UIImage+MPMExtention.h */; };
@@ -251,39 +251,39 @@
 		CD47181F2110536400401169 /* MPMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47172C2110536400401169 /* MPMButton.m */; };
 		CD4718222110536C00401169 /* MPMLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718202110536C00401169 /* MPMLoginViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CD4718232110536C00401169 /* MPMLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4718212110536C00401169 /* MPMLoginViewController.m */; };
-		CD4718252110538900401169 /* AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718242110538900401169 /* AFNetworking.h */; };
-		CD47182A2110539100401169 /* AFURLSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718262110539100401169 /* AFURLSessionManager.h */; };
-		CD47182B2110539100401169 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4718272110539100401169 /* AFHTTPSessionManager.m */; };
-		CD47182C2110539100401169 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4718282110539100401169 /* AFURLSessionManager.m */; };
-		CD47182D2110539100401169 /* AFHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718292110539100401169 /* AFHTTPSessionManager.h */; };
-		CD4718302110539600401169 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47182E2110539600401169 /* AFNetworkReachabilityManager.m */; };
-		CD4718312110539600401169 /* AFNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47182F2110539600401169 /* AFNetworkReachabilityManager.h */; };
-		CD4718342110539F00401169 /* AFSecurityPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718322110539F00401169 /* AFSecurityPolicy.h */; };
-		CD4718352110539F00401169 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4718332110539F00401169 /* AFSecurityPolicy.m */; };
-		CD47183A211053A600401169 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471836211053A600401169 /* AFURLRequestSerialization.m */; };
-		CD47183B211053A600401169 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471837211053A600401169 /* AFURLResponseSerialization.m */; };
-		CD47183C211053A600401169 /* AFURLRequestSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471838211053A600401169 /* AFURLRequestSerialization.h */; };
-		CD47183D211053A600401169 /* AFURLResponseSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471839211053A600401169 /* AFURLResponseSerialization.h */; };
-		CD471852211053C100401169 /* AFImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47183E211053BF00401169 /* AFImageDownloader.h */; };
-		CD471853211053C100401169 /* UIButton+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47183F211053BF00401169 /* UIButton+AFNetworking.h */; };
-		CD471854211053C100401169 /* AFAutoPurgingImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471840211053BF00401169 /* AFAutoPurgingImageCache.h */; };
-		CD471855211053C100401169 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471841211053BF00401169 /* UIImageView+AFNetworking.h */; };
-		CD471856211053C100401169 /* AFNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471842211053BF00401169 /* AFNetworkActivityIndicatorManager.h */; };
-		CD471857211053C100401169 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471843211053BF00401169 /* UIImageView+AFNetworking.m */; };
-		CD471858211053C100401169 /* AFAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471844211053BF00401169 /* AFAutoPurgingImageCache.m */; };
-		CD471859211053C100401169 /* UIProgressView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471845211053BF00401169 /* UIProgressView+AFNetworking.m */; };
-		CD47185A211053C100401169 /* UIProgressView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471846211053C000401169 /* UIProgressView+AFNetworking.h */; };
-		CD47185B211053C100401169 /* UIActivityIndicatorView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471847211053C000401169 /* UIActivityIndicatorView+AFNetworking.h */; };
-		CD47185C211053C100401169 /* UIWebView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471848211053C000401169 /* UIWebView+AFNetworking.h */; };
-		CD47185D211053C100401169 /* UIImage+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471849211053C000401169 /* UIImage+AFNetworking.h */; };
-		CD47185E211053C100401169 /* UIButton+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47184A211053C000401169 /* UIButton+AFNetworking.m */; };
-		CD47185F211053C100401169 /* UIKit+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47184B211053C000401169 /* UIKit+AFNetworking.h */; };
-		CD471860211053C100401169 /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47184C211053C100401169 /* AFNetworkActivityIndicatorManager.m */; };
-		CD471861211053C100401169 /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47184D211053C100401169 /* UIRefreshControl+AFNetworking.m */; };
-		CD471862211053C100401169 /* UIActivityIndicatorView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47184E211053C100401169 /* UIActivityIndicatorView+AFNetworking.m */; };
-		CD471863211053C100401169 /* UIRefreshControl+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47184F211053C100401169 /* UIRefreshControl+AFNetworking.h */; };
-		CD471864211053C100401169 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471850211053C100401169 /* UIWebView+AFNetworking.m */; };
-		CD471865211053C100401169 /* AFImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471851211053C100401169 /* AFImageDownloader.m */; };
+		CD4718252110538900401169 /* MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718242110538900401169 /* MPMNetworking.h */; };
+		CD47182A2110539100401169 /* MPMURLSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718262110539100401169 /* MPMURLSessionManager.h */; };
+		CD47182B2110539100401169 /* MPMHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4718272110539100401169 /* MPMHTTPSessionManager.m */; };
+		CD47182C2110539100401169 /* MPMURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4718282110539100401169 /* MPMURLSessionManager.m */; };
+		CD47182D2110539100401169 /* MPMHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718292110539100401169 /* MPMHTTPSessionManager.h */; };
+		CD4718302110539600401169 /* MPMNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47182E2110539600401169 /* MPMNetworkReachabilityManager.m */; };
+		CD4718312110539600401169 /* MPMNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47182F2110539600401169 /* MPMNetworkReachabilityManager.h */; };
+		CD4718342110539F00401169 /* MPMSecurityPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718322110539F00401169 /* MPMSecurityPolicy.h */; };
+		CD4718352110539F00401169 /* MPMSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4718332110539F00401169 /* MPMSecurityPolicy.m */; };
+		CD47183A211053A600401169 /* MPMURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471836211053A600401169 /* MPMURLRequestSerialization.m */; };
+		CD47183B211053A600401169 /* MPMURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471837211053A600401169 /* MPMURLResponseSerialization.m */; };
+		CD47183C211053A600401169 /* MPMURLRequestSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471838211053A600401169 /* MPMURLRequestSerialization.h */; };
+		CD47183D211053A600401169 /* MPMURLResponseSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471839211053A600401169 /* MPMURLResponseSerialization.h */; };
+		CD471852211053C100401169 /* MPMImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47183E211053BF00401169 /* MPMImageDownloader.h */; };
+		CD471853211053C100401169 /* UIButton+MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47183F211053BF00401169 /* UIButton+MPMNetworking.h */; };
+		CD471854211053C100401169 /* MPMAutoPurgingImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471840211053BF00401169 /* MPMAutoPurgingImageCache.h */; };
+		CD471855211053C100401169 /* UIImageView+MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471841211053BF00401169 /* UIImageView+MPMNetworking.h */; };
+		CD471856211053C100401169 /* MPMNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471842211053BF00401169 /* MPMNetworkActivityIndicatorManager.h */; };
+		CD471857211053C100401169 /* UIImageView+MPMNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471843211053BF00401169 /* UIImageView+MPMNetworking.m */; };
+		CD471858211053C100401169 /* MPMAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471844211053BF00401169 /* MPMAutoPurgingImageCache.m */; };
+		CD471859211053C100401169 /* UIProgressView+MPMNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471845211053BF00401169 /* UIProgressView+MPMNetworking.m */; };
+		CD47185A211053C100401169 /* UIProgressView+MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471846211053C000401169 /* UIProgressView+MPMNetworking.h */; };
+		CD47185B211053C100401169 /* UIActivityIndicatorView+MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471847211053C000401169 /* UIActivityIndicatorView+MPMNetworking.h */; };
+		CD47185C211053C100401169 /* UIWebView+MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471848211053C000401169 /* UIWebView+MPMNetworking.h */; };
+		CD47185D211053C100401169 /* UIImage+MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471849211053C000401169 /* UIImage+MPMNetworking.h */; };
+		CD47185E211053C100401169 /* UIButton+MPMNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47184A211053C000401169 /* UIButton+MPMNetworking.m */; };
+		CD47185F211053C100401169 /* UIKit+MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47184B211053C000401169 /* UIKit+MPMNetworking.h */; };
+		CD471860211053C100401169 /* MPMNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47184C211053C100401169 /* MPMNetworkActivityIndicatorManager.m */; };
+		CD471861211053C100401169 /* UIRefreshControl+MPMNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47184D211053C100401169 /* UIRefreshControl+MPMNetworking.m */; };
+		CD471862211053C100401169 /* UIActivityIndicatorView+MPMNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47184E211053C100401169 /* UIActivityIndicatorView+MPMNetworking.m */; };
+		CD471863211053C100401169 /* UIRefreshControl+MPMNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47184F211053C100401169 /* UIRefreshControl+MPMNetworking.h */; };
+		CD471864211053C100401169 /* UIWebView+MPMNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471850211053C100401169 /* UIWebView+MPMNetworking.m */; };
+		CD471865211053C100401169 /* MPMImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = CD471851211053C100401169 /* MPMImageDownloader.m */; };
 		CD47187F211053CF00401169 /* MASConstraintMaker.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471866211053CC00401169 /* MASConstraintMaker.h */; };
 		CD471880211053CF00401169 /* MASUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471867211053CC00401169 /* MASUtilities.h */; };
 		CD471881211053CF00401169 /* MASViewConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = CD471868211053CC00401169 /* MASViewConstraint.h */; };
@@ -326,9 +326,9 @@
 		CD4715FA21104EF200401169 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD4716062110536200401169 /* MPMCheckRegexTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCheckRegexTool.m; sourceTree = "<group>"; };
 		CD4716072110536200401169 /* MPMCheckRegexTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCheckRegexTool.h; sourceTree = "<group>"; };
-		CD4716092110536200401169 /* MPMHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMHTTPSessionManager.h; sourceTree = "<group>"; };
+		CD4716092110536200401169 /* MPMSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSessionManager.h; sourceTree = "<group>"; };
 		CD47160A2110536200401169 /* MPMShareUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMShareUser.m; sourceTree = "<group>"; };
-		CD47160B2110536200401169 /* MPMHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMHTTPSessionManager.m; sourceTree = "<group>"; };
+		CD47160B2110536200401169 /* MPMSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSessionManager.m; sourceTree = "<group>"; };
 		CD47160C2110536200401169 /* MPMShareUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMShareUser.h; sourceTree = "<group>"; };
 		CD47160E2110536200401169 /* NSDateFormatter+MPMExtention.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+MPMExtention.h"; sourceTree = "<group>"; };
 		CD47160F2110536200401169 /* UIImage+MPMExtention.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MPMExtention.h"; sourceTree = "<group>"; };
@@ -568,39 +568,39 @@
 		CD47172C2110536400401169 /* MPMButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMButton.m; sourceTree = "<group>"; };
 		CD4718202110536C00401169 /* MPMLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMLoginViewController.h; sourceTree = "<group>"; };
 		CD4718212110536C00401169 /* MPMLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMLoginViewController.m; sourceTree = "<group>"; };
-		CD4718242110538900401169 /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
-		CD4718262110539100401169 /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
-		CD4718272110539100401169 /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
-		CD4718282110539100401169 /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
-		CD4718292110539100401169 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
-		CD47182E2110539600401169 /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
-		CD47182F2110539600401169 /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
-		CD4718322110539F00401169 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
-		CD4718332110539F00401169 /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFSecurityPolicy.m; sourceTree = "<group>"; };
-		CD471836211053A600401169 /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLRequestSerialization.m; sourceTree = "<group>"; };
-		CD471837211053A600401169 /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
-		CD471838211053A600401169 /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLRequestSerialization.h; sourceTree = "<group>"; };
-		CD471839211053A600401169 /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLResponseSerialization.h; sourceTree = "<group>"; };
-		CD47183E211053BF00401169 /* AFImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageDownloader.h; sourceTree = "<group>"; };
-		CD47183F211053BF00401169 /* UIButton+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+AFNetworking.h"; sourceTree = "<group>"; };
-		CD471840211053BF00401169 /* AFAutoPurgingImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFAutoPurgingImageCache.h; sourceTree = "<group>"; };
-		CD471841211053BF00401169 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
-		CD471842211053BF00401169 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
-		CD471843211053BF00401169 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
-		CD471844211053BF00401169 /* AFAutoPurgingImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFAutoPurgingImageCache.m; sourceTree = "<group>"; };
-		CD471845211053BF00401169 /* UIProgressView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIProgressView+AFNetworking.m"; sourceTree = "<group>"; };
-		CD471846211053C000401169 /* UIProgressView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIProgressView+AFNetworking.h"; sourceTree = "<group>"; };
-		CD471847211053C000401169 /* UIActivityIndicatorView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActivityIndicatorView+AFNetworking.h"; sourceTree = "<group>"; };
-		CD471848211053C000401169 /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
-		CD471849211053C000401169 /* UIImage+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AFNetworking.h"; sourceTree = "<group>"; };
-		CD47184A211053C000401169 /* UIButton+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+AFNetworking.m"; sourceTree = "<group>"; };
-		CD47184B211053C000401169 /* UIKit+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+AFNetworking.h"; sourceTree = "<group>"; };
-		CD47184C211053C100401169 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
-		CD47184D211053C100401169 /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
-		CD47184E211053C100401169 /* UIActivityIndicatorView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActivityIndicatorView+AFNetworking.m"; sourceTree = "<group>"; };
-		CD47184F211053C100401169 /* UIRefreshControl+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIRefreshControl+AFNetworking.h"; sourceTree = "<group>"; };
-		CD471850211053C100401169 /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
-		CD471851211053C100401169 /* AFImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageDownloader.m; sourceTree = "<group>"; };
+		CD4718242110538900401169 /* MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMNetworking.h; sourceTree = "<group>"; };
+		CD4718262110539100401169 /* MPMURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMURLSessionManager.h; sourceTree = "<group>"; };
+		CD4718272110539100401169 /* MPMHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMHTTPSessionManager.m; sourceTree = "<group>"; };
+		CD4718282110539100401169 /* MPMURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMURLSessionManager.m; sourceTree = "<group>"; };
+		CD4718292110539100401169 /* MPMHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMHTTPSessionManager.h; sourceTree = "<group>"; };
+		CD47182E2110539600401169 /* MPMNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMNetworkReachabilityManager.m; sourceTree = "<group>"; };
+		CD47182F2110539600401169 /* MPMNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMNetworkReachabilityManager.h; sourceTree = "<group>"; };
+		CD4718322110539F00401169 /* MPMSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSecurityPolicy.h; sourceTree = "<group>"; };
+		CD4718332110539F00401169 /* MPMSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSecurityPolicy.m; sourceTree = "<group>"; };
+		CD471836211053A600401169 /* MPMURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMURLRequestSerialization.m; sourceTree = "<group>"; };
+		CD471837211053A600401169 /* MPMURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMURLResponseSerialization.m; sourceTree = "<group>"; };
+		CD471838211053A600401169 /* MPMURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMURLRequestSerialization.h; sourceTree = "<group>"; };
+		CD471839211053A600401169 /* MPMURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMURLResponseSerialization.h; sourceTree = "<group>"; };
+		CD47183E211053BF00401169 /* MPMImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMImageDownloader.h; sourceTree = "<group>"; };
+		CD47183F211053BF00401169 /* UIButton+MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+MPMNetworking.h"; sourceTree = "<group>"; };
+		CD471840211053BF00401169 /* MPMAutoPurgingImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAutoPurgingImageCache.h; sourceTree = "<group>"; };
+		CD471841211053BF00401169 /* UIImageView+MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+MPMNetworking.h"; sourceTree = "<group>"; };
+		CD471842211053BF00401169 /* MPMNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
+		CD471843211053BF00401169 /* UIImageView+MPMNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+MPMNetworking.m"; sourceTree = "<group>"; };
+		CD471844211053BF00401169 /* MPMAutoPurgingImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAutoPurgingImageCache.m; sourceTree = "<group>"; };
+		CD471845211053BF00401169 /* UIProgressView+MPMNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIProgressView+MPMNetworking.m"; sourceTree = "<group>"; };
+		CD471846211053C000401169 /* UIProgressView+MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIProgressView+MPMNetworking.h"; sourceTree = "<group>"; };
+		CD471847211053C000401169 /* UIActivityIndicatorView+MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActivityIndicatorView+MPMNetworking.h"; sourceTree = "<group>"; };
+		CD471848211053C000401169 /* UIWebView+MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+MPMNetworking.h"; sourceTree = "<group>"; };
+		CD471849211053C000401169 /* UIImage+MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MPMNetworking.h"; sourceTree = "<group>"; };
+		CD47184A211053C000401169 /* UIButton+MPMNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+MPMNetworking.m"; sourceTree = "<group>"; };
+		CD47184B211053C000401169 /* UIKit+MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+MPMNetworking.h"; sourceTree = "<group>"; };
+		CD47184C211053C100401169 /* MPMNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
+		CD47184D211053C100401169 /* UIRefreshControl+MPMNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIRefreshControl+MPMNetworking.m"; sourceTree = "<group>"; };
+		CD47184E211053C100401169 /* UIActivityIndicatorView+MPMNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActivityIndicatorView+MPMNetworking.m"; sourceTree = "<group>"; };
+		CD47184F211053C100401169 /* UIRefreshControl+MPMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIRefreshControl+MPMNetworking.h"; sourceTree = "<group>"; };
+		CD471850211053C100401169 /* UIWebView+MPMNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+MPMNetworking.m"; sourceTree = "<group>"; };
+		CD471851211053C100401169 /* MPMImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMImageDownloader.m; sourceTree = "<group>"; };
 		CD471866211053CC00401169 /* MASConstraintMaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASConstraintMaker.h; sourceTree = "<group>"; };
 		CD471867211053CC00401169 /* MASUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASUtilities.h; sourceTree = "<group>"; };
 		CD471868211053CC00401169 /* MASViewConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASViewConstraint.h; sourceTree = "<group>"; };
@@ -697,39 +697,39 @@
 		CD471602211052A800401169 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				CD4718242110538900401169 /* AFNetworking.h */,
-				CD4718292110539100401169 /* AFHTTPSessionManager.h */,
-				CD4718272110539100401169 /* AFHTTPSessionManager.m */,
-				CD4718262110539100401169 /* AFURLSessionManager.h */,
-				CD4718282110539100401169 /* AFURLSessionManager.m */,
-				CD47182F2110539600401169 /* AFNetworkReachabilityManager.h */,
-				CD47182E2110539600401169 /* AFNetworkReachabilityManager.m */,
-				CD4718322110539F00401169 /* AFSecurityPolicy.h */,
-				CD4718332110539F00401169 /* AFSecurityPolicy.m */,
-				CD471838211053A600401169 /* AFURLRequestSerialization.h */,
-				CD471836211053A600401169 /* AFURLRequestSerialization.m */,
-				CD471839211053A600401169 /* AFURLResponseSerialization.h */,
-				CD471837211053A600401169 /* AFURLResponseSerialization.m */,
-				CD471840211053BF00401169 /* AFAutoPurgingImageCache.h */,
-				CD471844211053BF00401169 /* AFAutoPurgingImageCache.m */,
-				CD47183E211053BF00401169 /* AFImageDownloader.h */,
-				CD471851211053C100401169 /* AFImageDownloader.m */,
-				CD471842211053BF00401169 /* AFNetworkActivityIndicatorManager.h */,
-				CD47184C211053C100401169 /* AFNetworkActivityIndicatorManager.m */,
-				CD471847211053C000401169 /* UIActivityIndicatorView+AFNetworking.h */,
-				CD47184E211053C100401169 /* UIActivityIndicatorView+AFNetworking.m */,
-				CD47183F211053BF00401169 /* UIButton+AFNetworking.h */,
-				CD47184A211053C000401169 /* UIButton+AFNetworking.m */,
-				CD471849211053C000401169 /* UIImage+AFNetworking.h */,
-				CD471841211053BF00401169 /* UIImageView+AFNetworking.h */,
-				CD471843211053BF00401169 /* UIImageView+AFNetworking.m */,
-				CD47184B211053C000401169 /* UIKit+AFNetworking.h */,
-				CD471846211053C000401169 /* UIProgressView+AFNetworking.h */,
-				CD471845211053BF00401169 /* UIProgressView+AFNetworking.m */,
-				CD47184F211053C100401169 /* UIRefreshControl+AFNetworking.h */,
-				CD47184D211053C100401169 /* UIRefreshControl+AFNetworking.m */,
-				CD471848211053C000401169 /* UIWebView+AFNetworking.h */,
-				CD471850211053C100401169 /* UIWebView+AFNetworking.m */,
+				CD4718242110538900401169 /* MPMNetworking.h */,
+				CD4718292110539100401169 /* MPMHTTPSessionManager.h */,
+				CD4718272110539100401169 /* MPMHTTPSessionManager.m */,
+				CD4718262110539100401169 /* MPMURLSessionManager.h */,
+				CD4718282110539100401169 /* MPMURLSessionManager.m */,
+				CD47182F2110539600401169 /* MPMNetworkReachabilityManager.h */,
+				CD47182E2110539600401169 /* MPMNetworkReachabilityManager.m */,
+				CD4718322110539F00401169 /* MPMSecurityPolicy.h */,
+				CD4718332110539F00401169 /* MPMSecurityPolicy.m */,
+				CD471838211053A600401169 /* MPMURLRequestSerialization.h */,
+				CD471836211053A600401169 /* MPMURLRequestSerialization.m */,
+				CD471839211053A600401169 /* MPMURLResponseSerialization.h */,
+				CD471837211053A600401169 /* MPMURLResponseSerialization.m */,
+				CD471840211053BF00401169 /* MPMAutoPurgingImageCache.h */,
+				CD471844211053BF00401169 /* MPMAutoPurgingImageCache.m */,
+				CD47183E211053BF00401169 /* MPMImageDownloader.h */,
+				CD471851211053C100401169 /* MPMImageDownloader.m */,
+				CD471842211053BF00401169 /* MPMNetworkActivityIndicatorManager.h */,
+				CD47184C211053C100401169 /* MPMNetworkActivityIndicatorManager.m */,
+				CD471847211053C000401169 /* UIActivityIndicatorView+MPMNetworking.h */,
+				CD47184E211053C100401169 /* UIActivityIndicatorView+MPMNetworking.m */,
+				CD47183F211053BF00401169 /* UIButton+MPMNetworking.h */,
+				CD47184A211053C000401169 /* UIButton+MPMNetworking.m */,
+				CD471849211053C000401169 /* UIImage+MPMNetworking.h */,
+				CD471841211053BF00401169 /* UIImageView+MPMNetworking.h */,
+				CD471843211053BF00401169 /* UIImageView+MPMNetworking.m */,
+				CD47184B211053C000401169 /* UIKit+MPMNetworking.h */,
+				CD471846211053C000401169 /* UIProgressView+MPMNetworking.h */,
+				CD471845211053BF00401169 /* UIProgressView+MPMNetworking.m */,
+				CD47184F211053C100401169 /* UIRefreshControl+MPMNetworking.h */,
+				CD47184D211053C100401169 /* UIRefreshControl+MPMNetworking.m */,
+				CD471848211053C000401169 /* UIWebView+MPMNetworking.h */,
+				CD471850211053C100401169 /* UIWebView+MPMNetworking.m */,
 			);
 			path = AFNetworking;
 			sourceTree = "<group>";
@@ -794,9 +794,9 @@
 		CD4716082110536200401169 /* ShareInstance */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716092110536200401169 /* MPMHTTPSessionManager.h */,
+				CD4716092110536200401169 /* MPMSessionManager.h */,
 				CD47160A2110536200401169 /* MPMShareUser.m */,
-				CD47160B2110536200401169 /* MPMHTTPSessionManager.m */,
+				CD47160B2110536200401169 /* MPMSessionManager.m */,
 				CD47160C2110536200401169 /* MPMShareUser.h */,
 			);
 			path = ShareInstance;
@@ -1441,7 +1441,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD4718222110536C00401169 /* MPMLoginViewController.h in Headers */,
-				CD47182A2110539100401169 /* AFURLSessionManager.h in Headers */,
+				CD47182A2110539100401169 /* MPMURLSessionManager.h in Headers */,
 				CD47177B2110536400401169 /* MPMAttendenceModel.h in Headers */,
 				CD47188F211053CF00401169 /* Masonry.h in Headers */,
 				CD4717F82110536400401169 /* MPMAttendenceSetTableViewCell.h in Headers */,
@@ -1459,7 +1459,7 @@
 				CD47188E211053CF00401169 /* MASViewAttribute.h in Headers */,
 				CD4717542110536400401169 /* MPMDealingModel.h in Headers */,
 				CD47178E2110536400401169 /* MPMCalendarWeekView.h in Headers */,
-				CD4718342110539F00401169 /* AFSecurityPolicy.h in Headers */,
+				CD4718342110539F00401169 /* MPMSecurityPolicy.h in Headers */,
 				CD4717982110536400401169 /* MPMApprovalProcessViewController.h in Headers */,
 				CD4717CD2110536400401169 /* MPMClassSettingViewController.h in Headers */,
 				CD47181D2110536400401169 /* MPMImageView.h in Headers */,
@@ -1468,7 +1468,7 @@
 				CD4717742110536400401169 /* MPMApplyAdditionViewController.h in Headers */,
 				CD4717572110536400401169 /* MPMCausationTypeData.h in Headers */,
 				CD4717342110536400401169 /* UIImage+MPMExtention.h in Headers */,
-				CD4718252110538900401169 /* AFNetworking.h in Headers */,
+				CD4718252110538900401169 /* MPMNetworking.h in Headers */,
 				CD4717402110536400401169 /* NSMutableArray+MPMExtention.h in Headers */,
 				CD4717932110536400401169 /* MPMApprovalCausationModel.h in Headers */,
 				CD47178D2110536400401169 /* MPMCalendarScrollView.h in Headers */,
@@ -1479,8 +1479,8 @@
 				CD4717822110536400401169 /* MPMAttendenceSigninViewController.h in Headers */,
 				CD47177A2110536400401169 /* MPMAttendencePickerTypeModel.h in Headers */,
 				CD4717D72110536400401169 /* MPMClassSettingSelectWeekTableViewCell.h in Headers */,
-				CD47172F2110536400401169 /* MPMHTTPSessionManager.h in Headers */,
-				CD471863211053C100401169 /* UIRefreshControl+AFNetworking.h in Headers */,
+				CD47172F2110536400401169 /* MPMSessionManager.h in Headers */,
+				CD471863211053C100401169 /* UIRefreshControl+MPMNetworking.h in Headers */,
 				CD4717CA2110536400401169 /* MPMSettingTimeViewController.h in Headers */,
 				CD4717C02110536400401169 /* MPMSchedulingEmplyoeeModel.h in Headers */,
 				CD4717AE2110536400401169 /* MPMAttendenceStatisticViewController.h in Headers */,
@@ -1495,17 +1495,17 @@
 				CD4718122110536400401169 /* MPMImageTouchView.h in Headers */,
 				CD4717772110536400401169 /* MPMLerakageCardModel.h in Headers */,
 				CD4717752110536400401169 /* MPMApplyImageView.h in Headers */,
-				CD471856211053C100401169 /* AFNetworkActivityIndicatorManager.h in Headers */,
+				CD471856211053C100401169 /* MPMNetworkActivityIndicatorManager.h in Headers */,
 				CD4717722110536400401169 /* MPMSearchPopAnimate.h in Headers */,
 				CD471885211053CF00401169 /* NSArray+MASAdditions.h in Headers */,
 				CD4717442110536400401169 /* MPMAttendenceMapViewController.h in Headers */,
 				CD4717A92110536400401169 /* MPMApprovalProcessDetailTableViewCell.h in Headers */,
-				CD4718312110539600401169 /* AFNetworkReachabilityManager.h in Headers */,
+				CD4718312110539600401169 /* MPMNetworkReachabilityManager.h in Headers */,
 				CD47179B2110536400401169 /* MPMSiderDrawerCollectionReusableView.h in Headers */,
-				CD47183C211053A600401169 /* AFURLRequestSerialization.h in Headers */,
+				CD47183C211053A600401169 /* MPMURLRequestSerialization.h in Headers */,
 				CD4717EA2110536400401169 /* MPMIntergralSettingViewController.h in Headers */,
 				CD4718A7211053DE00401169 /* SVProgressHUD.h in Headers */,
-				CD471853211053C100401169 /* UIButton+AFNetworking.h in Headers */,
+				CD471853211053C100401169 /* UIButton+MPMNetworking.h in Headers */,
 				CD4717362110536400401169 /* NSString+MPMAttention.h in Headers */,
 				CD4717682110536400401169 /* MPMSearchPushAnimate.h in Headers */,
 				CD4717B12110536400401169 /* MPMStatisticTableViewCell.h in Headers */,
@@ -1529,14 +1529,14 @@
 				CD4718A4211053DE00401169 /* SVIndefiniteAnimatedView.h in Headers */,
 				CD4717E42110536400401169 /* MPMAuthorityTableViewCell.h in Headers */,
 				CD4717902110536400401169 /* MPMApprovalCausationDetailModel.h in Headers */,
-				CD471852211053C100401169 /* AFImageDownloader.h in Headers */,
+				CD471852211053C100401169 /* MPMImageDownloader.h in Headers */,
 				CD4717E92110536400401169 /* MPMAuthoritySettingViewController.h in Headers */,
 				CD47180C2110536400401169 /* MPMBaseViewController.h in Headers */,
 				CD4717832110536400401169 /* MPMRepairSigninAddDealTableViewCell.h in Headers */,
 				CD4717B72110536400401169 /* MPMSettingSwitchValueModel.h in Headers */,
-				CD47185C211053C100401169 /* UIWebView+AFNetworking.h in Headers */,
+				CD47185C211053C100401169 /* UIWebView+MPMNetworking.h in Headers */,
 				CD4717B42110536400401169 /* MPMDepartScrollView.h in Headers */,
-				CD471855211053C100401169 /* UIImageView+AFNetworking.h in Headers */,
+				CD471855211053C100401169 /* UIImageView+MPMNetworking.h in Headers */,
 				CD47177F2110536400401169 /* MPMRepairSigninViewController.h in Headers */,
 				CD4718052110536400401169 /* MPMBaseTableViewCell.h in Headers */,
 				CD4717702110536400401169 /* MPMSelectDepartmentViewController.h in Headers */,
@@ -1550,20 +1550,20 @@
 				CD4717C62110536400401169 /* MPMSettingSwitchTableViewCell.h in Headers */,
 				CD471880211053CF00401169 /* MASUtilities.h in Headers */,
 				CD4718152110536400401169 /* MPMDatePickerView.h in Headers */,
-				CD47182D2110539100401169 /* AFHTTPSessionManager.h in Headers */,
+				CD47182D2110539100401169 /* MPMHTTPSessionManager.h in Headers */,
 				CD4718142110536400401169 /* MPMTableHeaderView.h in Headers */,
-				CD47185D211053C100401169 /* UIImage+AFNetworking.h in Headers */,
+				CD47185D211053C100401169 /* UIImage+MPMNetworking.h in Headers */,
 				CD47188B211053CF00401169 /* MASConstraint+Private.h in Headers */,
 				CD4717602110536400401169 /* MPMCommomDealingTableViewCell.h in Headers */,
 				CD4717E82110536400401169 /* MPMAuthorityModel.h in Headers */,
 				CD47180F2110536400401169 /* ColorConstant.h in Headers */,
 				CD47179F2110536400401169 /* MPMApprovalProcessHeaderSectionView.h in Headers */,
 				CD4717C42110536400401169 /* MPMCreateOrangeTableViewCell.h in Headers */,
-				CD471854211053C100401169 /* AFAutoPurgingImageCache.h in Headers */,
+				CD471854211053C100401169 /* MPMAutoPurgingImageCache.h in Headers */,
 				CD4717F62110536400401169 /* MPMAttendenceSettingTableViewCell.h in Headers */,
 				CD471887211053CF00401169 /* View+MASAdditions.h in Headers */,
 				CD4717E02110536400401169 /* MPMSettingCardTableViewCell.h in Headers */,
-				CD47185B211053C100401169 /* UIActivityIndicatorView+AFNetworking.h in Headers */,
+				CD47185B211053C100401169 /* UIActivityIndicatorView+MPMNetworking.h in Headers */,
 				CD4717C82110536400401169 /* MPMSettingTimeModel.h in Headers */,
 				CD4717DB2110536400401169 /* MPMSettingCardViewController.h in Headers */,
 				CD47180E2110536400401169 /* MPMIntergralConfig.h in Headers */,
@@ -1571,7 +1571,7 @@
 				CD47172E2110536400401169 /* MPMCheckRegexTool.h in Headers */,
 				CD471883211053CF00401169 /* NSArray+MASShorthandAdditions.h in Headers */,
 				CD4717A32110536400401169 /* MPMSiderDrawerCollectionViewButtonCell.h in Headers */,
-				CD47185F211053C100401169 /* UIKit+AFNetworking.h in Headers */,
+				CD47185F211053C100401169 /* UIKit+MPMNetworking.h in Headers */,
 				CD4717E12110536400401169 /* MPMSettingCardDetailTableViewCell.h in Headers */,
 				CD4717D22110536400401169 /* MPMClassSettingSelectWeekView.h in Headers */,
 				CD4718102110536400401169 /* MPMApplyAdditionConfig.h in Headers */,
@@ -1580,7 +1580,7 @@
 				CD471893211053CF00401169 /* NSLayoutConstraint+MASDebugAdditions.h in Headers */,
 				CD4717F32110536400401169 /* MPMIntergralSettingTableViewCell.h in Headers */,
 				CD4717962110536400401169 /* MPMApprovalFetchDetailModel.h in Headers */,
-				CD47183D211053A600401169 /* AFURLResponseSerialization.h in Headers */,
+				CD47183D211053A600401169 /* MPMURLResponseSerialization.h in Headers */,
 				CD4718022110536400401169 /* MPMBaseModel.h in Headers */,
 				CD4717562110536400401169 /* MPMGetPeopleModel.h in Headers */,
 				CD47174E2110536400401169 /* MPMBaseDealingViewController.h in Headers */,
@@ -1598,7 +1598,7 @@
 				CD4717CC2110536400401169 /* MPMAttendenceBaseSettingViewController.h in Headers */,
 				CD4717BA2110536400401169 /* MPMAttendenceSettingModel.h in Headers */,
 				CD4717B22110536400401169 /* MPMStatisticDepartmentTableViewCell.h in Headers */,
-				CD47185A211053C100401169 /* UIProgressView+AFNetworking.h in Headers */,
+				CD47185A211053C100401169 /* UIProgressView+MPMNetworking.h in Headers */,
 				CD4717452110536400401169 /* MPMPlaceInfoModel.h in Headers */,
 				CD4718002110536400401169 /* User+CoreDataClass.h in Headers */,
 			);
@@ -1679,7 +1679,7 @@
 				CD47174A2110536400401169 /* MPMPlaceInfoModel.m in Sources */,
 				CD47174C2110536400401169 /* MPMMapSelectTableViewCell.m in Sources */,
 				CD4717802110536400401169 /* MPMAttendenceSigninViewController.m in Sources */,
-				CD47182C2110539100401169 /* AFURLSessionManager.m in Sources */,
+				CD47182C2110539100401169 /* MPMURLSessionManager.m in Sources */,
 				CD47188C211053CF00401169 /* MASCompositeConstraint.m in Sources */,
 				CD47177C2110536400401169 /* MPMLerakageCardModel.m in Sources */,
 				CD4717862110536400401169 /* MPMRepairSigninAddDealTableViewCell.m in Sources */,
@@ -1687,7 +1687,7 @@
 				CD4717E72110536400401169 /* MPMAuthorityTableViewCell.m in Sources */,
 				CD4717D02110536400401169 /* MPMClassSettingViewController.m in Sources */,
 				CD47172D2110536400401169 /* MPMCheckRegexTool.m in Sources */,
-				CD47185E211053C100401169 /* UIButton+AFNetworking.m in Sources */,
+				CD47185E211053C100401169 /* UIButton+MPMNetworking.m in Sources */,
 				CD4717BD2110536400401169 /* MPMSettingSwitchValueModel.m in Sources */,
 				CD47179D2110536400401169 /* MPMSideDrawerView.m in Sources */,
 				CD4717712110536400401169 /* MPMSearchDepartViewController.m in Sources */,
@@ -1709,7 +1709,7 @@
 				CD4717302110536400401169 /* MPMShareUser.m in Sources */,
 				CD4718A1211053DE00401169 /* SVProgressAnimatedView.m in Sources */,
 				CD4717BE2110536400401169 /* MPMDepartment.m in Sources */,
-				CD47183B211053A600401169 /* AFURLResponseSerialization.m in Sources */,
+				CD47183B211053A600401169 /* MPMURLResponseSerialization.m in Sources */,
 				CD4717AF2110536400401169 /* MPMStatisticDepartmentTableViewCell.m in Sources */,
 				CD4717E52110536400401169 /* MPMAuthorityModel.m in Sources */,
 				CD4717FB2110536400401169 /* MPMCoreDataManager.m in Sources */,
@@ -1719,7 +1719,7 @@
 				CD4717582110536400401169 /* MPMHiddenTableViewDataSourceDelegate.m in Sources */,
 				CD4717B92110536400401169 /* MPMSchedulingEmplyoeeModel.m in Sources */,
 				CD4717C32110536400401169 /* MPMCreateOrangeTableViewCell.m in Sources */,
-				CD471857211053C100401169 /* UIImageView+AFNetworking.m in Sources */,
+				CD471857211053C100401169 /* UIImageView+MPMNetworking.m in Sources */,
 				CD471890211053CF00401169 /* MASConstraint.m in Sources */,
 				CD4717992110536400401169 /* MPMApprovalProcessViewController.m in Sources */,
 				CD47181A2110536400401169 /* MPMAttendencePickerView.m in Sources */,
@@ -1735,19 +1735,19 @@
 				CD4717882110536400401169 /* MPMAttendenceTableViewCell.m in Sources */,
 				CD4717352110536400401169 /* UILabel+MPMExtention.m in Sources */,
 				CD4717A22110536400401169 /* MPMApprovalProcessDetailTableViewCell.m in Sources */,
-				CD4718352110539F00401169 /* AFSecurityPolicy.m in Sources */,
+				CD4718352110539F00401169 /* MPMSecurityPolicy.m in Sources */,
 				CD4717FE2110536400401169 /* User+CoreDataClass.m in Sources */,
 				CD4717AB2110536400401169 /* MPMAttendenceStatisticViewController.m in Sources */,
 				CD4717EB2110536400401169 /* MPMIntergralDefaultData.m in Sources */,
 				CD47180A2110536400401169 /* MPMBaseTableViewCell.m in Sources */,
 				CD4717EC2110536400401169 /* MPMIntergralModel.m in Sources */,
-				CD471859211053C100401169 /* UIProgressView+AFNetworking.m in Sources */,
+				CD471859211053C100401169 /* UIProgressView+MPMNetworking.m in Sources */,
 				CD4717F02110536400401169 /* MPMIntergralSettingTableViewCell.m in Sources */,
 				CD4717432110536400401169 /* JZLocationConverter.m in Sources */,
 				CD4718032110536400401169 /* MPMBaseNavigationController.m in Sources */,
 				CD4717D62110536400401169 /* MPMClassSettingSelectWeekView.m in Sources */,
 				CD47173E2110536400401169 /* UIImage+MPMExtention.m in Sources */,
-				CD471865211053C100401169 /* AFImageDownloader.m in Sources */,
+				CD471865211053C100401169 /* MPMImageDownloader.m in Sources */,
 				CD4717612110536400401169 /* MPMCommomDealingReasonTableViewCell.m in Sources */,
 				CD4718A2211053DE00401169 /* SVIndefiniteAnimatedView.m in Sources */,
 				CD47180D2110536400401169 /* MPMMainTabBarViewController.m in Sources */,
@@ -1764,8 +1764,8 @@
 				CD4718132110536400401169 /* MPMImageView.m in Sources */,
 				CD471891211053CF00401169 /* MASConstraintMaker.m in Sources */,
 				CD47173A2110536400401169 /* NSObject+MPMExtention.m in Sources */,
-				CD471858211053C100401169 /* AFAutoPurgingImageCache.m in Sources */,
-				CD471862211053C100401169 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
+				CD471858211053C100401169 /* MPMAutoPurgingImageCache.m in Sources */,
+				CD471862211053C100401169 /* UIActivityIndicatorView+MPMNetworking.m in Sources */,
 				CD4717732110536400401169 /* MPMApplyAdditionViewController.m in Sources */,
 				CD4718232110536C00401169 /* MPMLoginViewController.m in Sources */,
 				CD4717FA2110536400401169 /* MPMAttendenceBaseTableViewCell.m in Sources */,
@@ -1773,23 +1773,23 @@
 				CD47175B2110536400401169 /* MPMCommomDealingTableViewCell.m in Sources */,
 				CD4717782110536400401169 /* MPMAttendenceModel.m in Sources */,
 				CD47177D2110536400401169 /* MPMAttendencePickerTypeModel.m in Sources */,
-				CD471864211053C100401169 /* UIWebView+AFNetworking.m in Sources */,
+				CD471864211053C100401169 /* UIWebView+MPMNetworking.m in Sources */,
 				CD4717942110536400401169 /* MPMApprovalFirstSectionModel.m in Sources */,
-				CD471860211053C100401169 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				CD471860211053C100401169 /* MPMNetworkActivityIndicatorManager.m in Sources */,
 				CD47178B2110536400401169 /* MPMCalendarWeekView.m in Sources */,
 				CD47179E2110536400401169 /* MPMApprovalProcessTableViewCell.m in Sources */,
 				CD4717F42110536400401169 /* MPMAttendenceBaseSettingViewController.m in Sources */,
 				CD4717CF2110536400401169 /* MPMClassSettingCycleModel.m in Sources */,
-				CD4717312110536400401169 /* MPMHTTPSessionManager.m in Sources */,
+				CD4717312110536400401169 /* MPMSessionManager.m in Sources */,
 				CD4717C72110536400401169 /* MPMSettingTimeModel.m in Sources */,
 				CD4717812110536400401169 /* MPMRepairSigninViewController.m in Sources */,
 				CD47173F2110536400401169 /* NSDateFormatter+MPMExtention.m in Sources */,
-				CD4718302110539600401169 /* AFNetworkReachabilityManager.m in Sources */,
+				CD4718302110539600401169 /* MPMNetworkReachabilityManager.m in Sources */,
 				CD47181F2110536400401169 /* MPMButton.m in Sources */,
 				CD4717D42110536400401169 /* MPMClassSettingSelectWeekTableViewCell.m in Sources */,
-				CD47182B2110539100401169 /* AFHTTPSessionManager.m in Sources */,
+				CD47182B2110539100401169 /* MPMHTTPSessionManager.m in Sources */,
 				CD4717392110536400401169 /* UIButton+MPMExtention.m in Sources */,
-				CD471861211053C100401169 /* UIRefreshControl+AFNetworking.m in Sources */,
+				CD471861211053C100401169 /* UIRefreshControl+MPMNetworking.m in Sources */,
 				CD4717A52110536400401169 /* MPMDetailTimeMessageView.m in Sources */,
 				CD47188A211053CF00401169 /* NSArray+MASAdditions.m in Sources */,
 				CD47175C2110536400401169 /* MPMGetPeopleTableViewCell.m in Sources */,
@@ -1813,7 +1813,7 @@
 				CD4717AA2110536400401169 /* MPMSiderDrawerCollectionViewTimeCell.m in Sources */,
 				CD4718172110536400401169 /* MPMCustomDatePickerView.m in Sources */,
 				CD471888211053CF00401169 /* ViewController+MASAdditions.m in Sources */,
-				CD47183A211053A600401169 /* AFURLRequestSerialization.m in Sources */,
+				CD47183A211053A600401169 /* MPMURLRequestSerialization.m in Sources */,
 				CD47173C2110536400401169 /* NSString+MPMAttention.m in Sources */,
 				CD4717B02110536400401169 /* MPMDepartScrollView.m in Sources */,
 				CD4717622110536400401169 /* MPMHiddenTableViewDeleteCell.m in Sources */,

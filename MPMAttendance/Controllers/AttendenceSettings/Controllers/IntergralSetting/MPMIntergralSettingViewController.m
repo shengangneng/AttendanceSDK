@@ -12,7 +12,7 @@
 #import "MPMIntergralSettingTableViewCell.h"
 #import "UIImage+MPMExtention.h"
 #import "MPMAttendencePickerView.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMIntergralModel.h"
 #import "MPMIntergralDefaultData.h"
@@ -62,7 +62,7 @@
     
     dispatch_group_enter(group);
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
             if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
                 for (int i = 0; i < ((NSArray *)response[@"dataObj"]).count; i++) {
                     NSDictionary *dic = response[@"dataObj"][i];
@@ -89,7 +89,7 @@
     params = @{@"token":[MPMShareUser shareUser].token,@"companyId":kSafeString([MPMShareUser shareUser].companyId),@"integralType":@(1)};
     dispatch_group_enter(group);
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
             if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
                 for (int i = 0; i < ((NSArray *)response[@"dataObj"]).count; i++) {
                     NSDictionary *dic = response[@"dataObj"][i];
@@ -200,7 +200,7 @@
 //        tempDic[@"isTick"] = model.isTick;
 //        [params addObject:tempDic];
 //    }
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:@{@"kqJifenConfig":params} loadingMessage:@"正在保存" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:@{@"kqJifenConfig":params} loadingMessage:@"正在保存" success:^(id response) {
         [self showAlertControllerToLogoutWithMessage:@"保存成功" sureAction:^(UIAlertAction * _Nonnull action) {
             [self.navigationController popViewControllerAnimated:YES];
         } needCancleButton:NO];

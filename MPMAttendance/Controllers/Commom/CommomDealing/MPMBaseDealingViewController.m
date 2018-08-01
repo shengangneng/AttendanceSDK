@@ -10,7 +10,7 @@
 #import "MPMCommomDealingTableViewCell.h"
 #import "MPMAttendencePickerView.h"
 #import "MPMButton.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMSelectDepartmentViewController.h"
 #import "MPMCustomDatePickerView.h"
@@ -129,7 +129,7 @@
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
         dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-            [[MPMHTTPSessionManager shareManager] postRequestWithURL:twoUrl params:twoParams loadingMessage:@"正在加载" success:^(id response) {
+            [[MPMSessionManager shareManager] postRequestWithURL:twoUrl params:twoParams loadingMessage:@"正在加载" success:^(id response) {
                 NSArray *arr = response[@"dataObj"];
                 DLog(@"%@",arr);
                 NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
@@ -156,7 +156,7 @@
             // 获取当月处理次数
             NSString *month = self.dealingModel.brushTime ? [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.brushDate.integerValue/1000 + 28800] withDefineFormatterType:forDateFormatTypeYearMonthBar] : [NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeYearMonthBar];
             NSString *url = [NSString stringWithFormat:@"%@causation/getApproveNumber?employeeId=%@&month=%@&status=%@&number=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,month,status,number,[MPMShareUser shareUser].token];
-            [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil success:^(id response) {
+            [[MPMSessionManager shareManager] getRequestWithURL:url params:nil success:^(id response) {
                 if (response[@"dataObj"] && [response[@"dataObj"] isKindOfClass:[NSNumber class]]) {
                     self.monthDealingCount = [NSString stringWithFormat:@"%@",response[@"dataObj"]];
                 }
@@ -172,7 +172,7 @@
     } else {
         NSString *month = self.dealingModel.brushTime ? [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.brushDate.integerValue/1000 + 28800] withDefineFormatterType:forDateFormatTypeYearMonthBar] : [NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeYearMonthBar];
         NSString *url = [NSString stringWithFormat:@"%@causation/getApproveNumber?employeeId=%@&month=%@&status=%@&number=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,month,status,number,[MPMShareUser shareUser].token];
-        [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil success:^(id response) {
+        [[MPMSessionManager shareManager] getRequestWithURL:url params:nil success:^(id response) {
             if (response[@"dataObj"] && [response[@"dataObj"] isKindOfClass:[NSNumber class]]) {
                 self.monthDealingCount = [NSString stringWithFormat:@"%@",response[@"dataObj"]];
             }
@@ -563,7 +563,7 @@
                    };
     }
     
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在提交" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在提交" success:^(id response) {
         DLog(@"%@",response);
         NSString *message = submitNumber.integerValue == 1 ? @"提交成功" : @"保存成功";
         __weak typeof(self) weakself = self;

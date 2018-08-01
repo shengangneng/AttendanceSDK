@@ -8,7 +8,7 @@
 
 #import "MPMSelectDepartmentViewController.h"
 #import "MPMButton.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMDepartment.h"
 #import "MPMShareUser.h"
 #import "MPMSelectDepartmentTableViewCell.h"
@@ -251,7 +251,7 @@
 - (void)getData {
     NSString *parentId = self.model ? self.model.mpm_id : @"-1";
     NSString *url = [NSString stringWithFormat:@"%@departmentVos?parentId=%@&token=%@&employeeId=%@",MPMHost,parentId,[MPMShareUser shareUser].token,[MPMShareUser shareUser].employeeId];
-    [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
         NSMutableArray *temp = [NSMutableArray array];
         NSArray *tempArr = response[@"dataObj"];
         for (int j = 0; j < tempArr.count ; j++) {
@@ -332,7 +332,7 @@
             dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
                 NSString *employeeId = [MPMDepartEmployeeHelper shareInstance].employees[i].employeeId;
                 NSString *url = [NSString stringWithFormat:@"%@getParentIds?employeeId=%@&token=%@&",MPMHost,employeeId,[MPMShareUser shareUser].token];
-                [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+                [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
                     id emp = response[@"dataObj"];
                     if ([emp isKindOfClass:[NSString class]]) {
                         [[MPMDepartEmployeeHelper shareInstance].allStringData addObject:emp];
@@ -352,7 +352,7 @@
             dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
                 NSString *departmentId = [MPMDepartEmployeeHelper shareInstance].departments[i].departmentId;
                 NSString *url = [NSString stringWithFormat:@"%@getParentIds?departmentId=%@&token=%@&",MPMHost,departmentId,[MPMShareUser shareUser].token];
-                [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+                [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
                     id dep = response[@"dataObj"];
                     if ([dep isKindOfClass:[NSString class]]) {
                         [[MPMDepartEmployeeHelper shareInstance].allStringData addObject:dep];

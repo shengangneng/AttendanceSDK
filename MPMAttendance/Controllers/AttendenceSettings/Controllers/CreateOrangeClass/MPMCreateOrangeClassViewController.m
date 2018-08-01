@@ -12,7 +12,7 @@
 #import "MPMCreateOrangeTableViewCell.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import "MPMSelectDepartmentViewController.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMAttendenceSettingModel.h"
 #import "MPMSchedulingDepartmentsModel.h"
@@ -115,7 +115,7 @@
         return;
     }
     NSString *url = [NSString stringWithFormat:@"%@schedulingSetting/getSchedulingById?schedulingId=%@&token=%@",MPMHost,self.schedulingId,[MPMShareUser shareUser].token];
-    [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
         NSDictionary *dic = response[@"dataObj"];
         self.model = [[MPMAttendenceSettingModel alloc] initWithDictionary:dic];
         NSArray *schedulingDepartments = [dic[@"schedulingDepartments"] isKindOfClass:[NSArray class]] ? dic[@"schedulingDepartments"] : @[];
@@ -195,7 +195,7 @@
         params = @{@"companyId":companyId,@"schedulingName":schedulingName,@"employees":
                        employees,@"departments":departments,@"transfer":@(transfer)};
     }
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
         if ([response[@"message"] isKindOfClass:[NSString class]] && [((NSString *)response[@"message"]) containsString:@"迁移"]) {
             [self showAlertControllerToLogoutWithMessage:response[@"message"] sureAction:^(UIAlertAction * _Nonnull action) {
                 [self saveWithTransfer:1];

@@ -12,11 +12,11 @@
 #import "MPMCommomGetPeopleViewController.h"
 #import "MPMGetPeopleModel.h"
 #import "MPMShareUser.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMAuthorityModel.h"
 #import "MPMSelectDepartmentViewController.h"
 #import "MPMDepartEmployeeHelper.h"
-#import "AFNetworking.h"
+#import "MPMNetworking.h"
 
 #define kAuthorityTableViewHeight 60
 @interface MPMAuthoritySettingViewController () <UITableViewDelegate, UITableViewDataSource>
@@ -63,7 +63,7 @@
     NSString *url = [NSString stringWithFormat:@"%@PermissionController/getRolePeople?token=%@",MPMHost,[MPMShareUser shareUser].token];
     NSDictionary *params = @{@"companyId":[MPMShareUser shareUser].companyId};
     
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
         if ([response[@"dataObj"] isKindOfClass:[NSDictionary class]] && [response[@"dataObj"][@"checkList"] isKindOfClass:[NSArray class]]) {
             // 统计员
             NSArray *checkList = response[@"dataObj"][@"checkList"];
@@ -148,7 +148,7 @@
     if (deleteIds.count > 0) {
         params[@"deleteIds"] = deleteIds;
     }
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:(params.count > 0 ? params : nil) loadingMessage:@"正在保存" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:(params.count > 0 ? params : nil) loadingMessage:@"正在保存" success:^(id response) {
         DLog(@"%@",response);
         [self showAlertControllerToLogoutWithMessage:@"保存成功" sureAction:^(UIAlertAction * _Nonnull action) {
             [self.navigationController popViewControllerAnimated:YES];

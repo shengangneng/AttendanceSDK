@@ -9,7 +9,7 @@
 #import "MPMClassSettingViewController.h"
 #import "MPMButton.h"
 #import "MPMShareUser.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMCustomDatePickerView.h"
 #import "MPMTableHeaderView.h"
 #import "MPMClassSettingTableViewCell.h"
@@ -117,7 +117,7 @@
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
         NSString *url = [NSString stringWithFormat:@"%@classSettingController/getClassSettingBySchedulingId?schedulingId=%@&token=%@",MPMHost,self.schedulingId,[MPMShareUser shareUser].token];
         NSDictionary *params;
-        [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:params success:^(id response) {
+        [[MPMSessionManager shareManager] getRequestWithURL:url params:params success:^(id response) {
             DLog(@"%@",response);
             NSDictionary *dic = response[@"dataObj"];
             if ([dic isKindOfClass:[NSDictionary class]]) {
@@ -159,7 +159,7 @@
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
         NSString *url = [NSString stringWithFormat:@"%@timeSlotController/getTimeSlotBySchedulingId?schedulingId=%@&token=%@",MPMHost,self.schedulingId,[MPMShareUser shareUser].token];
         NSDictionary *params;
-        [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:params success:^(id response) {
+        [[MPMSessionManager shareManager] getRequestWithURL:url params:params success:^(id response) {
             DLog(@"%@",response);
             NSArray *arr = response[@"dataObj"];
             if ([arr isKindOfClass:[NSArray class]]) {
@@ -220,7 +220,7 @@
     
     NSString *url = [NSString stringWithFormat:@"%@classSettingController/saveClassSetting?token=%@",MPMHost,[MPMShareUser shareUser].token];
     NSDictionary *params = @{@"classSettingId":kSafeString(self.cycleModel.classSettingId),@"classSettingType":self.cycleModel.classSettingType,@"cycle":self.cycleModel.cycle,@"resetTime":self.cycleModel.resetTime,@"schedulingId":self.schedulingId,@"automaticPunchCard":self.cycleModel.automaticPunchCard ? self.cycleModel.automaticPunchCard : @"0"};
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
         if (self.dulingType == kDulingTypeSetting) {
             [self.navigationController popViewControllerAnimated:YES];
         } else {

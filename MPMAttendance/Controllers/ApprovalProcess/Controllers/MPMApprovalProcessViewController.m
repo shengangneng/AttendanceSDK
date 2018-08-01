@@ -11,7 +11,7 @@
 #import "MPMApprovalProcessTableViewCell.h"
 #import "MPMApprovalProcessDetailViewController.h"
 #import "MPMSideDrawerView.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMApprovalFirstSectionModel.h"
 #import "MPMApprovalFetchDetailModel.h"
@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
     NSString *perimission = @"6";
     MPMShareUser *user = [MPMShareUser shareUser];
     NSString *url = [NSString stringWithFormat:@"%@ApproveController/getPerimssionList?employeeId=%@&token=%@&perimissionId=%@",MPMHost,user.employeeId,user.token,perimission];
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
         NSArray *arr = response[@"dataObj"];
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
         for (int i = 0; i < arr.count; i++) {
@@ -185,7 +185,7 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
             break;
     }
     
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
         NSArray *arr = response[@"dataObj"];
         if (arr && arr.count > 0) {
             NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
@@ -551,7 +551,7 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
             NSDictionary *dic = @{@"causationtypeNo":model.causation.causationtypeNo,@"exchangeId":model.causation.exchangeId,@"rejectReason":@"",@"status":model.causation.status};
             [params addObject:dic];
         }
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             [self updateAfterOperation];
         } failure:^(NSString *error) {
             DLog(@"%@",error);
@@ -566,7 +566,7 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
             NSDictionary *dic = @{@"causationtypeNo":model.causation.causationtypeNo,@"exchangeId":model.causation.exchangeId,@"rejectReason":@"",@"status":model.causation.status};
             [params addObject:dic];
         }
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             [self updateAfterOperation];
         } failure:^(NSString *error) {
             DLog(@"%@",error);
@@ -588,7 +588,7 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
             NSDictionary *dic = @{@"causationtypeNo":model.causation.causationtypeNo,@"exchangeId":model.causation.exchangeId,@"rejectReason":@"",@"status":model.causation.status};
             [params addObject:dic];
         }
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             [self updateAfterOperation];
         } failure:^(NSString *error) {
             DLog(@"%@",error);
@@ -603,7 +603,7 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
             NSDictionary *dic = @{@"causationtypeNo":model.causation.causationtypeNo,@"exchangeId":model.causation.exchangeId,@"rejectReason":@"",@"status":model.causation.status};
             [params addObject:dic];
         }
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             [self updateAfterOperation];
         } failure:^(NSString *error) {
             DLog(@"%@",error);
@@ -618,7 +618,7 @@ typedef NS_ENUM(NSInteger, TableViewEditType) {
             NSDictionary *dic = @{@"causationtypeNo":model.causation.causationtypeNo,@"exchangeId":model.causation.exchangeId,@"rejectReason":@"",@"status":model.causation.status};
             [params addObject:dic];
         }
-        [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
             [self updateAfterOperation];
         } failure:^(NSString *error) {
             DLog(@"%@",error);

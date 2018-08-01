@@ -12,7 +12,7 @@
 #import "UIImage+MPMExtention.h"
 #import "MPMStatisticTableViewCell.h"
 #import "MPMSelectDepartmentViewController.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import "MPMStatisticModel.h"
@@ -124,7 +124,7 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
         dic = @{@"departmentId":[MPMShareUser shareUser].departmentId,@"month":self.currentDateType1,@"token":user.token};
     }
     
-    [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:dic success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url params:dic success:^(id response) {
         if ([response[@"dataObj"][@"collect"] isKindOfClass:[NSArray class]]) {
             NSArray *arr = response[@"dataObj"][@"collect"];
             NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];

@@ -11,7 +11,7 @@
 #import "MPMRepairSigninAddDealTableViewCell.h"
 /** 可以用一个通用的“处理”页面 */
 #import "MPMBaseDealingViewController.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMLerakageCardModel.h"
 #import "NSDateFormatter+MPMExtention.h"
@@ -63,7 +63,7 @@
     /** 漏卡状态 */
     NSString *status = @"3";
     NSString *url = [NSString stringWithFormat:@"%@/attend/getLerakageCardList?employeeId=%@&classTimesId=%@&status=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,classTimeId,status,[MPMShareUser shareUser].token];
-    [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
         if (response[@"dataObj"] && [response[@"dataObj"] isKindOfClass:[NSArray class]]) {
             NSArray *dataObj = response[@"dataObj"];
             NSMutableArray *temp = [NSMutableArray arrayWithCapacity:dataObj.count];

@@ -11,7 +11,7 @@
 #import "MPMTableHeaderView.h"
 #import "MPMSettingSwitchTableViewCell.h"
 #import "MPMShareUser.h"
-#import "MPMHTTPSessionManager.h"
+#import "MPMSessionManager.h"
 #import "MPMSettingTimeModel.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import "MPMCustomDatePickerView.h"
@@ -142,7 +142,7 @@
 
 - (void)getData {
     NSString *url = [NSString stringWithFormat:@"%@timeSlotController/getTimeSlotBySchedulingId?schedulingId=%@&token=%@",MPMHost,self.schedulingId,[MPMShareUser shareUser].token];
-    [[MPMHTTPSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
         NSArray *arr = response[@"dataObj"];
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
         for (int i = 0; i < arr.count; i++) {
@@ -916,7 +916,7 @@
             [params addObject:@{@"returnTime":returnTime,@"signTime":signTime,@"schedulingId":self.schedulingId,@"crossDay":crossDay}];
         }
     }
-    [[MPMHTTPSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
         DLog(@"%@",response);
         // 无论是设置还是创建，成功后，都跳回上一页
         [self.navigationController popViewControllerAnimated:YES];
