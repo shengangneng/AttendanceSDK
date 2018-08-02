@@ -224,9 +224,9 @@
     self.model.schedulingDepartments = departments.copy;
     self.model.schedulingEmplyoees = employees.copy;
     if (self.model.schedulingDepartments.count != 0 && self.model.schedulingEmplyoees.count != 0) {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"部门%ld个,员工%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,self.model.schedulingEmplyoees.count];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"人员%ld人(部门%ld个)",self.model.schedulingEmplyoees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
     } else if (self.model.schedulingDepartments.count == 0 && self.model.schedulingEmplyoees.count != 0) {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"员工%ld人",self.model.schedulingEmplyoees.count];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"人员%ld人",self.model.schedulingEmplyoees.count];
     } else if (self.model.schedulingDepartments.count != 0 && self.model.schedulingEmplyoees.count == 0) {
         cell.detailTextLabel.text = [NSString stringWithFormat:@"部门%ld个",self.model.schedulingDepartments.count];
     } else {
@@ -290,9 +290,9 @@
         }
         cell.textLabel.text = @"参与人员";
         if (self.model.schedulingDepartments.count != 0 && self.model.schedulingEmplyoees.count != 0) {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"部门%ld个,员工%ld人",self.model.schedulingDepartments.count,self.model.schedulingEmplyoees.count];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"人员%ld人(部门%ld个)",self.model.schedulingEmplyoees.count,self.model.schedulingDepartments.count];
         } else if (self.model.schedulingDepartments.count == 0 && self.model.schedulingEmplyoees.count != 0) {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"员工%ld人",self.model.schedulingEmplyoees.count];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"人员%ld人",self.model.schedulingEmplyoees.count];
         } else if (self.model.schedulingDepartments.count != 0 && self.model.schedulingEmplyoees.count == 0) {
             cell.detailTextLabel.text = [NSString stringWithFormat:@"部门%ld个",self.model.schedulingDepartments.count];
         } else {

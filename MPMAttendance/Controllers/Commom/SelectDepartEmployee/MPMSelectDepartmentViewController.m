@@ -73,16 +73,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    self.navigationController.delegate = self;
+    //    self.navigationController.delegate = self;
     [self calculateSelect];
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-//    if (self.navigationController.delegate == self) {
-//        self.navigationController.delegate = nil;
-//    }
+    //    if (self.navigationController.delegate == self) {
+    //        self.navigationController.delegate = nil;
+    //    }
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
@@ -277,7 +277,7 @@
         } else {
             // 这时候[MPMDepartEmployeeHelper shareInstance].allArrayData已经有数据了，可以直接筛选全选和部分选中了
             [self calculateSelect];
-            self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+            self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
@@ -369,7 +369,7 @@
     dispatch_group_notify(group, kMainQueue, ^{
         [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
         [self calculateSelect];
-        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
     });
     
 }
@@ -529,7 +529,7 @@
     }];
     [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
     
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
     [self.tableView reloadData];
 }
 
@@ -691,7 +691,7 @@
                 strongself.selectCheckBlock(@"2");
             }
         }
-        strongself.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+        strongself.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     };
     cell.txLabel.text = depart.name;
@@ -760,7 +760,7 @@
         }
         
         [strongself.tableView reloadData];
-        strongself.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+        strongself.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
         
     }];
     takepart.delegate = self.delegate;
