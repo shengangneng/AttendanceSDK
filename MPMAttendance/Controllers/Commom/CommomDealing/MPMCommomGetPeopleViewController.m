@@ -32,22 +32,22 @@
 @property (nonatomic, strong) UIView *bottomHiddenView;
 @property (nonatomic, strong) UITableView *bottomHiddenTableView;
 // data
-@property (nonatomic, copy) NSString *code;
+@property (nonatomic, copy) NSString *code;                             /** 0多选，1单选 */
 @property (nonatomic, copy) NSArray *idsArray;
 @property (nonatomic, copy) CompleteSelectBlock completeSelectedBlock;
 @property (nonatomic, assign) BOOL searchMode;
 @property (nonatomic, strong) MPMHiddenTableViewDataSourceDelegate *dataSourceDelegate;
 
-@property (nonatomic, strong) NSMutableArray *selectedIndexPath;        /** 未筛选时候的选中项 */
 @property (nonatomic, copy) NSArray *peoplesArray;                      /** 请求回来的所有人员列表 */
-@property (nonatomic, strong) NSMutableArray *searchSelectedIndexPath;  /** 搜索之后的选中项 */
 @property (nonatomic, strong) NSMutableArray *searchPeoplesArray;       /** 搜索之后的人员列表 */
+@property (nonatomic, strong) NSMutableArray *tureSelectPeopleArray;    /** 保存选中的人的列表 */
+@property (nonatomic, strong) NSMutableArray *selectedIndexPath;        /** 选中项 */
 
 @end
 
 @implementation MPMCommomGetPeopleViewController
 
-- (instancetype)initWithCode:(NSString *)code idString:(NSString *)idString sureSelect:(CompleteSelectBlock)block; {
+- (instancetype)initWithCode:(NSString *)code idString:(NSString *)idString sureSelect:(CompleteSelectBlock)block {
     self = [super init];
     if (self) {
         self.code = code;
@@ -78,7 +78,7 @@
     self.searchMode = NO;
     self.selectedIndexPath = [NSMutableArray array];
     self.searchPeoplesArray = [NSMutableArray array];
-    self.searchSelectedIndexPath = [NSMutableArray array];
+    self.tureSelectPeopleArray = [NSMutableArray array];
     [self.headerHiddenMaskView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide:)]];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(left:)];
     [self.bottomUpButton addTarget:self action:@selector(popUp:) forControlEvents:UIControlEventTouchUpInside];
@@ -179,11 +179,13 @@
                 for (NSString *str in self.idsArray) {
                     if ([model.mpm_id isEqualToString:str]) {
                         [self.selectedIndexPath addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                        [self.tureSelectPeopleArray addObject:model];
                     }
                 }
                 [temp addObject:model];
             }
             self.peoplesArray = temp.copy;
+            self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
         }
         [self.middleTableView reloadData];
     } failure:^(NSString *error) {
@@ -196,30 +198,29 @@
     [self.dataSourceDelegate.peoplesArray removeObject:people];
     [self.bottomHiddenTableView reloadData];
     
+    [self.tureSelectPeopleArray enumerateObjectsUsingBlock:^(MPMGetPeopleModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.mpm_id isEqualToString:people.mpm_id]) {
+            [self.tureSelectPeopleArray removeObject:obj];
+        }
+    }];
+    
     if (self.searchMode) {
         for (int i = 0; i < self.searchPeoplesArray.count; i++) {
-            BOOL needDelete = NO;
             MPMGetPeopleModel *model = self.searchPeoplesArray[i];
             if ([model.mpm_id isEqualToString:people.mpm_id]) {
-                needDelete = YES;
-            }
-            if (needDelete) {
-                [self.searchSelectedIndexPath removeObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                [self.selectedIndexPath removeObject:[NSIndexPath indexPathForRow:i inSection:0]];
             }
         }
     } else {
         for (int i = 0; i < self.peoplesArray.count; i++) {
-            BOOL needDelete = NO;
             MPMGetPeopleModel *model = self.peoplesArray[i];
             if ([model.mpm_id isEqualToString:people.mpm_id]) {
-                needDelete = YES;
-            }
-            if (needDelete) {
                 [self.selectedIndexPath removeObject:[NSIndexPath indexPathForRow:i inSection:0]];
             }
         }
     }
     [self.middleTableView reloadData];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
 }
 
 #pragma mark - UITableViewDataSource && UITableViewDelegate
@@ -268,43 +269,45 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.searchMode) {
-        if ([self.searchSelectedIndexPath containsObject:indexPath]) {
-            [tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:0];
-        }
-        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.searchSelectedIndexPath.count];
-    } else {
-        if ([self.selectedIndexPath containsObject:indexPath]) {
-            [tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:0];
-        }
-        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.selectedIndexPath.count];
+    if ([self.selectedIndexPath containsObject:indexPath]) {
+        [tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:0];
     }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.searchMode) {
-        if ([self.searchSelectedIndexPath containsObject:indexPath]) {
-            return;
-        }
-        [self.searchSelectedIndexPath addObject:indexPath];
-        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.searchSelectedIndexPath.count];
-    } else {
-        if ([self.selectedIndexPath containsObject:indexPath]) {
-            return;
-        }
-        [self.selectedIndexPath addObject:indexPath];
-        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.selectedIndexPath.count];
+    if ([self.selectedIndexPath containsObject:indexPath]) {
+        return;
     }
+    MPMGetPeopleModel *model;
+    if (self.searchMode) {
+        model = self.searchPeoplesArray[indexPath.row];
+    } else {
+        model = self.peoplesArray[indexPath.row];
+    }
+    if (self.code.integerValue == 1) {
+        // 如果是单选，需要先移出之前选中的，再选中当前的
+        [self.tureSelectPeopleArray removeAllObjects];
+        [self.selectedIndexPath removeAllObjects];
+    }
+    [self.tureSelectPeopleArray addObject:model];
+    [self.selectedIndexPath addObject:indexPath];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    MPMGetPeopleModel *model;
     if (self.searchMode) {
-        [self.searchSelectedIndexPath removeObject:indexPath];
-        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.searchSelectedIndexPath.count];
+        model = self.searchPeoplesArray[indexPath.row];
     } else {
-        [self.selectedIndexPath removeObject:indexPath];
-        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.selectedIndexPath.count];
+        model = self.peoplesArray[indexPath.row];
     }
+    [self.selectedIndexPath removeObject:indexPath];
+    [self.tureSelectPeopleArray enumerateObjectsUsingBlock:^(MPMGetPeopleModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.mpm_id isEqualToString:model.mpm_id]) {
+            [self.tureSelectPeopleArray removeObject:obj];
+        }
+    }];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
 }
 
 #pragma mark - Target Action
@@ -313,47 +316,19 @@
 }
 
 - (void)bottomSure:(UIButton *)sender {
-    if ((self.searchMode && self.searchSelectedIndexPath == 0) || (!self.searchMode && self.selectedIndexPath.count == 0)) {
+    if (self.tureSelectPeopleArray.count == 0) {
         [self showAlertControllerToLogoutWithMessage:@"请选择参与人员" sureAction:nil needCancleButton:NO];
         return;
     }
-    NSArray *indexArr = self.searchMode ? self.searchSelectedIndexPath : self.selectedIndexPath;
-    NSArray *peopleArr = self.searchMode ? self.searchPeoplesArray : self.peoplesArray;
     if (self.completeSelectedBlock) {
-        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:indexArr.count];
-        for (int i = 0; i < indexArr.count; i++) {
-            NSIndexPath *index = indexArr[i];
-            MPMGetPeopleModel *model = peopleArr[index.row];
-            [temp addObject:model];
-        }
-        self.completeSelectedBlock(temp.copy);
+        self.completeSelectedBlock(self.tureSelectPeopleArray.copy);
     }
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)popUp:(UIButton *)sender {
     sender.selected = !sender.selected;
-    NSArray *indexPath;
-    NSArray *arr;
-    if (self.searchMode) {
-        indexPath = self.searchSelectedIndexPath.copy;
-        arr = self.searchPeoplesArray;
-    } else {
-        indexPath = self.selectedIndexPath.copy;
-        arr = self.peoplesArray;
-    }
-    NSMutableArray *temp = [NSMutableArray array];
-    for (int i = 0; i < arr.count; i++) {
-        BOOL needAdd = NO;
-        for (int j = 0; j < indexPath.count; j++) {
-            NSIndexPath *index = indexPath[j];
-            if (index.row == i) {
-                needAdd = YES;
-            }
-        }
-        if (needAdd) [temp addObject:arr[i]];
-    }
-    self.dataSourceDelegate.peoplesArray = temp;
+    self.dataSourceDelegate.peoplesArray = self.tureSelectPeopleArray;
     [self.bottomHiddenTableView reloadData];
     if (sender.selected) {
         [UIView animateWithDuration:0.3 animations:^{
@@ -409,72 +384,47 @@
 #pragma mark - UISearchBarDelegeat
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    DLog(@"%@", searchText);
-    // 改变搜索框，筛选数据
-    
-    if (kIsNilString(searchText)) {
-        self.searchMode = NO;
-        // 筛选数据 -> 全数据
-        for (int i = 0 ; i < self.searchSelectedIndexPath.count; i++) {
-            NSIndexPath *indexPath = self.searchSelectedIndexPath[i];
-            MPMGetPeopleModel *model = self.searchPeoplesArray[indexPath.row];
-            for (int j = 0 ; j < self.peoplesArray.count; j++) {
-                MPMGetPeopleModel *modelNew = self.peoplesArray[j];
-                if ([modelNew.name isEqualToString:model.name]) {
-                    [self.selectedIndexPath addObject:[NSIndexPath indexPathForRow:j inSection:0]];
-                }
+    self.searchMode = !kIsNilString(searchText);
+    [self.searchPeoplesArray removeAllObjects];
+    [self.selectedIndexPath removeAllObjects];
+    if (self.searchMode) {
+        // 根据选中的indexPath筛选出搜索后的人员列表
+        for (int i = 0; i < self.peoplesArray.count; i++) {
+            MPMGetPeopleModel *model = self.peoplesArray[i];
+            if ([model.name containsString:searchText]) {
+                [self.searchPeoplesArray addObject:model];
             }
         }
-        [self.searchPeoplesArray removeAllObjects];
-        [self.searchSelectedIndexPath removeAllObjects];
+        
+        for (int i = 0; i < self.searchPeoplesArray.count; i++) {
+            MPMGetPeopleModel *model = self.searchPeoplesArray[i];
+            BOOL needSelect = NO;
+            for (int j = 0; j < self.tureSelectPeopleArray.count; j++) {
+                MPMGetPeopleModel *temp = self.tureSelectPeopleArray[j];
+                if ([model.mpm_id isEqualToString:temp.mpm_id]) {
+                    needSelect = YES;
+                    continue;
+                }
+            }
+            if (needSelect) {
+                [self.selectedIndexPath addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
+        }
     } else {
-        self.searchMode = YES;
-        if (self.selectedIndexPath.count > 0) {
-            // 全数据 -> 筛选数据
-            for (int i = 0; i < self.peoplesArray.count; i++) {
-                MPMGetPeopleModel *model = self.peoplesArray[i];
-                if ([model.name containsString:searchText]) {
-                    [self.searchPeoplesArray addObject:model];
+        for (int i = 0; i < self.peoplesArray.count; i++) {
+            MPMGetPeopleModel *model = self.peoplesArray[i];
+            BOOL needSelect = NO;
+            for (int j = 0; j < self.tureSelectPeopleArray.count; j++) {
+                MPMGetPeopleModel *temp = self.tureSelectPeopleArray[j];
+                if ([model.mpm_id isEqualToString:temp.mpm_id]) {
+                    needSelect = YES;
+                    continue;
                 }
             }
-            int index = 0;
-            for (int i = 0; i < self.selectedIndexPath.count; i++) {
-                NSIndexPath *indexPath = self.selectedIndexPath[i];
-                MPMGetPeopleModel *model = self.peoplesArray[indexPath.row];
-                for (int j = 0 ; j < self.searchPeoplesArray.count; j++) {
-                    MPMGetPeopleModel *modelNew = self.searchPeoplesArray[j];
-                    if ([modelNew.name isEqualToString:model.name]) {
-                        [self.searchSelectedIndexPath addObject:[NSIndexPath indexPathForRow:index inSection:0]];
-                        index++;
-                    }
-                }
+            if (needSelect) {
+                [self.selectedIndexPath addObject:[NSIndexPath indexPathForRow:i inSection:0]];
             }
-        } else {
-            // 筛选数据 -> 筛选数据
-            NSMutableArray *temp = [NSMutableArray array];
-            NSMutableArray *tempIndex = [NSMutableArray array];
-            for (int i = 0; i < self.peoplesArray.count; i++) {
-                MPMGetPeopleModel *model = self.peoplesArray[i];
-                if ([model.name containsString:searchText]) {
-                    [temp addObject:model];
-                }
-            }
-            int index = 0;
-            for (int i = 0 ; i < self.searchSelectedIndexPath.count; i++) {
-                NSIndexPath *indexPath = self.searchSelectedIndexPath[i];
-                MPMGetPeopleModel *model = self.searchPeoplesArray[indexPath.row];
-                for (int j = 0 ; j < temp.count; j++) {
-                    MPMGetPeopleModel *modelNew = temp[j];
-                    if ([modelNew.name isEqualToString:model.name]) {
-                        [tempIndex addObject:[NSIndexPath indexPathForRow:index inSection:0]];
-                        index++;
-                    }
-                }
-            }
-            self.searchPeoplesArray = temp;
-            self.searchSelectedIndexPath = tempIndex;
         }
-        [self.selectedIndexPath removeAllObjects];
     }
     
     [self.middleTableView reloadData];
@@ -549,7 +499,7 @@
 - (UILabel *)bottomTotalSelectedLabel {
     if (!_bottomTotalSelectedLabel) {
         _bottomTotalSelectedLabel = [[UILabel alloc] init];
-        _bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数(%lu)",(unsigned long)self.selectedIndexPath.count];
+        _bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
         _bottomTotalSelectedLabel.textColor = kBlackColor;
         _bottomTotalSelectedLabel.textAlignment= NSTextAlignmentLeft;
     }
