@@ -79,7 +79,7 @@
     [super viewDidLoad];
     NSString *twoUrl;
     NSDictionary *twoParams;
-    NSString *number = (self.dealingFromType == kDealingFromTypeApply) ? @"1" : @"-1";
+    NSString *number = (self.dealingFromType == kDealingFromTypeApply) ? @"3" : @"-1";
     NSString *status = @"6";// 不明白这个什么意思
     if (self.dealingFromType == kDealingFromTypeEditing) {
         // 编辑，已经有数据了
