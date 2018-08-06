@@ -476,6 +476,28 @@
             return;
         }
         
+        // 开始时间不得大于等于结束时间
+        if (index == 0) {
+            if (((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).startDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).startTime.doubleValue >= ((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).endDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).endTime.doubleValue) {
+                needAlert = YES;
+            }
+        } else if (index == 1) {
+            if (((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).startDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).startTime.doubleValue >= ((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).endDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).endTime.doubleValue ||
+                ((MPMCausationDetailModel *)self.dealingModel.causationDetail[1]).startDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[1]).startTime.doubleValue >= ((MPMCausationDetailModel *)self.dealingModel.causationDetail[1]).endDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[1]).endTime.doubleValue) {
+                needAlert = YES;
+            }
+        } else if (index == 2) {
+            if (((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).startDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).startTime.doubleValue >= ((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).endDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).endTime.doubleValue ||
+                ((MPMCausationDetailModel *)self.dealingModel.causationDetail[1]).startDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[1]).startTime.doubleValue >= ((MPMCausationDetailModel *)self.dealingModel.causationDetail[1]).endDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[1]).endTime.doubleValue ||
+                ((MPMCausationDetailModel *)self.dealingModel.causationDetail[2]).startDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[2]).startTime.doubleValue >= ((MPMCausationDetailModel *)self.dealingModel.causationDetail[2]).endDate.doubleValue+((MPMCausationDetailModel *)self.dealingModel.causationDetail[2]).endTime.doubleValue) {
+                needAlert = YES;
+            }
+        }
+        if (needAlert) {
+            [self showAlertControllerToLogoutWithMessage:@"请选择正确的时间" sureAction:nil needCancleButton:NO];
+            return;
+        }
+        
         // 验证输入时长
         if (index == 0) {
             if (kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[0]).days)) {
