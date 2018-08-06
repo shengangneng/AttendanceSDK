@@ -134,7 +134,7 @@
     
     [self.bottomRoundButton addTarget:self action:@selector(signin:) forControlEvents:UIControlEventTouchUpInside];
     // TODO：地理位置，可以点击：用来矫正自己的位置
-//    [self.bottomLocationButton addTarget:self action:@selector(toMapView:) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.bottomLocationButton addTarget:self action:@selector(toMapView:) forControlEvents:UIControlEventTouchUpInside];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -239,8 +239,8 @@
 
 - (void)getDataWithDate:(NSDate *)date {
     [self getAttendanceSigninDataWithDate:date];
-//    [self getOneMonthAttendanceDataWithDate:date];
-    [self getThreeMonthDateWithDate:date];
+    //    [self getOneMonthAttendanceDataWithDate:date];
+    [self getThreeWeekDateWithDate:date];
 }
 /** 获取当前日期的签到信息 */
 - (void)getAttendanceSigninDataWithDate:(NSDate *)date {
@@ -333,24 +333,84 @@
         DLog(@"%@",error);
     }];
 }
-/** 获取当前月份的出勤信息 */
-- (void)getOneMonthAttendanceDataWithDate:(NSDate *)date {
-    NSString *dateString = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
-    NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getExchangeWorkByApprover?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateString,[MPMShareUser shareUser].token];
-    NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateString,@"token":[MPMShareUser shareUser].token};
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
-        NSArray *dataObj = response[@"dataObj"];
-        NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
-        for (int i = 0; i < dataObj.count; i++) {
-            NSDictionary *dic = dataObj[i];
-            MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
-            [tempArr addObject:model];
+
+// 获取前后共三周的数据
+- (void)getThreeWeekDateWithDate:(NSDate *)date {
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:date];
+    NSString *dateCurrentMonth = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
+    [comp setMonth:comp.day-7];
+    NSDate *lastMonthDate = [cal dateFromComponents:comp];
+    NSString *dateLastMonth = [NSDateFormatter formatterDate:lastMonthDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
+    [comp setMonth:comp.day+14];
+    NSDate *nextMonthDate = [cal dateFromComponents:comp];
+    NSString *dateNextMonth = [NSDateFormatter formatterDate:nextMonthDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
+    
+    __block NSArray *lastMonthArray;
+    __block NSArray *currentMonthArray;
+    __block NSArray *nextMonthArray;
+    
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
+    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getAttendanceStatusListYearWeek?queryDate=%@&token=%@",MPMHost,dateCurrentMonth,[MPMShareUser shareUser].token];
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
+            NSArray *dataObj = response[@"dataObj"];
+            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
+            for (int i = 0; i < dataObj.count; i++) {
+                NSDictionary *dic = dataObj[i];
+                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
+                [tempArr addObject:model];
+            }
+            currentMonthArray = tempArr.copy;
+            dispatch_group_leave(group);
+        } failure:^(NSString *error) {
+            DLog(@"%@",error);
+            dispatch_group_leave(group);
+        }];
+    });
+    dispatch_group_enter(group);
+    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getAttendanceStatusListYearWeek?queryDate=%@&token=%@",MPMHost,dateLastMonth,[MPMShareUser shareUser].token];
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
+            NSArray *dataObj = response[@"dataObj"];
+            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
+            for (int i = 0; i < dataObj.count; i++) {
+                NSDictionary *dic = dataObj[i];
+                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
+                [tempArr addObject:model];
+            }
+            lastMonthArray = tempArr.copy;
+            dispatch_group_leave(group);
+        } failure:^(NSString *error) {
+            DLog(@"%@",error);
+            dispatch_group_leave(group);
+        }];
+    });
+    dispatch_group_enter(group);
+    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getAttendanceStatusListYearWeek?queryDate=%@&token=%@",MPMHost,dateNextMonth,[MPMShareUser shareUser].token];
+        [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
+            NSArray *dataObj = response[@"dataObj"];
+            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
+            for (int i = 0; i < dataObj.count; i++) {
+                NSDictionary *dic = dataObj[i];
+                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
+                [tempArr addObject:model];
+            }
+            nextMonthArray = tempArr.copy;
+            dispatch_group_leave(group);
+        } failure:^(NSString *error) {
+            DLog(@"%@",error);
+            dispatch_group_leave(group);
+        }];
+    });
+    
+    dispatch_group_notify(group, kMainQueue, ^{
+        if (lastMonthArray.count > 0 && currentMonthArray.count > 0 && nextMonthArray.count > 0) {
+            [self.headerScrollView reloadLast:lastMonthArray current:currentMonthArray next:nextMonthArray];
         }
-        self.attendenceOneMonthArray = tempArr.copy;
-        [self.headerScrollView reloadData:self.attendenceOneMonthArray];
-    } failure:^(NSString *error) {
-        DLog(@"%@",error);
-    }];
+    });
 }
 
 /** 获取当前月份+前一个月份+后一个月份数据 */
@@ -583,27 +643,27 @@
 }
 
 #pragma mark - Notification
- - (void)appResignActive:(NSNotification *)noti {
-     [self.bottomAnimateLayer removeFromSuperlayer];
-     self.bottomAnimateLayer = nil;
-     [self.timer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
- }
- 
- - (void)appBecomeActive:(NSNotification *)noti {
-     [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
-     [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-     // 如果最后一个打卡数据不为空，或者当前时间不是今天，置灰打卡按钮
-     if (self.attendenceArray.count > 0) {
-         MPMAttendenceModel *model = self.attendenceArray.lastObject;
-         if (!kIsNilString(model.attendanceId) || [NSDateFormatter isDate1:[NSDate date] beforeDate2:self.currentMiddleDate]) {
-             [self.bottomAnimateLayer removeFromSuperlayer];
-             self.bottomAnimateLayer = nil;
-         }
-     } else if (self.attendenceArray.count == 0) {
-         [self.bottomAnimateLayer removeFromSuperlayer];
-         self.bottomAnimateLayer = nil;
-     }
- }
+- (void)appResignActive:(NSNotification *)noti {
+    [self.bottomAnimateLayer removeFromSuperlayer];
+    self.bottomAnimateLayer = nil;
+    [self.timer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+- (void)appBecomeActive:(NSNotification *)noti {
+    [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
+    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    // 如果最后一个打卡数据不为空，或者当前时间不是今天，置灰打卡按钮
+    if (self.attendenceArray.count > 0) {
+        MPMAttendenceModel *model = self.attendenceArray.lastObject;
+        if (!kIsNilString(model.attendanceId) || [NSDateFormatter isDate1:[NSDate date] beforeDate2:self.currentMiddleDate]) {
+            [self.bottomAnimateLayer removeFromSuperlayer];
+            self.bottomAnimateLayer = nil;
+        }
+    } else if (self.attendenceArray.count == 0) {
+        [self.bottomAnimateLayer removeFromSuperlayer];
+        self.bottomAnimateLayer = nil;
+    }
+}
 
 #pragma mark - KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {

@@ -17,8 +17,11 @@
 
 @property (nonatomic, weak)id<MPMCalendarScrollViewDelegate> mpmDelegate;
 
-/** 获取到当前月份的班次等信息之后，刷新scrollView中的数据 */
+/** 一次性查找前后共三周信息的接口 */
+- (void)reloadLast:(NSArray *)lastArray current:(NSArray *)currentArray next:(NSArray *)nextArray;
+/** 一次性查找前后共三个月信息的接口 */
 - (void)reloadData:(NSArray *)data;
+
 /** 选中当前星期当前日期 */
 - (void)changeToCurrentWeekDate;
 /** 切换为下个星期 */

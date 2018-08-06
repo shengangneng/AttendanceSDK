@@ -74,6 +74,29 @@
 }
 
 #pragma mark - Public Method
+/** 一次性查找前后共三周信息的接口 */
+- (void)reloadLast:(NSArray *)lastArray current:(NSArray *)currentArray next:(NSArray *)nextArray {
+    // 找到当天的标识
+    NSString *realCurrentDateString = [NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
+    for (int i = 0; i < currentArray.count; i++) {
+        MPMAttendenceOneMonthModel *model = currentArray[i];
+        for (int j = 0; j < self.currentWeekView.days.count; j++) {
+            if ([self.currentWeekView.days[j] componentsSeparatedByString:@","].count > 2) {
+                NSString *monthString = [self.currentWeekView.days[j] componentsSeparatedByString:@","].firstObject;
+                NSString *dayString = [self.currentWeekView.days[j] componentsSeparatedByString:@","][2];
+                if ([model.day containsString:[NSString stringWithFormat:@"-%02d-%02d",[monthString substringToIndex:monthString.length-1].intValue,dayString.intValue]]) {
+                    if ([model.day isEqualToString:realCurrentDateString]) {
+                        model.realCurrentDate = YES;
+                    }
+                    continue;
+                }
+            }
+        }
+    }
+    [self.lastWeekView updateButtonsView:lastArray];
+    [self.currentWeekView updateButtonsView:currentArray];
+    [self.nextWeekView updateButtonsView:nextArray];
+}
 
 - (void)reloadData:(NSArray *)data {
     // 传入当前月份的信息
