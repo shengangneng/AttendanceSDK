@@ -58,6 +58,8 @@ static MPMShareUser *user;
     self.username = nil;
     self.password = nil;
     self.companyName = nil;
+    self.lastRootViewController = nil;
+    self.lastCanPopViewController = nil;
 }
 
 @end

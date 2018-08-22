@@ -47,6 +47,7 @@
     self = [super init];
     if (self) {
         [MPMShareUser shareUser].lastRootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+        [MPMShareUser shareUser].lastCanPopViewController = self;
         if (kIsNilString(username) || kIsNilString(password) || kIsNilString(companyCode)) {
             [self setupSubviews];
             [self setupAttributes];
@@ -109,6 +110,9 @@
     [MPMProgressHUD setMaximumDismissTimeInterval:0.5];
     [MPMProgressHUD setDefaultMaskType:MPMProgressHUDMaskTypeBlack];
     self.view.backgroundColor = kWhiteColor;
+    if (self.navigationController) {
+        self.navigationItem.title = @"考勤登录";
+    }
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBackgroud:)]];
     // Target Action
     [self.middleLoginButton addTarget:self action:@selector(login:) forControlEvents:UIControlEventTouchUpInside];

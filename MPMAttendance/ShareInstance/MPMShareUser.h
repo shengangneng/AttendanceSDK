@@ -26,7 +26,8 @@
 @property (nonatomic, copy) NSString *companyName;
 
 @property (nonatomic, copy) NSArray *perimissionArray;
-@property (nonatomic, strong) UIViewController *lastRootViewController;/** 记录从其他系统条转过来时候的rootViewcontroller */
+@property (nonatomic, strong) UIViewController *lastRootViewController;     /** 记录从其他系统条转过来时候的rootViewcontroller */
+@property (nonatomic, strong) UIViewController *lastCanPopViewController;   /** 记录最后push到的controller */
 
 + (instancetype)shareUser;
 /** 每次重新登录，将数据保存到数据库 */

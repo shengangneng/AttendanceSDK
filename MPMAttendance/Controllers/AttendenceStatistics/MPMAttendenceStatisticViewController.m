@@ -311,35 +311,28 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 
 - (void)logout:(UIButton *)sender {
     UIViewController *lastRoot = [MPMShareUser shareUser].lastRootViewController;
-    if (lastRoot) {
-        kAppDelegate.window.rootViewController = lastRoot;
-        UIViewController *controller = [self getCurrentVCFromRoot:lastRoot];
-        [controller.navigationController popViewControllerAnimated:YES];
-    } else {
-        lastRoot = [[MPMLoginViewController alloc] initWithUsername:nil password:nil companyCode:nil];
-        kAppDelegate.window.rootViewController = lastRoot;
-    }
+    UIViewController *lastPop = [MPMShareUser shareUser].lastCanPopViewController;
+    kAppDelegate.window.rootViewController = lastRoot;
+    [lastPop.navigationController popViewControllerAnimated:YES];
     [[MPMShareUser shareUser] clearData];
 }
 
+/*
 - (UIViewController *)getCurrentVCFromRoot:(UIViewController *)root {
     UIViewController *currentVC;
     if ([root presentedViewController]) {
-        // 视图是被presented出来的
         root = [root presentedViewController];
     }
     if ([root isKindOfClass:[UITabBarController class]]) {
-        // 根视图为UITabBarController
         currentVC = [self getCurrentVCFromRoot:[(UITabBarController *)root selectedViewController]];
-    } else if ([root isKindOfClass:[UINavigationController class]]){
-        // 根视图为UINavigationController
+    } else if ([root isKindOfClass:[UINavigationController class]]) {
         currentVC = [self getCurrentVCFromRoot:[(UINavigationController *)root visibleViewController]];
     } else {
-        // 根视图为非导航类
         currentVC = root;
     }
     return currentVC;
 }
+*/
 
 #pragma mark - MPMCustomDatePickerViewDelegate
 
