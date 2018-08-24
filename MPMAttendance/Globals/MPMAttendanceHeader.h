@@ -22,7 +22,7 @@
 /**/
 
 /**  生产环境V1.1 */
- #define MPMHost @"http://47.97.112.161:8091/"
+ #define MPMHost @"http://kq.jifenzhi.com:8091/"
  /**/
 
 /**  开发环境  *
