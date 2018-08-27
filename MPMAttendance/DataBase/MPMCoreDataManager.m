@@ -74,6 +74,15 @@ static MPMCoreDataManager *coreDataManager;
         [_coordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[NSURL fileURLWithPath:saveURL] options:nil error:&error];
         if (error) {
             DLog(@"%@",error.localizedDescription);
+            // 更改了CoreData的xcdatamodeld里面的属性或者新增类时候，需要删掉原来的数据库再重新创建
+            error = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:saveURL error:&error];
+            if (error) {
+                DLog(@"%@",error.localizedDescription);
+            } else {
+                [_coordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[NSURL fileURLWithPath:saveURL] options:nil error:&error];
+            }
+
         }
     }
     return _coordinator;
