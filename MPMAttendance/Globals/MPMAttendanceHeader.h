@@ -89,7 +89,7 @@
 
 /************************************************************************************************************************/
 /***** 常用方法 *****/
-#define ImageName(name) [UIImage imageNamed:[@"MPMAttendanceBundle.bundle" stringByAppendingPathComponent:name]]
+#define ImageName(name) [UIImage imageNamed:[@"MPMAttendance.bundle" stringByAppendingPathComponent:name]]
 #define ImageContentOfFile(fileName, fileType) [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:(fileName) ofType:(fileType)]]
 // 通过tag获取view
 #define ViewWithTag(view, tag)   (id)[view viewWithTag: tag]

@@ -400,9 +400,9 @@ static const CGFloat MPMProgressHUDLabelSpacing = 8.0f;
         _imageViewSize = CGSizeMake(28.0f, 28.0f);
         _shouldTintImages = YES;
         
-        _infoImage = [UIImage imageNamed:[@"MPMAttendanceBundle.bundle" stringByAppendingPathComponent:@"info"]];
-        _successImage = [UIImage imageNamed:[@"MPMAttendanceBundle.bundle" stringByAppendingPathComponent:@"success"]];
-        _errorImage = [UIImage imageNamed:[@"MPMAttendanceBundle.bundle" stringByAppendingPathComponent:@"error"]];
+        _infoImage = [UIImage imageNamed:[@"MPMAttendance.bundle" stringByAppendingPathComponent:@"info"]];
+        _successImage = [UIImage imageNamed:[@"MPMAttendance.bundle" stringByAppendingPathComponent:@"success"]];
+        _errorImage = [UIImage imageNamed:[@"MPMAttendance.bundle" stringByAppendingPathComponent:@"error"]];
 
         _ringThickness = 2.0f;
         _ringRadius = 18.0f;

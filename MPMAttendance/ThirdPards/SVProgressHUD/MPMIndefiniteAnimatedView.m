@@ -51,7 +51,7 @@
         
         CALayer *maskLayer = [CALayer layer];
         
-        maskLayer.contents = (__bridge id)[[UIImage imageNamed:[@"MPMAttendanceBundle.bundle" stringByAppendingPathComponent:@"angle-mask"]] CGImage];
+        maskLayer.contents = (__bridge id)[[UIImage imageNamed:[@"MPMAttendance.bundle" stringByAppendingPathComponent:@"angle-mask"]] CGImage];
         maskLayer.frame = _indefiniteAnimatedLayer.bounds;
         _indefiniteAnimatedLayer.mask = maskLayer;
         
