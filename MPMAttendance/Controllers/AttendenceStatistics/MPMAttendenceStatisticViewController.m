@@ -202,7 +202,6 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
     self.navigationItem.title = @"考勤统计";
     self.titleTextField.text = [NSString stringWithFormat:@"%@  %@",[MPMShareUser shareUser].employeeName,[MPMShareUser shareUser].departmentName];
     self.currentType = forDataTypePerson;
-    [self setRightBarButtonType:forBarButtonTypeTitle title:@"退出" image:nil action:@selector(logout:)];
     [self.selectDateButton addTarget:self action:@selector(selectData:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -307,18 +306,6 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
     } else {
         [self.titleTextField becomeFirstResponder];
     }
-}
-
-- (void)logout:(UIButton *)sender {
-    UIViewController *lastRoot = [MPMShareUser shareUser].lastRootViewController;
-    UIViewController *lastPop = [MPMShareUser shareUser].lastCanPopViewController;
-    kAppDelegate.window.rootViewController = lastRoot;
-    // 推进来的时候隐藏了，现在需要取消隐藏
-    if (lastPop.navigationController.navigationBar.hidden == YES) {
-        lastPop.navigationController.navigationBar.hidden = NO;
-    }
-    [lastPop.navigationController popViewControllerAnimated:YES];
-    [[MPMShareUser shareUser] clearData];
 }
 
 /*

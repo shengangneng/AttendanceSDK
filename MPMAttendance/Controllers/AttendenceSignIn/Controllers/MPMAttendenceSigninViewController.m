@@ -132,6 +132,7 @@
     [rightButton2 addTarget:self action:@selector(right:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:rightButton1],[[UIBarButtonItem alloc] initWithCustomView:rightButton2]];
     
+    [self setLeftBarButtonWithTitle:@"返回" action:@selector(logout:)];
     [self.bottomRoundButton addTarget:self action:@selector(signin:) forControlEvents:UIControlEventTouchUpInside];
     // TODO：地理位置，可以点击：用来矫正自己的位置
     //    [self.bottomLocationButton addTarget:self action:@selector(toMapView:) forControlEvents:UIControlEventTouchUpInside];
@@ -513,6 +514,18 @@
 }
 
 #pragma mark - Target Action
+
+- (void)logout:(UIButton *)sender {
+    UIViewController *lastRoot = [MPMShareUser shareUser].lastRootViewController;
+    UIViewController *lastPop = [MPMShareUser shareUser].lastCanPopViewController;
+    kAppDelegate.window.rootViewController = lastRoot;
+    // 推进来的时候隐藏了，现在需要取消隐藏
+    if (lastPop.navigationController.navigationBar.hidden == YES) {
+        lastPop.navigationController.navigationBar.hidden = NO;
+    }
+    [lastPop.navigationController popViewControllerAnimated:YES];
+    [[MPMShareUser shareUser] clearData];
+}
 
 - (void)right:(UIButton *)sender {
     MPMRepairSigninViewController *rs = [[MPMRepairSigninViewController alloc] init];
