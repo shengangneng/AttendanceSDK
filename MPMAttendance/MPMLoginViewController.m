@@ -17,6 +17,7 @@
 
 @interface MPMLoginViewController () <UITextFieldDelegate>
 // Header
+@property (nonatomic, strong) UIButton *backButton;
 @property (nonatomic, strong) UIImageView *headerIcon;
 @property (nonatomic, strong) UILabel *headerTitleLabel;
 // Middle
@@ -61,6 +62,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // 推进来的时候隐藏navigationBar，否则会有卡顿
+    self.view.backgroundColor = kWhiteColor;
+    self.navigationItem.title = @"考勤登录";
+    if (self.navigationController) {
+        self.navigationController.navigationBar.hidden = YES;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -83,6 +90,7 @@
 
 - (void)setupSubviews {
     // add Header
+    [self.view addSubview:self.backButton];
     [self.view addSubview:self.headerIcon];
     [self.view addSubview:self.headerTitleLabel];
     // add Middle
@@ -109,19 +117,19 @@
 - (void)setupAttributes {
     [MPMProgressHUD setMaximumDismissTimeInterval:0.5];
     [MPMProgressHUD setDefaultMaskType:MPMProgressHUDMaskTypeBlack];
-    self.view.backgroundColor = kWhiteColor;
-    if (self.navigationController) {
-        self.navigationItem.title = @"考勤登录";
-    }
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBackgroud:)]];
     // Target Action
+    [self.backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     [self.middleLoginButton addTarget:self action:@selector(login:) forControlEvents:UIControlEventTouchUpInside];
     [self.middlefastRegisterButton addTarget:self action:@selector(fastRegister:) forControlEvents:UIControlEventTouchUpInside];
     [self.middlefoggotenPassButton addTarget:self action:@selector(foggotenPass:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupConstraints {
-    
+    [self.backButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.view.mpm_top).offset(kStatusBarHeight);
+        make.leading.equalTo(self.view.mpm_leading).offset(15);
+    }];
     [self.headerIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.bottom.equalTo(self.headerTitleLabel.mpm_top).offset(-10);
         make.centerX.equalTo(self.view.mpm_centerX);
@@ -259,6 +267,14 @@
 }
 
 #pragma mark - Target Action
+
+- (void)back:(UIButton *)sender {
+    if (YES == self.navigationController.navigationBar.hidden) {
+        self.navigationController.navigationBar.hidden = NO;
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)login:(UIButton *)sender {
     [self.view endEditing:YES];
     if (kIsNilString(self.middleUserTextField.text)) {
@@ -425,6 +441,13 @@
 #pragma mark - Lazy Init
 
 ///////////////////////////////////////////////////////////////////////////////////////
+- (UIButton *)backButton {
+    if (!_backButton) {
+        _backButton = [MPMButton normalButtonWithTitle:@"返回" titleColor:kMainBlueColor bgcolor:kWhiteColor];
+        [_backButton.titleLabel sizeToFit];
+    }
+    return _backButton;
+}
 
 - (UIImageView *)headerIcon {
     if (!_headerIcon) {

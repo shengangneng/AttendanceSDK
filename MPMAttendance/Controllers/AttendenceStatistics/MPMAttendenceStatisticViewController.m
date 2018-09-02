@@ -313,6 +313,10 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
     UIViewController *lastRoot = [MPMShareUser shareUser].lastRootViewController;
     UIViewController *lastPop = [MPMShareUser shareUser].lastCanPopViewController;
     kAppDelegate.window.rootViewController = lastRoot;
+    // 推进来的时候隐藏了，现在需要取消隐藏
+    if (lastPop.navigationController.navigationBar.hidden == YES) {
+        lastPop.navigationController.navigationBar.hidden = NO;
+    }
     [lastPop.navigationController popViewControllerAnimated:YES];
     [[MPMShareUser shareUser] clearData];
 }
