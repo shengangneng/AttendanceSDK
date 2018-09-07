@@ -60,6 +60,16 @@
     return self;
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self setupSubviews];
+        [self setupAttributes];
+        [self setupConstraints];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // 推进来的时候隐藏navigationBar，否则会有卡顿
@@ -269,10 +279,16 @@
 #pragma mark - Target Action
 
 - (void)back:(UIButton *)sender {
-    if (YES == self.navigationController.navigationBar.hidden) {
-        self.navigationController.navigationBar.hidden = NO;
+    UIViewController *lastRoot = [MPMShareUser shareUser].lastRootViewController;
+    UIViewController *lastPop = [MPMShareUser shareUser].lastCanPopViewController;
+    kAppDelegate.window.rootViewController = lastRoot;
+    // 推进来的时候隐藏了，现在需要取消隐藏
+    if (lastPop.navigationController.navigationBar.hidden == YES) {
+        lastPop.navigationController.navigationBar.hidden = NO;
     }
-    [self.navigationController popViewControllerAnimated:YES];
+    [lastPop.navigationController popViewControllerAnimated:YES];
+    [[MPMShareUser shareUser] clearData];
+    
 }
 
 - (void)login:(UIButton *)sender {
@@ -314,9 +330,9 @@
         NSDictionary *data = dic[@"dataObj"];
         // 登录后将数据存到user全局对象中。
         [[MPMShareUser shareUser] convertModelWithDictionary:data];
-        [MPMShareUser shareUser].username = self.middleUserTextField.text;
-        [MPMShareUser shareUser].password = self.middlePassTextField.text;
-        [MPMShareUser shareUser].companyName = self.middleCompTextField.text;
+        [MPMShareUser shareUser].username = username;
+        [MPMShareUser shareUser].password = password;
+        [MPMShareUser shareUser].companyName = companyCode;
         [self getPerrimition];
     } failure:^(NSString *error) {
         [self setupSubviews];
@@ -339,7 +355,6 @@
                 
                 [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
                     canEnter = YES;
-                    DLog(@"%@",response);
                     NSDictionary *dic = response;
                     NSDictionary *data = dic[@"dataObj"];
                     [[MPMShareUser shareUser] clearData];
@@ -353,7 +368,6 @@
                     canEnter = YES;
                     kAppDelegate.window.rootViewController = [[MPMLoginViewController alloc] init];
                     [[MPMShareUser shareUser] clearData];
-                    DLog(@"%@",error);
                 }];
             } else {
                 canEnter = YES;
