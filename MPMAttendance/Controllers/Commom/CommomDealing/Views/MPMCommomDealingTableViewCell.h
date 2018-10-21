@@ -23,7 +23,11 @@ typedef void(^SectionDeleteBlock)(UIButton *sender);
 
 @property (nonatomic, strong) UITextField *detailTextField;
 
-- (void)setupTextFieldCheck:(BOOL)check;
-- (void)setupUILabel;
+/** 如果cell的detail类型为TextField，设置是否限制输入数字，并限制数字的长度 */
+- (void)needCheckNumber:(BOOL)needCheckNumber limitLength:(NSInteger)length;
+
+/** 设置cell的detail类型为UITextField或者UILabel */
+- (void)setupDetailToBeUITextField;
+- (void)setupDetailToBeLabel;
 
 @end

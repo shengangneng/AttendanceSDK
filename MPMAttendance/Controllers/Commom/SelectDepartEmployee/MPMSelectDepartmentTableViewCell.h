@@ -8,17 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMBaseTableViewCell.h"
+#import "MPMRoundPeopleView.h"
+#import "MPMSelectDepartmentViewController.h"
 
 typedef void(^CheckImageBlock)(void);
 
 @interface MPMSelectDepartmentTableViewCell : MPMBaseTableViewCell
 
 @property (nonatomic, strong) UIImageView *checkIconImage;
-@property (nonatomic, strong) UIImageView *humanIconImage;
+@property (nonatomic, strong) MPMRoundPeopleView *roundPeopleView;
 @property (nonatomic, strong) UILabel *txLabel;
 
-@property (nonatomic, copy) NSString *isHuman;/** 如果有值为1则为human，否则为部门 */
+@property (nonatomic, assign) BOOL isHuman; /** 人员或部门 */
 
 @property (nonatomic, copy) CheckImageBlock checkImageBlock;
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier selectionType:(SelectionType)selectionType;
 
 @end

@@ -8,9 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol MPMAttendanceDelegate <NSObject>
+
+/** 考勤首页点击返回，会返回token、refreshToken、expiresIn：因为如果token是在考勤里面里面失效的，会做刷新token的操作 */
+- (void)attendanceDidCompleteWithToken:(NSString *)token refreshToken:(NSString *)refreshToken expiresIn:(NSString *)expiresIn;
+
+@end
+
 @interface MPMLoginViewController : UIViewController
 
-- (void)autoLogin;/** 仅供 */
-- (instancetype)initWithUsername:(NSString *)username password:(NSString *)password companyCode:(NSString *)companyCode;
+- (instancetype)initWithToken:(NSString *)token
+                 refreshToken:(NSString *)refreshToken
+                    expiresIn:(NSString *)expiresIn
+                       userId:(NSString *)userId
+                  companyCode:(NSString *)companyCode;
+
+@property (nonatomic, weak) id<MPMAttendanceDelegate> delegate;
 
 @end

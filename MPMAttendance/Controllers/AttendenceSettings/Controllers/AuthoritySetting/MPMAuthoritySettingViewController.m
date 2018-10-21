@@ -17,8 +17,14 @@
 #import "MPMSelectDepartmentViewController.h"
 #import "MPMDepartEmployeeHelper.h"
 #import "MPMNetworking.h"
+#import "MPMOauthUser.h"
+#import "MPMAuthorityRoleModel.h"
 
 #define kAuthorityTableViewHeight 60
+#define kRoleIdResponder @"kaoqin_admin"    // 考勤负责人roleId
+#define kRoleIdStatictor @"kaoqin_stat"     // 考情统计员roleId
+
+
 @interface MPMAuthoritySettingViewController () <UITableViewDelegate, UITableViewDataSource>
 // Views
 @property (nonatomic, strong) UITableView *tableView;
@@ -29,6 +35,7 @@
 @property (nonatomic, copy) NSArray *titleArray;
 @property (nonatomic, assign) BOOL respondorNeedFold;   /** 负责人是否需要折叠：默认为YES */
 @property (nonatomic, assign) BOOL statistorNeedFold;   /** 统计员是否需要折叠：默认为YES */
+
 @property (nonatomic, copy) NSArray<MPMAuthorityModel *> *responderArray;/** 负责人 */
 @property (nonatomic, copy) NSArray<MPMAuthorityModel *> *statictorArray;/** 统计员 */
 
@@ -39,19 +46,16 @@
 
 @implementation MPMAuthoritySettingViewController
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        [self setupAttributes];
-        [self setupSubViews];
-        [self setupConstraints];
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self getData];
+    [self setupAttributes];
+    __weak typeof(self) weakself = self;
+    [self addNetworkMonitoringWithGoodNetworkBlock:^{
+        __strong typeof(weakself) strongself = weakself;
+        [strongself setupSubViews];
+        [strongself setupConstraints];
+        [strongself getData];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -60,38 +64,86 @@
 }
 
 - (void)getData {
-    NSString *url = [NSString stringWithFormat:@"%@PermissionController/getRolePeople?token=%@",MPMHost,[MPMShareUser shareUser].token];
-    NSDictionary *params = @{@"companyId":[MPMShareUser shareUser].companyId};
-    
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
-        if ([response[@"dataObj"] isKindOfClass:[NSDictionary class]] && [response[@"dataObj"][@"checkList"] isKindOfClass:[NSArray class]]) {
-            // 统计员
-            NSArray *checkList = response[@"dataObj"][@"checkList"];
-            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:checkList.count];
-            for (int i = 0; i < checkList.count; i++) {
-                NSDictionary *dic = checkList[i];
-                MPMAuthorityModel *model = [[MPMAuthorityModel alloc] initWithDictionary:dic];
-                [temp addObject:model];
+    // 获取角色列表
+    NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_ROLE_LIST];
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        DLog(@"%@",response);
+        if ([response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+            NSArray *arr = response[kResponseObjectKey];
+            NSMutableArray *roleArray = [NSMutableArray arrayWithCapacity:arr.count];
+            for (int i = 0; i < arr.count; i++) {
+                NSDictionary *roleDic = arr[i];
+                MPMAuthorityRoleModel *role = [[MPMAuthorityRoleModel alloc] initWithDictionary:roleDic];
+                [roleArray addObject:role];
             }
-            self.statictorArray = temp.copy;
-            self.originalStatictorArray = temp.copy;
-        }
-        if ([response[@"dataObj"] isKindOfClass:[NSDictionary class]] && [response[@"dataObj"][@"gmlist"] isKindOfClass:[NSArray class]]) {
-            // 负责人
-            NSArray *gmlist = response[@"dataObj"][@"gmlist"];
-            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:gmlist.count];
-            for (int i = 0; i < gmlist.count; i++) {
-                NSDictionary *dic = gmlist[i];
-                MPMAuthorityModel *model = [[MPMAuthorityModel alloc] initWithDictionary:dic];
-                [temp addObject:model];
+            if (roleArray.count > 0) {
+                [self getAuthorityListWithRoleArray:roleArray.copy];
             }
-            self.responderArray = temp.copy;
-            self.originalRespinderArray = temp.copy;
         }
-        [self.tableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
+}
+
+- (void)getAuthorityListWithRoleArray:(NSArray *)roleArr {
+    dispatch_group_t group = dispatch_group_create();
+    BOOL needRequest = NO;
+    for (MPMAuthorityRoleModel *role in roleArr) {
+        if ([role.mpm_id isEqualToString:kRoleIdResponder]) {
+            needRequest = YES;
+            dispatch_group_enter(group);
+            dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+                NSString *url = [NSString stringWithFormat:@"%@%@?roleId=%@&companyId=%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_ROLE_AUTHORIZE,role.mpm_id,[MPMOauthUser shareOauthUser].company_id];
+                [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+                    DLog(@"%@",response);
+                    if ([response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                        NSArray *arr = response[kResponseObjectKey];
+                        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
+                        for (int i = 0; i < arr.count; i++) {
+                            NSDictionary *authorityDic = arr[i];
+                            MPMAuthorityModel *role = [[MPMAuthorityModel alloc] initWithDictionary:authorityDic];
+                            [temp addObject:role];
+                        }
+                        self.responderArray = temp.copy;
+                        self.originalRespinderArray = temp.copy;
+                    }
+                    dispatch_group_leave(group);
+                } failure:^(NSString *error) {
+                    DLog(@"%@",error);
+                    dispatch_group_leave(group);
+                }];
+            });
+        } else if ([role.mpm_id isEqualToString:kRoleIdStatictor]) {
+            needRequest = YES;
+            dispatch_group_enter(group);
+            dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+                NSString *url = [NSString stringWithFormat:@"%@%@?roleId=%@&companyId=%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_ROLE_AUTHORIZE,role.mpm_id,[MPMOauthUser shareOauthUser].company_id];
+                [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+                    DLog(@"%@",response);
+                    if ([response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                        NSArray *arr = response[kResponseObjectKey];
+                        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
+                        for (int i = 0; i < arr.count; i++) {
+                            NSDictionary *authorityDic = arr[i];
+                            MPMAuthorityModel *role = [[MPMAuthorityModel alloc] initWithDictionary:authorityDic];
+                            [temp addObject:role];
+                        }
+                        self.statictorArray = temp.copy;
+                        self.originalStatictorArray = temp.copy;
+                    }
+                    dispatch_group_leave(group);
+                } failure:^(NSString *error) {
+                    DLog(@"%@",error);
+                    dispatch_group_leave(group);
+                }];
+            });
+        }
+    }
+    if (needRequest) {
+        dispatch_group_notify(group, kMainQueue, ^{
+            [self.tableView reloadData];
+        });
+    }
 }
 
 #pragma mark - Target Action
@@ -100,62 +152,63 @@
 }
 
 - (void)save:(UIButton *)sender {
-    NSString *url = [NSString stringWithFormat:@"%@PermissionController/addPermission?token=%@",MPMHost,[MPMShareUser shareUser].token];
-    NSMutableArray *responsor = [NSMutableArray arrayWithCapacity:self.responderArray.count];
-    NSMutableArray *statictor = [NSMutableArray arrayWithCapacity:self.statictorArray.count];
-    for (MPMAuthorityModel *model in self.responderArray) {
-        [responsor addObject:@{@"employeeId":model.employeeId,@"userName":model.userName,@"companyId":[MPMShareUser shareUser].companyId}];
-    }
-    for (MPMAuthorityModel *model in self.statictorArray) {
-        [statictor addObject:@{@"employeeId":model.employeeId,@"userName":model.userName,@"companyId":[MPMShareUser shareUser].companyId}];
-    }
-    // 对比修改后的统计员和责任人，筛选出需要删除的数据
-    NSMutableArray *deleteIds = [NSMutableArray array];
-    for (int i = 0; i < self.originalRespinderArray.count; i++) {
-        BOOL canDelete = YES;
-        MPMAuthorityModel *model = self.originalRespinderArray[i];
-        for (int j = 0; j < self.responderArray.count; j++) {
-            MPMAuthorityModel *now = self.responderArray[j];
-            if ([model.employeeId isEqualToString:now.employeeId]) {
-                canDelete = NO;
-            }
-        }
-        if (canDelete) {
-            [deleteIds addObject:model.employeeId];
-        }
-    }
-    for (int i = 0; i < self.originalStatictorArray.count; i++) {
-        BOOL canDelete = YES;
-        MPMAuthorityModel *model = self.originalStatictorArray[i];
-        for (int j = 0; j < self.statictorArray.count; j++) {
-            MPMAuthorityModel *now = self.statictorArray[j];
-            if ([model.employeeId isEqualToString:now.employeeId]) {
-                canDelete = NO;
-            }
-        }
-        if (canDelete) {
-            [deleteIds addObject:model.employeeId];
-        }
-    }
     
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    if (responsor.count > 0) {
-        params[@"gmlist"] = responsor;
-    }
-    if (statictor.count > 0) {
-        params[@"checkList"] = statictor;
-    }
-    if (deleteIds.count > 0) {
-        params[@"deleteIds"] = deleteIds;
-    }
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:(params.count > 0 ? params : nil) loadingMessage:@"正在保存" success:^(id response) {
-        DLog(@"%@",response);
-        [self showAlertControllerToLogoutWithMessage:@"保存成功" sureAction:^(UIAlertAction * _Nonnull action) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } needCancleButton:NO];
-    } failure:^(NSString *error) {
-        DLog(@"%@",error);
-    }];
+    __block BOOL twoSaveAllSucceed = YES;
+    // 负责人和统计员的保存需要分别调用不同的接口
+    dispatch_group_t group = dispatch_group_create();
+    
+    dispatch_group_enter(group);
+    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+        // 保存负责人
+        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_ROLE_AUTHORIZE];
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        params[@"companyId"] = [MPMOauthUser shareOauthUser].company_id;
+        params[@"roleId"] = kRoleIdResponder;
+        NSMutableArray *users = [NSMutableArray arrayWithCapacity:self.responderArray.count];
+        for (MPMAuthorityModel *model in self.responderArray) {
+            [users addObject:@{@"id":kSafeString(model.mpm_id),@"name":kSafeString(model.name)}];
+        }
+        params[@"users"] = users;
+        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+            dispatch_group_leave(group);
+        } failure:^(NSString *error) {
+            dispatch_group_leave(group);
+            twoSaveAllSucceed = NO;
+        }];
+    });
+    
+    
+    dispatch_group_enter(group);
+    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+        // 保存统计员
+        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_ROLE_AUTHORIZE];
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        params[@"companyId"] = [MPMOauthUser shareOauthUser].company_id;
+        params[@"roleId"] = kRoleIdStatictor;
+        NSMutableArray *users = [NSMutableArray arrayWithCapacity:self.statictorArray.count];
+        for (MPMAuthorityModel *model in self.statictorArray) {
+            [users addObject:@{@"id":kSafeString(model.mpm_id),@"name":kSafeString(model.name)}];
+        }
+        params[@"users"] = users;
+        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+            dispatch_group_leave(group);
+        } failure:^(NSString *error) {
+            dispatch_group_leave(group);
+            twoSaveAllSucceed = NO;
+        }];
+    });
+    
+    dispatch_group_notify(group, kMainQueue, ^{
+        if (twoSaveAllSucceed) {
+            __weak typeof(self) weakself = self;
+            [self showAlertControllerToLogoutWithMessage:@"保存成功" sureAction:^(UIAlertAction * _Nonnull action) {
+                __strong typeof(weakself) strongself = weakself;
+                [strongself.navigationController popViewControllerAnimated:YES];
+            } needCancleButton:NO];
+        } else {
+            [self showAlertControllerToLogoutWithMessage:@"保存失败" sureAction:nil needCancleButton:NO];
+        }
+    });
 }
 
 #pragma mark - UITableViewDelegate && UITableViewDelegate
@@ -215,45 +268,39 @@
     __weak typeof(self) weakself = self;
     cell.addPeopleBlock = ^(){
         __strong typeof(weakself) strongself = weakself;
-        // 跳入多选人员页面（只能选择人员）
-        MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:@"部门"] allStringData:@"" selectionType:forSelectionTypeOnlyEmployee selectCheckBlock:nil];
-        
-        NSString *idString;
         if (indexPath.row == 0) {
+            [[MPMDepartEmployeeHelper shareInstance].employees removeAllObjects];
             for (int i = 0; i < strongself.responderArray.count; i++) {
                 MPMAuthorityModel *model = strongself.responderArray[i];
-                if (i == 0) {
-                    idString = model.employeeId;
-                } else {
-                    idString = [idString stringByAppendingString:[NSString stringWithFormat:@",%@",model.employeeId]];
-                }
-                MPMSchedulingEmplyoeeModel *emp = [[MPMSchedulingEmplyoeeModel alloc] init];
-                emp.employeeId = model.employeeId;
-                emp.employeeName = model.userName;
+                MPMDepartment *emp = [[MPMDepartment alloc] init];
+                emp.mpm_id = model.mpm_id;
+                emp.isHuman = YES;
+                emp.name = model.name;
                 [[MPMDepartEmployeeHelper shareInstance].employees addObject:emp];
             }
         } else {
+            [[MPMDepartEmployeeHelper shareInstance].employees removeAllObjects];
             for (int i = 0; i < strongself.statictorArray.count; i++) {
                 MPMAuthorityModel *model = strongself.statictorArray[i];
-                if (i == 0) {
-                    idString = model.employeeId;
-                } else {
-                    idString = [idString stringByAppendingString:[NSString stringWithFormat:@",%@",model.employeeId]];
-                }
-                MPMSchedulingEmplyoeeModel *emp = [[MPMSchedulingEmplyoeeModel alloc] init];
-                emp.employeeId = model.employeeId;
-                emp.employeeName = model.userName;
+                MPMDepartment *emp = [[MPMDepartment alloc] init];
+                emp.mpm_id = model.mpm_id;
+                emp.isHuman = YES;
+                emp.name = model.name;
                 [[MPMDepartEmployeeHelper shareInstance].employees addObject:emp];
             }
         }
-        depart.sureSelectBlock = ^(NSArray<MPMSchedulingDepartmentsModel *> *departments, NSArray<MPMSchedulingEmplyoeeModel *> *employees) {
+        // 跳入多选人员页面（只能选择人员）
+        MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:@"部门"] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
+        
+        __weak typeof(strongself) wweakself = strongself;
+        depart.sureSelectBlock = ^(NSArray<MPMDepartment *> *departments, NSArray<MPMDepartment *> *employees) {
             // 这里只回传人员数据
-            __strong typeof(strongself) sstrongself = strongself;
+            __strong typeof(wweakself) sstrongself = wweakself;
             NSMutableArray *temp = [NSMutableArray arrayWithCapacity:employees.count];
             for (int i = 0; i < employees.count; i++) {
                 MPMAuthorityModel *model = [[MPMAuthorityModel alloc] init];
-                model.employeeId = employees[i].employeeId;
-                model.userName = employees[i].employeeName;
+                model.mpm_id = employees[i].mpm_id;
+                model.name = employees[i].name;
                 [temp addObject:model];
             }
             if (indexPath.row == 0) {

@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-
+/*
 typedef NS_ENUM(NSInteger, CausationType) {
-    forCausationTypeAskLeave = -1,  // 请假申请
+    forCausationTypeAskLeave = -1,     // 请假申请
     forCausationTypeChangeSign = 0,    // 改签
     forCausationTypeRepairSign,        // 补签
     forCausationTypeLeave,             // 请假
@@ -29,6 +29,56 @@ typedef NS_ENUM(NSInteger, CausationType) {
     forCausationTypeExcetionApply,     // 例外申请
     forCausationTypeAddFreeSign,       // 增加自由补签
 };
+*/
+ 
+
+typedef NS_ENUM(NSInteger, CausationType) {
+    // 请假、出差、加班、外出、补签、改签
+    kCausationTypeAskLeave = 100,       /** 请假 */
+    kCausationTypeevecation = 101,      /** 出差 */
+    kCausationTypeOverTime = 102,       /** 加班 */
+    kCausationTypeOut = 103,            /** 外出 */
+    kCausationTypeRepairSign = 104,     /** 补签 */
+    kCausationTypeChangeSign = 105,     /** 改签 */
+    kCausationTypeExtraApply = 106,     /** 例外申请 */
+    // 请假具体类型
+    kCausationTypeThingLeave = 0,       /** 事假 */
+    kCausationTypeSickLeave = 1,        /** 病假 */
+    kCausationTypeChangeRestLeave = 2,  /** 调休 */
+    kCausationTypeLactationLeave = 3,   /** 哺乳假 */
+    kCausationTypeYearLeave = 4,        /** 年假 */
+    kCausationTypeMonthLeave = 5,       /** 月休假 */
+    kCausationTypeSeeRelativeLeave = 6, /** 探亲假 */
+    kCausationTypeMarryLeave = 7,       /** 婚假 */
+    kCausationTypeBabyLeave = 8,        /** 产假 */
+    kCausationTypeCompanyBabyLeave = 9, /** 陪产假 */
+    kCausationTypeFuneralLeave = 10,    /** 丧假 */
+    kCausationTypeInjuryLeave = 11,     /** 工伤假 */
+};
+
+
+
+// Key
+#define kCellHeaderTitleKey              @"CellHeaderTitle"  /** Header的文字 */
+#define kCellHeaderDetailKey             @"CellHeaderDetail" /** Header右边的文字 */
+#define kCellTitleDetailKey              @"CellTitleDetail"  /** Title和DetailTitle */
+#define kCellDetailTypeKey               @"CellDetailType"   /** Detail的控件类型 */
+#define kCellActionTypeKey               @"CellActionType"   /** Detail的操作类型 */
+// 选择器控件类型
+#define kAction_PickerTypeDealingType    @"DealingType"      /** 选择器：请假、出差、补签等处理类型 */
+#define kAction_PickerTypeTimeOfOne      @"TimeOfOne"        /** 选择器：年月日时分秒 */
+#define kAction_PickerTypeTimeOfTwo      @"TimeOfTwo"        /** 选择器：年月日 */
+#define kAction_PickerTypeTwoClass       @"TwoClass"         /** 选择器：上班、下班 */
+#define kAction_PickerTypeThreeClass     @"ThreeClass"       /** 选择器：早班、中班、晚班 */
+#define kAction_TrafficTool              @"TrafficTool"      /** 交通工具 */
+#define kAction_AddCell                  @"AddCell"          /** 增加一个Section */
+// DetailType
+#define kCellDetailTypeUILabel           @"UILabel"          /** UILabel */
+#define kCellDetailTypeUIButton          @"UIButton"         /** UIButton */
+#define kCellDetailTypeUITextView        @"UITextView"       /** UITextView */
+#define kCellDetailTypeUITextField       @"UITextField"      /** UITextField */
+#define kCellDetailTypeSelectTool        @"SelectTool"       /** 交通工具、出差补偿 */
+#define kCellDetailTypePeople            @"People"           /** 审批人、抄送人 */
 
 @interface MPMCausationTypeData : NSObject
 

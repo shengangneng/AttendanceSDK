@@ -27,6 +27,8 @@
 
 - (void)setupSubViews {
     [self addSubview:self.line];
+    [self addSubview:self.roundView];
+    [self.roundView addSubview:self.round];
     [self addSubview:self.classTypeLabel];
     [self addSubview:self.timeLabel];
     [self addSubview:self.waitBrushLabel];
@@ -34,6 +36,7 @@
     [self addSubview:self.statusImageView];
     [self addSubview:self.messageLabel];
     [self addSubview:self.messageTimeLabel];
+    [self addSubview:self.exceptionBtn];
     [self addSubview:self.scoreButton];
     [self addSubview:self.accessaryIcon];
 }
@@ -43,6 +46,16 @@
         make.leading.equalTo(self.mpm_leading).offset(29);
         make.height.equalTo(@(60));
         make.width.equalTo(@1);
+    }];
+    [self.roundView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.width.height.equalTo(@20);
+        make.centerX.equalTo(self.line.mpm_centerX);
+        make.centerY.equalTo(self.line.mpm_centerY);
+    }];
+    [self.round mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.width.height.equalTo(@10);
+        make.centerX.equalTo(self.line.mpm_centerX);
+        make.centerY.equalTo(self.line.mpm_centerY);
     }];
     [self.classTypeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.mpm_leading).offset(8);
@@ -80,6 +93,12 @@
     [self.messageTimeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.centerY.equalTo(self.contentImageView.mpm_centerY);
         make.leading.equalTo(self.messageLabel.mpm_trailing).offset(8);
+    }];
+    [self.exceptionBtn mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerY.equalTo(self.contentImageView.mpm_centerY);
+        make.height.equalTo(@18);
+        make.width.equalTo(@40);
+        make.leading.equalTo(self.messageTimeLabel.mpm_trailing).offset(8);
     }];
     [self.scoreButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.centerY.equalTo(self.contentImageView.mpm_centerY);
@@ -181,6 +200,15 @@
     }
     return _messageTimeLabel;
 }
+
+- (MPMDealingBorderButton *)exceptionBtn {
+    if (!_exceptionBtn) {
+        _exceptionBtn = [[MPMDealingBorderButton alloc] initWithTitle:@"请假" nColor:kOrangeColor sColor:kOrangeColor font:SystemFont(12) cornerRadius:5 borderWidth:1];
+        _exceptionBtn.hidden = YES;
+    }
+    return _exceptionBtn;
+}
+
 - (UIButton *)scoreButton {
     if (!_scoreButton) {
         _scoreButton = [[UIButton alloc] init];
@@ -200,6 +228,23 @@
         _accessaryIcon.image = ImageName(@"statistics_rightenter");
     }
     return _accessaryIcon;
+}
+
+- (UIView *)roundView {
+    if (!_roundView) {
+        _roundView = [[UIView alloc] init];
+        _roundView.backgroundColor = kWhiteColor;
+    }
+    return _roundView;
+}
+
+- (UIView *)round {
+    if (!_round) {
+        _round = [[UIView alloc] init];
+        _round.backgroundColor = kRGBA(226, 226, 226, 1);
+        _round.layer.cornerRadius = 5;
+    }
+    return _round;
 }
 
 @end

@@ -26,8 +26,8 @@
         [self addSubview:self.titleLable];
         [self addSubview:self.detailMessageLabel];
         [self.titleLable mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.mpm_leading).offset(20);
-            make.top.equalTo(self.mpm_top).offset(30);
+            make.leading.equalTo(self.mpm_leading).offset(40);
+            make.centerY.equalTo(self.mpm_centerY);
         }];
         [self.detailMessageLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.leading.equalTo(self.titleLable.mpm_leading);
@@ -55,6 +55,7 @@
     if (!_detailMessageLabel) {
         _detailMessageLabel = [[UILabel alloc] init];
         _detailMessageLabel.textColor = kWhiteColor;
+        _detailMessageLabel.hidden = YES;
         _detailMessageLabel.numberOfLines = 0;
         _detailMessageLabel.font = SystemFont(15);
     }

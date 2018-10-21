@@ -11,11 +11,13 @@
 #import "MPMAttendenceSettingViewController.h"
 #import "MPMIntergralSettingViewController.h"
 #import "MPMAuthoritySettingViewController.h"
+#import "MPMProcessSettingViewController.h"
 #import "MPMShareUser.h"
-#import "MPMSessionManager.h"
+#import "MPMHTTPSessionManager.h"
 #import "MPMSettingSwitchValueModel.h"
 #import "MPMLoginViewController.h"
 #import "MPMApprovalFirstSectionModel.h"
+#import "MPMOauthUser.h"
 
 #define PerimissionId @"8"   /** 考勤设置PermissionId */
 
@@ -30,63 +32,25 @@
 
 @implementation MPMAttendenceBaseSettingViewController
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        [self setupAttributes];
-        [self setupSubViews];
-        [self setupConstraints];
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-//    [self getData];
+    [self setupAttributes];
+    [self setupSubViews];
+    [self setupConstraints];
     [self getPermissionList];
 }
 
-- (void)getData {
-    // 获取“未关联排班时允许打卡”的信息
-    NSString *url = [NSString stringWithFormat:@"%@kqCompanyConfigController/getKqCompanyConfig?token=%@",MPMHost,[MPMShareUser shareUser].token];
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
-        if ([response[@"dataObj"] isKindOfClass:[NSDictionary class]]) {
-            self.switchValueModel = [[MPMSettingSwitchValueModel alloc] initWithDictionary:response[@"dataObj"]];
-        }
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-    } failure:^(NSString *error) {
-        DLog(@"%@",error);
-    }];
-}
-
 - (void)getPermissionList {
-    
-    NSString *url = [NSString stringWithFormat:@"%@ApproveController/getPerimssionList?token=%@&employeeId=%@&perimissionId=%@",MPMHost,[MPMShareUser shareUser].token,[MPMShareUser shareUser].employeeId,PerimissionId];
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
-        DLog(@"%@",response);
-        if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
-            NSArray *permission = response[@"dataObj"];
-            NSMutableArray *temp = [NSMutableArray array];
-            // 现在进入考勤设置，考勤排班固定写死
-            [temp addObject:kClassSettingPerimission];
-            for (id data in permission) {
-                if ([data isKindOfClass:[NSDictionary class]]) {
-                    MPMApprovalFirstSectionModel *model = [[MPMApprovalFirstSectionModel alloc] initWithDictionary:(NSDictionary *)data];
-                    if (kAttendanceSettingPerimissionDic[model.mpm_id]) {
-                        [temp addObject:kAttendanceSettingPerimissionDic[model.mpm_id]];
-                    }
-                }
-            }
-            self.tableViewData = temp.copy;
+    NSArray *arr = [MPMOauthUser shareOauthUser].perimissionArray;
+    NSMutableArray *temp = [NSMutableArray array];
+    for (int i = 0; i < arr.count; i++) {
+        NSString *key = arr[i][@"id"];
+        if (!kIsNilString(key) && kAttendanceSettingPerimissionDicV2[key]) {
+            [temp addObject:kAttendanceSettingPerimissionDicV2[key]];
         }
-        [self.tableView reloadData];
-    } failure:^(NSString *error) {
-        DLog(@"%@",error);
-    }];
+    }
+    self.tableViewData = temp.copy;
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDelegate && UITableViewDataSource
@@ -99,7 +63,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return kTableViewHeight;
+    return 55;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -121,17 +85,7 @@
     }
     __weak typeof(self) weakself = self;
     cell.switchChangeBlock = ^(UISwitch *sender) {
-        __strong typeof (weakself) strongself = weakself;
-        NSString *url = [NSString stringWithFormat:@"%@kqCompanyConfigController/kqCompanyConfigSet?token=%@",MPMHost,[MPMShareUser shareUser].token];
-        NSDictionary *params = @{@"companyId":strongself.switchValueModel.companyId,@"id":strongself.switchValueModel.mpm_id,@"validAttend":(sender.isOn?@"1":@"0")};
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
-            // 修改成功
-            strongself.switchValueModel.validAttend = (sender.isOn?@"1":@"0");
-            [strongself.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-        } failure:^(NSString *error) {
-            // 修改失败
-            [strongself.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-        }];
+        // 切换switch
     };
     return cell;
 }

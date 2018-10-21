@@ -8,17 +8,15 @@
 
 #import "MPMSelectDepartmentViewController.h"
 #import "MPMButton.h"
-#import "MPMSessionManager.h"
-#import "MPMDepartment.h"
+#import "MPMHTTPSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMSelectDepartmentTableViewCell.h"
 #import "MPMDepartEmployeeHelper.h"
-#import "MPMSchedulingDepartmentsModel.h"
-#import "MPMSchedulingEmplyoeeModel.h"
 #import "MPMHiddenTableViewDataSourceDelegate.h"
 #import "MPMGetPeopleModel.h"
 #import "MPMSearchDepartViewController.h"
 #import "MPMSearchPushAnimate.h"
+#import "MPMOauthUser.h"
 
 #define MagicNumber 999
 
@@ -46,9 +44,8 @@
 @property (nonatomic, strong) NSMutableArray *headerButtonTitlesArray;  /** 上一层传入的顶部按钮 */
 @property (nonatomic, strong) NSMutableArray *allSelectedIndexArray;    /** 记录全部选中的indexPath */
 @property (nonatomic, strong) NSMutableArray *partSelectedIndexArray;   /** 记录部分选中的indexPath */
-@property (nonatomic, copy) SelectCheckBlock selectCheckBlock;          /** 确定按钮 */
-@property (nonatomic, copy) NSString *allStringData;                    /** 从子到父类的链条id逗号分隔字符串 */
-@property (nonatomic, assign) forSelectionType selectionType;           /** 限制可以选择部门人员、部门only、人员only */
+@property (nonatomic, copy) ComfirmBlock comfirmBlock;                  /** 确定按钮 */
+@property (nonatomic, assign) SelectionType selectionType;              /** 限制可以选择部门人员、部门only、人员only */
 @property (nonatomic, strong) MPMHiddenTableViewDataSourceDelegate *dataSourceDelegate;
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;            /** 每次跳入下一层级，记录当前点击的indexPath */
 
@@ -56,33 +53,35 @@
 
 @implementation MPMSelectDepartmentViewController
 
-- (instancetype)initWithModel:(MPMDepartment *)model headerButtonTitles:(NSMutableArray *)headerTitles allStringData:(NSString *)allStringData selectionType:(forSelectionType)selectionType selectCheckBlock:(SelectCheckBlock)block {
+- (instancetype)initWithModel:(MPMDepartment *)model headerButtonTitles:(NSMutableArray *)headerTitles selectionType:(SelectionType)selectionType comfirmBlock:(ComfirmBlock)block {
     self = [super init];
     if (self) {
-        self.allStringData = allStringData;
         self.selectionType = selectionType;
-        self.selectCheckBlock = block;
+        self.comfirmBlock = block;
         self.model = model;
         self.headerButtonTitlesArray = [NSMutableArray arrayWithArray:headerTitles.copy];
         [self setupAttributes];
         [self setupSubViews];
         [self setupConstraints];
+        if (1 == headerTitles.count) {
+            [self firstInToCalculateParentIds];
+        }
     }
     return self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    //    self.navigationController.delegate = self;
+//    self.navigationController.delegate = self;
     [self calculateSelect];
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选 (%ld) ",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    //    if (self.navigationController.delegate == self) {
-    //        self.navigationController.delegate = nil;
-    //    }
+//    if (self.navigationController.delegate == self) {
+//        self.navigationController.delegate = nil;
+//    }
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
@@ -95,16 +94,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self getData];
+    [self getDataV2];
 }
 
 - (void)setupAttributes {
     [super setupAttributes];
     self.view.backgroundColor = kTableViewBGColor;
-    if (self.selectionType == forSelectionTypeOnlyEmployee) {
+    if (self.selectionType == kSelectionTypeOnlyEmployee) {
         self.navigationItem.title = @"选择人员";
         self.headerSearchBar.placeholder = @"搜索人员";
-    } else if (self.selectionType == forSelectionTypeOnlyDepartment) {
+    } else if (self.selectionType == kSelectionTypeOnlyDepartment) {
         self.navigationItem.title = @"选择部门";
         self.headerSearchBar.placeholder = @"搜索部门";
     } else {
@@ -248,40 +247,96 @@
     }];
 }
 
-- (void)getData {
-    NSString *parentId = self.model ? self.model.mpm_id : @"-1";
-    NSString *url = [NSString stringWithFormat:@"%@departmentVos?parentId=%@&token=%@&employeeId=%@",MPMHost,parentId,[MPMShareUser shareUser].token,[MPMShareUser shareUser].employeeId];
-    [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
-        NSMutableArray *temp = [NSMutableArray array];
-        NSArray *tempArr = response[@"dataObj"];
-        for (int j = 0; j < tempArr.count ; j++) {
-            NSDictionary *d = response[@"dataObj"][j];
-            MPMDepartment *depart = [[MPMDepartment alloc] initWithDictionary:d];
-            [temp addObject:depart];
-        }
-        if (temp.count > 0) {
-            for (int i = 0; i < temp.count; i++) {
-                MPMDepartment *depart = temp[i];
-                if (depart.isHuman) {
-                    // 后台接口的parentId如果是human，是不正确的，于是我自己组成正确的
-                    depart.parent_ids = [NSString stringWithFormat:@"-1,%@",self.allStringData];
-                }
+- (void)getDataV2 {
+    NSString *orgId = self.model ? self.model.mpm_id : @"-1";
+    NSString *url = [NSString stringWithFormat:@"%@%@?companyId=%@&companyCode=%@&orgId=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_MIX_FINDBYORGID,[MPMOauthUser shareOauthUser].company_id,[MPMOauthUser shareOauthUser].company_code,orgId];
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        DLog(@"%@",response);
+        if ([response[kResponseObjectKey] isKindOfClass:[NSArray class]] && ((NSArray *)response[kResponseObjectKey]).count > 0) {
+            NSArray *object = response[kResponseObjectKey];
+            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:object.count];
+            for (int i = 0; i < object.count; i++) {
+                NSDictionary *dic = object[i];
+                MPMDepartment *depart = [[MPMDepartment alloc] initWithDictionary:dic];
+                depart.isHuman = [depart.type isEqualToString:kUserType];
+                /*
+                if (kIsNilString(depart.parentIds) && depart.isHuman && !kIsNilString(depart.employeeId)) {
+                    // 如果人员的parentIds为空，则把人员上一级（部门）的parentIds拼上当前员工的employeeId即为员工的parentIds
+                    depart.parentIds = [self.model.parentIds stringByAppendingString:[NSString stringWithFormat:@",%@",depart.employeeId]];
+                }*/
+                [temp addObject:depart];
             }
-        }
-        
-        self.departsArray = temp.copy;
-        
-        if (self.headerButtonTitlesArray.count == 1) {
-            // 第一层的部门选择页面初始化的时候
-            [self getParentIds];
-        } else {
-            // 这时候[MPMDepartEmployeeHelper shareInstance].allArrayData已经有数据了，可以直接筛选全选和部分选中了
+            self.departsArray = temp.copy;
             [self calculateSelect];
-            self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
+            self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选 (%ld) ",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
+}
+
+/** 第一次进入人员选择器，如果带入了相应的人员或部门，则通过调用接口计算parentIds */
+- (void)firstInToCalculateParentIds {
+    if (0 == [MPMDepartEmployeeHelper shareInstance].departments.count && 0 == [MPMDepartEmployeeHelper shareInstance].employees.count) {
+        return;
+    } else {
+        dispatch_group_t group = dispatch_group_create();
+        // 查询人员的parentIds
+        for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].employees.count; i++) {
+            MPMDepartment *emp = [MPMDepartEmployeeHelper shareInstance].employees[i];
+            dispatch_group_enter(group);
+            dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+                NSString *url = [NSString stringWithFormat:@"%@%@?keyWord=%@&companyCode=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_MIX_FINDBYKEYWORD,emp.name,[MPMOauthUser shareOauthUser].company_code];
+                NSString *encodingUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+                [[MPMSessionManager shareManager] postRequestWithURL:encodingUrl setAuth:YES params:nil loadingMessage:@"正在搜索" success:^(id response) {
+                    if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                        NSArray *object = response[kResponseObjectKey];
+                        for (int i = 0; i < object.count; i++) {
+                            NSDictionary *dic = object[i];
+                            MPMDepartment *depart = [[MPMDepartment alloc] initWithDictionary:dic];
+                            depart.isHuman = [depart.type isEqualToString:kUserType];
+                            if ([depart.mpm_id isEqualToString:emp.mpm_id]) {
+                                emp.parentIds = depart.parentIds;
+                            }
+                        }
+                    }
+                    dispatch_group_leave(group);
+                } failure:^(NSString *error) {
+                    DLog(@"%@",error);
+                    dispatch_group_leave(group);
+                }];
+            });
+        }
+        // 查询部门的parentIds
+        for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].departments.count; i++) {
+            MPMDepartment *dep = [MPMDepartEmployeeHelper shareInstance].departments[i];
+            dispatch_group_enter(group);
+            dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+                NSString *url = [NSString stringWithFormat:@"%@%@?keyWord=%@&companyCode=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_MIX_FINDBYKEYWORD,dep.name,[MPMOauthUser shareOauthUser].company_code];
+                NSString *encodingUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+                [[MPMSessionManager shareManager] postRequestWithURL:encodingUrl setAuth:YES params:nil loadingMessage:@"正在搜索" success:^(id response) {
+                    if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                        NSArray *object = response[kResponseObjectKey];
+                        for (int i = 0; i < object.count; i++) {
+                            NSDictionary *dic = object[i];
+                            MPMDepartment *depart = [[MPMDepartment alloc] initWithDictionary:dic];
+                            depart.isHuman = [depart.type isEqualToString:kUserType];
+                            if ([depart.mpm_id isEqualToString:dep.mpm_id]) {
+                                dep.parentIds = depart.parentIds;
+                            }
+                        }
+                    }
+                    dispatch_group_leave(group);
+                } failure:^(NSString *error) {
+                    DLog(@"%@",error);
+                    dispatch_group_leave(group);
+                }];
+            });
+        }
+        dispatch_group_notify(group, kMainQueue, ^{
+            [self calculateSelect];
+        });
+    }
 }
 
 // 通过[MPMDepartEmployeeHelper shareInstance].allArrayData数组来决定哪些已选中和哪些未选中
@@ -293,85 +348,37 @@
         MPMDepartment *model = self.departsArray[i];
         BOOL allSelect = NO;
         BOOL partSelect = NO;
-        for (MPMSchedulingEmplyoeeModel *eee in [MPMDepartEmployeeHelper shareInstance].employees) {
-            if ([eee.employeeId isEqualToString:model.mpm_id]) {
-                allSelect = YES;
-            }
-            if ([[eee.parentsId componentsSeparatedByString:@","] containsObject:model.mpm_id]) {
-                partSelect = YES;
+        for (MPMDepartment *eee in [MPMDepartEmployeeHelper shareInstance].employees) {
+            if (model.isHuman) {
+                if ([eee.mpm_id isEqualToString:model.mpm_id]) {
+                    allSelect = YES;
+                }
+            } else {
+                if ([[eee.parentIds componentsSeparatedByString:@","] containsObject:model.mpm_id] || [eee.parentId isEqualToString:model.mpm_id]) {
+                    partSelect = YES;
+                }
             }
         }
-        for (MPMSchedulingDepartmentsModel *ddd in [MPMDepartEmployeeHelper shareInstance].departments) {
-            if ([ddd.departmentId isEqualToString:model.mpm_id]) {
+        for (MPMDepartment *ddd in [MPMDepartEmployeeHelper shareInstance].departments) {
+            if ([ddd.mpm_id isEqualToString:model.mpm_id]) {
                 allSelect = YES;
             }
-            if ([[ddd.parentsId componentsSeparatedByString:@","] containsObject:model.mpm_id]) {
+            if ([[ddd.parentIds componentsSeparatedByString:@","] containsObject:model.mpm_id]) {
                 partSelect = YES;
             }
         }
         if (allSelect) {
-            self.departsArray[i].selectedStatus = @"1";
+            self.departsArray[i].selectedStatus = kSelectedStatusAllSelected;
             [self.allSelectedIndexArray addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         } else if (partSelect) {
-            self.departsArray[i].selectedStatus = @"2";
+            self.departsArray[i].selectedStatus = kSelectedStatusPartSelected;
             [self.partSelectedIndexArray addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         } else {
-            self.departsArray[i].selectedStatus = @"0";
+            self.departsArray[i].selectedStatus = kSelectedStatusUnselected;
         }
     }
     
     [self.tableView reloadData];
-}
-
-- (void)getParentIds {
-    dispatch_group_t group = dispatch_group_create();
-    
-    if ([MPMDepartEmployeeHelper shareInstance].employees.count > 0) {
-        for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].employees.count; i++) {
-            dispatch_group_enter(group);
-            dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-                NSString *employeeId = [MPMDepartEmployeeHelper shareInstance].employees[i].employeeId;
-                NSString *url = [NSString stringWithFormat:@"%@getParentIds?employeeId=%@&token=%@&",MPMHost,employeeId,[MPMShareUser shareUser].token];
-                [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
-                    id emp = response[@"dataObj"];
-                    if ([emp isKindOfClass:[NSString class]]) {
-                        [[MPMDepartEmployeeHelper shareInstance].allStringData addObject:emp];
-                    }
-                    dispatch_group_leave(group);
-                } failure:^(NSString *error) {
-                    DLog(@"%@",error);
-                    dispatch_group_leave(group);
-                }];
-            });
-        }
-    }
-    
-    if ([MPMDepartEmployeeHelper shareInstance].departments.count > 0) {
-        for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].departments.count; i++) {
-            dispatch_group_enter(group);
-            dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-                NSString *departmentId = [MPMDepartEmployeeHelper shareInstance].departments[i].departmentId;
-                NSString *url = [NSString stringWithFormat:@"%@getParentIds?departmentId=%@&token=%@&",MPMHost,departmentId,[MPMShareUser shareUser].token];
-                [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
-                    id dep = response[@"dataObj"];
-                    if ([dep isKindOfClass:[NSString class]]) {
-                        [[MPMDepartEmployeeHelper shareInstance].allStringData addObject:dep];
-                    }
-                    dispatch_group_leave(group);
-                } failure:^(NSString *error) {
-                    DLog(@"%@",error);
-                    dispatch_group_leave(group);
-                }];
-            });
-        }
-    }
-    
-    dispatch_group_notify(group, kMainQueue, ^{
-        [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
-        [self calculateSelect];
-        self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
-    });
-    
 }
 
 #pragma mark - Target Action
@@ -387,12 +394,13 @@
     }
     // 使用Delegate的方式回传数据
     if (self.delegate && [self.delegate respondsToSelector:@selector(departCompleteSelectWithDepartments:employees:)]) {
-        [self.delegate departCompleteSelectWithDepartments:[MPMDepartEmployeeHelper shareInstance].departments employees:[MPMDepartEmployeeHelper shareInstance].employees];
+        [self.delegate departCompleteSelectWithDepartments:[MPMDepartEmployeeHelper shareInstance].departments.copy employees:[MPMDepartEmployeeHelper shareInstance].employees.copy];
     }
     // 使用Block的方式回传数据
     if (self.sureSelectBlock) {
-        self.sureSelectBlock([MPMDepartEmployeeHelper shareInstance].departments, [MPMDepartEmployeeHelper shareInstance].employees);
+        self.sureSelectBlock([MPMDepartEmployeeHelper shareInstance].departments.copy, [MPMDepartEmployeeHelper shareInstance].employees.copy);
     }
+    [[MPMDepartEmployeeHelper shareInstance] clearData];
     // 跳回第一个进入选择部门的页面。
     UIViewController *vc = self.navigationController.viewControllers[self.navigationController.viewControllers.count-1-self.headerButtonTitlesArray.count];
     [self.navigationController popToViewController:vc animated:YES];
@@ -409,16 +417,17 @@
 - (void)popUp:(UIButton *)sender {
     sender.selected = !sender.selected;
     NSMutableArray *temp = [NSMutableArray array];
-    for (MPMSchedulingDepartmentsModel *dep in [MPMDepartEmployeeHelper shareInstance].departments) {
+    for (MPMDepartment *dep in [MPMDepartEmployeeHelper shareInstance].departments) {
         MPMGetPeopleModel *model = [[MPMGetPeopleModel alloc] init];
-        model.name = dep.departmentName;
-        model.mpm_id = dep.departmentId;
+        model.name = dep.name;
+        model.mpm_id = dep.mpm_id;
+        model.isHuman = @"0";
         [temp addObject:model];
     }
-    for (MPMSchedulingEmplyoeeModel *emp in [MPMDepartEmployeeHelper shareInstance].employees) {
+    for (MPMDepartment *emp in [MPMDepartEmployeeHelper shareInstance].employees) {
         MPMGetPeopleModel *model = [[MPMGetPeopleModel alloc] init];
-        model.name = emp.employeeName;
-        model.mpm_id = emp.employeeId;
+        model.name = emp.name;
+        model.mpm_id = emp.mpm_id;
         model.isHuman = @"1";
         [temp addObject:model];
     }
@@ -499,37 +508,29 @@
     for (int i = 0; i < self.departsArray.count; i++) {
         MPMDepartment *mo = self.departsArray[i];
         if ([mo.mpm_id isEqualToString:people.mpm_id]) {
-            self.departsArray[i].selectedStatus = @"0";
+            self.departsArray[i].selectedStatus = kSelectedStatusUnselected;
             [self.allSelectedIndexArray removeObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
     }
     // 传递回去上个页面
     if (self.allSelectedIndexArray.count == self.departsArray.count) {
-        // 如果已经是全选了-传回status = 1
-        if (self.selectCheckBlock) {
-            self.selectCheckBlock(@"1");
+        // 如果已经是全选了-传回status
+        if (self.comfirmBlock) {
+            self.comfirmBlock(kSelectedStatusAllSelected);
         }
     } else if (self.allSelectedIndexArray.count == 0 && self.partSelectedIndexArray.count == 0) {
-        // 如果一个都没选中-传回status = 0
-        if (self.selectCheckBlock) {
-            self.selectCheckBlock(@"0");
+        // 如果一个都没选中-传回status
+        if (self.comfirmBlock) {
+            self.comfirmBlock(kSelectedStatusUnselected);
         }
     } else {
-        // 如果部分选中-传回status = 2
-        if (self.selectCheckBlock) {
-            self.selectCheckBlock(@"2");
+        // 如果部分选中-传回status
+        if (self.comfirmBlock) {
+            self.comfirmBlock(kSelectedStatusPartSelected);
         }
     }
     
-    // 移除全局对象里面的内容
-    [[MPMDepartEmployeeHelper shareInstance].allStringData enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj containsString:depart.mpm_id]) {
-            [[MPMDepartEmployeeHelper shareInstance].allStringData removeObject:obj];
-        }
-    }];
-    [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
-    
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选 (%ld) ",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
     [self.tableView reloadData];
 }
 
@@ -548,10 +549,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-//    if (self.departsArray.count == 0) {
-//        return 0;
-//    }
-//    return kTableViewHeight;
     return 0;
 }
 
@@ -563,56 +560,17 @@
     static NSString *identifier = @"DepartmentCell";
     MPMSelectDepartmentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[MPMSelectDepartmentTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+        cell = [[MPMSelectDepartmentTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier selectionType:self.selectionType];
     }
-//    // 全选
-//    if (indexPath.section == 0) {
-//        cell.isHuman = nil;
-//        cell.checkIconImage.image = ImageName(@"setting_none");
-//        cell.accessoryType = UITableViewCellAccessoryNone;
-//        cell.txLabel.text = @"全选";
-//        __weak typeof(self) weakself = self;
-//        cell.checkImageBlock = ^{
-//            DLog(@"全选...");
-//            __strong typeof(weakself) strongself = weakself;
-//            if (strongself.selectionType == forSelectionTypeOnlyEmployee) {
-//                // 如果只能选择员工
-//                BOOL hasDepart = NO;
-//                for (MPMDepartment *model in self.departsArray) {
-//                    if (!model.isHuman) {
-//                        hasDepart = YES;
-//                    }
-//                }
-//                if (hasDepart) {
-//                    [strongself showAlertControllerToLogoutWithMessage:@"当前只允许选择员工" sureAction:nil needCancleButton:NO];
-//                } else {
-//                    [strongself showAlertControllerToLogoutWithMessage:@"功能还在完善中..." sureAction:nil needCancleButton:NO];
-//                }
-//            } else if (strongself.selectionType == forSelectionTypeOnlyDepartment) {
-//                // 如果只能选择部门
-//                BOOL hasEmpoyee = NO;
-//                for (MPMDepartment *model in self.departsArray) {
-//                    if (model.isHuman && model.isHuman.integerValue == 1) {
-//                        hasEmpoyee = YES;
-//                    }
-//                }
-//                if (hasEmpoyee) {
-//                    [strongself showAlertControllerToLogoutWithMessage:@"当前只允许选择部门" sureAction:nil needCancleButton:NO];
-//                } else {
-//                    [strongself showAlertControllerToLogoutWithMessage:@"功能还在完善中..." sureAction:nil needCancleButton:NO];
-//                }
-//            } else {
-//                // 如果部门或者员工都可以选择
-//                [strongself showAlertControllerToLogoutWithMessage:@"功能还在完善中..." sureAction:nil needCancleButton:NO];
-//            }
-//        };
-//        return cell;
-//    }
     MPMDepartment *depart = self.departsArray[indexPath.row];
     cell.isHuman = depart.isHuman;
-    if (depart.selectedStatus.integerValue == 1) {
+    if (cell.isHuman) {
+        cell.roundPeopleView.nameLabel.text = depart.name.length > 2 ? [depart.name substringFromIndex:depart.name.length-2] : depart.name;
+        [cell.roundPeopleView setNeedsDisplay];
+    }
+    if (depart.selectedStatus == kSelectedStatusAllSelected) {
         cell.checkIconImage.image = ImageName(@"setting_all");
-    } else if (depart.selectedStatus.integerValue == 2) {
+    } else if (depart.selectedStatus == kSelectedStatusPartSelected) {
         cell.checkIconImage.image = ImageName(@"setting_some");
     } else {
         cell.checkIconImage.image = ImageName(@"setting_none");
@@ -622,26 +580,22 @@
     __weak typeof(self) weakself = self;
     cell.checkImageBlock = ^{
         __strong typeof(weakself) strongself = weakself;
-        NSString *preStatus = ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus;// 取出之前的状态
-        if (preStatus.integerValue == 1) {
+        SelectedStatus preStatus = ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus;// 取出之前的状态
+        if (preStatus == kSelectedStatusAllSelected) {
             // 如果之前为全选，则变为不选中
-            ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = @"0";
+            ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = kSelectedStatusUnselected;
             [strongself.allSelectedIndexArray removeObject:indexPath];
             // 如果是员工，需要移出。如果是部门，需要移除部门内所有内容
-            NSString *str = kIsNilString(strongself.allStringData)?strongself.departsArray[indexPath.row].mpm_id:[NSString stringWithFormat:@"%@,%@",strongself.allStringData,strongself.departsArray[indexPath.row].mpm_id];
             if (depart.isHuman) {
                 // 如果是员工，则直接移除
                 [[MPMDepartEmployeeHelper shareInstance] employeeArrayRemoveDepartModel:depart];
-                [[MPMDepartEmployeeHelper shareInstance].allStringData removeObject:str];
             } else {
                 // 如果是部门，需要移除部门下面的全部内容
                 [[MPMDepartEmployeeHelper shareInstance] departmentArrayRemoveSub:depart];
-                [[MPMDepartEmployeeHelper shareInstance] allStringDataRemoveSubOfId:str];
             }
-            [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
-        } else if (preStatus.integerValue == 2) {
+        } else if (preStatus == kSelectedStatusPartSelected) {
             // 如果之前为部分选中，则变为不选中
-            ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = @"0";
+            ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = kSelectedStatusUnselected;
             [strongself.partSelectedIndexArray removeObject:indexPath];
             if (depart.isHuman) {
                 // 不可能是人员
@@ -649,49 +603,42 @@
                 // 如果是部门-其实是删除里面的员工
                 [[MPMDepartEmployeeHelper shareInstance] departmentArrayRemoveSub:depart];
             }
-            // 由于不可能是员工，所以直接移除部门地下所有的内容
-            NSString *str = kIsNilString(strongself.allStringData)?strongself.departsArray[indexPath.row].mpm_id:[NSString stringWithFormat:@"%@,%@",strongself.allStringData,strongself.departsArray[indexPath.row].mpm_id];
-            [[MPMDepartEmployeeHelper shareInstance] allStringDataRemoveSubOfId:str];
-            [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
         } else {
             // 如果之前为不选中，则变为全选
-            if (strongself.selectionType == forSelectionTypeOnlyEmployee && !depart.isHuman) {
+            if (strongself.selectionType == kSelectionTypeOnlyEmployee && !depart.isHuman) {
                 // 如果是只能选择员工，但是选择了部门
                 [strongself showAlertControllerToLogoutWithMessage:@"当前只允许选择员工" sureAction:nil needCancleButton:NO];
-            } else if (strongself.selectionType == forSelectionTypeOnlyDepartment && depart.isHuman) {
+            } else if (strongself.selectionType == kSelectionTypeOnlyDepartment && depart.isHuman) {
                 // 如果是只能选择部门，但是选择了员工
                 [strongself showAlertControllerToLogoutWithMessage:@"当前只允许选择部门" sureAction:nil needCancleButton:NO];
             } else {
-                ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = @"1";
+                ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = kSelectedStatusAllSelected;
                 [strongself.allSelectedIndexArray addObject:indexPath];
                 if (depart.isHuman) {
                     [[MPMDepartEmployeeHelper shareInstance] employeeArrayAddDepartModel:depart];
                 } else {
                     [[MPMDepartEmployeeHelper shareInstance] departmentArrayAddDepartModel:depart];
                 }
-                NSString *str = kIsNilString(strongself.allStringData)?strongself.departsArray[indexPath.row].mpm_id:[NSString stringWithFormat:@"%@,%@",strongself.allStringData,strongself.departsArray[indexPath.row].mpm_id];
-                [[MPMDepartEmployeeHelper shareInstance].allStringData addObject:str];
-                [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
             }
         }
         
         if (strongself.allSelectedIndexArray.count == strongself.departsArray.count) {
-            // 如果已经是全选了-传回status = 1
-            if (strongself.selectCheckBlock) {
-                strongself.selectCheckBlock(@"1");
+            // 如果已经是全选了-传回status
+            if (strongself.comfirmBlock) {
+                strongself.comfirmBlock(kSelectedStatusAllSelected);
             }
         } else if (strongself.allSelectedIndexArray.count == 0 && strongself.partSelectedIndexArray.count == 0) {
-            // 如果一个都没选中-传回status = 0
-            if (strongself.selectCheckBlock) {
-                strongself.selectCheckBlock(@"0");
+            // 如果一个都没选中-传回status
+            if (strongself.comfirmBlock) {
+                strongself.comfirmBlock(kSelectedStatusUnselected);
             }
         } else {
-            // 如果部分选中-传回status = 2
-            if (strongself.selectCheckBlock) {
-                strongself.selectCheckBlock(@"2");
+            // 如果部分选中-传回status
+            if (strongself.comfirmBlock) {
+                strongself.comfirmBlock(kSelectedStatusPartSelected);
             }
         }
-        strongself.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
+        strongself.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选 (%ld) ",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     };
     cell.txLabel.text = depart.name;
@@ -702,18 +649,24 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     MPMDepartment *depart = self.departsArray[indexPath.row];
     // 如果是人员，或者已经全选，则不让再跳入
-    if (depart.isHuman || depart.selectedStatus.integerValue == 1) return;
+    if (depart.isHuman) {
+        MPMSelectDepartmentTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (cell.checkImageBlock) {
+            cell.checkImageBlock();
+        }
+        return;
+    }
+    if (depart.selectedStatus == kSelectedStatusAllSelected) return;
     self.currentIndexPath = indexPath;
     NSMutableArray *temp = [NSMutableArray arrayWithArray:self.headerButtonTitlesArray.copy];
     [temp addObject:depart.name];
-    NSString *nextString = kIsNilString(self.allStringData)?depart.mpm_id:[NSString stringWithFormat:@"%@,%@",self.allStringData,depart.mpm_id];
     __weak typeof(self) weakself = self;
-    MPMSelectDepartmentViewController *takepart = [[MPMSelectDepartmentViewController alloc] initWithModel:depart headerButtonTitles:temp allStringData:nextString selectionType:(forSelectionType)self.selectionType selectCheckBlock:^(NSString *status) {
+    MPMSelectDepartmentViewController *takepart = [[MPMSelectDepartmentViewController alloc] initWithModel:depart headerButtonTitles:temp selectionType:(SelectionType)self.selectionType comfirmBlock:^(SelectedStatus selectedStatus) {
         __strong typeof(weakself) strongself = weakself;
         // 下一层界面回传status回来：改变当前cell的图标，并改变当前的选中数组。（如果还需要传给上一级，则再传）
-        ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = status;
+        ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = selectedStatus;
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        if (status.integerValue == 1) {
+        if (selectedStatus == kSelectedStatusAllSelected) {
             // 如果之前是全选-不处理；如果之前是部分选中，则移除并加入全选中;如果之前是没有选中，则加入全选中。
             if ([strongself.allSelectedIndexArray containsObject:indexPath]) {
                 
@@ -723,7 +676,7 @@
             } else {
                 [strongself.allSelectedIndexArray addObject:indexPath];
             }
-        } else if (status.integerValue == 2) {
+        } else if (selectedStatus == kSelectedStatusPartSelected) {
             // 如果之前是全选，移出全选加入部分选中；如果之前是部分选中-不处理；如果之前是没有选中，加入部分选中。
             if ([strongself.allSelectedIndexArray containsObject:indexPath]) {
                 [strongself.allSelectedIndexArray removeObject:indexPath];
@@ -744,23 +697,23 @@
         
         if (strongself.allSelectedIndexArray.count == strongself.departsArray.count) {
             // 如果已经是全选了-传回status = 1
-            if (strongself.selectCheckBlock) {
-                strongself.selectCheckBlock(@"1");
+            if (strongself.comfirmBlock) {
+                strongself.comfirmBlock(kSelectedStatusAllSelected);
             }
         } else if (strongself.allSelectedIndexArray.count == 0 && strongself.partSelectedIndexArray.count == 0) {
             // // 如果一个都没选中-传回status = 0
-            if (strongself.selectCheckBlock) {
-                strongself.selectCheckBlock(@"0");
+            if (strongself.comfirmBlock) {
+                strongself.comfirmBlock(kSelectedStatusUnselected);
             }
         } else {
             // 如果部分选中-传回status = 2
-            if (strongself.selectCheckBlock) {
-                strongself.selectCheckBlock(@"2");
+            if (strongself.comfirmBlock) {
+                strongself.comfirmBlock(kSelectedStatusPartSelected);
             }
         }
         
         [strongself.tableView reloadData];
-        strongself.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选:人员%ld人(部门%ld个)",[MPMDepartEmployeeHelper shareInstance].employees.count,[MPMDepartEmployeeHelper shareInstance].departments.count];
+        strongself.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选 (%ld) ",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
         
     }];
     takepart.delegate = self.delegate;
@@ -785,7 +738,7 @@
 }
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    MPMSearchDepartViewController *controller = [[MPMSearchDepartViewController alloc] initWithDelegate:self.delegate sureSelectBlock:self.sureSelectBlock selectType:self.selectionType titleArray:self.headerButtonTitlesArray];
+    MPMSearchDepartViewController *controller = [[MPMSearchDepartViewController alloc] initWithDelegate:self.delegate sureSelectBlock:self.sureSelectBlock selectionType:self.selectionType titleArray:self.headerButtonTitlesArray];
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:controller animated:YES];
     return NO;

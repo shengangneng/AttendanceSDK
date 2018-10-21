@@ -16,8 +16,8 @@
 #import "MPMShareUser.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import "MPMStatisticModel.h"
-#import "MPMSchedulingDepartmentsModel.h"
 #import "MPMLoginViewController.h"
+#import "MPMOauthUser.h"
 
 #define kKeyPath1 @"currentDateType1"
 #define kKeyPath2 @"currentDateType2"
@@ -52,8 +52,8 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 // 用于区分个人和团队
 @property (nonatomic, assign) forGetDataType currentType;
 // 请求回来的数据
-@property (nonatomic, copy)  NSArray<MPMStatisticModel *> *personTotalArray;
-@property (nonatomic, copy)  NSArray<MPMStatisticModel *> *personDetaiArray;
+@property (nonatomic, copy)  NSArray<MPMStatisticCountList *> *personDetaiArray;
+@property (nonatomic, strong) MPMStatisticModel *model;
 
 @property (nonatomic, strong) NSDate *currentDate;     /** 记录选中的时间，默认为当前时间 */
 @property (nonatomic, copy) NSString *currentDateType1;/** 2018/04/20 */
@@ -68,27 +68,43 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
     if (self) {
         [self addObserver];
         [self formatDate];
-        [self setupAttributes];
-        [self setupSubViews];
-        [self setupConstraints];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setupAttributes];
+    __weak typeof(self) weakself = self;
+    [self addNetworkMonitoringWithGoodNetworkBlock:^{
+        __strong typeof(weakself) strongself = weakself;
+        [strongself setupSubViews];
+        [strongself setupConstraints];
+        if (strongself.goodNetworkToLoadBlock) {
+            strongself.goodNetworkToLoadBlock();
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    __weak typeof(self) weakself = self;
+    self.goodNetworkToLoadBlock = ^{
+        __strong typeof(weakself) strongself = weakself;
+        [strongself getData:forDataTypePerson];
+    };
     [self getData:forDataTypePerson];
+}
+
+- (void)logout:(UIButton *)sender {
+    kAppDelegate.window.rootViewController = [[MPMLoginViewController alloc] init];
+    [[MPMOauthUser shareOauthUser] clearData];
 }
 
 - (void)formatDate {
     NSDate *currentDate = self.currentDate = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    self.currentDateType1 = [dateFormatter formatterDate:currentDate withCustomFormatterType:@"yyyy/MM/dd"];
-    self.currentDateType2 = [dateFormatter formatterDate:currentDate withCustomFormatterType:@"yyyy-MM"];
+    self.currentDateType1 = [NSDateFormatter formatterDate:currentDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
+    self.currentDateType2 = [NSDateFormatter formatterDate:currentDate withDefineFormatterType:forDateFormatTypeYearMonthBar];
 }
 
 - (void)addObserver {
@@ -112,64 +128,32 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 }
 
 - (void)getData:(forGetDataType)type {
-    MPMShareUser *user = [MPMShareUser shareUser];
-    NSString *url = [NSString stringWithFormat:@"%@AttendanceCountController/getAttendanceCountList",MPMHost];
-    NSDictionary *dic;
-    
-    if (type == forDataTypePerson) {
-        // 获取个人，不需要传departmentId
-        dic = @{@"employeeId":user.employeeId,@"month":self.currentDateType1,@"token":user.token};
-    } else if (type == forDataTypeTeam) {
-        // 获取团队，传departmentId
-        dic = @{@"departmentId":[MPMShareUser shareUser].departmentId,@"month":self.currentDateType1,@"token":user.token};
-    }
-    
-    [[MPMSessionManager shareManager] getRequestWithURL:url params:dic success:^(id response) {
-        if ([response[@"dataObj"][@"collect"] isKindOfClass:[NSArray class]]) {
-            NSArray *arr = response[@"dataObj"][@"collect"];
-            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
-            for (int i = 0; i < arr.count; i++) {
-                MPMStatisticModel *model = [[MPMStatisticModel alloc] initWithDictionary:arr[i]];
-                [temp addObject:model];
-            }
-            self.personTotalArray = temp.copy;
-        }
-        if ([response[@"dataObj"][@"item"] isKindOfClass:[NSArray class]]) {
-            NSArray *arr = response[@"dataObj"][@"item"];
-            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arr.count];
-            for (int i = 0; i < arr.count; i++) {
-                MPMStatisticModel *model = [[MPMStatisticModel alloc] initWithDictionary:arr[i]];
-                [temp addObject:model];
+    NSString *url = [NSString stringWithFormat:@"%@%@?month=%@",MPMINTERFACE_HOST,MPMINTERFACE_STATISTIC_COUNT,self.currentDateType1];
+    NSString *encodingUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+    [[MPMSessionManager shareManager] getRequestWithURL:encodingUrl setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        DLog(@"%@",response);
+        if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *object = response[kResponseObjectKey];
+            self.model = [[MPMStatisticModel alloc] initWithDictionary:object];
+            NSMutableArray *temp = @[].mutableCopy;
+            for (int i = 0; i < self.model.countList.count; i++) {
+                NSDictionary *dic = self.model.countList[i];
+                MPMStatisticCountList *list = [[MPMStatisticCountList alloc] initWithDictionary:dic];
+                [temp addObject:list];
             }
             self.personDetaiArray = temp.copy;
         }
         [self updateTotalMessage];
-        [self updateTableMessage];
+        [self.bottomTableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
-        self.personDetaiArray = nil;
-        self.personTotalArray = nil;
-        [self updateTotalMessage];
-        [self updateTableMessage];
     }];
 }
 
 - (void)updateTotalMessage {
-    if (!self.personTotalArray || self.personTotalArray.count < 3) {
-        self.totalDate.text = @"0";
-        self.totalDateTitle.text = @"实际出勤/应出勤";
-        self.totalScore.text = @"0";
-        self.totalDeScoreTitle.text = @"奖分";
-        self.totalDeScore.text = @"0";
-        self.totalDeScoreTitle.text = @"扣分";
-    } else {
-        self.totalDate.text = [NSString stringWithFormat:@"%d",self.personTotalArray[0].value.intValue];
-        self.totalDateTitle.text = self.personTotalArray[0].name;
-        self.totalScore.text = [NSString stringWithFormat:@"%d",self.personTotalArray[1].value.intValue];
-        self.totalDeScoreTitle.text = self.personTotalArray[1].name;
-        self.totalDeScore.text = [NSString stringWithFormat:@"%d",self.personTotalArray[2].value.intValue];
-        self.totalDeScoreTitle.text = self.personTotalArray[2].name;
-    }
+    self.totalDate.text = [NSString stringWithFormat:@"%@ / %@",self.model.actualAttendance,self.model.shouldAttendance];
+    self.totalScore.text = self.model.awardCount;
+    self.totalDeScore.text = self.model.buckleCount;
 }
 
 - (void)updateTableMessage {
@@ -200,7 +184,8 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 - (void)setupAttributes {
     [super setupAttributes];
     self.navigationItem.title = @"考勤统计";
-    self.titleTextField.text = [NSString stringWithFormat:@"%@  %@",[MPMShareUser shareUser].employeeName,[MPMShareUser shareUser].departmentName];
+    [self setRightBarButtonType:forBarButtonTypeTitle title:@"退出" image:nil action:@selector(logout:)];
+    self.titleTextField.text = [NSString stringWithFormat:@"%@  %@",[MPMOauthUser shareOauthUser].name_cn,[MPMOauthUser shareOauthUser].department_name];
     self.currentType = forDataTypePerson;
     [self.selectDateButton addTarget:self action:@selector(selectData:) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -308,30 +293,12 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
     }
 }
 
-/*
-- (UIViewController *)getCurrentVCFromRoot:(UIViewController *)root {
-    UIViewController *currentVC;
-    if ([root presentedViewController]) {
-        root = [root presentedViewController];
-    }
-    if ([root isKindOfClass:[UITabBarController class]]) {
-        currentVC = [self getCurrentVCFromRoot:[(UITabBarController *)root selectedViewController]];
-    } else if ([root isKindOfClass:[UINavigationController class]]) {
-        currentVC = [self getCurrentVCFromRoot:[(UINavigationController *)root visibleViewController]];
-    } else {
-        currentVC = root;
-    }
-    return currentVC;
-}
-*/
-
 #pragma mark - MPMCustomDatePickerViewDelegate
 
 - (void)customDatePickerViewDidCompleteSelectDate:(NSDate *)date {
     self.currentDate = date;
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    self.currentDateType1 = [dateFormatter formatterDate:date withCustomFormatterType:@"yyyy/MM/dd"];
-    self.currentDateType2 = [dateFormatter formatterDate:date withCustomFormatterType:@"yyyy-MM"];
+    self.currentDateType1 = [NSDateFormatter formatterDate:self.currentDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
+    self.currentDateType2 = [NSDateFormatter formatterDate:self.currentDate withDefineFormatterType:forDateFormatTypeYearMonthBar];
     [self getData:self.currentType];
 }
 
@@ -357,11 +324,11 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
         cell = [[MPMStatisticTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
     }
     
-    MPMStatisticModel *detailModel = self.personDetaiArray[indexPath.row];
+    MPMStatisticCountList *detailModel = self.personDetaiArray[indexPath.row];
     cell.image.image = ImageName(kStatisticCellImage[detailModel.name]);
     cell.titleLabel.text = detailModel.name;
     cell.countLabel.text = [NSString stringWithFormat:@"%d次",detailModel.count.intValue];
-    cell.scoreLabel.text = [NSString stringWithFormat:@"%d分",detailModel.value.intValue];
+    cell.scoreLabel.text = [NSString stringWithFormat:@"%d分",detailModel.sumScore.intValue];
     return cell;
 }
 

@@ -8,12 +8,12 @@
 
 #import "MPMSessionManager.h"
 #import "MPMLoginViewController.h"
-#import "MPMShareUser.h"
+#import "MPMOauthUser.h"
 #import "MPMAttendanceHeader.h"
 
 static MPMSessionManager *instance;
 @interface MPMSessionManager()
-@property (nonatomic, strong) MPMNetworkReachabilityManager *checkNetworkManager;
+
 @end
 
 @implementation MPMSessionManager
@@ -21,10 +21,9 @@ static MPMSessionManager *instance;
 - (instancetype)initManager {
     self = [super init];
     if (self) {
-        self.manager = [MPMHTTPSessionManager manager];
-        self.manager.requestSerializer = [MPMJSONRequestSerializer serializer];
-        self.manager.responseSerializer = [MPMJSONResponseSerializer serializer];
-        self.checkNetworkManager = [MPMNetworkReachabilityManager manager];
+        self.managerV2 = [MPMHTTPSessionManager manager];
+        self.managerV2.requestSerializer = [MPMHTTPRequestSerializer serializer];
+        self.managerV2.responseSerializer = [MPMJSONResponseSerializer serializer];
     }
     return self;
 }
@@ -40,139 +39,241 @@ static MPMSessionManager *instance;
 
 #pragma mark - Public Method
 
-- (void)startNetworkMonitoringWithStatusChangeBlock:(void (^)(MPMNetworkReachabilityStatus))block {
-    dispatch_async(kGlobalQueueDEFAULT, ^{
-        [self.checkNetworkManager setReachabilityStatusChangeBlock:^(MPMNetworkReachabilityStatus status) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                block(status);
-            });
+/** 每次网络请求之前，都会判断token是否已经过期（如果token已经过期，则用RefreshToken去刷新token之后再继续请求；如果token没有过期，则继续请求） */
+- (void)checkOrRefreshTokenWithCompleteBlock:(void(^)(void))block {
+    typeof(block) strongBlock = block;
+    if ([MPMOauthUser shareOauthUser].expires_in.doubleValue > [NSDate date].timeIntervalSince1970) {
+        strongBlock();
+        return;
+    }
+    static BOOL canEnter = YES;
+    @synchronized(self){
+        if (canEnter) {
+            canEnter = NO;
+            NSString *url = MPMINTERFACE_OAUTH;
+            [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMHTTPRequestSerializer serializer];
+            [[MPMSessionManager shareManager].managerV2.requestSerializer setAuthorizationHeaderFieldWithUsername:@"mpm24_ios" password:@"COa8vJuC928rRV6SX3Q9MOBdKY7Nn8tn"];
+            NSDictionary *params = @{@"grant_type":@"refresh_token",@"refresh_token":[MPMOauthUser shareOauthUser].refresh_token};
+            // 用refresh token去刷新token，并更新过期时间
+            [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+                canEnter = YES;
+                MPMOauthUser *updateUser = [[MPMOauthUser alloc] initWithDictionary:responseObject];
+                updateUser.expiresIn = updateUser.expires_in;
+                updateUser.expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 + [MPMOauthUser shareOauthUser].expires_in.doubleValue - 60];
+                [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
+                strongBlock();
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                canEnter = YES;
+                strongBlock();
+            }];
+        } else {
+            return;
+        }
+    }
+}
+
+#pragma mark - Public Method
+
+/** GET请求 */
+- (void)getRequestWithURL:(NSString *)url setAuth:(BOOL)setAuth params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
+    BOOL needHUD = !kIsNilString(loadingMessage);
+    if (needHUD) {
+        [MPMProgressHUD showWithStatus:loadingMessage];
+    }
+    if (setAuth) {
+        __weak typeof(self) weakself = self;
+        [self checkOrRefreshTokenWithCompleteBlock:^{
+            __strong typeof(weakself) strongself = weakself;
+            [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
+            [strongself.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+                if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                    if (needHUD) {
+                        [MPMProgressHUD dismiss];
+                    }
+                    success(responseObject);
+                } else {
+                    if (needHUD) {
+                        [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
+                    }
+                    failure(nil);
+                }
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                if (needHUD) {
+                    [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                }
+                NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+                if (responses.statusCode == kRequestErrorUnauthorized) {
+                    [self back];
+                } else {
+                    failure(error.localizedDescription);
+                }
+            }];
         }];
-        [self.checkNetworkManager startMonitoring];
-    });
-}
-
-/** 带有MPMProgressHUD的请求 */
-- (void)getRequestWithURL:(NSString *)url params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id))success failure:(void(^)(NSString *))failure {
-    [MPMProgressHUD showWithStatus:loadingMessage];
-    [self.manager GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *dic = responseObject;
-            NSNumber *succ = dic[@"success"];
-            if (succ.intValue == 1) {
-                [MPMProgressHUD dismiss];
+    } else {
+        [self.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                if (needHUD) {
+                    [MPMProgressHUD dismiss];
+                }
                 success(responseObject);
             } else {
-                NSString *errorMessage = [dic[@"message"] isKindOfClass:[NSNull class]] ? ([dic[@"dataObj"] isKindOfClass:[NSString class]] ? dic[@"dataObj"] : @"error") : dic[@"message"];
-                failure(errorMessage);
-                if ([errorMessage containsString:@"用户信息已失效"]) {
-                    [MPMProgressHUD dismiss];
-//                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
-                    [[[MPMLoginViewController alloc] init] autoLogin];
+                if (needHUD) {
+                    [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
+                }
+                failure(nil);
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+            if (needHUD) {
+                [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+            }
+            if (responses.statusCode == kRequestErrorUnauthorized) {
+                [self back];
+            } else {
+                failure(error.localizedDescription);
+            }
+        }];
+    }
+}
+
+/** POST请求 */
+- (void)postRequestWithURL:(NSString *)url setAuth:(BOOL)setAuth params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
+    BOOL needHUD = !kIsNilString(loadingMessage);
+    if (needHUD) {
+        [MPMProgressHUD showWithStatus:loadingMessage];
+    }
+    if (setAuth) {
+        __weak typeof(self) weakself = self;
+        [self checkOrRefreshTokenWithCompleteBlock:^{
+            __strong typeof(weakself) strongself = weakself;
+            [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
+            [strongself.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+                if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                    if (needHUD) {
+                        [MPMProgressHUD dismiss];
+                    }
+                    success(responseObject);
                 } else {
-                    [MPMProgressHUD showErrorWithStatus:errorMessage];
+                    if (needHUD) {
+                        [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
+                    }
+                    failure(nil);
                 }
-            }
-        } else {
-            [MPMProgressHUD dismiss];
-            success(responseObject);
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
-        failure(error.localizedDescription);
-    }];
-}
-
-- (void)postRequestWithURL:(NSString *)url params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id))success failure:(void(^)(NSString *))failure {
-    [MPMProgressHUD showWithStatus:loadingMessage];
-    [self.manager POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *dic = responseObject;
-            NSNumber *succ = dic[@"success"];
-            if (succ.intValue == 1) {
-                [MPMProgressHUD dismiss];
-                success(responseObject);
-            } else {
-                NSString *errorMessage = [dic[@"message"] isKindOfClass:[NSNull class]] ? ([dic[@"dataObj"] isKindOfClass:[NSString class]] ? dic[@"dataObj"] : @"error") : dic[@"message"];
-                failure(errorMessage);
-                if ([errorMessage containsString:@"用户信息已失效"]) {
-                    [MPMProgressHUD dismiss];
-//                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
-                    [[[MPMLoginViewController alloc] init] autoLogin];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+                if (needHUD) {
+                    [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                }
+                if (responses.statusCode == kRequestErrorUnauthorized) {
+                    [self back];
                 } else {
-                    [MPMProgressHUD showErrorWithStatus:errorMessage];
+                    failure(error.localizedDescription);
                 }
-            }
-        } else {
-            [MPMProgressHUD dismiss];
-            success(responseObject);
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
-        failure(error.localizedDescription);
-    }];
-}
-
-/** 不带MPMProgressHUD的请求 */
-- (void)getRequestWithURL:(NSString *)url params:(id)params success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
-    [self.manager GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *dic = responseObject;
-            NSNumber *succ = dic[@"success"];
-            if (succ.intValue == 1) {
+            }];
+        }];
+    } else {
+        [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                if (needHUD) {
+                    [MPMProgressHUD dismiss];
+                }
                 success(responseObject);
             } else {
-                NSString *errorMessage = [dic[@"message"] isKindOfClass:[NSNull class]] ? ([dic[@"dataObj"] isKindOfClass:[NSString class]] ? dic[@"dataObj"] : @"error") : dic[@"message"];
-                failure(errorMessage);
-                if ([errorMessage containsString:@"用户信息已失效"]) {
-                    [MPMProgressHUD dismiss];
-//                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
-                    [[[MPMLoginViewController alloc] init] autoLogin];
+                if (needHUD) {
+                    [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
                 }
+                failure(nil);
             }
-        } else {
-            success(responseObject);
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        failure(error.localizedDescription);
-    }];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+            if (needHUD) {
+                [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+            }
+            if (responses.statusCode == kRequestErrorUnauthorized) {
+                [self back];
+            } else {
+                failure(error.localizedDescription);
+            }
+        }];
+    }
 }
 
-- (void)postRequestWithURL:(NSString *)url params:(id)params success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
-    [self.manager POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *dic = responseObject;
-            NSNumber *succ = dic[@"success"];
-            if (succ.intValue == 1) {
+/** DELETE请求 */
+- (void)deleteRequestWithURL:(NSString *)url setAuth:(BOOL)setAuth params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
+    BOOL needHUD = !kIsNilString(loadingMessage);
+    if (needHUD) {
+        [MPMProgressHUD showWithStatus:loadingMessage];
+    }
+    if (setAuth) {
+        __weak typeof(self) weakself = self;
+        [self checkOrRefreshTokenWithCompleteBlock:^{
+            __strong typeof(weakself) strongself = weakself;
+            [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
+            [strongself.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                    if (needHUD) {
+                        [MPMProgressHUD dismiss];
+                    }
+                    success(responseObject);
+                } else {
+                    if (needHUD) {
+                        [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
+                    }
+                    failure(nil);
+                }
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+                [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                if (responses.statusCode == kRequestErrorUnauthorized) {
+                    [self back];
+                } else {
+                    failure(error.localizedDescription);
+                }
+            }];
+        }];
+    } else {
+        [self.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                if (needHUD) {
+                    [MPMProgressHUD dismiss];
+                }
                 success(responseObject);
             } else {
-                NSString *errorMessage = [dic[@"message"] isKindOfClass:[NSNull class]] ? ([dic[@"dataObj"] isKindOfClass:[NSString class]] ? dic[@"dataObj"] : @"error") : dic[@"message"];
-                failure(errorMessage);
-                if ([errorMessage containsString:@"用户信息已失效"]) {
-                    [MPMProgressHUD dismiss];
-//                    [self showAlertControllerToLogoutWithMessage:@"用户信息已失效，请重新登录"];
-                    [[[MPMLoginViewController alloc] init] autoLogin];
+                if (needHUD) {
+                    [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
                 }
+                failure(nil);
             }
-        } else {
-            success(responseObject);
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        failure(error.localizedDescription);
-    }];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+            if (needHUD) {
+                [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+            }
+            if (responses.statusCode == kRequestErrorUnauthorized) {
+                [self back];
+            } else {
+                failure(error.localizedDescription);
+            }
+        }];
+    }
 }
 
-
-#pragma mark -
-- (void)showAlertControllerToLogoutWithMessage:(NSString *)message {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:message message:nil preferredStyle:UIAlertControllerStyleAlert];
-    // 这里用weakAlert，否则会导致循环引用
-    __weak typeof (UIAlertController *) weakAlert = alertController;
-    UIAlertAction *sure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        kAppDelegate.window.rootViewController = [[MPMLoginViewController alloc] init];
-        [[MPMShareUser shareUser] clearData];
-    }];
-    [weakAlert addAction:sure];
-    [kAppDelegate.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+- (void)back {
+    UIViewController *lastRoot = [MPMOauthUser shareOauthUser].lastRootViewController;
+    UIViewController *lastPop = [MPMOauthUser shareOauthUser].lastCanPopViewController;
+    kAppDelegate.window.rootViewController = lastRoot;
+    // 推进来的时候隐藏了，现在需要取消隐藏
+    if (lastPop.navigationController.navigationBar.hidden == YES) {
+        lastPop.navigationController.navigationBar.hidden = NO;
+    }
+    [UIApplication sharedApplication].statusBarStyle = [MPMOauthUser shareOauthUser].lastStatusBarStyle;
+    if ([lastPop isKindOfClass:[MPMLoginViewController class]] && ((MPMLoginViewController *)lastPop).delegate && [((MPMLoginViewController *)lastPop).delegate respondsToSelector:@selector(attendanceDidCompleteWithToken:refreshToken:expiresIn:)]) {
+        if (!kIsNilString([MPMOauthUser shareOauthUser].access_token) && !kIsNilString([MPMOauthUser shareOauthUser].refresh_token) && !kIsNilString([MPMOauthUser shareOauthUser].expiresIn)) {
+            [((MPMLoginViewController *)lastPop).delegate attendanceDidCompleteWithToken:[MPMOauthUser shareOauthUser].access_token refreshToken:[MPMOauthUser shareOauthUser].refresh_token expiresIn:[MPMOauthUser shareOauthUser].expiresIn];
+        }
+    }
+    [lastPop.navigationController popViewControllerAnimated:YES];
+    [[MPMOauthUser shareOauthUser] clearData];
 }
 
 @end

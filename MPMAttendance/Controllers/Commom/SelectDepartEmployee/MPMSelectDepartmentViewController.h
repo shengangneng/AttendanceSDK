@@ -8,23 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMBaseViewController.h"
-@class MPMDepartment;
-@class MPMSchedulingDepartmentsModel;
-@class MPMSchedulingEmplyoeeModel;
+#import "MPMDepartment.h"
 
-typedef void(^SelectCheckBlock)(NSString *status);
+typedef void(^ComfirmBlock)(SelectedStatus selectedStatus);
+
 /** 点击底部的“确定”按钮，回传选中的部门和人员信息：Block和Delegate两种方式 */
-typedef void(^SureSelectBlock)(NSArray<MPMSchedulingDepartmentsModel *> *departments, NSArray<MPMSchedulingEmplyoeeModel *> *employees);
-typedef NS_ENUM(NSInteger, forSelectionType) {
-    forSelectionTypeBoth,
-    forSelectionTypeOnlyDepartment,
-    forSelectionTypeOnlyEmployee
+typedef void(^SureSelectBlock)(NSArray<MPMDepartment *> *departments, NSArray<MPMDepartment *> *employees);
+typedef NS_ENUM(NSInteger, SelectionType) {
+    kSelectionTypeBoth,           /** 可以选择人员和部门 */
+    kSelectionTypeOnlyDepartment, /** 只可以选中部门 */
+    kSelectionTypeOnlyEmployee    /** 只可以选择人员 */
 };
 
 @protocol MPMSelectDepartmentViewControllerDelegate<NSObject>
 
 /** 点击底部“确定”按钮，回传选中的部门和人员信息：Block和Delegate两种方式 */
-- (void)departCompleteSelectWithDepartments:(NSArray<MPMSchedulingDepartmentsModel *> *)departments employees:(NSArray<MPMSchedulingEmplyoeeModel *> *)employees;
+- (void)departCompleteSelectWithDepartments:(NSArray<MPMDepartment *> *)departments employees:(NSArray<MPMDepartment *> *)employees;
 
 @end
 
@@ -36,11 +35,10 @@ typedef NS_ENUM(NSInteger, forSelectionType) {
 @property (nonatomic, copy) SureSelectBlock sureSelectBlock;
 
 /**
- * model:第一次跳入传nil，之后每次跳入下一个都带入当前的model
- * headerTitles:第一次跳入带入[NSMutableArray arrayWithObject:@"部门"]，之后每次跳入叠加name
- * allStringData:从子到父类的链条id逗号分隔字符串，第一次跳入传@“”
- * block:选中某一行的时候把数据告诉前一个页面，第一次跳入传nil。
+ * @param model         第一次跳入传nil，之后每次跳入下一个都带入当前的model
+ * @param headerTitles  第一次跳入带入[NSMutableArray arrayWithObject:@"部门"]，之后每次跳入叠加name
+ * @param block         选中某一行的时候把数据告诉前一个页面，第一次跳入传nil。
  */
-- (instancetype)initWithModel:(MPMDepartment *)model headerButtonTitles:(NSMutableArray *)headerTitles allStringData:(NSString *)allStringData selectionType:(forSelectionType)selectionType selectCheckBlock:(SelectCheckBlock)block;
+- (instancetype)initWithModel:(MPMDepartment *)model headerButtonTitles:(NSMutableArray *)headerTitles selectionType:(SelectionType)selectionType comfirmBlock:(ComfirmBlock)block;
 
 @end

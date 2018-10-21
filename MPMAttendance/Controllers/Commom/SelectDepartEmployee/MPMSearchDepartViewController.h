@@ -9,14 +9,16 @@
 #import "MPMBaseViewController.h"
 #import "MPMSelectDepartmentViewController.h"
 
-typedef void(^SureSelectBlock)(NSArray<MPMSchedulingDepartmentsModel *> *departments, NSArray<MPMSchedulingEmplyoeeModel *> *employees);
+typedef void(^SureSelectBlock)(NSArray<MPMDepartment *> *departments, NSArray<MPMDepartment *> *employees);
 
 @interface MPMSearchDepartViewController : MPMBaseViewController
 
 @property (nonatomic, strong) UISearchBar *headerSearchBar;
 @property (nonatomic, strong) UIImageView *headerView;
 
-/** type:选择部门、选择人员、选择部门和人员 */
-- (instancetype)initWithDelegate:(id<MPMSelectDepartmentViewControllerDelegate>)delegate sureSelectBlock:(SureSelectBlock)sureBlock selectType:(forSelectionType)type titleArray:(NSMutableArray *)titleArray;
+/**
+ * @param selectionType 选择类型：部门+人员、只能部门、只能人员
+ */
+- (instancetype)initWithDelegate:(id<MPMSelectDepartmentViewControllerDelegate>)delegate sureSelectBlock:(SureSelectBlock)sureBlock selectionType:(SelectionType)selectionType titleArray:(NSMutableArray *)titleArray;
 
 @end

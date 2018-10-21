@@ -10,4 +10,7 @@
 
 @interface MPMMainTabBarViewController : UITabBarController
 
+/** 获取流程审批待办未读信息 */
+- (void)updateApprovalUnreadCount;
+
 @end

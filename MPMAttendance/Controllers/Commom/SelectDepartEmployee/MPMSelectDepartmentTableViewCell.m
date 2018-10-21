@@ -9,53 +9,53 @@
 #import "MPMSelectDepartmentTableViewCell.h"
 #import "MPMButton.h"
 
+@interface MPMSelectDepartmentTableViewCell ()
+
+@property (nonatomic, assign) SelectionType selectionType;/** 只能选择人则部门的圆圈必须隐藏 */
+
+@end
+
 @implementation MPMSelectDepartmentTableViewCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier selectionType:(SelectionType)selectionType {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.selectionType = selectionType;
         [self.checkIconImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(check:)]];
         
         [self addSubview:self.checkIconImage];
-        [self addSubview:self.humanIconImage];
+        [self addSubview:self.roundPeopleView];
         [self addSubview:self.txLabel];
-        [self.checkIconImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.mpm_leading).offset(12);
-            make.width.height.equalTo(@25);
-            make.centerY.equalTo(self.mpm_centerY);
-        }];
-        [self.humanIconImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.checkIconImage.mpm_trailing).offset(10);
-            make.width.height.equalTo(@30);
-            make.centerY.equalTo(self.mpm_centerY);
-        }];
-        [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.humanIconImage.mpm_trailing).offset(10);
-            make.trailing.equalTo(self.mpm_trailing).offset(-35);
-            make.top.bottom.equalTo(self);
-            make.centerY.equalTo(self.mpm_centerY);
-        }];
+        self.checkIconImage.frame = CGRectMake(0, 0, kTableViewHeight, kTableViewHeight);
+        self.roundPeopleView.frame = CGRectMake(50, (kTableViewHeight - kRoundPeopleViewDefaultWidth)/2, kRoundPeopleViewDefaultWidth, kRoundPeopleViewDefaultWidth);
+        self.txLabel.frame = CGRectMake(CGRectGetMaxX(self.roundPeopleView.frame)+10, 0, kScreenWidth-(20+CGRectGetMaxX(self.roundPeopleView.frame)), kTableViewHeight);
     }
     return self;
 }
 
-- (void)setIsHuman:(NSString *)isHuman {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    return [self initWithStyle:style reuseIdentifier:reuseIdentifier selectionType:kSelectionTypeBoth];
+}
+
+- (void)setIsHuman:(BOOL)isHuman {
     _isHuman = isHuman;
-    if (isHuman && isHuman.integerValue == 1) {
+    if (isHuman) {
         self.accessoryType = UITableViewCellAccessoryNone;
-        [self.humanIconImage mpm_updateConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.checkIconImage.mpm_trailing).offset(10);
-            make.width.height.equalTo(@30);
-            make.centerY.equalTo(self.mpm_centerY);
-        }];
+        self.roundPeopleView.hidden = NO;
+        self.roundPeopleView.frame = CGRectMake(50, (kTableViewHeight - kRoundPeopleViewDefaultWidth)/2, kRoundPeopleViewDefaultWidth, kRoundPeopleViewDefaultWidth);
+        self.txLabel.frame = CGRectMake(CGRectGetMaxX(self.roundPeopleView.frame)+10, 0, kScreenWidth-(20+CGRectGetMaxX(self.roundPeopleView.frame)), kTableViewHeight);
+        self.checkIconImage.hidden = NO;
     } else {
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        [self.humanIconImage mpm_updateConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.checkIconImage.mpm_trailing).offset(0);
-            make.height.equalTo(@30);
-            make.width.equalTo(@0);
-            make.centerY.equalTo(self.mpm_centerY);
-        }];
+        self.roundPeopleView.hidden = YES;
+        self.roundPeopleView.frame = CGRectMake(50, 0, 0, 0);
+        if (kSelectionTypeOnlyEmployee == self.selectionType) {
+            self.checkIconImage.hidden = YES;
+            self.txLabel.frame = CGRectMake(15, 0, kScreenWidth-(60), kTableViewHeight);
+        } else {
+            self.checkIconImage.hidden = NO;
+            self.txLabel.frame = CGRectMake(50, 0, kScreenWidth-(60), kTableViewHeight);
+        }
     }
     [self layoutIfNeeded];
 }
@@ -79,16 +79,18 @@
     if (!_checkIconImage) {
         _checkIconImage = [[UIImageView alloc] init];
         _checkIconImage.image = ImageName(@"setting_none");
+        _checkIconImage.contentMode = UIViewContentModeCenter;
         _checkIconImage.userInteractionEnabled = YES;
     }
     return _checkIconImage;
 }
 
-- (UIImageView *)humanIconImage {
-    if (!_humanIconImage) {
-        _humanIconImage = [[UIImageView alloc] initWithImage:ImageName(@"approval_useravatar_mid")];
+- (MPMRoundPeopleView *)roundPeopleView {
+    if (!_roundPeopleView) {
+        _roundPeopleView = [[MPMRoundPeopleView alloc] initWithWidth:kRoundPeopleViewDefaultWidth];
+        _roundPeopleView.backgroundColor = kWhiteColor;
     }
-    return _humanIconImage;
+    return _roundPeopleView;
 }
 
 - (UILabel *)txLabel {

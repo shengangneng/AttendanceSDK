@@ -10,8 +10,6 @@
 
 @interface MPMRepairSigninAddTimeTableViewCell ()
 
-@property (nonatomic, strong) UIButton *addTimeButton;
-
 @end
 
 @implementation MPMRepairSigninAddTimeTableViewCell

@@ -40,7 +40,7 @@
 - (void)setupConstraints {
     [self.iconView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.mpm_leading).offset(13);
-        make.width.height.equalTo(@24);
+        make.width.height.equalTo(@33);
         make.centerY.equalTo(self.mpm_centerY);
     }];
     [self.txLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {

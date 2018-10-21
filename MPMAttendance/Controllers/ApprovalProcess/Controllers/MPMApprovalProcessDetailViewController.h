@@ -7,12 +7,15 @@
 //
 
 #import "MPMBaseViewController.h"
-#import "MPMApprovalCausationModel.h"
-#import "MPMApprovalFetchDetailModel.h"
+#import "MPMProcessMyMetterModel.h"
+#import "MPMApprovalProcessViewController.h"
 
 @interface MPMApprovalProcessDetailViewController : MPMBaseViewController
 
-/** params：ButtonTitles从上一页面传入的底部按钮 */
-- (instancetype)initWithCausation:(MPMApprovalCausationModel *)causation CausationDetailArray:(NSArray *)causationDetail operationButtonTitles:(NSArray *)buttons image:(NSString *)image text:(NSString *)text;
+
+/**
+ @param selectIndexPath section0我的事项（row0待办 row1已办）section1我的申请 section2抄送给我 section3考勤签到节点跳入
+ */
+- (instancetype)initWithModel:(MPMProcessMyMetterModel *)model selectedIndexPath:(NSIndexPath *)selectIndexPath;
 
 @end

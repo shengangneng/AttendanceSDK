@@ -10,8 +10,19 @@
 
 @interface MPMStatisticModel : MPMBaseModel
 
+// 2.0
+@property (nonatomic, copy) NSString *actualAttendance;
+@property (nonatomic, copy) NSString *awardCount;
+@property (nonatomic, copy) NSString *buckleCount;
+@property (nonatomic, copy) NSString *shouldAttendance;
+@property (nonatomic, copy) NSArray *countList; // @{@"count":@"",@"name":@"",@"sumScore":@""}
+
+@end
+
+@interface MPMStatisticCountList : MPMBaseModel
+
 @property (nonatomic, copy) NSString *count;
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *value;
+@property (nonatomic, copy) NSString *sumScore;
 
 @end

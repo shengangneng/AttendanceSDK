@@ -10,7 +10,7 @@
 #import "MPMButton.h"
 #import "MPMGetPeopleTableViewCell.h"
 #import "MPMTableHeaderView.h"
-#import "MPMSessionManager.h"
+#import "MPMHTTPSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMGetPeopleModel.h"
 #import "MPMHiddenTableViewDataSourceDelegate.h"
@@ -69,7 +69,6 @@
     [self setupAttributes];
     [self setupSubViews];
     [self setupConstraints];
-    [self getData];
 }
 
 - (void)setupAttributes {
@@ -167,32 +166,6 @@
     }];
 }
 
-- (void)getData {
-    NSString *url = [NSString stringWithFormat:@"%@getPeopleList?code=%@&token=%@",MPMHost,self.code,[MPMShareUser shareUser].token];
-    [[MPMSessionManager shareManager] getRequestWithURL:url params:nil loadingMessage:@"正在加载" success:^(id response) {
-        if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
-            NSArray *dataObj = response[@"dataObj"];
-            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:dataObj.count];
-            for (int i = 0; i < dataObj.count; i++) {
-                NSDictionary *dic = dataObj[i];
-                MPMGetPeopleModel *model = [[MPMGetPeopleModel alloc] initWithDictionary:dic];
-                for (NSString *str in self.idsArray) {
-                    if ([model.mpm_id isEqualToString:str]) {
-                        [self.selectedIndexPath addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-                        [self.tureSelectPeopleArray addObject:model];
-                    }
-                }
-                [temp addObject:model];
-            }
-            self.peoplesArray = temp.copy;
-            self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
-        }
-        [self.middleTableView reloadData];
-    } failure:^(NSString *error) {
-        DLog(@"%@",error);
-    }];
-}
-
 #pragma mark - MPMHiddenTabelViewDelegate
 - (void)hiddenTableView:(UITableView *)tableView deleteData:(MPMGetPeopleModel *)people {
     [self.dataSourceDelegate.peoplesArray removeObject:people];
@@ -220,7 +193,7 @@
         }
     }
     [self.middleTableView reloadData];
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%ld)",self.tureSelectPeopleArray.count];
 }
 
 #pragma mark - UITableViewDataSource && UITableViewDelegate
@@ -291,7 +264,7 @@
     }
     [self.tureSelectPeopleArray addObject:model];
     [self.selectedIndexPath addObject:indexPath];
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%ld)",self.tureSelectPeopleArray.count];
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -307,7 +280,7 @@
             [self.tureSelectPeopleArray removeObject:obj];
         }
     }];
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数:(%ld)",self.tureSelectPeopleArray.count];
 }
 
 #pragma mark - Target Action
@@ -499,7 +472,7 @@
 - (UILabel *)bottomTotalSelectedLabel {
     if (!_bottomTotalSelectedLabel) {
         _bottomTotalSelectedLabel = [[UILabel alloc] init];
-        _bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数(%lu)",(unsigned long)self.tureSelectPeopleArray.count];
+        _bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数(%ld)",self.tureSelectPeopleArray.count];
         _bottomTotalSelectedLabel.textColor = kBlackColor;
         _bottomTotalSelectedLabel.textAlignment= NSTextAlignmentLeft;
     }

@@ -20,7 +20,7 @@
         case forDateFormatTypeAll:                   { formatterType = @"yyyy-MM-dd HH:mm:ss"; }break;
         case forDateFormatTypeAllWithoutSeconds:     { formatterType = @"yyyy-MM-dd HH:mm"; }break;
         case forDateFormatTypeYearMonthDaySlash:     { formatterType = @"yyyy/MM/dd"; }break;
-        case forDateFormatTypeYearMonthDayHourMinite: { formatterType = @"MM月dd日HH:mm"; }break;
+        case forDateFormatTypeYearMonthDayHourMinite:{ formatterType = @"MM月dd日HH:mm"; }break;
         case forDateFormatTypeShortYearMonthDaySlash:{ formatterType = @"yy/MM/dd"; }break;
         case forDateFormatTypeYearMonthDayBar:       { formatterType = @"yyyy-MM-dd"; }break;
         case forDateFormatTypeYearMonthBar:          { formatterType = @"yyyy-MM"; }break;
@@ -30,6 +30,7 @@
         case forDateFormatTypeHourMinute:            { formatterType = @"HH:mm"; }break;
         case forDateFormatTypeHourMinuteSeconds:     { formatterType = @"HH:mm:ss"; }break;
         case forDateFormatTypeMonthYearDayWeek:      { formatterType = @"M月,yyyy年,d,EEE"; }break;
+        case forDateFormatTypeMonthYearDayWeek2:     { formatterType = @"yyyy-MM-dd EEE"; }break;
         case forDateFormatTypeSpecial:               { formatterType = @"yyyy-MM-dd'T'HH:mm:ss.000'Z'"; }break;
         default:                                     { formatterType = @"yyyy-MM-dd HH:mm:ss"; }break;
     }
@@ -45,7 +46,7 @@
         case forDateFormatTypeAllWithoutSeconds:     { formatterType = @"yyyy-MM-dd HH:mm"; }break;
         case forDateFormatTypeYearMonthDaySlash:     { formatterType = @"yyyy/MM/dd"; }break;
         case forDateFormatTypeShortYearMonthDaySlash:{ formatterType = @"yy/MM/dd"; }break;
-        case forDateFormatTypeYearMonthDayHourMinite: { formatterType = @"MM月dd日HH:mm"; }break;
+        case forDateFormatTypeYearMonthDayHourMinite:{ formatterType = @"MM月dd日HH:mm"; }break;
         case forDateFormatTypeYearMonthDayBar:       { formatterType = @"yyyy-MM-dd"; }break;
         case forDateFormatTypeYearMonthBar:          { formatterType = @"yyyy-MM"; }break;
         case forDateFormatTypeShortYearMonthDayBar:  { formatterType = @"yy-MM-dd"; }break;
@@ -54,6 +55,7 @@
         case forDateFormatTypeHourMinute:            { formatterType = @"HH:mm"; }break;
         case forDateFormatTypeHourMinuteSeconds:     { formatterType = @"HH:mm:ss"; }break;
         case forDateFormatTypeMonthYearDayWeek:      { formatterType = @"M月,yyyy年,d,EEE"; }break;
+        case forDateFormatTypeMonthYearDayWeek2:     { formatterType = @"yyyy-MM-dd EEE"; }break;
         case forDateFormatTypeSpecial:               { formatterType = @"yyyy-MM-dd'T'HH:mm:ss.000'Z'"; }break;
         default:                                     { formatterType = @"yyyy-MM-dd HH:mm:ss"; }break;
     }
@@ -88,7 +90,7 @@
 }
 
 /** 比较date2是否在date1后 */
-+ (BOOL)isDate1:(NSDate *)date1 beforeDate2:(NSDate *)date2 {
++ (BOOL)isDate1:(NSDate *)date1 equalToDate2:(NSDate *)date2 {
     if (!date1 || !date2) {
         return NO;
     }
@@ -96,7 +98,7 @@
     formater.dateFormat = @"MM:dd";
     double dayString1 = [formater stringFromDate:date1].timeValue;
     double dayString2 = [formater stringFromDate:date2].timeValue;
-    if (dayString1 < dayString2) {
+    if (dayString1 == dayString2) {
         return YES;
     } else {
         return NO;

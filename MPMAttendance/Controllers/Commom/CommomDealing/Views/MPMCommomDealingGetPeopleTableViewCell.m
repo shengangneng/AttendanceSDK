@@ -8,6 +8,7 @@
 
 #import "MPMCommomDealingGetPeopleTableViewCell.h"
 #import "MPMButton.h"
+#import "MPMRoundPeopleButton.h"
 
 @interface MPMCommomDealingGetPeopleTableViewCell ()
 
@@ -64,7 +65,7 @@
     [self.accessoryButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.centerY.equalTo(self.txLabel.mpm_centerY);
         make.trailing.equalTo(self.mpm_trailing).offset(-15);
-        make.width.height.equalTo(@22);
+        make.width.height.equalTo(@30);
     }];
     [self.peopleView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self);
@@ -79,30 +80,31 @@
     }];
 }
 
-- (void)setPeopleViewData:(NSString *)data fold:(BOOL)fold {
+- (void)setPeopleViewArray:(NSArray<MPMDepartment *> *)peoples fold:(BOOL)fold {
     [self.peopleView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[UIButton class]]) {
+        if ([obj isKindOfClass:[MPMRoundPeopleButton class]]) {
             [obj removeFromSuperview];
         }
     }];
     
-    NSArray *arr = [data componentsSeparatedByString:@","];
     int count = 5;
     int width = 50;
     int heigth = 50;
     int margin = (kScreenWidth - width * count) / (count + 1);
     int bord = 6.5;
-    for (int i = 0; i < arr.count; i++) {
-        NSString *btnTitle = arr[i];
+    for (int i = 0; i < peoples.count; i++) {
+        MPMDepartment *depart = peoples[i];
         int row = i / count;
         int line = i % count;
-        UIButton *btn = [MPMButton imageUpTitleDownButtonWithTitle:btnTitle titleColor:kMainLightGray titleFont:SystemFont(13) image:ImageName(@"approval_useravatar_mid") highImage:ImageName(@"approval_useravatar_mid") backgroupColor:kWhiteColor cornerRadius:0 offset:2];
+        MPMRoundPeopleButton *btn = [[MPMRoundPeopleButton alloc] init];
+        btn.roundPeople.nameLabel.text = depart.name.length > 2 ? [depart.name substringWithRange:NSMakeRange(depart.name.length - 2, 2)] : depart.name;
+        btn.nameLabel.text = depart.name;
         btn.frame = CGRectMake(margin + line*(margin+width), row*(bord + heigth), width, heigth);
         [self.peopleView addSubview:btn];
     }
     
     if (fold) {
-        if (arr.count > 5) {
+        if (peoples.count > 5) {
             self.operationButton.hidden = NO;
             self.operationButton.selected = NO;
             [self.operationButton mpm_updateConstraints:^(MPMConstraintMaker *make) {
@@ -177,7 +179,7 @@
 
 - (UIButton *)accessoryButton {
     if (!_accessoryButton) {
-        _accessoryButton = [MPMButton imageButtonWithImage:ImageName(@"apply_addakey") hImage:ImageName(@"apply_addakey")];
+        _accessoryButton = [MPMButton imageButtonWithImage:ImageName(@"commom_add") hImage:ImageName(@"commom_add")];
     }
     return _accessoryButton;
 }

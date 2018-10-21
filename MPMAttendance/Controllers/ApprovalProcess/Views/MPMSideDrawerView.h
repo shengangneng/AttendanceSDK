@@ -12,15 +12,23 @@
 @protocol MPMSideDrawerViewDelegate<NSObject>
 
 - (void)siderDrawerViewDidDismiss;
-- (void)siderDrawerView:(MPMSideDrawerView *)siderDrawerView didCompleteWithCausationtypeNo:(NSArray *)cNo startDate:(NSString *)sDate endDate:(NSString *)eDate;
+- (void)siderDrawerViewDidCompleteSelected;
 
 @end
 
 @interface MPMSideDrawerView : UIView
 
 @property (nonatomic, weak) id<MPMSideDrawerViewDelegate> delegate;
+// 保存选中的属性
+@property (nonatomic, strong) NSString *state;
+@property (nonatomic, strong) NSString *type;
+@property (nonatomic, strong) NSDate *startDate;
+@property (nonatomic, strong) NSDate *endDate;
 
-- (void)showInView:(UIView *)superView maskViewFrame:(CGRect)mFrame drawerViewFrame:(CGRect)dFrame;
+@property (nonatomic, assign) NSInteger pagesize;
+
+/** @param statusTitles 节点状态数组：待办（全部、待处理、驳回的）已办（全部、已通过、已驳回）我的申请（全部、进行中、已完成、已取消）抄送给我（无） */
+- (void)showInView:(UIView *)superView maskViewFrame:(CGRect)mFrame drawerViewFrame:(CGRect)dFrame statusTitles:(NSArray *)statusTitles;
 - (void)dismiss;
 - (void)reset:(UIButton *)sender;   /** 重置数据 */
 

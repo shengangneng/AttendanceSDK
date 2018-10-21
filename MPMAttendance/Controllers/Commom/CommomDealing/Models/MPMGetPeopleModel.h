@@ -12,6 +12,6 @@
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *mpm_id;
-@property (nonatomic, copy) NSString *isHuman;
+@property (nonatomic, copy) NSString *isHuman;  /** 0是部门 1是人员 */
 
 @end

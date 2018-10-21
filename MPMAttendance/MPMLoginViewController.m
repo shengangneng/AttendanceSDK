@@ -11,13 +11,11 @@
 #import "MPMButton.h"
 #import "MPMSessionManager.h"
 #import "MPMShareUser.h"
-#import "MPMDepartment.h"
 #import "NSObject+MPMExtention.h"
-#import "MPMAttendanceHeader.h"
+#import "MPMOauthUser.h"
 
 @interface MPMLoginViewController () <UITextFieldDelegate>
 // Header
-@property (nonatomic, strong) UIButton *backButton;
 @property (nonatomic, strong) UIImageView *headerIcon;
 @property (nonatomic, strong) UILabel *headerTitleLabel;
 // Middle
@@ -44,20 +42,45 @@
 
 @implementation MPMLoginViewController
 
-- (instancetype)initWithUsername:(NSString *)username password:(NSString *)password companyCode:(NSString *)companyCode {
+
+- (instancetype)initWithToken:(NSString *)token
+                 refreshToken:(NSString *)refreshToken
+                    expiresIn:(NSString *)expiresIn
+                       userId:(NSString *)userId
+                  companyCode:(NSString *)companyCode {
     self = [super init];
     if (self) {
-        [MPMShareUser shareUser].lastRootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
-        [MPMShareUser shareUser].lastCanPopViewController = self;
-        if (kIsNilString(username) || kIsNilString(password) || kIsNilString(companyCode)) {
-            [self setupSubviews];
-            [self setupAttributes];
-            [self setupConstraints];
+        [MPMOauthUser shareOauthUser].lastRootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+        [MPMOauthUser shareOauthUser].lastStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+        [MPMOauthUser shareOauthUser].lastCanPopViewController = self;
+        if (kIsNilString(token) || kIsNilString(refreshToken) || kIsNilString(expiresIn)) {
+            // 传入的参数如果为空，则直接跳回
+            if (self.navigationController.navigationBar.hidden == YES) {
+                self.navigationController.navigationBar.hidden = NO;
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+            [[MPMOauthUser shareOauthUser] clearData];
         } else {
-            [self loginWithUsername:username password:password companyCode:companyCode];
+            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+            [MPMOauthUser shareOauthUser].access_token = token;
+            [MPMOauthUser shareOauthUser].token_type = @"Bearer";
+            [MPMOauthUser shareOauthUser].refresh_token = refreshToken;
+            [MPMOauthUser shareOauthUser].user_id = userId;
+            [MPMOauthUser shareOauthUser].company_code = companyCode;
+            [MPMOauthUser shareOauthUser].expiresIn = expiresIn;
+            [MPMOauthUser shareOauthUser].expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 + expiresIn.doubleValue - 60];
+            [self defaultSetting];
+            [self getPerrimitionV2];
+            [self getCurrentUserMessage];
         }
     }
     return self;
+}
+
+- (void)defaultSetting {
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [MPMProgressHUD setMaximumDismissTimeInterval:0.5];
+    [MPMProgressHUD setDefaultMaskType:MPMProgressHUDMaskTypeBlack];
 }
 
 - (instancetype)init {
@@ -80,13 +103,9 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
-}
-
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    //    [self addHeaderIconAnimation];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -100,7 +119,6 @@
 
 - (void)setupSubviews {
     // add Header
-    [self.view addSubview:self.backButton];
     [self.view addSubview:self.headerIcon];
     [self.view addSubview:self.headerTitleLabel];
     // add Middle
@@ -125,28 +143,23 @@
 }
 
 - (void)setupAttributes {
-    [MPMProgressHUD setMaximumDismissTimeInterval:0.5];
-    [MPMProgressHUD setDefaultMaskType:MPMProgressHUDMaskTypeBlack];
+    self.view.backgroundColor = kWhiteColor;
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBackgroud:)]];
     // Target Action
-    [self.backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     [self.middleLoginButton addTarget:self action:@selector(login:) forControlEvents:UIControlEventTouchUpInside];
     [self.middlefastRegisterButton addTarget:self action:@selector(fastRegister:) forControlEvents:UIControlEventTouchUpInside];
     [self.middlefoggotenPassButton addTarget:self action:@selector(foggotenPass:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupConstraints {
-    [self.backButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.top.equalTo(self.view.mpm_top).offset(kStatusBarHeight);
-        make.leading.equalTo(self.view.mpm_leading).offset(15);
-    }];
+    
     [self.headerIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.bottom.equalTo(self.headerTitleLabel.mpm_top).offset(-10);
         make.centerX.equalTo(self.view.mpm_centerX);
         make.width.equalTo(@(116));
         make.height.equalTo(@(120));
     }];
-
+    
     [self.headerTitleLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.bottom.equalTo(self.middleBackgroundView.mpm_top).offset(-25);
         make.centerX.equalTo(self.view.mpm_centerX);
@@ -277,20 +290,6 @@
 }
 
 #pragma mark - Target Action
-
-- (void)back:(UIButton *)sender {
-    UIViewController *lastRoot = [MPMShareUser shareUser].lastRootViewController;
-    UIViewController *lastPop = [MPMShareUser shareUser].lastCanPopViewController;
-    kAppDelegate.window.rootViewController = lastRoot;
-    // 推进来的时候隐藏了，现在需要取消隐藏
-    if (lastPop.navigationController.navigationBar.hidden == YES) {
-        lastPop.navigationController.navigationBar.hidden = NO;
-    }
-    [lastPop.navigationController popViewControllerAnimated:YES];
-    [[MPMShareUser shareUser] clearData];
-    
-}
-
 - (void)login:(UIButton *)sender {
     [self.view endEditing:YES];
     if (kIsNilString(self.middleUserTextField.text)) {
@@ -304,67 +303,49 @@
         [MPMProgressHUD showErrorWithStatus:@"请输入企业代码"];
         return;
     }
-    NSString *url = [MPMHost stringByAppendingString:@"index"];
-    NSDictionary *params = @{@"userName":self.middleUserTextField.text,@"password":self.middlePassTextField.text,@"companyCode":self.middleCompTextField.text};
+    NSString *url = MPMINTERFACE_OAUTH;
+    [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMHTTPRequestSerializer serializer];
+    [[MPMSessionManager shareManager].managerV2.requestSerializer setAuthorizationHeaderFieldWithUsername:@"kaoqin_ios" password:@"mpm"];
+    NSDictionary *params = @{@"grant_type":@"password",@"username":[NSString stringWithFormat:@"enterprise:%@:%@",self.middleCompTextField.text,self.middleUserTextField.text],@"password":self.middlePassTextField.text};
     
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在登录" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:NO params:params loadingMessage:@"正在登录" success:^(id response) {
         DLog(@"%@",response);
-        NSDictionary *dic = response;
-        NSDictionary *data = dic[@"dataObj"];
-        // 登录后将数据存到user全局对象中。
-        [[MPMShareUser shareUser] convertModelWithDictionary:data];
-        [MPMShareUser shareUser].username = self.middleUserTextField.text;
-        [MPMShareUser shareUser].password = self.middlePassTextField.text;
-        [MPMShareUser shareUser].companyName = self.middleCompTextField.text;
-        [self getPerrimition];
+        MPMOauthUser *user = [[MPMOauthUser alloc] initWithDictionary:response];
+        // 记录token过期时间（减去60秒）
+        user.expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 + user.expires_in.doubleValue - 60];
+        user.password = self.middlePassTextField.text;
+        user.company_code = self.middleCompTextField.text;
+        [self getPerrimitionV2];
+        [self getCurrentUserMessage];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
 }
 
-- (void)loginWithUsername:(NSString *)username password:(NSString *)password companyCode:(NSString *)companyCode {
-    NSString *url = [MPMHost stringByAppendingString:@"index"];
-    NSDictionary *params = @{@"userName":kSafeString(username),@"password":kSafeString(password),@"companyCode":kSafeString(companyCode)};
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
-        NSDictionary *dic = response;
-        NSDictionary *data = dic[@"dataObj"];
-        // 登录后将数据存到user全局对象中。
-        [[MPMShareUser shareUser] convertModelWithDictionary:data];
-        [MPMShareUser shareUser].username = username;
-        [MPMShareUser shareUser].password = password;
-        [MPMShareUser shareUser].companyName = companyCode;
-        [self getPerrimition];
-    } failure:^(NSString *error) {
-        [self setupSubviews];
-        [self setupAttributes];
-        [self setupConstraints];
-    }];
-}
-
 - (void)autoLogin {
     static BOOL canEnter = YES;
-    @synchronized(self) {
-        if(canEnter) {
+    @synchronized(self){
+        if (canEnter) {
             canEnter = NO;
-            if ([[MPMShareUser shareUser] getUserFromCoreData]) {
-                NSString *url = [MPMHost stringByAppendingString:@"index"];
-                NSString *username = [MPMShareUser shareUser].username;
-                NSString *password = [MPMShareUser shareUser].password;
-                NSString *companyName = [MPMShareUser shareUser].companyName;
-                NSDictionary *params = @{@"userName":username,@"password":password,@"companyCode":companyName};
-                
-                [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+            if ([[MPMOauthUser shareOauthUser] getUserFromCoreData]) {
+                NSString *url = MPMINTERFACE_OAUTH;
+                NSString *username = [MPMOauthUser shareOauthUser].login_name;
+                NSString *password = [MPMOauthUser shareOauthUser].password;
+                NSString *companycode = [MPMOauthUser shareOauthUser].company_code;
+                [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMHTTPRequestSerializer serializer];
+                [[MPMSessionManager shareManager].managerV2.requestSerializer setAuthorizationHeaderFieldWithUsername:@"kaoqin_ios" password:@"mpm"];
+                NSDictionary *params = @{@"grant_type":@"password",@"username":[NSString stringWithFormat:@"enterprise:%@:%@",companycode,username],@"password":kSafeString(password)};
+                [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:NO params:params loadingMessage:@"正在登录" success:^(id response) {
+                    DLog(@"%@",response);
                     canEnter = YES;
-                    NSDictionary *dic = response;
-                    NSDictionary *data = dic[@"dataObj"];
-                    [[MPMShareUser shareUser] clearData];
-                    [MPMShareUser shareUser].username = username;
-                    [MPMShareUser shareUser].password = password;
-                    [MPMShareUser shareUser].companyName = companyName;
-                    // 登录后将数据存到user全局对象中。
-                    [[MPMShareUser shareUser] convertModelWithDictionary:data];
-                    [self getPerrimition];
+                    MPMOauthUser *user = [[MPMOauthUser alloc] initWithDictionary:response];
+                    user.expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 + user.expires_in.doubleValue - 60];
+                    user.password = self.middlePassTextField.text;
+                    user.company_code = self.middleCompTextField.text;
+                    [self getPerrimitionV2];
+                    [self getCurrentUserMessage];
                 } failure:^(NSString *error) {
+                    DLog(@"%@",error);
                     canEnter = YES;
                     kAppDelegate.window.rootViewController = [[MPMLoginViewController alloc] init];
                     [[MPMShareUser shareUser] clearData];
@@ -378,21 +359,43 @@
     }
 }
 
-- (void)getPerrimition {
-    NSString *url = [NSString stringWithFormat:@"%@ApproveController/getPerimssionList?employeeId=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,[MPMShareUser shareUser].token];
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
-        [MPMShareUser shareUser].perimissionArray = response[@"dataObj"];
-        [[MPMShareUser shareUser] saveOrUpdateUserToCoreData];
-        kAppDelegate.window.rootViewController = [[MPMMainTabBarViewController alloc] init];
+- (void)getPerrimitionV2 {
+    NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_MYRES];
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        if (response[kResponseDataKey] && [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] && kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
+            [MPMOauthUser shareOauthUser].perimissionArray = response[kResponseObjectKey];
+            [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
+            kAppDelegate.window.rootViewController = [[MPMMainTabBarViewController alloc] init];
+        } else {
+            [MPMProgressHUD showErrorWithStatus:@"获取菜单失败"];
+        }
     } failure:^(NSString *error) {
-        DLog(@"%@",error);
+        NSLog(@"获取菜单失败...");
+    }];
+}
+
+- (void)getCurrentUserMessage {
+    NSString *url = [NSString stringWithFormat:@"%@%@?userId=%@&companyCode=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_CURRENTUSER,[MPMOauthUser shareOauthUser].user_id,[MPMOauthUser shareOauthUser].company_code];
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *object = response[kResponseObjectKey];
+            [MPMOauthUser shareOauthUser].employee_id = object[@"employeeId"];
+            [MPMOauthUser shareOauthUser].company_id = object[@"companyId"];
+            [MPMOauthUser shareOauthUser].company_code = object[@"companyCode"];
+            [MPMOauthUser shareOauthUser].department_id = object[@"departmentId"];
+            [MPMOauthUser shareOauthUser].department_name = object[@"departmentName"];
+            [MPMOauthUser shareOauthUser].name_cn = object[@"username"];
+            [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
+        }
+    } failure:^(NSString *error) {
+        NSLog(@"获取用户信息失败...%@--%@",[MPMOauthUser shareOauthUser].user_id,[MPMOauthUser shareOauthUser].company_code);
     }];
 }
 
 - (void)fastRegister:(UIButton *)sender {
     DLog(@"%@",@"fastRegister");
 }
- 
+
 - (void)foggotenPass:(UIButton *)sender {
     DLog(@"%@",@"foggotenPass");
 }
@@ -421,6 +424,14 @@
         [self.middleCompTextField becomeFirstResponder];
     } else if (self.middleCompTextField.isFirstResponder) {
         [self login:self.middleLoginButton];
+    }
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    // 如果修改用户名输入框，则清空密码框的内容
+    if (textField == self.middleUserTextField && self.middlePassTextField.text.length > 0) {
+        self.middlePassTextField.text = @"";
     }
     return YES;
 }
@@ -455,13 +466,6 @@
 #pragma mark - Lazy Init
 
 ///////////////////////////////////////////////////////////////////////////////////////
-- (UIButton *)backButton {
-    if (!_backButton) {
-        _backButton = [MPMButton normalButtonWithTitle:@"返回" titleColor:kMainBlueColor bgcolor:kWhiteColor];
-        [_backButton.titleLabel sizeToFit];
-    }
-    return _backButton;
-}
 
 - (UIImageView *)headerIcon {
     if (!_headerIcon) {

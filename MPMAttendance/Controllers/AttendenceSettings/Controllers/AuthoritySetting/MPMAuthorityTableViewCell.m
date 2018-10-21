@@ -9,6 +9,7 @@
 #import "MPMAuthorityTableViewCell.h"
 #import "MPMButton.h"
 #import "MPMAuthorityModel.h"
+#import "MPMRoundPeopleButton.h"
 
 @implementation MPMAuthorityTableViewCell
 
@@ -25,7 +26,7 @@
 #pragma mark - Public Method
 - (void)setPeopleViewData:(NSArray *)dataArray fold:(BOOL)fold {
     [self.peoplesView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[UIButton class]]) {
+        if ([obj isKindOfClass:[MPMRoundPeopleButton class]]) {
             [obj removeFromSuperview];
         }
     }];
@@ -37,16 +38,16 @@
     int bord = 6.5;
     for (int i = 0; i < dataArray.count; i++) {
         MPMAuthorityModel *model = dataArray[i];
-        NSString *btnTitle = model.userName;
         int row = i / count;
         int line = i % count;
-        UIButton *btn = [MPMButton imageUpTitleDownButtonWithTitle:btnTitle titleColor:kMainLightGray titleFont:SystemFont(13) image:ImageName(@"approval_useravatar_mid") highImage:ImageName(@"approval_useravatar_mid") backgroupColor:kWhiteColor cornerRadius:0 offset:2];
+        
+        MPMRoundPeopleButton *btn = [[MPMRoundPeopleButton alloc] init];
+        btn.roundPeople.nameLabel.text = model.name.length > 2 ? [model.name substringWithRange:NSMakeRange(model.name.length - 2, 2)] : model.name;
+        btn.deleteIcon.hidden = NO;
+        btn.nameLabel.text = model.name;
         btn.tag = i + Tag;
         [btn addTarget:self action:@selector(deletePeople:) forControlEvents:UIControlEventTouchUpInside];
         btn.frame = CGRectMake(margin + line*(margin+width), row*(bord + heigth), width, heigth);
-        UIImageView *del = [[UIImageView alloc] initWithFrame:CGRectMake(30, 0, 13, 13)];
-        del.image = ImageName(@"setting_removepersonnel");
-        [btn addSubview:del];
         [self.peoplesView addSubview:btn];
     }
     
@@ -135,7 +136,7 @@
         make.height.equalTo(@20);
     }];
     [self.addPeopleButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.width.height.equalTo(@22);
+        make.width.height.equalTo(@30);
         make.trailing.equalTo(self.mpm_trailing).offset(-15);
         make.centerY.equalTo(self.mpm_top).offset(30);
     }];
@@ -174,7 +175,7 @@
 
 - (UIButton *)addPeopleButton {
     if (!_addPeopleButton) {
-        _addPeopleButton = [MPMButton imageButtonWithImage:ImageName(@"apply_addakey") hImage:ImageName(@"apply_addakey")];
+        _addPeopleButton = [MPMButton imageButtonWithImage:ImageName(@"commom_add") hImage:ImageName(@"commom_add")];
     }
     return _addPeopleButton;
 }

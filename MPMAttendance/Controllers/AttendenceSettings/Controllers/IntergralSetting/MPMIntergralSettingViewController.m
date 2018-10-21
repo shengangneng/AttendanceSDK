@@ -12,10 +12,13 @@
 #import "MPMIntergralSettingTableViewCell.h"
 #import "UIImage+MPMExtention.h"
 #import "MPMAttendencePickerView.h"
-#import "MPMSessionManager.h"
+#import "MPMHTTPSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMIntergralModel.h"
 #import "MPMIntergralDefaultData.h"
+#import "MPMOauthUser.h"
+
+#define kSegmentItems @[@"考勤打卡",@"例外申请"]
 
 @interface MPMIntergralSettingViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -28,52 +31,78 @@
 @property (nonatomic, strong) UIButton *saveButton;
 @property (nonatomic, strong) MPMAttendencePickerView *pickerView;
 // Data
-
-@property (nonatomic, strong) NSMutableArray<MPMIntergralModel *> *allAttenData;/** 从接口获取到的考勤打卡数据 */
-@property (nonatomic, strong) NSMutableArray<MPMIntergralModel *> *allExtraData;/** 从接口获取到的例外申请数据 */
-
-@property (nonatomic, copy) NSArray<MPMIntergralModel *> *originalAttenData;/** 从接口获取到的考勤打卡数据 */
-@property (nonatomic, copy) NSArray<MPMIntergralModel *> *originalExtraData;/** 从接口获取到的例外申请数据 */
+@property (nonatomic, copy) NSArray<MPMIntergralModel *> *allAttenData;/** 从接口获取到的考勤打卡数据 */
+@property (nonatomic, copy) NSArray<MPMIntergralModel *> *allExtraData;/** 从接口获取到的例外申请数据 */
 
 @end
 
 @implementation MPMIntergralSettingViewController
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        [self setupAttributes];
-        [self setupSubViews];
-        [self setupConstraints];
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self getData];
+    [self setupAttributes];
+    __weak typeof(self) weakself = self;
+    [self addNetworkMonitoringWithGoodNetworkBlock:^{
+        __strong typeof(weakself) strongself = weakself;
+        [strongself setupSubViews];
+        [strongself setupConstraints];
+        [strongself getData];
+    }];
 }
 
-/** integralType：0考勤打卡、1例外申请 */
 - (void)getData {
+    // 考勤打卡：0
+    NSString *url = [NSString stringWithFormat:@"%@%@?scene=%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_INTERGRAL_LIST,@"0"];
     dispatch_group_t group = dispatch_group_create();
-    NSString *url = [NSString stringWithFormat:@"%@JiFenController/getJiFenConfigList?token=%@",MPMHost,[MPMShareUser shareUser].token];
-    NSDictionary *params = @{@"token":[MPMShareUser shareUser].token,@"companyId":kSafeString([MPMShareUser shareUser].companyId),@"integralType":@(0)};
-    
     dispatch_group_enter(group);
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
-            if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
-                for (int i = 0; i < ((NSArray *)response[@"dataObj"]).count; i++) {
-                    NSDictionary *dic = response[@"dataObj"][i];
-                    MPMIntergralModel *model = [[MPMIntergralModel alloc] initWithDictionary:dic];
-                    [self.allAttenData addObject:model];
-                    for (int j = 0; j < self.originalAttenData.count; j++) {
-                        if ([model.mpm_id isEqualToString:((MPMIntergralModel *)self.originalAttenData[j]).mpm_id]) {
-                            ((MPMIntergralModel *)self.originalAttenData[j]).conditions = model.conditions;
-                            ((MPMIntergralModel *)self.originalAttenData[j]).integralType = model.integralType;
-                            ((MPMIntergralModel *)self.originalAttenData[j]).integralValue = model.integralValue;
-                            ((MPMIntergralModel *)self.originalAttenData[j]).isTick = model.isTick;
+        [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+            if ([response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                for (int i = 0; i < ((NSArray *)response[kResponseObjectKey]).count; i++) {
+                    NSDictionary *dic = response[kResponseObjectKey][i];
+                    MPMIntergralModel *data = [[MPMIntergralModel alloc] initWithDictionary:dic];
+                    for (int  j = 0; j < self.allAttenData.count; j++) {
+                        MPMIntergralModel *model = self.allAttenData[j];
+                        if ([model.integralType isEqualToString:data.integralType]) {
+                            model.companyId = data.companyId;
+                            model.conditions = data.conditions;
+                            model.isTick = data.isTick;
+                            model.mpm_description = data.mpm_description;
+                            model.mpm_id = data.mpm_id;
+                            model.integralValue = data.integralValue;
+                            model.name = data.name;
+                            model.scene = data.scene;
+                            continue;
+                        }
+                    }
+                }
+            }
+            dispatch_group_leave(group);
+        } failure:^(NSString *error) {
+            DLog(@"%@",error);
+            dispatch_group_leave(group);
+        }];
+    });
+    // 例外申请：1
+    url = [NSString stringWithFormat:@"%@%@?scene=%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_INTERGRAL_LIST,@"1"];
+    dispatch_group_enter(group);
+    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
+        [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在加载" success:^(id response) {
+            if ([response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                for (int i = 0; i < ((NSArray *)response[kResponseObjectKey]).count; i++) {
+                    NSDictionary *dic = response[kResponseObjectKey][i];
+                    MPMIntergralModel *data = [[MPMIntergralModel alloc] initWithDictionary:dic];
+                    for (int  j = 0; j < self.allExtraData.count; j++) {
+                        MPMIntergralModel *model = self.allExtraData[j];
+                        if ([model.integralType isEqualToString:data.integralType]) {
+                            model.companyId = data.companyId;
+                            model.isTick = data.isTick;
+                            model.conditions = data.conditions;
+                            model.mpm_description = data.mpm_description;
+                            model.mpm_id = data.mpm_id;
+                            model.integralValue = data.integralValue;
+                            model.name = data.name;
+                            model.scene = data.scene;
                             continue;
                         }
                     }
@@ -86,33 +115,6 @@
         }];
     });
     
-    params = @{@"token":[MPMShareUser shareUser].token,@"companyId":kSafeString([MPMShareUser shareUser].companyId),@"integralType":@(1)};
-    dispatch_group_enter(group);
-    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
-            if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
-                for (int i = 0; i < ((NSArray *)response[@"dataObj"]).count; i++) {
-                    NSDictionary *dic = response[@"dataObj"][i];
-                    MPMIntergralModel *model = [[MPMIntergralModel alloc] initWithDictionary:dic];
-                    [self.allExtraData addObject:model];
-                    for (int j = 0; j < self.originalExtraData.count; j++) {
-                        if ([model.mpm_id isEqualToString:((MPMIntergralModel *)self.originalExtraData[j]).mpm_id]) {
-                            ((MPMIntergralModel *)self.originalExtraData[j]).conditions = model.conditions;
-                            ((MPMIntergralModel *)self.originalExtraData[j]).integralType = model.integralType;
-                            ((MPMIntergralModel *)self.originalExtraData[j]).integralValue = model.integralValue;
-                            ((MPMIntergralModel *)self.originalExtraData[j]).isTick = model.isTick;
-                            continue;
-                        }
-                    }
-                }
-            }
-            dispatch_group_leave(group);
-        } failure:^(NSString *error) {
-            DLog(@"%@",error);
-            dispatch_group_leave(group);
-        }];
-    });
-        
     dispatch_group_notify(group, kMainQueue, ^{
         [self.tableView reloadData];
     });
@@ -129,81 +131,69 @@
 
 - (void)reset:(UIButton *)sender {
     DLog(@"重置");
-    if (self.segmentControl.selectedSegmentIndex == 0) {
-        for (int i = 0; i < self.originalAttenData.count; i++) {
-            MPMIntergralModel *model = self.originalAttenData[i];
-            self.originalAttenData[i].needCondiction = kJiFenType0NeedCondictionFromId[model.mpm_id];
-            self.originalAttenData[i].conditions = kJiFenType0NeedCondictionsDefaultValueFromId[model.mpm_id];
-            self.originalAttenData[i].integralValue = kJiFenType0IntergralValueFromId[model.mpm_id];
-            self.originalAttenData[i].isTick = kJiFenType0IsTickFromId[model.mpm_id];
-            self.originalAttenData[i].isChange = @"1";
-        }
-    } else {
-        for (int i = 0; i < self.originalExtraData.count; i++) {
-            MPMIntergralModel *model = self.originalExtraData[i];
-            self.originalExtraData[i].needCondiction = kJiFenType1NeedCondictionFromId[model.mpm_id];
-            self.originalExtraData[i].conditions = kJiFenType1NeedCondictionsDefaultValueFromId[model.mpm_id];
-            self.originalExtraData[i].integralValue = kJiFenType1IntergralValueFromId[model.mpm_id];
-            self.originalExtraData[i].isTick = kJiFenType1IsTickFromId[model.mpm_id];
-            self.originalExtraData[i].isChange = @"1";
-        }
+    for (int i = 0; i < self.allAttenData.count; i++) {
+        MPMIntergralModel *model = self.allAttenData[i];
+        self.allAttenData[i].needCondiction = kJiFenType0NeedCondictionFromId[model.integralType];
+        self.allAttenData[i].conditions = kJiFenType0NeedCondictionsDefaultValueFromId[model.integralType];
+        self.allAttenData[i].integralValue = kJiFenType0IntergralValueFromId[model.integralType];
+        self.allAttenData[i].isTick = kJiFenType0IsTickFromId[model.integralType];
+        self.allAttenData[i].typeCanChange = kJiFenType0CanChangeFromId[model.integralType];
+        self.allAttenData[i].isChange = @"1";
     }
-    [self.tableView reloadData];
+    for (int i = 0; i < self.allExtraData.count; i++) {
+        MPMIntergralModel *model = self.allExtraData[i];
+        self.allExtraData[i].needCondiction = kJiFenType1NeedCondictionFromId[model.integralType];
+        self.allExtraData[i].conditions = kJiFenType1NeedCondictionsDefaultValueFromId[model.integralType];
+        self.allExtraData[i].integralValue = kJiFenType1IntergralValueFromId[model.integralType];
+        self.allExtraData[i].isTick = kJiFenType1IsTickFromId[model.integralType];
+        self.allExtraData[i].typeCanChange = kJiFenType1CanChangeFromId[model.integralType];
+        self.allExtraData[i].isChange = @"1";
+    }
+    [self resetOrSaveIntegral:YES];
 }
 
 - (void)save:(UIButton *)sender {
     DLog(@"保存");
-    NSString *url = [NSString stringWithFormat:@"%@JiFenController/addJiFenConfig?token=%@",MPMHost,[MPMShareUser shareUser].token];
-    NSArray *allArray = self.segmentControl.selectedSegmentIndex == 0 ? self.allAttenData.copy : self.allExtraData.copy;
-    NSArray *arr = self.segmentControl.selectedSegmentIndex == 0 ? self.originalAttenData : self.originalExtraData;
-    NSMutableArray *params = [NSMutableArray array];
+    [self resetOrSaveIntegral:NO];
+}
+
+/** YES:reset NO:save */
+- (void)resetOrSaveIntegral:(BOOL)reset {
+    NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_INTERGRAL_SAVE];
+    NSMutableArray *allArray = [NSMutableArray arrayWithArray:self.allAttenData];
+    [allArray addObjectsFromArray:self.allExtraData];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:allArray.count];
     for (int i = 0; i < allArray.count; i++) {
-        BOOL needRefresh = NO;
-        MPMIntergralModel *temp;
         MPMIntergralModel *model = allArray[i];
-        for (int j = 0; j < arr.count; j++) {
-            MPMIntergralModel *newModel = arr[j];
-            if ([model.mpm_id isEqualToString:newModel.mpm_id]) {
-                needRefresh = YES;
-                temp = newModel;
-                continue;
-            }
-        }
-        if (needRefresh) {
-            NSMutableDictionary *tempDic = [NSMutableDictionary dictionary];
-            tempDic[@"companyId"] = [MPMShareUser shareUser].companyId;
-            tempDic[@"conditions"] = temp.conditions;
-            tempDic[@"id"] = temp.mpm_id;
-            tempDic[@"integralType"] = temp.integralType;
-            tempDic[@"integralValue"] = temp.integralValue;
-            tempDic[@"isTick"] = temp.isTick;
-            [params addObject:tempDic];
-        } else {
-            NSMutableDictionary *tempDic = [NSMutableDictionary dictionary];
-            tempDic[@"companyId"] = [MPMShareUser shareUser].companyId;
-            tempDic[@"conditions"] = model.conditions;
-            tempDic[@"id"] = model.mpm_id;
-            tempDic[@"integralType"] = model.integralType;
-            tempDic[@"integralValue"] = model.integralValue;
-            tempDic[@"isTick"] = model.isTick;
-            [params addObject:tempDic];
+        NSMutableDictionary *tempDic = [NSMutableDictionary dictionary];
+        tempDic[@"companyId"] = [MPMOauthUser shareOauthUser].company_id;
+        tempDic[@"conditions"] = model.conditions;
+        tempDic[@"description"] = model.mpm_description;
+        tempDic[@"id"] = model.mpm_id;
+        tempDic[@"integralType"] = model.integralType;
+        tempDic[@"integralValue"] = model.integralValue;
+        tempDic[@"isTick"] = model.isTick;
+        tempDic[@"name"] = model.name;
+        tempDic[@"scene"] = model.scene;
+        if (model.isChange.integerValue == 1) {
+            [temp addObject:tempDic];
         }
     }
-//    for (int i = 0; i < arr.count; i++) {
-//        MPMIntergralModel *model = arr[i];
-//        NSMutableDictionary *tempDic = [NSMutableDictionary dictionary];
-//        tempDic[@"companyId"] = [MPMShareUser shareUser].companyId;
-//        tempDic[@"conditions"] = model.conditions;
-//        tempDic[@"id"] = model.mpm_id;
-//        tempDic[@"integralType"] = model.integralType;
-//        tempDic[@"integralValue"] = model.integralValue;
-//        tempDic[@"isTick"] = model.isTick;
-//        [params addObject:tempDic];
-//    }
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:@{@"kqJifenConfig":params} loadingMessage:@"正在保存" success:^(id response) {
-        [self showAlertControllerToLogoutWithMessage:@"保存成功" sureAction:^(UIAlertAction * _Nonnull action) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } needCancleButton:NO];
+    [params setObject:temp forKey:@"scoreVo"];
+    [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMJSONRequestSerializer serializer];
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在操作" success:^(id response) {
+        DLog(@"%@",response);
+        __weak typeof(self) weakself = self;
+        if (reset) {
+            [self showAlertControllerToLogoutWithMessage:@"重置成功" sureAction:nil needCancleButton:NO];
+            [self getData];
+        } else {
+            [self showAlertControllerToLogoutWithMessage:@"保存成功" sureAction:^(UIAlertAction * _Nonnull action) {
+                __strong typeof(weakself) strongself = weakself;
+                [strongself.navigationController popViewControllerAnimated:YES];
+            } needCancleButton:NO];
+        }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
@@ -216,9 +206,9 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.segmentControl.selectedSegmentIndex == 0) {
-        return self.originalAttenData.count;
+        return self.allAttenData.count;
     } else {
-        return self.originalExtraData.count;
+        return self.allExtraData.count;
     }
 }
 
@@ -242,12 +232,12 @@
     if (!cell) {
         cell = [[MPMIntergralSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifer];
     }
-    NSArray<MPMIntergralModel *> *arr = self.segmentControl.selectedSegmentIndex == 0 ? self.originalAttenData : self.originalExtraData;
+    NSArray<MPMIntergralModel *> *arr = self.segmentControl.selectedSegmentIndex == 0 ? self.allAttenData : self.allExtraData;
     MPMIntergralModel *model = arr[indexPath.row];
-    cell.titleLabel.text = model.title;
-    cell.subTitleLabel.text = model.subTitle;
+    cell.titleLabel.text = model.name;
+    cell.subTitleLabel.text = model.mpm_description;
     cell.selectionButton.hidden = (model.needCondiction.integerValue == 0);
-    NSArray *defaultCondictionValues = self.segmentControl.selectedSegmentIndex == 0 ? kJiFenType0CondictionAllValueFromId[model.mpm_id] : kJiFenType1CondictionAllValueFromId[model.mpm_id];
+    NSArray *defaultCondictionValues = self.segmentControl.selectedSegmentIndex == 0 ? kJiFenType0CondictionAllValueFromId[model.integralType] : kJiFenType1CondictionAllValueFromId[model.integralType];
     if (defaultCondictionValues.count > 0) {
         [cell.selectionButton setTitle:defaultCondictionValues[model.conditions.integerValue] forState:UIControlStateNormal];
     }
@@ -332,10 +322,8 @@
     self.navigationItem.title = @"积分设置";
     self.view.backgroundColor = kTableViewBGColor;
     // 先获取获取考勤打卡、例外申请 积分设置的默认配置
-    self.allAttenData = [NSMutableArray array];
-    self.allExtraData = [NSMutableArray array];
-    self.originalAttenData = [MPMIntergralDefaultData getIntergralDefaultDataOfIntergralType:0];
-    self.originalExtraData = [MPMIntergralDefaultData getIntergralDefaultDataOfIntergralType:1];
+    self.allAttenData = [MPMIntergralDefaultData getIntergralDefaultDataOfScene:0];
+    self.allExtraData = [MPMIntergralDefaultData getIntergralDefaultDataOfScene:1];
     [self.segmentControl addTarget:self action:@selector(segmentChange:) forControlEvents:UIControlEventValueChanged];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
     [self.resetButton addTarget:self action:@selector(reset:) forControlEvents:UIControlEventTouchUpInside];
@@ -394,7 +382,7 @@
 #pragma mark - Lazy Init
 - (UISegmentedControl *)segmentControl {
     if (!_segmentControl) {
-        _segmentControl = [[UISegmentedControl alloc] initWithItems:@[@"考勤打卡",@"例外申请"]];
+        _segmentControl = [[UISegmentedControl alloc] initWithItems:kSegmentItems];
         _segmentControl.tintColor = kClearColor;
         [_segmentControl setDividerImage:[UIImage getImageFromColor:kMainBlueColor] forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
         [_segmentControl setDividerImage:[UIImage getImageFromColor:kMainBlueColor] forLeftSegmentState:UIControlStateSelected rightSegmentState:UIControlStateSelected barMetrics:UIBarMetricsDefault];

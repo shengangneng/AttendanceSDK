@@ -8,7 +8,7 @@
 
 #import "MPMSearchDepartViewController.h"
 #import "MPMSearchPopAnimate.h"
-#import "MPMSessionManager.h"
+#import "MPMHTTPSessionManager.h"
 #import "MPMShareUser.h"
 #import "MPMDepartEmployeeHelper.h"
 #import "MPMDepartment.h"
@@ -16,6 +16,7 @@
 #import "MPMButton.h"
 #import "MPMHiddenTableViewDataSourceDelegate.h"
 #import "MPMGetPeopleModel.h"
+#import "MPMOauthUser.h"
 
 @interface MPMSearchDepartViewController () <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UINavigationControllerDelegate, MPMHiddenTabelViewDelegate>
 
@@ -35,7 +36,7 @@
 @property (nonatomic, copy) SureSelectBlock sureSelectBlock;
 @property (nonatomic, weak) id<MPMSelectDepartmentViewControllerDelegate> delegate;
 @property (nonatomic, strong) NSMutableArray *headerButtonTitlesArray;/** 通过这个数组的数量来决定pop回去的controller的index */
-@property (nonatomic, assign) forSelectionType selectionType;
+@property (nonatomic, assign) SelectionType selectionType;
 @property (nonatomic, copy) NSArray<MPMDepartment *> *searchArray;
 @property (nonatomic, strong) NSMutableArray *allSelectIndexPath;
 @property (nonatomic, strong) NSMutableArray *partSelectIndexPath;
@@ -44,13 +45,13 @@
 
 @implementation MPMSearchDepartViewController
 
-- (instancetype)initWithDelegate:(id<MPMSelectDepartmentViewControllerDelegate>)delegate sureSelectBlock:(SureSelectBlock)sureBlock selectType:(forSelectionType)type titleArray:(NSMutableArray *)titleArray {
+- (instancetype)initWithDelegate:(id<MPMSelectDepartmentViewControllerDelegate>)delegate sureSelectBlock:(SureSelectBlock)sureBlock selectionType:(SelectionType)selectionType titleArray:(NSMutableArray *)titleArray {
     self = [super init];
     if (self) {
         self.delegate = delegate;
         self.sureSelectBlock = sureBlock;
         self.headerButtonTitlesArray = [NSMutableArray arrayWithArray:titleArray.copy];
-        self.selectionType = type;
+        self.selectionType = selectionType;
         [self setupAttributes];
         [self setupSubViews];
         [self setupConstraints];
@@ -125,10 +126,15 @@
     }
     MPMDepartment *model = self.searchArray[indexPath.row];
     cell.isHuman = model.isHuman;
+    if (cell.isHuman) {
+        cell.roundPeopleView.nameLabel.text = model.name.length > 2 ? [model.name substringFromIndex:model.name.length-2] : model.name;
+        [cell.roundPeopleView setNeedsDisplay];
+        [cell.roundPeopleView setNeedsDisplay];
+    }
     cell.accessoryType = UITableViewCellAccessoryNone;
-    if (model.selectedStatus.integerValue == 1) {
+    if (model.selectedStatus == kSelectedStatusAllSelected) {
         cell.checkIconImage.image = ImageName(@"setting_all");
-    } else if (model.selectedStatus.integerValue == 2) {
+    } else if (model.selectedStatus == kSelectedStatusPartSelected) {
         cell.checkIconImage.image = ImageName(@"setting_some");
     } else {
         cell.checkIconImage.image = ImageName(@"setting_none");
@@ -142,7 +148,7 @@
     MPMDepartment *model = self.searchArray[indexPath.row];
     if ([self.allSelectIndexPath containsObject:indexPath]) {
         [self.allSelectIndexPath removeObject:indexPath];
-        self.searchArray[indexPath.row].selectedStatus = @"0";
+        self.searchArray[indexPath.row].selectedStatus = kSelectedStatusUnselected;
         if (model.isHuman) {
             // 如果是员工，则直接移除
             [[MPMDepartEmployeeHelper shareInstance] employeeArrayRemoveDepartModel:model];
@@ -150,7 +156,6 @@
             // 如果是部门，需要移除部门下面的全部内容
             [[MPMDepartEmployeeHelper shareInstance] departmentArrayRemoveSub:model];
         }
-        [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
     } else if ([self.partSelectIndexPath containsObject:indexPath]) {
         [self.partSelectIndexPath removeObject:indexPath];
         if (model.isHuman) {
@@ -158,8 +163,7 @@
         } else {
             [[MPMDepartEmployeeHelper shareInstance] departmentArrayRemoveSub:model];
         }
-        [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
-        self.searchArray[indexPath.row].selectedStatus = @"0";
+        self.searchArray[indexPath.row].selectedStatus = kSelectedStatusUnselected;
     } else {
         [self.allSelectIndexPath addObject:indexPath];
         if (model.isHuman) {
@@ -167,8 +171,7 @@
         } else {
             [[MPMDepartEmployeeHelper shareInstance] departmentArrayAddDepartModel:model];
         }
-        [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
-        self.searchArray[indexPath.row].selectedStatus = @"1";
+        self.searchArray[indexPath.row].selectedStatus = kSelectedStatusAllSelected;
     }
     self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -178,16 +181,16 @@
 - (void)popUp:(UIButton *)sender {
     sender.selected = !sender.selected;
     NSMutableArray *temp = [NSMutableArray array];
-    for (MPMSchedulingDepartmentsModel *dep in [MPMDepartEmployeeHelper shareInstance].departments) {
+    for (MPMDepartment *dep in [MPMDepartEmployeeHelper shareInstance].departments) {
         MPMGetPeopleModel *model = [[MPMGetPeopleModel alloc] init];
-        model.name = dep.departmentName;
-        model.mpm_id = dep.departmentId;
+        model.name = dep.name;
+        model.mpm_id = dep.mpm_id;
         [temp addObject:model];
     }
-    for (MPMSchedulingEmplyoeeModel *emp in [MPMDepartEmployeeHelper shareInstance].employees) {
+    for (MPMDepartment *emp in [MPMDepartEmployeeHelper shareInstance].employees) {
         MPMGetPeopleModel *model = [[MPMGetPeopleModel alloc] init];
-        model.name = emp.employeeName;
-        model.mpm_id = emp.employeeId;
+        model.name = emp.name;
+        model.mpm_id = emp.mpm_id;
         model.isHuman = @"1";
         [temp addObject:model];
     }
@@ -312,19 +315,12 @@
     for (int i = 0; i < self.searchArray.count; i++) {
         MPMDepartment *mo = self.searchArray[i];
         if ([mo.mpm_id isEqualToString:people.mpm_id]) {
-            self.searchArray[i].selectedStatus = @"0";
+            self.searchArray[i].selectedStatus = kSelectedStatusUnselected;
             [self.allSelectIndexPath removeObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
     }
-    // 移除全局对象里面的内容
-    [[MPMDepartEmployeeHelper shareInstance].allStringData enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj containsString:depart.mpm_id]) {
-            [[MPMDepartEmployeeHelper shareInstance].allStringData removeObject:obj];
-        }
-    }];
-    [[MPMDepartEmployeeHelper shareInstance] dealingAllStringData];
     
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选（%ld)",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
     [self.tableView reloadData];
 }
 
@@ -333,63 +329,30 @@
     if (kIsNilString(text)) {
         return;
     }
-    // 需要格式化一下输入的中文字符串
-    NSString *url = [NSString stringWithFormat:@"%@getQueryObject?token=%@&queryStr=%@",MPMHost,[MPMShareUser shareUser].token,text];
+    // 查询人员或部门
+    NSString *url = [NSString stringWithFormat:@"%@%@?keyWord=%@&companyCode=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_MIX_FINDBYKEYWORD,text,[MPMOauthUser shareOauthUser].company_code];
     NSString *encodingUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
-    NSDictionary *params = @{@"token":[MPMShareUser shareUser].token,@"quertStr":text};
-    [[MPMSessionManager shareManager] postRequestWithURL:encodingUrl params:params success:^(id response) {
-        DLog(@"%@",response);
-        if (response[@"dataObj"] && [response[@"dataObj"] isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *dataObj = response[@"dataObj"];
-            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:((NSArray *)dataObj[@"departmentMap"]).count];
-            if (self.selectionType == forSelectionTypeBoth) {
-                if (dataObj[@"departmentMap"] && [dataObj[@"departmentMap"] isKindOfClass:[NSArray class]]) {
-                    for (NSDictionary *dic in dataObj[@"departmentMap"]) {
-                        MPMDepartment *depart = [[MPMDepartment alloc] init];
-                        depart.mpm_id = dic[@"id"];
-                        depart.parent_ids = dic[@"ids"];
-                        depart.name = dic[@"name"];
-                        [temp addObject:depart];
-                    }
-                }
-                if (dataObj[@"employeeMap"] && [dataObj[@"employeeMap"] isKindOfClass:[NSArray class]]) {
-                    for (NSDictionary *dic in dataObj[@"employeeMap"]) {
-                        MPMDepartment *depart = [[MPMDepartment alloc] init];
-                        depart.mpm_id = dic[@"id"];
-                        depart.parent_ids = dic[@"ids"];
-                        depart.name = dic[@"name"];
-                        depart.isHuman = @"1";
-                        [temp addObject:depart];
-                    }
-                }
-            } else if (self.selectionType == forSelectionTypeOnlyDepartment) {
-                if (dataObj[@"departmentMap"] && [dataObj[@"departmentMap"] isKindOfClass:[NSArray class]]) {
-                    for (NSDictionary *dic in dataObj[@"departmentMap"]) {
-                        MPMDepartment *depart = [[MPMDepartment alloc] init];
-                        depart.mpm_id = dic[@"id"];
-                        depart.parent_ids = dic[@"ids"];
-                        depart.name = dic[@"name"];
-                        [temp addObject:depart];
-                    }
-                }
-            } else {
-                if (dataObj[@"employeeMap"] && [dataObj[@"employeeMap"] isKindOfClass:[NSArray class]]) {
-                    for (NSDictionary *dic in dataObj[@"employeeMap"]) {
-                        MPMDepartment *depart = [[MPMDepartment alloc] init];
-                        depart.mpm_id = dic[@"id"];
-                        depart.parent_ids = dic[@"ids"];
-                        depart.name = dic[@"name"];
-                        depart.isHuman = @"1";
-                        [temp addObject:depart];
-                    }
+    [[MPMSessionManager shareManager] postRequestWithURL:encodingUrl setAuth:YES params:nil loadingMessage:@"正在搜索" success:^(id response) {
+        if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+            NSArray *object = response[kResponseObjectKey];
+            NSMutableArray *resault = [NSMutableArray arrayWithCapacity:object.count];
+            for (int i = 0; i < object.count; i++) {
+                NSDictionary *dic = object[i];
+                MPMDepartment *depart = [[MPMDepartment alloc] initWithDictionary:dic];
+                depart.isHuman = [depart.type isEqualToString:kUserType];
+                
+                if (kSelectionTypeBoth == self.selectionType ||
+                    (kSelectionTypeOnlyEmployee == self.selectionType && depart.isHuman) ||
+                    (kSelectionTypeOnlyDepartment == self.selectionType && !depart.isHuman)) {
+                    [resault addObject:depart];
                 }
             }
-            self.searchArray = temp.copy;
+            self.searchArray = resault.copy;
             [self.allSelectIndexPath removeAllObjects];
             [self.partSelectIndexPath removeAllObjects];
             [self calculateSelection];
-            [self.tableView reloadData];
         }
+        [self.tableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
@@ -397,37 +360,21 @@
 
 - (void)calculateSelection {
     // 查找全选和部分选中
-    for (int i = 0; i < self.searchArray.count;i++) {
+    for (int i = 0; i < self.searchArray.count; i++) {
         MPMDepartment *model = self.searchArray[i];
-        BOOL allSelect = NO;
-        BOOL partSelect = NO;
-        for (MPMSchedulingEmplyoeeModel *eee in [MPMDepartEmployeeHelper shareInstance].employees) {
-            if ([eee.employeeId isEqualToString:model.mpm_id]) {
-                allSelect = YES;
-            }
-            if ([[eee.parentsId componentsSeparatedByString:@","] containsObject:model.mpm_id]) {
-                partSelect = YES;
+        BOOL select = NO;
+        for (MPMDepartment *eee in [MPMDepartEmployeeHelper shareInstance].employees) {
+            if ([eee.mpm_id isEqualToString:model.mpm_id]) {
+                select = YES;
             }
         }
-        for (MPMSchedulingDepartmentsModel *ddd in [MPMDepartEmployeeHelper shareInstance].departments) {
-            if ([ddd.departmentId isEqualToString:model.mpm_id]) {
-                allSelect = YES;
-            }
-            if ([[ddd.parentsId componentsSeparatedByString:@","] containsObject:model.mpm_id]) {
-                partSelect = YES;
-            }
-        }
-        if (allSelect) {
-            self.searchArray[i].selectedStatus = @"1";
+        if (select) {
+            self.searchArray[i].selectedStatus = kSelectedStatusAllSelected;
             [self.allSelectIndexPath addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-        }
-        if (partSelect) {
-            self.searchArray[i].selectedStatus = @"2";
-            [self.partSelectIndexPath addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
     }
     
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选 (%ld) ",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
     [self.tableView reloadData];
 }
 
@@ -435,13 +382,13 @@
 
 - (void)setupAttributes {
     [super setupAttributes];
-    if (self.selectionType == forSelectionTypeBoth) {
+    if (self.selectionType == kSelectionTypeBoth) {
         self.navigationItem.title =
         self.headerSearchBar.placeholder = @"搜索部门或人员";
-    } else if (self.selectionType == forSelectionTypeOnlyDepartment) {
+    } else if (self.selectionType == kSelectionTypeOnlyDepartment) {
         self.navigationItem.title =
         self.headerSearchBar.placeholder = @"搜索部门";
-    } else {
+    } else if (self.selectionType == kSelectionTypeOnlyEmployee) {
         self.navigationItem.title =
         self.headerSearchBar.placeholder = @"搜索人员";
     }
@@ -449,7 +396,7 @@
     self.partSelectIndexPath = [NSMutableArray array];
     [self.headerSearchBar becomeFirstResponder];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
-    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"部门:%ld个  人员:%ld人",[MPMDepartEmployeeHelper shareInstance].departments.count,[MPMDepartEmployeeHelper shareInstance].employees.count];
+    self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选 (%ld) ",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
     [self.headerHiddenMaskView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hide:)]];
     [self.bottomUpButton addTarget:self action:@selector(popUp:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomSureButton addTarget:self action:@selector(sure:) forControlEvents:UIControlEventTouchUpInside];
@@ -590,7 +537,7 @@
 - (UILabel *)bottomTotalSelectedLabel {
     if (!_bottomTotalSelectedLabel) {
         _bottomTotalSelectedLabel = [[UILabel alloc] init];
-        _bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"选中人数(%ld)",self.allSelectIndexPath.count];
+        _bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选 (%ld) ",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
         _bottomTotalSelectedLabel.textColor = kBlackColor;
         _bottomTotalSelectedLabel.textAlignment = NSTextAlignmentLeft;
     }

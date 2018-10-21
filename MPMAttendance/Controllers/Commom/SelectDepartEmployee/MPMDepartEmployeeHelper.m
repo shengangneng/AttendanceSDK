@@ -17,57 +17,38 @@ static MPMDepartEmployeeHelper *shareHelper;
         shareHelper = [[MPMDepartEmployeeHelper alloc] init];
         shareHelper.departments = [NSMutableArray array];
         shareHelper.employees = [NSMutableArray array];
-        shareHelper.allStringData = [NSMutableArray array];
-        shareHelper.allArrayData = [NSMutableArray array];
     });
     return shareHelper;
 }
 
-- (void)dealingAllStringData {
-    [shareHelper.allArrayData removeAllObjects];
-    for (int i = 0; i < shareHelper.allStringData.count; i++) {
-        if ([shareHelper.allStringData[i] hasPrefix:@"-1,"]) {
-            shareHelper.allStringData[i] = [shareHelper.allStringData[i] substringFromIndex:3];
-        }
-        NSArray *arr = [shareHelper.allStringData[i] componentsSeparatedByString:@","];
-        [shareHelper.allArrayData addObject:arr];
+#pragma mark - Getter
+- (NSMutableArray<MPMDepartment *> *)employees {
+    if (!_employees) {
+        _employees = [NSMutableArray array];
     }
+    return _employees;
 }
 
-- (void)allStringDataRemoveSubOfId:(NSString *)string {
-    NSMutableArray *temp = [NSMutableArray arrayWithArray:shareHelper.allStringData.copy];
-    [shareHelper.allStringData removeAllObjects];
-    for (NSString *str in temp) {
-        if (![str hasPrefix:string]) {
-            [shareHelper.allStringData addObject:str];
-        }
+- (NSMutableArray<MPMDepartment *> *)departments {
+    if (!_departments) {
+        _departments = [NSMutableArray array];
     }
+    return _departments;
 }
 
 /** 部门的增加操作 */
 - (void)departmentArrayAddDepartModel:(MPMDepartment *)dep {
-    MPMSchedulingDepartmentsModel *depart = [[MPMSchedulingDepartmentsModel alloc] init];
-    depart.departmentId = dep.mpm_id;
-    depart.departmentName = dep.name;
-    depart.parentsId = dep.parent_ids;
-    [shareHelper.departments addObject:depart];
+    [shareHelper.departments addObject:dep];
 }
 /** 部门的删除操作-（需要移出下面的部门和员工） */
 - (void)departmentArrayRemoveSub:(MPMDepartment *)dep {
     
-    NSMutableArray *temp = [NSMutableArray array];
-    for (NSArray *arr in shareHelper.allArrayData) {
-        if ([arr containsObject:dep.mpm_id]) {
-            [temp addObject:arr.lastObject];
-        }
-    }
-    
-    // 当前部门和部门下的子部门都需要取消选中
+    // 查找当前部门或者部门底下的部门并移除
     NSMutableArray *newDepart = [NSMutableArray arrayWithArray:shareHelper.departments.copy];
     [shareHelper.departments removeAllObjects];
-    for (MPMSchedulingDepartmentsModel *mo in newDepart) {
+    for (MPMDepartment *mo in newDepart) {
         BOOL canDelete = NO;
-        if ([dep.mpm_id isEqualToString:mo.departmentId] || [[mo.parentsId componentsSeparatedByString:@","] containsObject:dep.mpm_id]) {
+        if ([dep.mpm_id isEqualToString:mo.mpm_id] || [[mo.parentIds componentsSeparatedByString:@","] containsObject:dep.mpm_id]) {
             canDelete = YES;
         }
         if (!canDelete) {
@@ -75,11 +56,15 @@ static MPMDepartEmployeeHelper *shareHelper;
         }
     }
     
+    // 查找部门地下的员工并移除
     NSMutableArray *newEmp = [NSMutableArray arrayWithArray:shareHelper.employees.copy];
     [shareHelper.employees removeAllObjects];
-    for (MPMSchedulingEmplyoeeModel *mo in newEmp) {
+    for (MPMDepartment *mo in newEmp) {
         BOOL canDelete = NO;
-        if ([[mo.parentsId componentsSeparatedByString:@","] containsObject:dep.mpm_id]) {
+        // 如果员工的parentIds中包含这个部门的id，说明员工是这个部门里面的，需要删除这个员工
+        // 有的人，没有parentIds！所以需要判断如果员工的parentId等于当前部门的id，需要删除这个员工
+        if ([[mo.parentIds componentsSeparatedByString:@","] containsObject:dep.mpm_id] ||
+            [mo.parentId isEqualToString:dep.mpm_id]) {
             canDelete = YES;
         }
         if (!canDelete) {
@@ -90,16 +75,12 @@ static MPMDepartEmployeeHelper *shareHelper;
 
 /** 员工的增加操作 */
 - (void)employeeArrayAddDepartModel:(MPMDepartment *)dep {
-    MPMSchedulingEmplyoeeModel *emp = [[MPMSchedulingEmplyoeeModel alloc] init];
-    emp.employeeId = dep.mpm_id;
-    emp.employeeName = dep.name;
-    emp.parentsId = dep.parent_ids;
-    [shareHelper.employees addObject:emp];
+    [shareHelper.employees addObject:dep];
 }
 /** 员工的删除操作 */
 - (void)employeeArrayRemoveDepartModel:(MPMDepartment *)dep {
-    [shareHelper.employees enumerateObjectsUsingBlock:^(MPMSchedulingEmplyoeeModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.employeeId isEqualToString:dep.mpm_id]) {
+    [shareHelper.employees enumerateObjectsUsingBlock:^(MPMDepartment * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.mpm_id isEqualToString:dep.mpm_id]) {
             [shareHelper.employees removeObject:obj];
         }
     }];
@@ -108,8 +89,6 @@ static MPMDepartEmployeeHelper *shareHelper;
 - (void)clearData {
     [shareHelper.departments removeAllObjects];
     [shareHelper.employees removeAllObjects];
-    [shareHelper.allStringData removeAllObjects];
-    [shareHelper.allArrayData removeAllObjects];
 }
 
 @end

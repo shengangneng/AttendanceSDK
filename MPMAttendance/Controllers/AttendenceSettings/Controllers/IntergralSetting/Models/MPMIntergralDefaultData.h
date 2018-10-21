@@ -11,7 +11,7 @@
 
 @interface MPMIntergralDefaultData : NSObject
 
-/** IntergralType：0考勤打卡、1例外申请 */
-+ (NSArray<MPMIntergralModel *> *)getIntergralDefaultDataOfIntergralType:(NSInteger )type;
+/** scene：0考勤打卡、1例外申请 */
++ (NSArray<MPMIntergralModel *> *)getIntergralDefaultDataOfScene:(NSInteger)scene;
 
 @end

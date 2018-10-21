@@ -8,7 +8,8 @@
 
 #import "MPMMainTabBarViewController.h"
 #import "MPMBaseNavigationController.h"
-#import "MPMShareUser.h"
+#import "MPMOauthUser.h"
+#import "MPMSessionManager.h"
 // 五个TabBar
 #import "MPMAttendenceSigninViewController.h"       // 考勤打卡
 #import "MPMApplyAdditionViewController.h"          // 例外申请
@@ -27,6 +28,28 @@
     [super viewDidLoad];
     [self setupAttributes];
     [self setupChildVC];
+    [self updateApprovalUnreadCount];
+}
+
+// 获取"流程审批"未读消息数
+- (void)updateApprovalUnreadCount {
+    NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_MYNEWS];
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        if ([response[kResponseObjectKey] isKindOfClass:[NSNumber class]]) {
+            NSNumber *unreadCount = response[kResponseObjectKey];
+            for (UIViewController *vc in self.viewControllers) {
+                if ([vc isKindOfClass:[MPMBaseNavigationController class]] && [((MPMBaseNavigationController *)vc).viewControllers.firstObject isKindOfClass:[MPMApprovalProcessViewController class]]) {
+                    if (0 == unreadCount.doubleValue) {
+                        ((MPMApprovalProcessViewController *)((MPMBaseNavigationController *)vc).viewControllers.firstObject).tabBarItem.badgeValue = nil;
+                    } else {
+                        ((MPMApprovalProcessViewController *)((MPMBaseNavigationController *)vc).viewControllers.firstObject).tabBarItem.badgeValue = unreadCount.stringValue;
+                    }
+                }
+            }
+        }
+    } failure:^(NSString *error) {
+        DLog(@"获取流程审批未读消息失败");
+    }];
 }
 
 - (void)setupAttributes {
@@ -35,12 +58,12 @@
 }
 
 - (void)setupChildVC {
-    NSArray *arr = [MPMShareUser shareUser].perimissionArray;
+    NSArray *arr = [MPMOauthUser shareOauthUser].perimissionArray;
     if (arr && arr.count > 0) {
         for (int i = 0; i < arr.count; i++) {
             NSString *perimissionId = arr[i][@"id"];
-            NSString *perimissionName = arr[i][@"perimissionname"];
-            NSString *vcName_imageName = [kTarBarControllerDic objectForKey:perimissionId];
+            NSString *perimissionName = arr[i][@"name"];
+            NSString *vcName_imageName = [kTarBarControllerDicV2 objectForKey:perimissionId];
             if (kIsNilString(vcName_imageName)) continue;
             NSString *vcName = [vcName_imageName componentsSeparatedByString:@","].firstObject;
             NSString *imageName = [vcName_imageName componentsSeparatedByString:@","].lastObject;
@@ -87,6 +110,7 @@
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
     NSInteger index = [self.tabBar.items indexOfObject:item];
+    [self updateApprovalUnreadCount];
     [self animationWithIndex:index];
 }
 

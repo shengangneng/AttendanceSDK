@@ -7,20 +7,13 @@
 //
 
 #import "MPMBaseModel.h"
+#import "MPMCausationTypeData.h"
+@class MPMCausationDetailModel;
 
 @interface MPMDealingModel : MPMBaseModel
 
-@property (nonatomic, copy) NSString *mpm_copyName;     /** 抄送人 */
-@property (nonatomic, copy) NSString *mpm_copyNameId;   /** 抄送人id */
-@property (nonatomic, copy) NSString *approvalName;     /** 审批人 */
-@property (nonatomic, copy) NSString *approvalId;       /** 审批人id */
-@property (nonatomic, copy) NSString *nowApproval;      /** 审批人 */
-@property (nonatomic, copy) NSString *nowApprovalId;    /** 审批人id */
-@property (nonatomic, copy) NSString *status;           /** 打卡状态：0正常、1异常 */
 @property (nonatomic, copy) NSString *type;             /** 考勤状态：0考勤、1会议 */
-@property (nonatomic, copy) NSString *remark;           /** 备注、处理理由 */
 @property (nonatomic, copy) NSDictionary *attendence;   /** 签到信息 */
-@property (nonatomic, copy) NSString *address;          /** 签到地址 */
 @property (nonatomic, copy) NSString *attendenceId;     /** 选中的补签处理类型id */
 @property (nonatomic, copy) NSString *brushDate;        /** 签到日期 */
 @property (nonatomic, copy) NSString *brushTime;        /** 签到时间 */
@@ -33,12 +26,31 @@
 @property (nonatomic, copy) NSString *signType;         /** 签到类型：0上班 1下班 */
 @property (nonatomic, copy) NSString *source;           /** 来源：0安卓、1iOS、2pc、3考勤机 */
 @property (nonatomic, copy) NSNumber *early;            /** 是否早到：0否、1是 */
-@property (nonatomic, strong) NSMutableArray *causationDetail;  /** address、causationId、days、endDate、endTime、startDate、startTime */
 // 调班
 @property (nonatomic, copy) NSString *mpm_newDate;  /** 新调班日期 */
 @property (nonatomic, copy) NSString *originalDate; /** 原调班日期 */
 // 考勤节点时间
 @property (nonatomic, copy) NSString *oriAttendenceDate;
+
+#pragma mark - 2.0接口参数
+
+- (instancetype)initWithCausationType:(CausationType)type addCount:(NSInteger)addCount;
+
+@property (nonatomic, assign) CausationType causationType;                                  /** 类型 */
+@property (nonatomic, strong) NSMutableArray<MPMCausationDetailModel *> *causationDetail;   /** 时间、地点、小时、交通工具 */
+@property (nonatomic, copy) NSString *status;           /** 打卡状态：0正常、1异常 */
+@property (nonatomic, copy) NSString *remark;           /** 备注、处理理由 */
+@property (nonatomic, copy) NSString *decision;         /** 参与者为多个时,决策路由的走向, 1一个通过则往下走 2全部通过才能往下走 */
+@property (nonatomic, copy) NSArray *delivers;          /** 抄送人 */
+@property (nonatomic, copy) NSArray *participants;      /** 审批人 */
+@property (nonatomic, copy) NSString *redress;          /** 加班补偿：1无 2调休 3加班费 */
+
+// 以下为自定义字段
+@property (nonatomic, assign) BOOL mpm_copyNameNeedFold;    /** “抄送人”控件是否需要折叠：YES需要 NO不需要 */
+@property (nonatomic, assign) BOOL mpm_applyNameNeedFold;   /** “审批人”控件是否需要折叠：YES需要 NO不需要 */
+@property (nonatomic, assign) NSInteger addMaxCount;    /** 限制增加明细最大数量：补签为5 其余为3 */
+@property (nonatomic, assign) NSInteger addCount;       /** 记录增加明细的数量：0不可修改，123为可修改并代表数量（补签页面012345分别代表补签记录的条数） */
+
 
 - (void)clearData;
 

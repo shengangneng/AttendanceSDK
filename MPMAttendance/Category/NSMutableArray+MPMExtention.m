@@ -18,23 +18,16 @@
     }
 }
 
+/** 移除可变数组的某一个model，后面的model自动补上 */
 - (void)removeModelAtIndex:(NSInteger)index {
-    if (index > 3 || self.count < 3) {
+    if (index > self.count || index < 0) {
         return;
     }
-    
-    if (index == 0) {
-        [((MPMCausationDetailModel *)self[0]) clearData];
-        [((MPMCausationDetailModel *)self[0]) copyWithOtherModel:((MPMCausationDetailModel *)self[1])];
-        [((MPMCausationDetailModel *)self[1]) clearData];
-        [((MPMCausationDetailModel *)self[1]) copyWithOtherModel:((MPMCausationDetailModel *)self[2])];
-        [((MPMCausationDetailModel *)self[2]) clearData];
-    } else if (index == 1) {
-        [((MPMCausationDetailModel *)self[1]) clearData];
-        [((MPMCausationDetailModel *)self[1]) copyWithOtherModel:((MPMCausationDetailModel *)self[2])];
-        [((MPMCausationDetailModel *)self[2]) clearData];
-    } else {
-        [((MPMCausationDetailModel *)self[2]) clearData];
+    for (NSInteger i = index; i < self.count; i++) {
+        [((MPMCausationDetailModel *)self[i]) clearData];
+        if (i + 1 < self.count) {
+            [((MPMCausationDetailModel *)self[i]) copyWithOtherModel:((MPMCausationDetailModel *)self[i+1])];
+        }
     }
 }
 

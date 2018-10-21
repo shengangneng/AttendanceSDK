@@ -10,9 +10,7 @@
 
 @interface MPMAttendencePickerTypeModel : MPMBaseModel
 
-@property (nonatomic, copy) NSString *attendanceNo;
-@property (nonatomic, copy) NSString *causationtypeNo;
-@property (nonatomic, copy) NSString *mpm_id;
-@property (nonatomic, copy) NSString *type;
+@property (nonatomic, copy) NSString *typeNum;
+@property (nonatomic, copy) NSString *typeName;
 
 @end

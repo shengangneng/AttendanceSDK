@@ -10,4 +10,19 @@
 
 @implementation MPMDepartment
 
+/** 自身的数据转为MPMObjListModel数据 */
+- (MPMObjListModel *)translateToObjectList {
+    MPMObjListModel *list = [[MPMObjListModel alloc] init];
+    list.name = self.name;
+    if (self.isHuman) {
+        list.objId = self.mpm_id;
+        list.type = @"0";
+    } else {
+        list.objId = self.mpm_id;
+        list.type = @"1";
+    }
+    list.orgIdIndex = self.parentIds;
+    return list;
+}
+
 @end

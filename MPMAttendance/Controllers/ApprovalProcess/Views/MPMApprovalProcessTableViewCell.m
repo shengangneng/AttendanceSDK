@@ -55,9 +55,8 @@
         make.height.equalTo(@35);
     }];
     [self.flagLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.flagIcon.mpm_trailing).offset(12);
+        make.centerX.equalTo(self.flagImageView.mpm_centerX);
         make.bottom.equalTo(self.flagImageView.mpm_bottom);
-        make.trailing.equalTo(self.flagImageView.mpm_trailing).offset(-2);
         make.height.equalTo(@30);
     }];
     [self.flagIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -66,9 +65,9 @@
         make.leading.equalTo(self.flagImageView.mpm_leading).offset(12.5);
     }];
     [self.applyPersonLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.flagLabel.mpm_leading);
+        make.leading.equalTo(self.flagImageView.mpm_leading).offset(47.5);
         make.top.equalTo(self.flagImageView.mpm_bottom);
-        make.trailing.equalTo(self.flagLabel.mpm_trailing);
+        make.trailing.equalTo(self.flagImageView.mpm_trailing).offset(-2);
         make.height.equalTo(@22);
     }];
     [self.applyPersonMessageLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -78,8 +77,8 @@
         make.height.equalTo(@22);
     }];
     [self.extraApplyLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.flagLabel.mpm_leading);
-        make.trailing.equalTo(self.flagLabel.mpm_trailing);
+        make.leading.equalTo(self.applyPersonLabel.mpm_leading);
+        make.trailing.equalTo(self.applyPersonLabel.mpm_trailing);
         make.top.equalTo(self.applyPersonLabel.mpm_bottom);
         make.height.equalTo(@22);
     }];
@@ -90,8 +89,8 @@
         make.height.equalTo(@22);
     }];
     [self.applyDetailLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.flagLabel.mpm_leading);
-        make.trailing.equalTo(self.flagLabel.mpm_trailing);
+        make.leading.equalTo(self.applyPersonLabel.mpm_leading);
+        make.trailing.equalTo(self.applyPersonLabel.mpm_trailing);
         make.top.equalTo(self.extraApplyLabel.mpm_bottom);
         make.height.equalTo(@22);
     }];
@@ -99,7 +98,7 @@
         make.leading.equalTo(self.applyDetailLabel.mpm_trailing).offset(10);
         make.top.equalTo(self.applyDetailLabel.mpm_top).offset(2.5);
         make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
-//        make.height.mpm_greaterThanOrEqualTo(22);
+        //        make.height.mpm_greaterThanOrEqualTo(22);
     }];
     [self.line mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.containerView);
@@ -107,8 +106,8 @@
         make.height.equalTo(@0.5);
     }];
     [self.seeMoreLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.flagLabel.mpm_leading);
-        make.trailing.equalTo(self.flagLabel.mpm_trailing);
+        make.leading.equalTo(self.applyPersonLabel.mpm_leading);
+        make.trailing.equalTo(self.applyPersonLabel.mpm_trailing);
         make.top.equalTo(self.line.mpm_bottom);
         make.bottom.equalTo(self.containerView.mpm_bottom);
         make.height.equalTo(@30);
@@ -156,6 +155,7 @@
     if (!_flagIcon) {
         _flagIcon = [[UIImageView alloc] init];
         _flagIcon.image = ImageName(@"approval_useravatar");
+        _flagIcon.hidden = YES;
     }
     return _flagIcon;
 }
@@ -166,7 +166,7 @@
         _flagLabel.text = @"待审批";
         _flagLabel.font = SystemFont(14);
         _flagLabel.textColor = kWhiteColor;
-        _flagLabel.textAlignment = NSTextAlignmentLeft;
+        _flagLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _flagLabel;
 }

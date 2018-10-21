@@ -42,41 +42,9 @@
 		CD47174D2110536400401169 /* MPMHiddenTableViewDataSourceDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47162C2110536300401169 /* MPMHiddenTableViewDataSourceDelegate.h */; };
 		CD47174E2110536400401169 /* MPMBaseDealingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47162D2110536300401169 /* MPMBaseDealingViewController.h */; };
 		CD47174F2110536400401169 /* MPMCommomGetPeopleViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47162E2110536300401169 /* MPMCommomGetPeopleViewController.h */; };
-		CD4717502110536400401169 /* MPMDealingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716302110536300401169 /* MPMDealingModel.m */; };
-		CD4717512110536400401169 /* MPMCausationDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716312110536300401169 /* MPMCausationDetailModel.m */; };
-		CD4717522110536400401169 /* MPMCausationTypeData.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716322110536300401169 /* MPMCausationTypeData.m */; };
-		CD4717532110536400401169 /* MPMGetPeopleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716332110536300401169 /* MPMGetPeopleModel.m */; };
-		CD4717542110536400401169 /* MPMDealingModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716342110536300401169 /* MPMDealingModel.h */; };
-		CD4717552110536400401169 /* MPMCausationDetailModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716352110536300401169 /* MPMCausationDetailModel.h */; };
-		CD4717562110536400401169 /* MPMGetPeopleModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716362110536300401169 /* MPMGetPeopleModel.h */; };
-		CD4717572110536400401169 /* MPMCausationTypeData.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716372110536300401169 /* MPMCausationTypeData.h */; };
 		CD4717582110536400401169 /* MPMHiddenTableViewDataSourceDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716382110536300401169 /* MPMHiddenTableViewDataSourceDelegate.m */; };
 		CD4717592110536400401169 /* MPMBaseDealingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716392110536300401169 /* MPMBaseDealingViewController.m */; };
-		CD47175A2110536400401169 /* MPMCommomDealingReasonTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47163B2110536300401169 /* MPMCommomDealingReasonTableViewCell.h */; };
-		CD47175B2110536400401169 /* MPMCommomDealingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47163C2110536300401169 /* MPMCommomDealingTableViewCell.m */; };
-		CD47175C2110536400401169 /* MPMGetPeopleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47163D2110536300401169 /* MPMGetPeopleTableViewCell.m */; };
-		CD47175D2110536400401169 /* MPMCommomDealingGetPeopleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47163E2110536300401169 /* MPMCommomDealingGetPeopleTableViewCell.m */; };
-		CD47175E2110536400401169 /* MPMHiddenTableViewDeleteCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47163F2110536300401169 /* MPMHiddenTableViewDeleteCell.h */; };
-		CD47175F2110536400401169 /* MPMCommomDealingAddCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716402110536300401169 /* MPMCommomDealingAddCellTableViewCell.m */; };
-		CD4717602110536400401169 /* MPMCommomDealingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716412110536300401169 /* MPMCommomDealingTableViewCell.h */; };
-		CD4717612110536400401169 /* MPMCommomDealingReasonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716422110536300401169 /* MPMCommomDealingReasonTableViewCell.m */; };
-		CD4717622110536400401169 /* MPMHiddenTableViewDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716432110536300401169 /* MPMHiddenTableViewDeleteCell.m */; };
-		CD4717632110536400401169 /* MPMCommomDealingGetPeopleTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716442110536300401169 /* MPMCommomDealingGetPeopleTableViewCell.h */; };
-		CD4717642110536400401169 /* MPMGetPeopleTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716452110536300401169 /* MPMGetPeopleTableViewCell.h */; };
-		CD4717652110536400401169 /* MPMCommomDealingAddCellTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716462110536300401169 /* MPMCommomDealingAddCellTableViewCell.h */; };
 		CD4717662110536400401169 /* MPMCommomGetPeopleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716472110536300401169 /* MPMCommomGetPeopleViewController.m */; };
-		CD4717672110536400401169 /* MPMDepartEmployeeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716492110536300401169 /* MPMDepartEmployeeHelper.m */; };
-		CD4717682110536400401169 /* MPMSearchPushAnimate.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47164A2110536300401169 /* MPMSearchPushAnimate.h */; };
-		CD4717692110536400401169 /* MPMSelectDepartmentTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47164B2110536300401169 /* MPMSelectDepartmentTableViewCell.h */; };
-		CD47176A2110536400401169 /* MPMSearchPopAnimate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47164C2110536300401169 /* MPMSearchPopAnimate.m */; };
-		CD47176B2110536400401169 /* MPMSearchDepartViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47164D2110536300401169 /* MPMSearchDepartViewController.h */; };
-		CD47176C2110536400401169 /* MPMSelectDepartmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47164E2110536300401169 /* MPMSelectDepartmentViewController.m */; };
-		CD47176D2110536400401169 /* MPMDepartEmployeeHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47164F2110536300401169 /* MPMDepartEmployeeHelper.h */; };
-		CD47176E2110536400401169 /* MPMSelectDepartmentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716502110536300401169 /* MPMSelectDepartmentTableViewCell.m */; };
-		CD47176F2110536400401169 /* MPMSearchPushAnimate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716512110536300401169 /* MPMSearchPushAnimate.m */; };
-		CD4717702110536400401169 /* MPMSelectDepartmentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716522110536300401169 /* MPMSelectDepartmentViewController.h */; };
-		CD4717712110536400401169 /* MPMSearchDepartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716532110536300401169 /* MPMSearchDepartViewController.m */; };
-		CD4717722110536400401169 /* MPMSearchPopAnimate.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716542110536300401169 /* MPMSearchPopAnimate.h */; };
 		CD4717732110536400401169 /* MPMApplyAdditionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716582110536300401169 /* MPMApplyAdditionViewController.m */; };
 		CD4717742110536400401169 /* MPMApplyAdditionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716592110536300401169 /* MPMApplyAdditionViewController.h */; };
 		CD4717752110536400401169 /* MPMApplyImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47165B2110536300401169 /* MPMApplyImageView.h */; };
@@ -105,14 +73,8 @@
 		CD47178C2110536400401169 /* MPMCalendarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716772110536300401169 /* MPMCalendarButton.m */; };
 		CD47178D2110536400401169 /* MPMCalendarScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716782110536300401169 /* MPMCalendarScrollView.h */; };
 		CD47178E2110536400401169 /* MPMCalendarWeekView.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716792110536300401169 /* MPMCalendarWeekView.h */; };
-		CD47178F2110536400401169 /* MPMApprovalCausationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47167C2110536300401169 /* MPMApprovalCausationModel.m */; };
-		CD4717902110536400401169 /* MPMApprovalCausationDetailModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47167D2110536300401169 /* MPMApprovalCausationDetailModel.h */; };
 		CD4717912110536400401169 /* MPMApprovalFirstSectionModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47167E2110536300401169 /* MPMApprovalFirstSectionModel.h */; };
-		CD4717922110536400401169 /* MPMApprovalFetchDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47167F2110536300401169 /* MPMApprovalFetchDetailModel.m */; };
-		CD4717932110536400401169 /* MPMApprovalCausationModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716802110536300401169 /* MPMApprovalCausationModel.h */; };
 		CD4717942110536400401169 /* MPMApprovalFirstSectionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716812110536300401169 /* MPMApprovalFirstSectionModel.m */; };
-		CD4717952110536400401169 /* MPMApprovalCausationDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716822110536300401169 /* MPMApprovalCausationDetailModel.m */; };
-		CD4717962110536400401169 /* MPMApprovalFetchDetailModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716832110536300401169 /* MPMApprovalFetchDetailModel.h */; };
 		CD4717972110536400401169 /* MPMApprovalProcessDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716852110536300401169 /* MPMApprovalProcessDetailViewController.m */; };
 		CD4717982110536400401169 /* MPMApprovalProcessViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716862110536300401169 /* MPMApprovalProcessViewController.h */; };
 		CD4717992110536400401169 /* MPMApprovalProcessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716872110536300401169 /* MPMApprovalProcessViewController.m */; };
@@ -144,17 +106,11 @@
 		CD4717B32110536400401169 /* MPMStatisticTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716A52110536300401169 /* MPMStatisticTableViewCell.m */; };
 		CD4717B42110536400401169 /* MPMDepartScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716A62110536300401169 /* MPMDepartScrollView.h */; };
 		CD4717B52110536400401169 /* MPMSlotTimeDtosModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716A92110536300401169 /* MPMSlotTimeDtosModel.h */; };
-		CD4717B62110536400401169 /* MPMSchedulingDepartmentsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716AA2110536300401169 /* MPMSchedulingDepartmentsModel.m */; };
 		CD4717B72110536400401169 /* MPMSettingSwitchValueModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716AB2110536300401169 /* MPMSettingSwitchValueModel.h */; };
 		CD4717B82110536400401169 /* MPMDepartment.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716AC2110536300401169 /* MPMDepartment.h */; };
-		CD4717B92110536400401169 /* MPMSchedulingEmplyoeeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716AD2110536300401169 /* MPMSchedulingEmplyoeeModel.m */; };
-		CD4717BA2110536400401169 /* MPMAttendenceSettingModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716AE2110536300401169 /* MPMAttendenceSettingModel.h */; };
-		CD4717BB2110536400401169 /* MPMSchedulingDepartmentsModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716AF2110536300401169 /* MPMSchedulingDepartmentsModel.h */; };
 		CD4717BC2110536400401169 /* MPMSlotTimeDtosModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716B02110536300401169 /* MPMSlotTimeDtosModel.m */; };
 		CD4717BD2110536400401169 /* MPMSettingSwitchValueModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716B12110536300401169 /* MPMSettingSwitchValueModel.m */; };
 		CD4717BE2110536400401169 /* MPMDepartment.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716B22110536300401169 /* MPMDepartment.m */; };
-		CD4717BF2110536400401169 /* MPMAttendenceSettingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716B32110536300401169 /* MPMAttendenceSettingModel.m */; };
-		CD4717C02110536400401169 /* MPMSchedulingEmplyoeeModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716B42110536300401169 /* MPMSchedulingEmplyoeeModel.h */; };
 		CD4717C12110536400401169 /* MPMCreateOrangeClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716B72110536300401169 /* MPMCreateOrangeClassViewController.m */; };
 		CD4717C22110536400401169 /* MPMCreateOrangeClassViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716B82110536300401169 /* MPMCreateOrangeClassViewController.h */; };
 		CD4717C32110536400401169 /* MPMCreateOrangeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716BB2110536300401169 /* MPMCreateOrangeTableViewCell.m */; };
@@ -208,10 +164,8 @@
 		CD4717F32110536400401169 /* MPMIntergralSettingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716F82110536300401169 /* MPMIntergralSettingTableViewCell.h */; };
 		CD4717F42110536400401169 /* MPMAttendenceBaseSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716F92110536300401169 /* MPMAttendenceBaseSettingViewController.m */; };
 		CD4717F52110536400401169 /* MPMAttendenceSetTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716FB2110536300401169 /* MPMAttendenceSetTableViewCell.m */; };
-		CD4717F62110536400401169 /* MPMAttendenceSettingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716FC2110536300401169 /* MPMAttendenceSettingTableViewCell.h */; };
 		CD4717F72110536400401169 /* MPMAttendenceBaseTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716FD2110536300401169 /* MPMAttendenceBaseTableViewCell.h */; };
 		CD4717F82110536400401169 /* MPMAttendenceSetTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716FE2110536300401169 /* MPMAttendenceSetTableViewCell.h */; };
-		CD4717F92110536400401169 /* MPMAttendenceSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716FF2110536300401169 /* MPMAttendenceSettingTableViewCell.m */; };
 		CD4717FA2110536400401169 /* MPMAttendenceBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4717002110536300401169 /* MPMAttendenceBaseTableViewCell.m */; };
 		CD4717FB2110536400401169 /* MPMCoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4717022110536300401169 /* MPMCoreDataManager.m */; };
 		CD4717FC2110536400401169 /* MPMAtendence.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CD4717032110536300401169 /* MPMAtendence.xcdatamodeld */; };
@@ -318,6 +272,129 @@
 		CD4718A6211053DE00401169 /* MPMProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47189E211053DD00401169 /* MPMProgressHUD.m */; };
 		CD4718A7211053DE00401169 /* MPMProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47189F211053DD00401169 /* MPMProgressHUD.h */; };
 		CD4718AB2110545900401169 /* MPMAttendanceHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718AA2110545900401169 /* MPMAttendanceHeader.h */; };
+		CDE1CFA6217C18F20047CF85 /* MPMOauthUser.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */; };
+		CDE1CFA7217C18F20047CF85 /* MPMOauthUser.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */; };
+		CDE1CFA9217C1A620047CF85 /* MPMInterfaceConst.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */; };
+		CDE1CFAE217C1C1A0047CF85 /* OauthUser+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFAA217C1C1A0047CF85 /* OauthUser+CoreDataProperties.m */; };
+		CDE1CFAF217C1C1A0047CF85 /* OauthUser+CoreDataProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFAB217C1C1A0047CF85 /* OauthUser+CoreDataProperties.h */; };
+		CDE1CFB0217C1C1A0047CF85 /* OauthUser+CoreDataClass.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFAC217C1C1A0047CF85 /* OauthUser+CoreDataClass.h */; };
+		CDE1CFB1217C1C1A0047CF85 /* OauthUser+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFAD217C1C1A0047CF85 /* OauthUser+CoreDataClass.m */; };
+		CDE1CFB7217C1F9F0047CF85 /* MPMNoMessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFB3217C1F9F0047CF85 /* MPMNoMessageView.h */; };
+		CDE1CFB8217C1F9F0047CF85 /* MPMOfflineView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFB4217C1F9F0047CF85 /* MPMOfflineView.h */; };
+		CDE1CFB9217C1F9F0047CF85 /* MPMNoMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFB5217C1F9F0047CF85 /* MPMNoMessageView.m */; };
+		CDE1CFBA217C1F9F0047CF85 /* MPMOfflineView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFB6217C1F9F0047CF85 /* MPMOfflineView.m */; };
+		CDE1CFCB217C218B0047CF85 /* MPMDealingBorderButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFC9217C218B0047CF85 /* MPMDealingBorderButton.h */; };
+		CDE1CFCC217C218B0047CF85 /* MPMDealingBorderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFCA217C218B0047CF85 /* MPMDealingBorderButton.m */; };
+		CDE1CFCF217C23E00047CF85 /* MPMAttendenceManageModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFCD217C23E00047CF85 /* MPMAttendenceManageModel.h */; };
+		CDE1CFD0217C23E00047CF85 /* MPMAttendenceManageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFCE217C23E00047CF85 /* MPMAttendenceManageModel.m */; };
+		CDE1CFD3217C23E70047CF85 /* MPMAttendenceExceptionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFD1217C23E70047CF85 /* MPMAttendenceExceptionModel.m */; };
+		CDE1CFD4217C23E70047CF85 /* MPMAttendenceExceptionModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFD2217C23E70047CF85 /* MPMAttendenceExceptionModel.h */; };
+		CDE1CFD7217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFD5217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.m */; };
+		CDE1CFD8217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFD6217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.h */; };
+		CDE1CFDB217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFD9217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.m */; };
+		CDE1CFDC217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFDA217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.h */; };
+		CDE1CFDF217C26B30047CF85 /* MPMProcessMyMetterModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFDD217C26B30047CF85 /* MPMProcessMyMetterModel.h */; };
+		CDE1CFE0217C26B30047CF85 /* MPMProcessMyMetterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFDE217C26B30047CF85 /* MPMProcessMyMetterModel.m */; };
+		CDE1CFE7217C26D30047CF85 /* MPMProcessInst.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFE1217C26D30047CF85 /* MPMProcessInst.h */; };
+		CDE1CFE8217C26D30047CF85 /* MPMTaskInstGroups.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFE2217C26D30047CF85 /* MPMTaskInstGroups.m */; };
+		CDE1CFE9217C26D30047CF85 /* MPMTaskInstGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFE3217C26D30047CF85 /* MPMTaskInstGroups.h */; };
+		CDE1CFEA217C26D30047CF85 /* MPMProcessInst.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFE4217C26D30047CF85 /* MPMProcessInst.m */; };
+		CDE1CFEB217C26D30047CF85 /* MPMProcessDetailList.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFE5217C26D30047CF85 /* MPMProcessDetailList.m */; };
+		CDE1CFEC217C26D30047CF85 /* MPMProcessDetailList.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFE6217C26D30047CF85 /* MPMProcessDetailList.h */; };
+		CDE1CFF5217C272E0047CF85 /* MPMProcessDetailApprovalView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFED217C272D0047CF85 /* MPMProcessDetailApprovalView.m */; };
+		CDE1CFF6217C272E0047CF85 /* MPMProcessDetailApprovalTriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFEE217C272D0047CF85 /* MPMProcessDetailApprovalTriangleView.m */; };
+		CDE1CFF7217C272E0047CF85 /* MPMProcessDetailApprovalNodeView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFEF217C272D0047CF85 /* MPMProcessDetailApprovalNodeView.h */; };
+		CDE1CFF8217C272E0047CF85 /* MPMProcessDetailApprovalNodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFF0217C272D0047CF85 /* MPMProcessDetailApprovalNodeView.m */; };
+		CDE1CFF9217C272E0047CF85 /* MPMProcessDetailDeliversView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFF1217C272D0047CF85 /* MPMProcessDetailDeliversView.h */; };
+		CDE1CFFA217C272E0047CF85 /* MPMProcessDetailApprovalTriangleView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFF2217C272D0047CF85 /* MPMProcessDetailApprovalTriangleView.h */; };
+		CDE1CFFB217C272E0047CF85 /* MPMProcessDetailDeliversView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFF3217C272D0047CF85 /* MPMProcessDetailDeliversView.m */; };
+		CDE1CFFC217C272E0047CF85 /* MPMProcessDetailApprovalView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFF4217C272D0047CF85 /* MPMProcessDetailApprovalView.h */; };
+		CDE1D015217C29F80047CF85 /* MPMProcessSettingCommomViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFFF217C29F80047CF85 /* MPMProcessSettingCommomViewController.h */; };
+		CDE1D016217C29F80047CF85 /* MPMProcessSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D000217C29F80047CF85 /* MPMProcessSettingViewController.m */; };
+		CDE1D017217C29F80047CF85 /* MPMProcessSettingCommomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D001217C29F80047CF85 /* MPMProcessSettingCommomViewController.m */; };
+		CDE1D018217C29F80047CF85 /* MPMProcessDef.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D003217C29F80047CF85 /* MPMProcessDef.h */; };
+		CDE1D019217C29F80047CF85 /* MPMProcessTaskModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D004217C29F80047CF85 /* MPMProcessTaskModel.m */; };
+		CDE1D01A217C29F80047CF85 /* MPMProcessPeople.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D005217C29F80047CF85 /* MPMProcessPeople.m */; };
+		CDE1D01B217C29F80047CF85 /* MPMProcessDef.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D006217C29F80047CF85 /* MPMProcessDef.m */; };
+		CDE1D01C217C29F80047CF85 /* MPMProcessPeople.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D007217C29F80047CF85 /* MPMProcessPeople.h */; };
+		CDE1D01D217C29F80047CF85 /* MPMProcessTaskModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D008217C29F80047CF85 /* MPMProcessTaskModel.h */; };
+		CDE1D01E217C29F80047CF85 /* MPMProcessSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D009217C29F80047CF85 /* MPMProcessSettingViewController.h */; };
+		CDE1D01F217C29F80047CF85 /* MPMProcessSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D00B217C29F80047CF85 /* MPMProcessSettingTableViewCell.m */; };
+		CDE1D020217C29F80047CF85 /* MPMTaskApplyersScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D00C217C29F80047CF85 /* MPMTaskApplyersScrollView.h */; };
+		CDE1D021217C29F80047CF85 /* MPMTaskContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D00D217C29F80047CF85 /* MPMTaskContentView.m */; };
+		CDE1D022217C29F80047CF85 /* MPMProcessHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D00E217C29F80047CF85 /* MPMProcessHeaderView.h */; };
+		CDE1D023217C29F80047CF85 /* MPMTaskEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D00F217C29F80047CF85 /* MPMTaskEditView.m */; };
+		CDE1D024217C29F80047CF85 /* MPMProcessSettingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D010217C29F80047CF85 /* MPMProcessSettingTableViewCell.h */; };
+		CDE1D025217C29F80047CF85 /* MPMTaskApplyersScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D011217C29F80047CF85 /* MPMTaskApplyersScrollView.m */; };
+		CDE1D026217C29F80047CF85 /* MPMTaskContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D012217C29F80047CF85 /* MPMTaskContentView.h */; };
+		CDE1D027217C29F80047CF85 /* MPMTaskEditView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D013217C29F80047CF85 /* MPMTaskEditView.h */; };
+		CDE1D028217C29F80047CF85 /* MPMProcessHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D014217C29F80047CF85 /* MPMProcessHeaderView.m */; };
+		CDE1D032217C2A400047CF85 /* MPMObjListModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D02A217C2A400047CF85 /* MPMObjListModel.h */; };
+		CDE1D033217C2A400047CF85 /* MPMAttendanceSettingModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D02B217C2A400047CF85 /* MPMAttendanceSettingModel.h */; };
+		CDE1D034217C2A400047CF85 /* MPMSignTimeSections.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D02C217C2A400047CF85 /* MPMSignTimeSections.m */; };
+		CDE1D035217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D02D217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.m */; };
+		CDE1D036217C2A400047CF85 /* MPMObjListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D02E217C2A400047CF85 /* MPMObjListModel.m */; };
+		CDE1D037217C2A400047CF85 /* MPMSignTimeSections.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D02F217C2A400047CF85 /* MPMSignTimeSections.h */; };
+		CDE1D038217C2A400047CF85 /* MPMAttendanceSettingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D030217C2A400047CF85 /* MPMAttendanceSettingModel.m */; };
+		CDE1D039217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D031217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.h */; };
+		CDE1D03C217C2AD50047CF85 /* MPMSettingClassListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D03A217C2AD50047CF85 /* MPMSettingClassListViewController.h */; };
+		CDE1D03D217C2AD50047CF85 /* MPMSettingClassListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D03B217C2AD50047CF85 /* MPMSettingClassListViewController.m */; };
+		CDE1D040217C2AEA0047CF85 /* MPMSettingSearchTimeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D03E217C2AE90047CF85 /* MPMSettingSearchTimeViewController.h */; };
+		CDE1D041217C2AEA0047CF85 /* MPMSettingSearchTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D03F217C2AEA0047CF85 /* MPMSettingSearchTimeViewController.m */; };
+		CDE1D045217C2AFF0047CF85 /* MPMSearchTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D043217C2AFF0047CF85 /* MPMSearchTableViewCell.h */; };
+		CDE1D046217C2AFF0047CF85 /* MPMSearchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D044217C2AFF0047CF85 /* MPMSearchTableViewCell.m */; };
+		CDE1D049217C2B200047CF85 /* MPMSettingClassListTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D047217C2B200047CF85 /* MPMSettingClassListTableViewCell.h */; };
+		CDE1D04A217C2B200047CF85 /* MPMSettingClassListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D048217C2B200047CF85 /* MPMSettingClassListTableViewCell.m */; };
+		CDE1D04D217C2B680047CF85 /* MPMSettingClassListModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D04B217C2B680047CF85 /* MPMSettingClassListModel.h */; };
+		CDE1D04E217C2B680047CF85 /* MPMSettingClassListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D04C217C2B680047CF85 /* MPMSettingClassListModel.m */; };
+		CDE1D051217C2CBD0047CF85 /* MPMAuthorityRoleModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D04F217C2CBD0047CF85 /* MPMAuthorityRoleModel.h */; };
+		CDE1D052217C2CBD0047CF85 /* MPMAuthorityRoleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D050217C2CBD0047CF85 /* MPMAuthorityRoleModel.m */; };
+		CDE1D055217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D053217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.m */; };
+		CDE1D056217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D054217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.h */; };
+		CDE1D05F217C2F0D0047CF85 /* MPMDealingModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D057217C2F0C0047CF85 /* MPMDealingModel.h */; };
+		CDE1D060217C2F0D0047CF85 /* MPMCausationDetailModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D058217C2F0C0047CF85 /* MPMCausationDetailModel.h */; };
+		CDE1D061217C2F0D0047CF85 /* MPMCausationTypeData.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D059217C2F0D0047CF85 /* MPMCausationTypeData.m */; };
+		CDE1D062217C2F0D0047CF85 /* MPMCausationTypeData.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D05A217C2F0D0047CF85 /* MPMCausationTypeData.h */; };
+		CDE1D063217C2F0D0047CF85 /* MPMGetPeopleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D05B217C2F0D0047CF85 /* MPMGetPeopleModel.m */; };
+		CDE1D064217C2F0D0047CF85 /* MPMGetPeopleModel.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D05C217C2F0D0047CF85 /* MPMGetPeopleModel.h */; };
+		CDE1D065217C2F0D0047CF85 /* MPMCausationDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D05D217C2F0D0047CF85 /* MPMCausationDetailModel.m */; };
+		CDE1D066217C2F0D0047CF85 /* MPMDealingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D05E217C2F0D0047CF85 /* MPMDealingModel.m */; };
+		CDE1D079217C2F330047CF85 /* MPMBaseDealingHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D067217C2F300047CF85 /* MPMBaseDealingHeader.m */; };
+		CDE1D07A217C2F330047CF85 /* MPMHiddenTableViewDeleteCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D068217C2F300047CF85 /* MPMHiddenTableViewDeleteCell.h */; };
+		CDE1D07B217C2F330047CF85 /* MPMCommomDealingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D069217C2F300047CF85 /* MPMCommomDealingTableViewCell.m */; };
+		CDE1D07C217C2F330047CF85 /* MPMCommomDealingGetPeopleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D06A217C2F310047CF85 /* MPMCommomDealingGetPeopleTableViewCell.m */; };
+		CDE1D07D217C2F330047CF85 /* MPMHiddenTableViewDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D06B217C2F310047CF85 /* MPMHiddenTableViewDeleteCell.m */; };
+		CDE1D07E217C2F330047CF85 /* MPMCommomDealingAddCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D06C217C2F310047CF85 /* MPMCommomDealingAddCellTableViewCell.m */; };
+		CDE1D07F217C2F330047CF85 /* MPMGetPeopleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D06D217C2F310047CF85 /* MPMGetPeopleTableViewCell.m */; };
+		CDE1D080217C2F330047CF85 /* MPMBaseDealingHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D06E217C2F310047CF85 /* MPMBaseDealingHeader.h */; };
+		CDE1D081217C2F330047CF85 /* MPMCommomDealingGetPeopleTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D06F217C2F320047CF85 /* MPMCommomDealingGetPeopleTableViewCell.h */; };
+		CDE1D082217C2F330047CF85 /* MPMCommomDealingAddCellTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D070217C2F320047CF85 /* MPMCommomDealingAddCellTableViewCell.h */; };
+		CDE1D083217C2F330047CF85 /* MPMCommomDealingReasonTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D071217C2F320047CF85 /* MPMCommomDealingReasonTableViewCell.h */; };
+		CDE1D084217C2F330047CF85 /* MPMGetPeopleTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D072217C2F320047CF85 /* MPMGetPeopleTableViewCell.h */; };
+		CDE1D085217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D073217C2F320047CF85 /* MPMDealingSeeTimeTableViewCell.h */; };
+		CDE1D086217C2F330047CF85 /* MPMCommomDealingReasonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D074217C2F320047CF85 /* MPMCommomDealingReasonTableViewCell.m */; };
+		CDE1D087217C2F330047CF85 /* MPMCommomDealingMultiSelectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D075217C2F320047CF85 /* MPMCommomDealingMultiSelectTableViewCell.m */; };
+		CDE1D088217C2F330047CF85 /* MPMCommomDealingMultiSelectTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D076217C2F330047CF85 /* MPMCommomDealingMultiSelectTableViewCell.h */; };
+		CDE1D089217C2F330047CF85 /* MPMCommomDealingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D077217C2F330047CF85 /* MPMCommomDealingTableViewCell.h */; };
+		CDE1D08A217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D078217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.m */; };
+		CDE1D097217C2F690047CF85 /* MPMSearchPushAnimate.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D08B217C2F680047CF85 /* MPMSearchPushAnimate.h */; };
+		CDE1D098217C2F690047CF85 /* MPMSearchPopAnimate.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D08C217C2F680047CF85 /* MPMSearchPopAnimate.h */; };
+		CDE1D099217C2F690047CF85 /* MPMSearchPopAnimate.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D08D217C2F680047CF85 /* MPMSearchPopAnimate.m */; };
+		CDE1D09A217C2F690047CF85 /* MPMSelectDepartmentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D08E217C2F680047CF85 /* MPMSelectDepartmentViewController.h */; };
+		CDE1D09B217C2F690047CF85 /* MPMSelectDepartmentTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D08F217C2F680047CF85 /* MPMSelectDepartmentTableViewCell.h */; };
+		CDE1D09C217C2F690047CF85 /* MPMDepartEmployeeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D090217C2F680047CF85 /* MPMDepartEmployeeHelper.m */; };
+		CDE1D09D217C2F690047CF85 /* MPMSearchDepartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D091217C2F680047CF85 /* MPMSearchDepartViewController.m */; };
+		CDE1D09E217C2F690047CF85 /* MPMSearchDepartViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D092217C2F690047CF85 /* MPMSearchDepartViewController.h */; };
+		CDE1D09F217C2F690047CF85 /* MPMDepartEmployeeHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D093217C2F690047CF85 /* MPMDepartEmployeeHelper.h */; };
+		CDE1D0A0217C2F690047CF85 /* MPMSearchPushAnimate.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D094217C2F690047CF85 /* MPMSearchPushAnimate.m */; };
+		CDE1D0A1217C2F690047CF85 /* MPMSelectDepartmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D095217C2F690047CF85 /* MPMSelectDepartmentViewController.m */; };
+		CDE1D0A2217C2F690047CF85 /* MPMSelectDepartmentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D096217C2F690047CF85 /* MPMSelectDepartmentTableViewCell.m */; };
+		CDE1D0A6217C54070047CF85 /* MPMRefreshFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D0A4217C54070047CF85 /* MPMRefreshFooter.h */; };
+		CDE1D0A7217C54070047CF85 /* MPMRefreshFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D0A5217C54070047CF85 /* MPMRefreshFooter.m */; };
+		CDE1D0B5217C58FD0047CF85 /* MPMRoundPeopleView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D0B1217C58FC0047CF85 /* MPMRoundPeopleView.h */; };
+		CDE1D0B6217C58FD0047CF85 /* MPMRoundPeopleButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D0B2217C58FC0047CF85 /* MPMRoundPeopleButton.h */; };
+		CDE1D0B7217C58FD0047CF85 /* MPMRoundPeopleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D0B3217C58FC0047CF85 /* MPMRoundPeopleButton.m */; };
+		CDE1D0B8217C58FD0047CF85 /* MPMRoundPeopleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D0B4217C58FD0047CF85 /* MPMRoundPeopleView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -358,41 +435,9 @@
 		CD47162C2110536300401169 /* MPMHiddenTableViewDataSourceDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMHiddenTableViewDataSourceDelegate.h; sourceTree = "<group>"; };
 		CD47162D2110536300401169 /* MPMBaseDealingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMBaseDealingViewController.h; sourceTree = "<group>"; };
 		CD47162E2110536300401169 /* MPMCommomGetPeopleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomGetPeopleViewController.h; sourceTree = "<group>"; };
-		CD4716302110536300401169 /* MPMDealingModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMDealingModel.m; sourceTree = "<group>"; };
-		CD4716312110536300401169 /* MPMCausationDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCausationDetailModel.m; sourceTree = "<group>"; };
-		CD4716322110536300401169 /* MPMCausationTypeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCausationTypeData.m; sourceTree = "<group>"; };
-		CD4716332110536300401169 /* MPMGetPeopleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMGetPeopleModel.m; sourceTree = "<group>"; };
-		CD4716342110536300401169 /* MPMDealingModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDealingModel.h; sourceTree = "<group>"; };
-		CD4716352110536300401169 /* MPMCausationDetailModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCausationDetailModel.h; sourceTree = "<group>"; };
-		CD4716362110536300401169 /* MPMGetPeopleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMGetPeopleModel.h; sourceTree = "<group>"; };
-		CD4716372110536300401169 /* MPMCausationTypeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCausationTypeData.h; sourceTree = "<group>"; };
 		CD4716382110536300401169 /* MPMHiddenTableViewDataSourceDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMHiddenTableViewDataSourceDelegate.m; sourceTree = "<group>"; };
 		CD4716392110536300401169 /* MPMBaseDealingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMBaseDealingViewController.m; sourceTree = "<group>"; };
-		CD47163B2110536300401169 /* MPMCommomDealingReasonTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingReasonTableViewCell.h; sourceTree = "<group>"; };
-		CD47163C2110536300401169 /* MPMCommomDealingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingTableViewCell.m; sourceTree = "<group>"; };
-		CD47163D2110536300401169 /* MPMGetPeopleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMGetPeopleTableViewCell.m; sourceTree = "<group>"; };
-		CD47163E2110536300401169 /* MPMCommomDealingGetPeopleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingGetPeopleTableViewCell.m; sourceTree = "<group>"; };
-		CD47163F2110536300401169 /* MPMHiddenTableViewDeleteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMHiddenTableViewDeleteCell.h; sourceTree = "<group>"; };
-		CD4716402110536300401169 /* MPMCommomDealingAddCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingAddCellTableViewCell.m; sourceTree = "<group>"; };
-		CD4716412110536300401169 /* MPMCommomDealingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingTableViewCell.h; sourceTree = "<group>"; };
-		CD4716422110536300401169 /* MPMCommomDealingReasonTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingReasonTableViewCell.m; sourceTree = "<group>"; };
-		CD4716432110536300401169 /* MPMHiddenTableViewDeleteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMHiddenTableViewDeleteCell.m; sourceTree = "<group>"; };
-		CD4716442110536300401169 /* MPMCommomDealingGetPeopleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingGetPeopleTableViewCell.h; sourceTree = "<group>"; };
-		CD4716452110536300401169 /* MPMGetPeopleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMGetPeopleTableViewCell.h; sourceTree = "<group>"; };
-		CD4716462110536300401169 /* MPMCommomDealingAddCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingAddCellTableViewCell.h; sourceTree = "<group>"; };
 		CD4716472110536300401169 /* MPMCommomGetPeopleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomGetPeopleViewController.m; sourceTree = "<group>"; };
-		CD4716492110536300401169 /* MPMDepartEmployeeHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMDepartEmployeeHelper.m; sourceTree = "<group>"; };
-		CD47164A2110536300401169 /* MPMSearchPushAnimate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSearchPushAnimate.h; sourceTree = "<group>"; };
-		CD47164B2110536300401169 /* MPMSelectDepartmentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSelectDepartmentTableViewCell.h; sourceTree = "<group>"; };
-		CD47164C2110536300401169 /* MPMSearchPopAnimate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSearchPopAnimate.m; sourceTree = "<group>"; };
-		CD47164D2110536300401169 /* MPMSearchDepartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSearchDepartViewController.h; sourceTree = "<group>"; };
-		CD47164E2110536300401169 /* MPMSelectDepartmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSelectDepartmentViewController.m; sourceTree = "<group>"; };
-		CD47164F2110536300401169 /* MPMDepartEmployeeHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDepartEmployeeHelper.h; sourceTree = "<group>"; };
-		CD4716502110536300401169 /* MPMSelectDepartmentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSelectDepartmentTableViewCell.m; sourceTree = "<group>"; };
-		CD4716512110536300401169 /* MPMSearchPushAnimate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSearchPushAnimate.m; sourceTree = "<group>"; };
-		CD4716522110536300401169 /* MPMSelectDepartmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSelectDepartmentViewController.h; sourceTree = "<group>"; };
-		CD4716532110536300401169 /* MPMSearchDepartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSearchDepartViewController.m; sourceTree = "<group>"; };
-		CD4716542110536300401169 /* MPMSearchPopAnimate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSearchPopAnimate.h; sourceTree = "<group>"; };
 		CD4716582110536300401169 /* MPMApplyAdditionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApplyAdditionViewController.m; sourceTree = "<group>"; };
 		CD4716592110536300401169 /* MPMApplyAdditionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApplyAdditionViewController.h; sourceTree = "<group>"; };
 		CD47165B2110536300401169 /* MPMApplyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApplyImageView.h; sourceTree = "<group>"; };
@@ -421,14 +466,8 @@
 		CD4716772110536300401169 /* MPMCalendarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCalendarButton.m; sourceTree = "<group>"; };
 		CD4716782110536300401169 /* MPMCalendarScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCalendarScrollView.h; sourceTree = "<group>"; };
 		CD4716792110536300401169 /* MPMCalendarWeekView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCalendarWeekView.h; sourceTree = "<group>"; };
-		CD47167C2110536300401169 /* MPMApprovalCausationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApprovalCausationModel.m; sourceTree = "<group>"; };
-		CD47167D2110536300401169 /* MPMApprovalCausationDetailModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApprovalCausationDetailModel.h; sourceTree = "<group>"; };
 		CD47167E2110536300401169 /* MPMApprovalFirstSectionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApprovalFirstSectionModel.h; sourceTree = "<group>"; };
-		CD47167F2110536300401169 /* MPMApprovalFetchDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApprovalFetchDetailModel.m; sourceTree = "<group>"; };
-		CD4716802110536300401169 /* MPMApprovalCausationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApprovalCausationModel.h; sourceTree = "<group>"; };
 		CD4716812110536300401169 /* MPMApprovalFirstSectionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApprovalFirstSectionModel.m; sourceTree = "<group>"; };
-		CD4716822110536300401169 /* MPMApprovalCausationDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApprovalCausationDetailModel.m; sourceTree = "<group>"; };
-		CD4716832110536300401169 /* MPMApprovalFetchDetailModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApprovalFetchDetailModel.h; sourceTree = "<group>"; };
 		CD4716852110536300401169 /* MPMApprovalProcessDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApprovalProcessDetailViewController.m; sourceTree = "<group>"; };
 		CD4716862110536300401169 /* MPMApprovalProcessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApprovalProcessViewController.h; sourceTree = "<group>"; };
 		CD4716872110536300401169 /* MPMApprovalProcessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApprovalProcessViewController.m; sourceTree = "<group>"; };
@@ -460,17 +499,11 @@
 		CD4716A52110536300401169 /* MPMStatisticTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMStatisticTableViewCell.m; sourceTree = "<group>"; };
 		CD4716A62110536300401169 /* MPMDepartScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDepartScrollView.h; sourceTree = "<group>"; };
 		CD4716A92110536300401169 /* MPMSlotTimeDtosModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSlotTimeDtosModel.h; sourceTree = "<group>"; };
-		CD4716AA2110536300401169 /* MPMSchedulingDepartmentsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSchedulingDepartmentsModel.m; sourceTree = "<group>"; };
 		CD4716AB2110536300401169 /* MPMSettingSwitchValueModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSettingSwitchValueModel.h; sourceTree = "<group>"; };
 		CD4716AC2110536300401169 /* MPMDepartment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDepartment.h; sourceTree = "<group>"; };
-		CD4716AD2110536300401169 /* MPMSchedulingEmplyoeeModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSchedulingEmplyoeeModel.m; sourceTree = "<group>"; };
-		CD4716AE2110536300401169 /* MPMAttendenceSettingModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAttendenceSettingModel.h; sourceTree = "<group>"; };
-		CD4716AF2110536300401169 /* MPMSchedulingDepartmentsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSchedulingDepartmentsModel.h; sourceTree = "<group>"; };
 		CD4716B02110536300401169 /* MPMSlotTimeDtosModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSlotTimeDtosModel.m; sourceTree = "<group>"; };
 		CD4716B12110536300401169 /* MPMSettingSwitchValueModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSettingSwitchValueModel.m; sourceTree = "<group>"; };
 		CD4716B22110536300401169 /* MPMDepartment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMDepartment.m; sourceTree = "<group>"; };
-		CD4716B32110536300401169 /* MPMAttendenceSettingModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendenceSettingModel.m; sourceTree = "<group>"; };
-		CD4716B42110536300401169 /* MPMSchedulingEmplyoeeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSchedulingEmplyoeeModel.h; sourceTree = "<group>"; };
 		CD4716B72110536300401169 /* MPMCreateOrangeClassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCreateOrangeClassViewController.m; sourceTree = "<group>"; };
 		CD4716B82110536300401169 /* MPMCreateOrangeClassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCreateOrangeClassViewController.h; sourceTree = "<group>"; };
 		CD4716BB2110536300401169 /* MPMCreateOrangeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCreateOrangeTableViewCell.m; sourceTree = "<group>"; };
@@ -524,10 +557,8 @@
 		CD4716F82110536300401169 /* MPMIntergralSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMIntergralSettingTableViewCell.h; sourceTree = "<group>"; };
 		CD4716F92110536300401169 /* MPMAttendenceBaseSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendenceBaseSettingViewController.m; sourceTree = "<group>"; };
 		CD4716FB2110536300401169 /* MPMAttendenceSetTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendenceSetTableViewCell.m; sourceTree = "<group>"; };
-		CD4716FC2110536300401169 /* MPMAttendenceSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAttendenceSettingTableViewCell.h; sourceTree = "<group>"; };
 		CD4716FD2110536300401169 /* MPMAttendenceBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAttendenceBaseTableViewCell.h; sourceTree = "<group>"; };
 		CD4716FE2110536300401169 /* MPMAttendenceSetTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAttendenceSetTableViewCell.h; sourceTree = "<group>"; };
-		CD4716FF2110536300401169 /* MPMAttendenceSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendenceSettingTableViewCell.m; sourceTree = "<group>"; };
 		CD4717002110536300401169 /* MPMAttendenceBaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendenceBaseTableViewCell.m; sourceTree = "<group>"; };
 		CD4717022110536300401169 /* MPMCoreDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCoreDataManager.m; sourceTree = "<group>"; };
 		CD4717042110536300401169 /* MPMAtendence.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MPMAtendence.xcdatamodel; sourceTree = "<group>"; };
@@ -634,6 +665,129 @@
 		CD47189E211053DD00401169 /* MPMProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProgressHUD.m; sourceTree = "<group>"; };
 		CD47189F211053DD00401169 /* MPMProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProgressHUD.h; sourceTree = "<group>"; };
 		CD4718AA2110545900401169 /* MPMAttendanceHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPMAttendanceHeader.h; sourceTree = "<group>"; };
+		CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMOauthUser.h; sourceTree = "<group>"; };
+		CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMOauthUser.m; sourceTree = "<group>"; };
+		CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMInterfaceConst.h; sourceTree = "<group>"; };
+		CDE1CFAA217C1C1A0047CF85 /* OauthUser+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OauthUser+CoreDataProperties.m"; sourceTree = "<group>"; };
+		CDE1CFAB217C1C1A0047CF85 /* OauthUser+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OauthUser+CoreDataProperties.h"; sourceTree = "<group>"; };
+		CDE1CFAC217C1C1A0047CF85 /* OauthUser+CoreDataClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OauthUser+CoreDataClass.h"; sourceTree = "<group>"; };
+		CDE1CFAD217C1C1A0047CF85 /* OauthUser+CoreDataClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OauthUser+CoreDataClass.m"; sourceTree = "<group>"; };
+		CDE1CFB3217C1F9F0047CF85 /* MPMNoMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMNoMessageView.h; sourceTree = "<group>"; };
+		CDE1CFB4217C1F9F0047CF85 /* MPMOfflineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMOfflineView.h; sourceTree = "<group>"; };
+		CDE1CFB5217C1F9F0047CF85 /* MPMNoMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMNoMessageView.m; sourceTree = "<group>"; };
+		CDE1CFB6217C1F9F0047CF85 /* MPMOfflineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMOfflineView.m; sourceTree = "<group>"; };
+		CDE1CFC9217C218B0047CF85 /* MPMDealingBorderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDealingBorderButton.h; sourceTree = "<group>"; };
+		CDE1CFCA217C218B0047CF85 /* MPMDealingBorderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMDealingBorderButton.m; sourceTree = "<group>"; };
+		CDE1CFCD217C23E00047CF85 /* MPMAttendenceManageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAttendenceManageModel.h; sourceTree = "<group>"; };
+		CDE1CFCE217C23E00047CF85 /* MPMAttendenceManageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendenceManageModel.m; sourceTree = "<group>"; };
+		CDE1CFD1217C23E70047CF85 /* MPMAttendenceExceptionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendenceExceptionModel.m; sourceTree = "<group>"; };
+		CDE1CFD2217C23E70047CF85 /* MPMAttendenceExceptionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAttendenceExceptionModel.h; sourceTree = "<group>"; };
+		CDE1CFD5217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendenceExceptionTableViewCell.m; sourceTree = "<group>"; };
+		CDE1CFD6217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAttendenceExceptionTableViewCell.h; sourceTree = "<group>"; };
+		CDE1CFD9217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApprovalProcessNodeDealingViewController.m; sourceTree = "<group>"; };
+		CDE1CFDA217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApprovalProcessNodeDealingViewController.h; sourceTree = "<group>"; };
+		CDE1CFDD217C26B30047CF85 /* MPMProcessMyMetterModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessMyMetterModel.h; sourceTree = "<group>"; };
+		CDE1CFDE217C26B30047CF85 /* MPMProcessMyMetterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessMyMetterModel.m; sourceTree = "<group>"; };
+		CDE1CFE1217C26D30047CF85 /* MPMProcessInst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessInst.h; sourceTree = "<group>"; };
+		CDE1CFE2217C26D30047CF85 /* MPMTaskInstGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMTaskInstGroups.m; sourceTree = "<group>"; };
+		CDE1CFE3217C26D30047CF85 /* MPMTaskInstGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMTaskInstGroups.h; sourceTree = "<group>"; };
+		CDE1CFE4217C26D30047CF85 /* MPMProcessInst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessInst.m; sourceTree = "<group>"; };
+		CDE1CFE5217C26D30047CF85 /* MPMProcessDetailList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessDetailList.m; sourceTree = "<group>"; };
+		CDE1CFE6217C26D30047CF85 /* MPMProcessDetailList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessDetailList.h; sourceTree = "<group>"; };
+		CDE1CFED217C272D0047CF85 /* MPMProcessDetailApprovalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessDetailApprovalView.m; sourceTree = "<group>"; };
+		CDE1CFEE217C272D0047CF85 /* MPMProcessDetailApprovalTriangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessDetailApprovalTriangleView.m; sourceTree = "<group>"; };
+		CDE1CFEF217C272D0047CF85 /* MPMProcessDetailApprovalNodeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessDetailApprovalNodeView.h; sourceTree = "<group>"; };
+		CDE1CFF0217C272D0047CF85 /* MPMProcessDetailApprovalNodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessDetailApprovalNodeView.m; sourceTree = "<group>"; };
+		CDE1CFF1217C272D0047CF85 /* MPMProcessDetailDeliversView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessDetailDeliversView.h; sourceTree = "<group>"; };
+		CDE1CFF2217C272D0047CF85 /* MPMProcessDetailApprovalTriangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessDetailApprovalTriangleView.h; sourceTree = "<group>"; };
+		CDE1CFF3217C272D0047CF85 /* MPMProcessDetailDeliversView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessDetailDeliversView.m; sourceTree = "<group>"; };
+		CDE1CFF4217C272D0047CF85 /* MPMProcessDetailApprovalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessDetailApprovalView.h; sourceTree = "<group>"; };
+		CDE1CFFF217C29F80047CF85 /* MPMProcessSettingCommomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessSettingCommomViewController.h; sourceTree = "<group>"; };
+		CDE1D000217C29F80047CF85 /* MPMProcessSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessSettingViewController.m; sourceTree = "<group>"; };
+		CDE1D001217C29F80047CF85 /* MPMProcessSettingCommomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessSettingCommomViewController.m; sourceTree = "<group>"; };
+		CDE1D003217C29F80047CF85 /* MPMProcessDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessDef.h; sourceTree = "<group>"; };
+		CDE1D004217C29F80047CF85 /* MPMProcessTaskModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessTaskModel.m; sourceTree = "<group>"; };
+		CDE1D005217C29F80047CF85 /* MPMProcessPeople.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessPeople.m; sourceTree = "<group>"; };
+		CDE1D006217C29F80047CF85 /* MPMProcessDef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessDef.m; sourceTree = "<group>"; };
+		CDE1D007217C29F80047CF85 /* MPMProcessPeople.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessPeople.h; sourceTree = "<group>"; };
+		CDE1D008217C29F80047CF85 /* MPMProcessTaskModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessTaskModel.h; sourceTree = "<group>"; };
+		CDE1D009217C29F80047CF85 /* MPMProcessSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessSettingViewController.h; sourceTree = "<group>"; };
+		CDE1D00B217C29F80047CF85 /* MPMProcessSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessSettingTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D00C217C29F80047CF85 /* MPMTaskApplyersScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMTaskApplyersScrollView.h; sourceTree = "<group>"; };
+		CDE1D00D217C29F80047CF85 /* MPMTaskContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMTaskContentView.m; sourceTree = "<group>"; };
+		CDE1D00E217C29F80047CF85 /* MPMProcessHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessHeaderView.h; sourceTree = "<group>"; };
+		CDE1D00F217C29F80047CF85 /* MPMTaskEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMTaskEditView.m; sourceTree = "<group>"; };
+		CDE1D010217C29F80047CF85 /* MPMProcessSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProcessSettingTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D011217C29F80047CF85 /* MPMTaskApplyersScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMTaskApplyersScrollView.m; sourceTree = "<group>"; };
+		CDE1D012217C29F80047CF85 /* MPMTaskContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMTaskContentView.h; sourceTree = "<group>"; };
+		CDE1D013217C29F80047CF85 /* MPMTaskEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMTaskEditView.h; sourceTree = "<group>"; };
+		CDE1D014217C29F80047CF85 /* MPMProcessHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProcessHeaderView.m; sourceTree = "<group>"; };
+		CDE1D02A217C2A400047CF85 /* MPMObjListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMObjListModel.h; sourceTree = "<group>"; };
+		CDE1D02B217C2A400047CF85 /* MPMAttendanceSettingModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAttendanceSettingModel.h; sourceTree = "<group>"; };
+		CDE1D02C217C2A400047CF85 /* MPMSignTimeSections.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSignTimeSections.m; sourceTree = "<group>"; };
+		CDE1D02D217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMFixedTimeWorkScheduleModel.m; sourceTree = "<group>"; };
+		CDE1D02E217C2A400047CF85 /* MPMObjListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMObjListModel.m; sourceTree = "<group>"; };
+		CDE1D02F217C2A400047CF85 /* MPMSignTimeSections.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSignTimeSections.h; sourceTree = "<group>"; };
+		CDE1D030217C2A400047CF85 /* MPMAttendanceSettingModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAttendanceSettingModel.m; sourceTree = "<group>"; };
+		CDE1D031217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMFixedTimeWorkScheduleModel.h; sourceTree = "<group>"; };
+		CDE1D03A217C2AD50047CF85 /* MPMSettingClassListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSettingClassListViewController.h; sourceTree = "<group>"; };
+		CDE1D03B217C2AD50047CF85 /* MPMSettingClassListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSettingClassListViewController.m; sourceTree = "<group>"; };
+		CDE1D03E217C2AE90047CF85 /* MPMSettingSearchTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSettingSearchTimeViewController.h; sourceTree = "<group>"; };
+		CDE1D03F217C2AEA0047CF85 /* MPMSettingSearchTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSettingSearchTimeViewController.m; sourceTree = "<group>"; };
+		CDE1D043217C2AFF0047CF85 /* MPMSearchTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSearchTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D044217C2AFF0047CF85 /* MPMSearchTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSearchTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D047217C2B200047CF85 /* MPMSettingClassListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSettingClassListTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D048217C2B200047CF85 /* MPMSettingClassListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSettingClassListTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D04B217C2B680047CF85 /* MPMSettingClassListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSettingClassListModel.h; sourceTree = "<group>"; };
+		CDE1D04C217C2B680047CF85 /* MPMSettingClassListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSettingClassListModel.m; sourceTree = "<group>"; };
+		CDE1D04F217C2CBD0047CF85 /* MPMAuthorityRoleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMAuthorityRoleModel.h; sourceTree = "<group>"; };
+		CDE1D050217C2CBD0047CF85 /* MPMAuthorityRoleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMAuthorityRoleModel.m; sourceTree = "<group>"; };
+		CDE1D053217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMDealingSeeTimeDetailViewController.m; sourceTree = "<group>"; };
+		CDE1D054217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDealingSeeTimeDetailViewController.h; sourceTree = "<group>"; };
+		CDE1D057217C2F0C0047CF85 /* MPMDealingModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDealingModel.h; sourceTree = "<group>"; };
+		CDE1D058217C2F0C0047CF85 /* MPMCausationDetailModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCausationDetailModel.h; sourceTree = "<group>"; };
+		CDE1D059217C2F0D0047CF85 /* MPMCausationTypeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCausationTypeData.m; sourceTree = "<group>"; };
+		CDE1D05A217C2F0D0047CF85 /* MPMCausationTypeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCausationTypeData.h; sourceTree = "<group>"; };
+		CDE1D05B217C2F0D0047CF85 /* MPMGetPeopleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMGetPeopleModel.m; sourceTree = "<group>"; };
+		CDE1D05C217C2F0D0047CF85 /* MPMGetPeopleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMGetPeopleModel.h; sourceTree = "<group>"; };
+		CDE1D05D217C2F0D0047CF85 /* MPMCausationDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCausationDetailModel.m; sourceTree = "<group>"; };
+		CDE1D05E217C2F0D0047CF85 /* MPMDealingModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMDealingModel.m; sourceTree = "<group>"; };
+		CDE1D067217C2F300047CF85 /* MPMBaseDealingHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMBaseDealingHeader.m; sourceTree = "<group>"; };
+		CDE1D068217C2F300047CF85 /* MPMHiddenTableViewDeleteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMHiddenTableViewDeleteCell.h; sourceTree = "<group>"; };
+		CDE1D069217C2F300047CF85 /* MPMCommomDealingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D06A217C2F310047CF85 /* MPMCommomDealingGetPeopleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingGetPeopleTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D06B217C2F310047CF85 /* MPMHiddenTableViewDeleteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMHiddenTableViewDeleteCell.m; sourceTree = "<group>"; };
+		CDE1D06C217C2F310047CF85 /* MPMCommomDealingAddCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingAddCellTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D06D217C2F310047CF85 /* MPMGetPeopleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMGetPeopleTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D06E217C2F310047CF85 /* MPMBaseDealingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMBaseDealingHeader.h; sourceTree = "<group>"; };
+		CDE1D06F217C2F320047CF85 /* MPMCommomDealingGetPeopleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingGetPeopleTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D070217C2F320047CF85 /* MPMCommomDealingAddCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingAddCellTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D071217C2F320047CF85 /* MPMCommomDealingReasonTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingReasonTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D072217C2F320047CF85 /* MPMGetPeopleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMGetPeopleTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D073217C2F320047CF85 /* MPMDealingSeeTimeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDealingSeeTimeTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D074217C2F320047CF85 /* MPMCommomDealingReasonTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingReasonTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D075217C2F320047CF85 /* MPMCommomDealingMultiSelectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomDealingMultiSelectTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D076217C2F330047CF85 /* MPMCommomDealingMultiSelectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingMultiSelectTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D077217C2F330047CF85 /* MPMCommomDealingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomDealingTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D078217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMDealingSeeTimeTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D08B217C2F680047CF85 /* MPMSearchPushAnimate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSearchPushAnimate.h; sourceTree = "<group>"; };
+		CDE1D08C217C2F680047CF85 /* MPMSearchPopAnimate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSearchPopAnimate.h; sourceTree = "<group>"; };
+		CDE1D08D217C2F680047CF85 /* MPMSearchPopAnimate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSearchPopAnimate.m; sourceTree = "<group>"; };
+		CDE1D08E217C2F680047CF85 /* MPMSelectDepartmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSelectDepartmentViewController.h; sourceTree = "<group>"; };
+		CDE1D08F217C2F680047CF85 /* MPMSelectDepartmentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSelectDepartmentTableViewCell.h; sourceTree = "<group>"; };
+		CDE1D090217C2F680047CF85 /* MPMDepartEmployeeHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMDepartEmployeeHelper.m; sourceTree = "<group>"; };
+		CDE1D091217C2F680047CF85 /* MPMSearchDepartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSearchDepartViewController.m; sourceTree = "<group>"; };
+		CDE1D092217C2F690047CF85 /* MPMSearchDepartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSearchDepartViewController.h; sourceTree = "<group>"; };
+		CDE1D093217C2F690047CF85 /* MPMDepartEmployeeHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMDepartEmployeeHelper.h; sourceTree = "<group>"; };
+		CDE1D094217C2F690047CF85 /* MPMSearchPushAnimate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSearchPushAnimate.m; sourceTree = "<group>"; };
+		CDE1D095217C2F690047CF85 /* MPMSelectDepartmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSelectDepartmentViewController.m; sourceTree = "<group>"; };
+		CDE1D096217C2F690047CF85 /* MPMSelectDepartmentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSelectDepartmentTableViewCell.m; sourceTree = "<group>"; };
+		CDE1D0A4217C54070047CF85 /* MPMRefreshFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMRefreshFooter.h; sourceTree = "<group>"; };
+		CDE1D0A5217C54070047CF85 /* MPMRefreshFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMRefreshFooter.m; sourceTree = "<group>"; };
+		CDE1D0B1217C58FC0047CF85 /* MPMRoundPeopleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMRoundPeopleView.h; sourceTree = "<group>"; };
+		CDE1D0B2217C58FC0047CF85 /* MPMRoundPeopleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMRoundPeopleButton.h; sourceTree = "<group>"; };
+		CDE1D0B3217C58FC0047CF85 /* MPMRoundPeopleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMRoundPeopleButton.m; sourceTree = "<group>"; };
+		CDE1D0B4217C58FD0047CF85 /* MPMRoundPeopleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMRoundPeopleView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -668,14 +822,14 @@
 			children = (
 				CD4718202110536C00401169 /* MPMLoginViewController.h */,
 				CD4718212110536C00401169 /* MPMLoginViewController.m */,
+				CD47161E2110536300401169 /* Controllers */,
+				CD47171C2110536400401169 /* Views */,
 				CD47170A2110536300401169 /* BaseClass */,
 				CD47160D2110536200401169 /* Category */,
-				CD47161E2110536300401169 /* Controllers */,
 				CD4717012110536300401169 /* DataBase */,
 				CD4717172110536300401169 /* Globals */,
 				CD4716082110536200401169 /* ShareInstance */,
 				CD4716052110536200401169 /* Tools */,
-				CD47171C2110536400401169 /* Views */,
 				CD4716012110529A00401169 /* ThirdPards */,
 				CD4715FA21104EF200401169 /* Info.plist */,
 			);
@@ -795,6 +949,8 @@
 				CD47160A2110536200401169 /* MPMShareUser.m */,
 				CD4716092110536200401169 /* MPMSessionManager.h */,
 				CD47160B2110536200401169 /* MPMSessionManager.m */,
+				CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */,
+				CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */,
 			);
 			path = ShareInstance;
 			sourceTree = "<group>";
@@ -804,20 +960,20 @@
 			children = (
 				CD47160F2110536200401169 /* UIImage+MPMExtention.h */,
 				CD4716192110536200401169 /* UIImage+MPMExtention.m */,
-				CD4716182110536200401169 /* UILabel+MPMExtention.h */,
-				CD4716102110536200401169 /* UILabel+MPMExtention.m */,
-				CD4716112110536200401169 /* NSString+MPMAttention.h */,
-				CD4716172110536200401169 /* NSString+MPMAttention.m */,
-				CD47161C2110536200401169 /* UIButton+MPMExtention.h */,
-				CD4716142110536200401169 /* UIButton+MPMExtention.m */,
 				CD47161D2110536200401169 /* NSObject+MPMExtention.h */,
 				CD4716152110536200401169 /* NSObject+MPMExtention.m */,
+				CD47161C2110536200401169 /* UIButton+MPMExtention.h */,
+				CD4716142110536200401169 /* UIButton+MPMExtention.m */,
+				CD47160E2110536200401169 /* NSDateFormatter+MPMExtention.h */,
+				CD47161A2110536200401169 /* NSDateFormatter+MPMExtention.m */,
 				CD4716162110536200401169 /* NSDate+MPMExtention.h */,
 				CD4716122110536200401169 /* NSDate+MPMExtention.m */,
-				CD47161A2110536200401169 /* NSDateFormatter+MPMExtention.m */,
-				CD47160E2110536200401169 /* NSDateFormatter+MPMExtention.h */,
 				CD47161B2110536200401169 /* NSMutableArray+MPMExtention.h */,
 				CD4716132110536200401169 /* NSMutableArray+MPMExtention.m */,
+				CD4716112110536200401169 /* NSString+MPMAttention.h */,
+				CD4716172110536200401169 /* NSString+MPMAttention.m */,
+				CD4716182110536200401169 /* UILabel+MPMExtention.h */,
+				CD4716102110536200401169 /* UILabel+MPMExtention.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -825,12 +981,12 @@
 		CD47161E2110536300401169 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CD47161F2110536300401169 /* Commom */,
-				CD4716552110536300401169 /* ApplyForAdditions */,
 				CD47165D2110536300401169 /* AttendenceSignIn */,
+				CD4716552110536300401169 /* ApplyForAdditions */,
 				CD47167A2110536300401169 /* ApprovalProcess */,
 				CD47169A2110536300401169 /* AttendenceStatistics */,
 				CD4716A72110536300401169 /* AttendenceSettings */,
+				CD47161F2110536300401169 /* Commom */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -848,16 +1004,16 @@
 		CD4716202110536300401169 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716262110536300401169 /* JZLocationConverter.h */,
-				CD4716212110536300401169 /* JZLocationConverter.m */,
+				CD4716222110536300401169 /* MPMAttendenceMapViewController.h */,
+				CD4716272110536300401169 /* MPMAttendenceMapViewController.m */,
 				CD4716232110536300401169 /* MPMPlaceInfoModel.h */,
 				CD4716282110536300401169 /* MPMPlaceInfoModel.m */,
 				CD4716292110536300401169 /* MPMSigninDateView.h */,
 				CD4716252110536300401169 /* MPMSigninDateView.m */,
+				CD4716262110536300401169 /* JZLocationConverter.h */,
+				CD4716212110536300401169 /* JZLocationConverter.m */,
 				CD4716242110536300401169 /* MPMMapSelectTableViewCell.h */,
 				CD47162A2110536300401169 /* MPMMapSelectTableViewCell.m */,
-				CD4716222110536300401169 /* MPMAttendenceMapViewController.h */,
-				CD4716272110536300401169 /* MPMAttendenceMapViewController.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -871,6 +1027,8 @@
 				CD4716472110536300401169 /* MPMCommomGetPeopleViewController.m */,
 				CD47162C2110536300401169 /* MPMHiddenTableViewDataSourceDelegate.h */,
 				CD4716382110536300401169 /* MPMHiddenTableViewDataSourceDelegate.m */,
+				CDE1D054217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.h */,
+				CDE1D053217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.m */,
 				CD47162F2110536300401169 /* Models */,
 				CD47163A2110536300401169 /* Views */,
 			);
@@ -880,14 +1038,14 @@
 		CD47162F2110536300401169 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716342110536300401169 /* MPMDealingModel.h */,
-				CD4716302110536300401169 /* MPMDealingModel.m */,
-				CD4716362110536300401169 /* MPMGetPeopleModel.h */,
-				CD4716332110536300401169 /* MPMGetPeopleModel.m */,
-				CD4716372110536300401169 /* MPMCausationTypeData.h */,
-				CD4716322110536300401169 /* MPMCausationTypeData.m */,
-				CD4716352110536300401169 /* MPMCausationDetailModel.h */,
-				CD4716312110536300401169 /* MPMCausationDetailModel.m */,
+				CDE1D057217C2F0C0047CF85 /* MPMDealingModel.h */,
+				CDE1D05E217C2F0D0047CF85 /* MPMDealingModel.m */,
+				CDE1D05C217C2F0D0047CF85 /* MPMGetPeopleModel.h */,
+				CDE1D05B217C2F0D0047CF85 /* MPMGetPeopleModel.m */,
+				CDE1D05A217C2F0D0047CF85 /* MPMCausationTypeData.h */,
+				CDE1D059217C2F0D0047CF85 /* MPMCausationTypeData.m */,
+				CDE1D058217C2F0C0047CF85 /* MPMCausationDetailModel.h */,
+				CDE1D05D217C2F0D0047CF85 /* MPMCausationDetailModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -895,18 +1053,24 @@
 		CD47163A2110536300401169 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716452110536300401169 /* MPMGetPeopleTableViewCell.h */,
-				CD47163D2110536300401169 /* MPMGetPeopleTableViewCell.m */,
-				CD47163F2110536300401169 /* MPMHiddenTableViewDeleteCell.h */,
-				CD4716432110536300401169 /* MPMHiddenTableViewDeleteCell.m */,
-				CD4716412110536300401169 /* MPMCommomDealingTableViewCell.h */,
-				CD47163C2110536300401169 /* MPMCommomDealingTableViewCell.m */,
-				CD4716462110536300401169 /* MPMCommomDealingAddCellTableViewCell.h */,
-				CD4716402110536300401169 /* MPMCommomDealingAddCellTableViewCell.m */,
-				CD47163B2110536300401169 /* MPMCommomDealingReasonTableViewCell.h */,
-				CD4716422110536300401169 /* MPMCommomDealingReasonTableViewCell.m */,
-				CD4716442110536300401169 /* MPMCommomDealingGetPeopleTableViewCell.h */,
-				CD47163E2110536300401169 /* MPMCommomDealingGetPeopleTableViewCell.m */,
+				CDE1D072217C2F320047CF85 /* MPMGetPeopleTableViewCell.h */,
+				CDE1D06D217C2F310047CF85 /* MPMGetPeopleTableViewCell.m */,
+				CDE1D077217C2F330047CF85 /* MPMCommomDealingTableViewCell.h */,
+				CDE1D069217C2F300047CF85 /* MPMCommomDealingTableViewCell.m */,
+				CDE1D06E217C2F310047CF85 /* MPMBaseDealingHeader.h */,
+				CDE1D067217C2F300047CF85 /* MPMBaseDealingHeader.m */,
+				CDE1D070217C2F320047CF85 /* MPMCommomDealingAddCellTableViewCell.h */,
+				CDE1D06C217C2F310047CF85 /* MPMCommomDealingAddCellTableViewCell.m */,
+				CDE1D06F217C2F320047CF85 /* MPMCommomDealingGetPeopleTableViewCell.h */,
+				CDE1D06A217C2F310047CF85 /* MPMCommomDealingGetPeopleTableViewCell.m */,
+				CDE1D076217C2F330047CF85 /* MPMCommomDealingMultiSelectTableViewCell.h */,
+				CDE1D075217C2F320047CF85 /* MPMCommomDealingMultiSelectTableViewCell.m */,
+				CDE1D071217C2F320047CF85 /* MPMCommomDealingReasonTableViewCell.h */,
+				CDE1D074217C2F320047CF85 /* MPMCommomDealingReasonTableViewCell.m */,
+				CDE1D073217C2F320047CF85 /* MPMDealingSeeTimeTableViewCell.h */,
+				CDE1D078217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.m */,
+				CDE1D068217C2F300047CF85 /* MPMHiddenTableViewDeleteCell.h */,
+				CDE1D06B217C2F310047CF85 /* MPMHiddenTableViewDeleteCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -914,18 +1078,18 @@
 		CD4716482110536300401169 /* SelectDepartEmployee */ = {
 			isa = PBXGroup;
 			children = (
-				CD47164F2110536300401169 /* MPMDepartEmployeeHelper.h */,
-				CD4716492110536300401169 /* MPMDepartEmployeeHelper.m */,
-				CD47164A2110536300401169 /* MPMSearchPushAnimate.h */,
-				CD4716512110536300401169 /* MPMSearchPushAnimate.m */,
-				CD4716542110536300401169 /* MPMSearchPopAnimate.h */,
-				CD47164C2110536300401169 /* MPMSearchPopAnimate.m */,
-				CD47164D2110536300401169 /* MPMSearchDepartViewController.h */,
-				CD4716532110536300401169 /* MPMSearchDepartViewController.m */,
-				CD47164B2110536300401169 /* MPMSelectDepartmentTableViewCell.h */,
-				CD4716502110536300401169 /* MPMSelectDepartmentTableViewCell.m */,
-				CD4716522110536300401169 /* MPMSelectDepartmentViewController.h */,
-				CD47164E2110536300401169 /* MPMSelectDepartmentViewController.m */,
+				CDE1D08E217C2F680047CF85 /* MPMSelectDepartmentViewController.h */,
+				CDE1D095217C2F690047CF85 /* MPMSelectDepartmentViewController.m */,
+				CDE1D093217C2F690047CF85 /* MPMDepartEmployeeHelper.h */,
+				CDE1D090217C2F680047CF85 /* MPMDepartEmployeeHelper.m */,
+				CDE1D08F217C2F680047CF85 /* MPMSelectDepartmentTableViewCell.h */,
+				CDE1D096217C2F690047CF85 /* MPMSelectDepartmentTableViewCell.m */,
+				CDE1D092217C2F690047CF85 /* MPMSearchDepartViewController.h */,
+				CDE1D091217C2F680047CF85 /* MPMSearchDepartViewController.m */,
+				CDE1D08B217C2F680047CF85 /* MPMSearchPushAnimate.h */,
+				CDE1D094217C2F690047CF85 /* MPMSearchPushAnimate.m */,
+				CDE1D08C217C2F680047CF85 /* MPMSearchPopAnimate.h */,
+				CDE1D08D217C2F680047CF85 /* MPMSearchPopAnimate.m */,
 			);
 			path = SelectDepartEmployee;
 			sourceTree = "<group>";
@@ -933,8 +1097,8 @@
 		CD4716552110536300401169 /* ApplyForAdditions */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716562110536300401169 /* Models */,
 				CD4716572110536300401169 /* Controllers */,
+				CD4716562110536300401169 /* Models */,
 				CD47165A2110536300401169 /* Views */,
 			);
 			path = ApplyForAdditions;
@@ -968,8 +1132,8 @@
 		CD47165D2110536300401169 /* AttendenceSignIn */ = {
 			isa = PBXGroup;
 			children = (
-				CD47165E2110536300401169 /* Models */,
 				CD4716672110536300401169 /* Controllers */,
+				CD47165E2110536300401169 /* Models */,
 				CD47166C2110536300401169 /* Views */,
 			);
 			path = AttendenceSignIn;
@@ -978,14 +1142,18 @@
 		CD47165E2110536300401169 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CDE1CFCD217C23E00047CF85 /* MPMAttendenceManageModel.h */,
+				CDE1CFCE217C23E00047CF85 /* MPMAttendenceManageModel.m */,
 				CD4716632110536300401169 /* MPMAttendenceModel.h */,
 				CD4716602110536300401169 /* MPMAttendenceModel.m */,
-				CD47165F2110536300401169 /* MPMLerakageCardModel.h */,
-				CD4716642110536300401169 /* MPMLerakageCardModel.m */,
-				CD4716622110536300401169 /* MPMAttendencePickerTypeModel.h */,
-				CD4716652110536300401169 /* MPMAttendencePickerTypeModel.m */,
 				CD4716662110536300401169 /* MPMAttendenceOneMonthModel.h */,
 				CD4716612110536300401169 /* MPMAttendenceOneMonthModel.m */,
+				CD4716622110536300401169 /* MPMAttendencePickerTypeModel.h */,
+				CD4716652110536300401169 /* MPMAttendencePickerTypeModel.m */,
+				CD47165F2110536300401169 /* MPMLerakageCardModel.h */,
+				CD4716642110536300401169 /* MPMLerakageCardModel.m */,
+				CDE1CFD2217C23E70047CF85 /* MPMAttendenceExceptionModel.h */,
+				CDE1CFD1217C23E70047CF85 /* MPMAttendenceExceptionModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -993,10 +1161,10 @@
 		CD4716672110536300401169 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716682110536300401169 /* MPMRepairSigninViewController.h */,
-				CD47166A2110536300401169 /* MPMRepairSigninViewController.m */,
 				CD47166B2110536300401169 /* MPMAttendenceSigninViewController.h */,
 				CD4716692110536300401169 /* MPMAttendenceSigninViewController.m */,
+				CD4716682110536300401169 /* MPMRepairSigninViewController.h */,
+				CD47166A2110536300401169 /* MPMRepairSigninViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1004,13 +1172,15 @@
 		CD47166C2110536300401169 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CD4716732110536300401169 /* MPMCalendar */,
 				CD47166E2110536300401169 /* MPMAttendenceTableViewCell.h */,
 				CD4716722110536300401169 /* MPMAttendenceTableViewCell.m */,
-				CD47166D2110536300401169 /* MPMRepairSigninAddDealTableViewCell.h */,
-				CD4716702110536300401169 /* MPMRepairSigninAddDealTableViewCell.m */,
+				CDE1CFD6217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.h */,
+				CDE1CFD5217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.m */,
 				CD4716712110536300401169 /* MPMRepairSigninAddTimeTableViewCell.h */,
 				CD47166F2110536300401169 /* MPMRepairSigninAddTimeTableViewCell.m */,
-				CD4716732110536300401169 /* MPMCalendar */,
+				CD47166D2110536300401169 /* MPMRepairSigninAddDealTableViewCell.h */,
+				CD4716702110536300401169 /* MPMRepairSigninAddDealTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1018,12 +1188,12 @@
 		CD4716732110536300401169 /* MPMCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716742110536300401169 /* MPMCalendarScrollView.m */,
-				CD4716752110536300401169 /* MPMCalendarButton.h */,
-				CD4716762110536300401169 /* MPMCalendarWeekView.m */,
-				CD4716772110536300401169 /* MPMCalendarButton.m */,
 				CD4716782110536300401169 /* MPMCalendarScrollView.h */,
+				CD4716742110536300401169 /* MPMCalendarScrollView.m */,
 				CD4716792110536300401169 /* MPMCalendarWeekView.h */,
+				CD4716762110536300401169 /* MPMCalendarWeekView.m */,
+				CD4716752110536300401169 /* MPMCalendarButton.h */,
+				CD4716772110536300401169 /* MPMCalendarButton.m */,
 			);
 			path = MPMCalendar;
 			sourceTree = "<group>";
@@ -1031,8 +1201,8 @@
 		CD47167A2110536300401169 /* ApprovalProcess */ = {
 			isa = PBXGroup;
 			children = (
-				CD47167B2110536300401169 /* Models */,
 				CD4716842110536300401169 /* Controllers */,
+				CD47167B2110536300401169 /* Models */,
 				CD4716892110536300401169 /* Views */,
 			);
 			path = ApprovalProcess;
@@ -1041,14 +1211,16 @@
 		CD47167B2110536300401169 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716802110536300401169 /* MPMApprovalCausationModel.h */,
-				CD47167C2110536300401169 /* MPMApprovalCausationModel.m */,
-				CD4716832110536300401169 /* MPMApprovalFetchDetailModel.h */,
-				CD47167F2110536300401169 /* MPMApprovalFetchDetailModel.m */,
 				CD47167E2110536300401169 /* MPMApprovalFirstSectionModel.h */,
 				CD4716812110536300401169 /* MPMApprovalFirstSectionModel.m */,
-				CD47167D2110536300401169 /* MPMApprovalCausationDetailModel.h */,
-				CD4716822110536300401169 /* MPMApprovalCausationDetailModel.m */,
+				CDE1CFDD217C26B30047CF85 /* MPMProcessMyMetterModel.h */,
+				CDE1CFDE217C26B30047CF85 /* MPMProcessMyMetterModel.m */,
+				CDE1CFE3217C26D30047CF85 /* MPMTaskInstGroups.h */,
+				CDE1CFE2217C26D30047CF85 /* MPMTaskInstGroups.m */,
+				CDE1CFE1217C26D30047CF85 /* MPMProcessInst.h */,
+				CDE1CFE4217C26D30047CF85 /* MPMProcessInst.m */,
+				CDE1CFE6217C26D30047CF85 /* MPMProcessDetailList.h */,
+				CDE1CFE5217C26D30047CF85 /* MPMProcessDetailList.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1060,6 +1232,8 @@
 				CD4716872110536300401169 /* MPMApprovalProcessViewController.m */,
 				CD4716882110536300401169 /* MPMApprovalProcessDetailViewController.h */,
 				CD4716852110536300401169 /* MPMApprovalProcessDetailViewController.m */,
+				CDE1CFDA217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.h */,
+				CDE1CFD9217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1067,22 +1241,30 @@
 		CD4716892110536300401169 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716972110536300401169 /* MPMSideDrawerView.h */,
-				CD47168C2110536300401169 /* MPMSideDrawerView.m */,
-				CD47168F2110536300401169 /* MPMDetailTimeMessageView.h */,
-				CD4716942110536300401169 /* MPMDetailTimeMessageView.m */,
-				CD47168E2110536300401169 /* MPMApprovalProcessHeaderSectionView.h */,
-				CD4716952110536300401169 /* MPMApprovalProcessHeaderSectionView.m */,
 				CD4716962110536300401169 /* MPMApprovalProcessTableViewCell.h */,
 				CD47168D2110536300401169 /* MPMApprovalProcessTableViewCell.m */,
-				CD4716982110536300401169 /* MPMApprovalProcessDetailTableViewCell.h */,
-				CD4716912110536300401169 /* MPMApprovalProcessDetailTableViewCell.m */,
+				CD4716972110536300401169 /* MPMSideDrawerView.h */,
+				CD47168C2110536300401169 /* MPMSideDrawerView.m */,
+				CD4716922110536300401169 /* MPMSiderDrawerCollectionViewButtonCell.h */,
+				CD47168B2110536300401169 /* MPMSiderDrawerCollectionViewButtonCell.m */,
 				CD4716902110536300401169 /* MPMSiderDrawerCollectionViewTimeCell.h */,
 				CD4716992110536300401169 /* MPMSiderDrawerCollectionViewTimeCell.m */,
 				CD47168A2110536300401169 /* MPMSiderDrawerCollectionReusableView.h */,
 				CD4716932110536300401169 /* MPMSiderDrawerCollectionReusableView.m */,
-				CD4716922110536300401169 /* MPMSiderDrawerCollectionViewButtonCell.h */,
-				CD47168B2110536300401169 /* MPMSiderDrawerCollectionViewButtonCell.m */,
+				CD4716982110536300401169 /* MPMApprovalProcessDetailTableViewCell.h */,
+				CD4716912110536300401169 /* MPMApprovalProcessDetailTableViewCell.m */,
+				CD47168F2110536300401169 /* MPMDetailTimeMessageView.h */,
+				CD4716942110536300401169 /* MPMDetailTimeMessageView.m */,
+				CD47168E2110536300401169 /* MPMApprovalProcessHeaderSectionView.h */,
+				CD4716952110536300401169 /* MPMApprovalProcessHeaderSectionView.m */,
+				CDE1CFF1217C272D0047CF85 /* MPMProcessDetailDeliversView.h */,
+				CDE1CFF3217C272D0047CF85 /* MPMProcessDetailDeliversView.m */,
+				CDE1CFF4217C272D0047CF85 /* MPMProcessDetailApprovalView.h */,
+				CDE1CFED217C272D0047CF85 /* MPMProcessDetailApprovalView.m */,
+				CDE1CFEF217C272D0047CF85 /* MPMProcessDetailApprovalNodeView.h */,
+				CDE1CFF0217C272D0047CF85 /* MPMProcessDetailApprovalNodeView.m */,
+				CDE1CFF2217C272D0047CF85 /* MPMProcessDetailApprovalTriangleView.h */,
+				CDE1CFEE217C272D0047CF85 /* MPMProcessDetailApprovalTriangleView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1110,12 +1292,12 @@
 		CD4716A02110536300401169 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716A62110536300401169 /* MPMDepartScrollView.h */,
-				CD4716A22110536300401169 /* MPMDepartScrollView.m */,
 				CD4716A32110536300401169 /* MPMStatisticTableViewCell.h */,
 				CD4716A52110536300401169 /* MPMStatisticTableViewCell.m */,
 				CD4716A42110536300401169 /* MPMStatisticDepartmentTableViewCell.h */,
 				CD4716A12110536300401169 /* MPMStatisticDepartmentTableViewCell.m */,
+				CD4716A62110536300401169 /* MPMDepartScrollView.h */,
+				CD4716A22110536300401169 /* MPMDepartScrollView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1123,8 +1305,8 @@
 		CD4716A72110536300401169 /* AttendenceSettings */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716A82110536300401169 /* Models */,
 				CD4716B52110536300401169 /* Controllers */,
+				CD4716A82110536300401169 /* Models */,
 				CD4716FA2110536300401169 /* Views */,
 			);
 			path = AttendenceSettings;
@@ -1133,18 +1315,12 @@
 		CD4716A82110536300401169 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716AC2110536300401169 /* MPMDepartment.h */,
-				CD4716B22110536300401169 /* MPMDepartment.m */,
 				CD4716A92110536300401169 /* MPMSlotTimeDtosModel.h */,
 				CD4716B02110536300401169 /* MPMSlotTimeDtosModel.m */,
-				CD4716AE2110536300401169 /* MPMAttendenceSettingModel.h */,
-				CD4716B32110536300401169 /* MPMAttendenceSettingModel.m */,
+				CD4716AC2110536300401169 /* MPMDepartment.h */,
+				CD4716B22110536300401169 /* MPMDepartment.m */,
 				CD4716AB2110536300401169 /* MPMSettingSwitchValueModel.h */,
 				CD4716B12110536300401169 /* MPMSettingSwitchValueModel.m */,
-				CD4716B42110536300401169 /* MPMSchedulingEmplyoeeModel.h */,
-				CD4716AD2110536300401169 /* MPMSchedulingEmplyoeeModel.m */,
-				CD4716AF2110536300401169 /* MPMSchedulingDepartmentsModel.h */,
-				CD4716AA2110536300401169 /* MPMSchedulingDepartmentsModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1152,16 +1328,12 @@
 		CD4716B52110536300401169 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716C52110536300401169 /* MPMAttendenceSettingViewController.h */,
-				CD4716E42110536300401169 /* MPMAttendenceSettingViewController.m */,
 				CD4716C62110536300401169 /* MPMAttendenceBaseSettingViewController.h */,
 				CD4716F92110536300401169 /* MPMAttendenceBaseSettingViewController.m */,
-				CD4716B62110536300401169 /* CreateOrangeClass */,
-				CD4716BD2110536300401169 /* SettingTime */,
-				CD4716C72110536300401169 /* ClassSetting */,
-				CD4716D62110536300401169 /* SettingCard */,
+				CDE1CFFD217C29A80047CF85 /* AttendanceSetting */,
 				CD4716E52110536300401169 /* AuthoritySetting */,
 				CD4716EC2110536300401169 /* IntergralSetting */,
+				CDE1CFFE217C29F80047CF85 /* ProcessSetting */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1196,10 +1368,13 @@
 		CD4716BD2110536300401169 /* SettingTime */ = {
 			isa = PBXGroup;
 			children = (
+				CDE1D042217C2AED0047CF85 /* Views */,
+				CDE1D03A217C2AD50047CF85 /* MPMSettingClassListViewController.h */,
+				CDE1D03B217C2AD50047CF85 /* MPMSettingClassListViewController.m */,
 				CD4716C42110536300401169 /* MPMSettingTimeViewController.h */,
 				CD4716BE2110536300401169 /* MPMSettingTimeViewController.m */,
-				CD4716BF2110536300401169 /* MPMSettingSwitchTableViewCell.h */,
-				CD4716C32110536300401169 /* MPMSettingSwitchTableViewCell.m */,
+				CDE1D03E217C2AE90047CF85 /* MPMSettingSearchTimeViewController.h */,
+				CDE1D03F217C2AEA0047CF85 /* MPMSettingSearchTimeViewController.m */,
 				CD4716C02110536300401169 /* Model */,
 			);
 			path = SettingTime;
@@ -1210,6 +1385,8 @@
 			children = (
 				CD4716C22110536300401169 /* MPMSettingTimeModel.h */,
 				CD4716C12110536300401169 /* MPMSettingTimeModel.m */,
+				CDE1D04B217C2B680047CF85 /* MPMSettingClassListModel.h */,
+				CDE1D04C217C2B680047CF85 /* MPMSettingClassListModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1239,10 +1416,10 @@
 			children = (
 				CD4716D22110536300401169 /* MPMClassSettingTableViewCell.h */,
 				CD4716CE2110536300401169 /* MPMClassSettingTableViewCell.m */,
-				CD4716CF2110536300401169 /* MPMClassSettingSelectWeekView.h */,
-				CD4716D32110536300401169 /* MPMClassSettingSelectWeekView.m */,
 				CD4716D02110536300401169 /* MPMClassSettingImageTableViewCell.h */,
 				CD4716D52110536300401169 /* MPMClassSettingImageTableViewCell.m */,
+				CD4716CF2110536300401169 /* MPMClassSettingSelectWeekView.h */,
+				CD4716D32110536300401169 /* MPMClassSettingSelectWeekView.m */,
 				CD4716D42110536300401169 /* MPMClassSettingSelectWeekTableViewCell.h */,
 				CD4716D12110536300401169 /* MPMClassSettingSelectWeekTableViewCell.m */,
 			);
@@ -1252,8 +1429,8 @@
 		CD4716D62110536300401169 /* SettingCard */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716D72110536300401169 /* Models */,
 				CD4716DA2110536300401169 /* Controllers */,
+				CD4716D72110536300401169 /* Models */,
 				CD4716DF2110536300401169 /* Views */,
 			);
 			path = SettingCard;
@@ -1293,12 +1470,14 @@
 		CD4716E52110536300401169 /* AuthoritySetting */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716EA2110536300401169 /* MPMAuthorityModel.h */,
-				CD4716E72110536300401169 /* MPMAuthorityModel.m */,
-				CD4716E62110536300401169 /* MPMAuthorityTableViewCell.h */,
-				CD4716E92110536300401169 /* MPMAuthorityTableViewCell.m */,
 				CD4716EB2110536300401169 /* MPMAuthoritySettingViewController.h */,
 				CD4716E82110536300401169 /* MPMAuthoritySettingViewController.m */,
+				CD4716E62110536300401169 /* MPMAuthorityTableViewCell.h */,
+				CD4716E92110536300401169 /* MPMAuthorityTableViewCell.m */,
+				CD4716EA2110536300401169 /* MPMAuthorityModel.h */,
+				CD4716E72110536300401169 /* MPMAuthorityModel.m */,
+				CDE1D04F217C2CBD0047CF85 /* MPMAuthorityRoleModel.h */,
+				CDE1D050217C2CBD0047CF85 /* MPMAuthorityRoleModel.m */,
 			);
 			path = AuthoritySetting;
 			sourceTree = "<group>";
@@ -1328,10 +1507,10 @@
 		CD4716F42110536300401169 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				CD4716F72110536300401169 /* MPMIntergralScoreView.h */,
-				CD4716F62110536300401169 /* MPMIntergralScoreView.m */,
 				CD4716F82110536300401169 /* MPMIntergralSettingTableViewCell.h */,
 				CD4716F52110536300401169 /* MPMIntergralSettingTableViewCell.m */,
+				CD4716F72110536300401169 /* MPMIntergralScoreView.h */,
+				CD4716F62110536300401169 /* MPMIntergralScoreView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1343,8 +1522,6 @@
 				CD4716FB2110536300401169 /* MPMAttendenceSetTableViewCell.m */,
 				CD4716FD2110536300401169 /* MPMAttendenceBaseTableViewCell.h */,
 				CD4717002110536300401169 /* MPMAttendenceBaseTableViewCell.m */,
-				CD4716FC2110536300401169 /* MPMAttendenceSettingTableViewCell.h */,
-				CD4716FF2110536300401169 /* MPMAttendenceSettingTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1359,6 +1536,10 @@
 				CD4717022110536300401169 /* MPMCoreDataManager.m */,
 				CD4717092110536300401169 /* User+CoreDataProperties.h */,
 				CD4717052110536300401169 /* User+CoreDataProperties.m */,
+				CDE1CFAC217C1C1A0047CF85 /* OauthUser+CoreDataClass.h */,
+				CDE1CFAD217C1C1A0047CF85 /* OauthUser+CoreDataClass.m */,
+				CDE1CFAB217C1C1A0047CF85 /* OauthUser+CoreDataProperties.h */,
+				CDE1CFAA217C1C1A0047CF85 /* OauthUser+CoreDataProperties.m */,
 			);
 			path = DataBase;
 			sourceTree = "<group>";
@@ -1366,18 +1547,18 @@
 		CD47170A2110536300401169 /* BaseClass */ = {
 			isa = PBXGroup;
 			children = (
-				CD47170B2110536300401169 /* MPMBaseModel.h */,
-				CD4717122110536300401169 /* MPMBaseModel.m */,
-				CD47170D2110536300401169 /* MPMBaseNavigationBar.h */,
-				CD4717142110536300401169 /* MPMBaseNavigationBar.m */,
-				CD47170E2110536300401169 /* MPMBaseTableViewCell.h */,
-				CD4717132110536300401169 /* MPMBaseTableViewCell.m */,
-				CD4717152110536300401169 /* MPMBaseViewController.h */,
-				CD4717102110536300401169 /* MPMBaseViewController.m */,
-				CD4717112110536300401169 /* MPMBaseNavigationController.h */,
-				CD47170C2110536300401169 /* MPMBaseNavigationController.m */,
 				CD47170F2110536300401169 /* MPMMainTabBarViewController.h */,
 				CD4717162110536300401169 /* MPMMainTabBarViewController.m */,
+				CD4717112110536300401169 /* MPMBaseNavigationController.h */,
+				CD47170C2110536300401169 /* MPMBaseNavigationController.m */,
+				CD47170D2110536300401169 /* MPMBaseNavigationBar.h */,
+				CD4717142110536300401169 /* MPMBaseNavigationBar.m */,
+				CD4717152110536300401169 /* MPMBaseViewController.h */,
+				CD4717102110536300401169 /* MPMBaseViewController.m */,
+				CD47170B2110536300401169 /* MPMBaseModel.h */,
+				CD4717122110536300401169 /* MPMBaseModel.m */,
+				CD47170E2110536300401169 /* MPMBaseTableViewCell.h */,
+				CD4717132110536300401169 /* MPMBaseTableViewCell.m */,
 			);
 			path = BaseClass;
 			sourceTree = "<group>";
@@ -1389,6 +1570,7 @@
 				CD4717192110536300401169 /* ColorConstant.h */,
 				CD47171A2110536300401169 /* MPMApplyAdditionConfig.h */,
 				CD4718AA2110545900401169 /* MPMAttendanceHeader.h */,
+				CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */,
 			);
 			path = Globals;
 			sourceTree = "<group>";
@@ -1396,25 +1578,22 @@
 		CD47171C2110536400401169 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CDE1D0B0217C58ED0047CF85 /* MPMRoundPeople */,
+				CDE1D0A3217C53FB0047CF85 /* MPMRefresh */,
 				CD4717282110536400401169 /* MPMButton.h */,
 				CD47172C2110536400401169 /* MPMButton.m */,
+				CDE1CFC9217C218B0047CF85 /* MPMDealingBorderButton.h */,
+				CDE1CFCA217C218B0047CF85 /* MPMDealingBorderButton.m */,
 				CD47172A2110536400401169 /* MPMImageView.h */,
 				CD47171F2110536400401169 /* MPMImageView.m */,
-				CD4717202110536400401169 /* MPMTableHeaderView.h */,
-				CD47172B2110536400401169 /* MPMTableHeaderView.m */,
 				CD47171D2110536400401169 /* MPMImageTouchView.h */,
 				CD4717292110536400401169 /* MPMImageTouchView.m */,
-				CD47171E2110536400401169 /* MPMHeaderRefreshView */,
+				CD4717202110536400401169 /* MPMTableHeaderView.h */,
+				CD47172B2110536400401169 /* MPMTableHeaderView.m */,
+				CDE1CFB2217C1F9F0047CF85 /* NoMessageView */,
 				CD4717212110536400401169 /* PicerView */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		CD47171E2110536400401169 /* MPMHeaderRefreshView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = MPMHeaderRefreshView;
 			sourceTree = "<group>";
 		};
 		CD4717212110536400401169 /* PicerView */ = {
@@ -1430,6 +1609,123 @@
 			path = PicerView;
 			sourceTree = "<group>";
 		};
+		CDE1CFB2217C1F9F0047CF85 /* NoMessageView */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1CFB4217C1F9F0047CF85 /* MPMOfflineView.h */,
+				CDE1CFB6217C1F9F0047CF85 /* MPMOfflineView.m */,
+				CDE1CFB3217C1F9F0047CF85 /* MPMNoMessageView.h */,
+				CDE1CFB5217C1F9F0047CF85 /* MPMNoMessageView.m */,
+			);
+			path = NoMessageView;
+			sourceTree = "<group>";
+		};
+		CDE1CFFD217C29A80047CF85 /* AttendanceSetting */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1D029217C2A400047CF85 /* Model */,
+				CD4716C52110536300401169 /* MPMAttendenceSettingViewController.h */,
+				CD4716E42110536300401169 /* MPMAttendenceSettingViewController.m */,
+				CD4716B62110536300401169 /* CreateOrangeClass */,
+				CD4716BD2110536300401169 /* SettingTime */,
+				CD4716C72110536300401169 /* ClassSetting */,
+				CD4716D62110536300401169 /* SettingCard */,
+			);
+			path = AttendanceSetting;
+			sourceTree = "<group>";
+		};
+		CDE1CFFE217C29F80047CF85 /* ProcessSetting */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1D009217C29F80047CF85 /* MPMProcessSettingViewController.h */,
+				CDE1D000217C29F80047CF85 /* MPMProcessSettingViewController.m */,
+				CDE1CFFF217C29F80047CF85 /* MPMProcessSettingCommomViewController.h */,
+				CDE1D001217C29F80047CF85 /* MPMProcessSettingCommomViewController.m */,
+				CDE1D002217C29F80047CF85 /* Model */,
+				CDE1D00A217C29F80047CF85 /* Views */,
+			);
+			path = ProcessSetting;
+			sourceTree = "<group>";
+		};
+		CDE1D002217C29F80047CF85 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1D003217C29F80047CF85 /* MPMProcessDef.h */,
+				CDE1D004217C29F80047CF85 /* MPMProcessTaskModel.m */,
+				CDE1D005217C29F80047CF85 /* MPMProcessPeople.m */,
+				CDE1D006217C29F80047CF85 /* MPMProcessDef.m */,
+				CDE1D007217C29F80047CF85 /* MPMProcessPeople.h */,
+				CDE1D008217C29F80047CF85 /* MPMProcessTaskModel.h */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		CDE1D00A217C29F80047CF85 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1D00B217C29F80047CF85 /* MPMProcessSettingTableViewCell.m */,
+				CDE1D00C217C29F80047CF85 /* MPMTaskApplyersScrollView.h */,
+				CDE1D00D217C29F80047CF85 /* MPMTaskContentView.m */,
+				CDE1D00E217C29F80047CF85 /* MPMProcessHeaderView.h */,
+				CDE1D00F217C29F80047CF85 /* MPMTaskEditView.m */,
+				CDE1D010217C29F80047CF85 /* MPMProcessSettingTableViewCell.h */,
+				CDE1D011217C29F80047CF85 /* MPMTaskApplyersScrollView.m */,
+				CDE1D012217C29F80047CF85 /* MPMTaskContentView.h */,
+				CDE1D013217C29F80047CF85 /* MPMTaskEditView.h */,
+				CDE1D014217C29F80047CF85 /* MPMProcessHeaderView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CDE1D029217C2A400047CF85 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1D02B217C2A400047CF85 /* MPMAttendanceSettingModel.h */,
+				CDE1D030217C2A400047CF85 /* MPMAttendanceSettingModel.m */,
+				CDE1D02A217C2A400047CF85 /* MPMObjListModel.h */,
+				CDE1D02E217C2A400047CF85 /* MPMObjListModel.m */,
+				CDE1D031217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.h */,
+				CDE1D02D217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.m */,
+				CDE1D02F217C2A400047CF85 /* MPMSignTimeSections.h */,
+				CDE1D02C217C2A400047CF85 /* MPMSignTimeSections.m */,
+			);
+			name = Model;
+			path = ../../../../../../../MPMAtendencce/MPMAtendence/Controllers/AttendenceSettings/Controllers/AttendanceSetting/Model;
+			sourceTree = "<group>";
+		};
+		CDE1D042217C2AED0047CF85 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1D043217C2AFF0047CF85 /* MPMSearchTableViewCell.h */,
+				CDE1D044217C2AFF0047CF85 /* MPMSearchTableViewCell.m */,
+				CD4716BF2110536300401169 /* MPMSettingSwitchTableViewCell.h */,
+				CD4716C32110536300401169 /* MPMSettingSwitchTableViewCell.m */,
+				CDE1D047217C2B200047CF85 /* MPMSettingClassListTableViewCell.h */,
+				CDE1D048217C2B200047CF85 /* MPMSettingClassListTableViewCell.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CDE1D0A3217C53FB0047CF85 /* MPMRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1D0A4217C54070047CF85 /* MPMRefreshFooter.h */,
+				CDE1D0A5217C54070047CF85 /* MPMRefreshFooter.m */,
+			);
+			path = MPMRefresh;
+			sourceTree = "<group>";
+		};
+		CDE1D0B0217C58ED0047CF85 /* MPMRoundPeople */ = {
+			isa = PBXGroup;
+			children = (
+				CDE1D0B1217C58FC0047CF85 /* MPMRoundPeopleView.h */,
+				CDE1D0B4217C58FD0047CF85 /* MPMRoundPeopleView.m */,
+				CDE1D0B2217C58FC0047CF85 /* MPMRoundPeopleButton.h */,
+				CDE1D0B3217C58FC0047CF85 /* MPMRoundPeopleButton.m */,
+			);
+			path = MPMRoundPeople;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1437,37 +1733,45 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDE1D07A217C2F330047CF85 /* MPMHiddenTableViewDeleteCell.h in Headers */,
 				CD4718222110536C00401169 /* MPMLoginViewController.h in Headers */,
+				CDE1CFCB217C218B0047CF85 /* MPMDealingBorderButton.h in Headers */,
 				CD47182A2110539100401169 /* MPMURLSessionManager.h in Headers */,
+				CDE1D022217C29F80047CF85 /* MPMProcessHeaderView.h in Headers */,
 				CD47177B2110536400401169 /* MPMAttendenceModel.h in Headers */,
 				CD47188F211053CF00401169 /* MPMMasonry.h in Headers */,
 				CD4717F82110536400401169 /* MPMAttendenceSetTableViewCell.h in Headers */,
-				CD4717632110536400401169 /* MPMCommomDealingGetPeopleTableViewCell.h in Headers */,
+				CDE1D0A6217C54070047CF85 /* MPMRefreshFooter.h in Headers */,
 				CD4717462110536400401169 /* MPMMapSelectTableViewCell.h in Headers */,
 				CD4717ED2110536400401169 /* MPMIntergralDefaultData.h in Headers */,
 				CD4717F22110536400401169 /* MPMIntergralScoreView.h in Headers */,
 				CD4717EE2110536400401169 /* MPMIntergralModel.h in Headers */,
 				CD47174D2110536400401169 /* MPMHiddenTableViewDataSourceDelegate.h in Headers */,
-				CD4717642110536400401169 /* MPMGetPeopleTableViewCell.h in Headers */,
+				CDE1D062217C2F0D0047CF85 /* MPMCausationTypeData.h in Headers */,
 				CD471881211053CF00401169 /* MPMViewConstraint.h in Headers */,
 				CD47188D211053CF00401169 /* MPMConstraint.h in Headers */,
 				CD47187F211053CF00401169 /* MPMConstraintMaker.h in Headers */,
 				CD4718A5211053DE00401169 /* MPMRadialGradientLayer.h in Headers */,
 				CD47188E211053CF00401169 /* MPMViewAttribute.h in Headers */,
-				CD4717542110536400401169 /* MPMDealingModel.h in Headers */,
 				CD47178E2110536400401169 /* MPMCalendarWeekView.h in Headers */,
 				CD4718342110539F00401169 /* MPMSecurityPolicy.h in Headers */,
 				CD4717982110536400401169 /* MPMApprovalProcessViewController.h in Headers */,
 				CD4717CD2110536400401169 /* MPMClassSettingViewController.h in Headers */,
 				CD47181D2110536400401169 /* MPMImageView.h in Headers */,
 				CD4717A72110536400401169 /* MPMApprovalProcessTableViewCell.h in Headers */,
+				CDE1CFF9217C272E0047CF85 /* MPMProcessDetailDeliversView.h in Headers */,
 				CD4717412110536400401169 /* UIButton+MPMExtention.h in Headers */,
 				CD4717742110536400401169 /* MPMApplyAdditionViewController.h in Headers */,
-				CD4717572110536400401169 /* MPMCausationTypeData.h in Headers */,
+				CDE1CFFA217C272E0047CF85 /* MPMProcessDetailApprovalTriangleView.h in Headers */,
 				CD4717342110536400401169 /* UIImage+MPMExtention.h in Headers */,
 				CD4718252110538900401169 /* MPMNetworking.h in Headers */,
+				CDE1D049217C2B200047CF85 /* MPMSettingClassListTableViewCell.h in Headers */,
+				CDE1CFD8217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.h in Headers */,
+				CDE1D088217C2F330047CF85 /* MPMCommomDealingMultiSelectTableViewCell.h in Headers */,
+				CDE1D09A217C2F690047CF85 /* MPMSelectDepartmentViewController.h in Headers */,
+				CDE1CFB7217C1F9F0047CF85 /* MPMNoMessageView.h in Headers */,
+				CDE1D080217C2F330047CF85 /* MPMBaseDealingHeader.h in Headers */,
 				CD4717402110536400401169 /* NSMutableArray+MPMExtention.h in Headers */,
-				CD4717932110536400401169 /* MPMApprovalCausationModel.h in Headers */,
 				CD47178D2110536400401169 /* MPMCalendarScrollView.h in Headers */,
 				CD4718162110536400401169 /* MPMAttendencePickerView.h in Headers */,
 				CD47174B2110536400401169 /* MPMSigninDateView.h in Headers */,
@@ -1476,124 +1780,155 @@
 				CD4717822110536400401169 /* MPMAttendenceSigninViewController.h in Headers */,
 				CD47177A2110536400401169 /* MPMAttendencePickerTypeModel.h in Headers */,
 				CD4717D72110536400401169 /* MPMClassSettingSelectWeekTableViewCell.h in Headers */,
+				CDE1CFB0217C1C1A0047CF85 /* OauthUser+CoreDataClass.h in Headers */,
+				CDE1CFFC217C272E0047CF85 /* MPMProcessDetailApprovalView.h in Headers */,
 				CD47172F2110536400401169 /* MPMSessionManager.h in Headers */,
 				CD471863211053C100401169 /* UIRefreshControl+MPMNetworking.h in Headers */,
 				CD4717CA2110536400401169 /* MPMSettingTimeViewController.h in Headers */,
-				CD4717C02110536400401169 /* MPMSchedulingEmplyoeeModel.h in Headers */,
+				CDE1D027217C29F80047CF85 /* MPMTaskEditView.h in Headers */,
 				CD4717AE2110536400401169 /* MPMAttendenceStatisticViewController.h in Headers */,
-				CD47176D2110536400401169 /* MPMDepartEmployeeHelper.h in Headers */,
+				CDE1CFDF217C26B30047CF85 /* MPMProcessMyMetterModel.h in Headers */,
 				CD4717D92110536400401169 /* MPMSettingCardAddressWifiModel.h in Headers */,
 				CD47179A2110536400401169 /* MPMApprovalProcessDetailViewController.h in Headers */,
 				CD47181B2110536400401169 /* MPMButton.h in Headers */,
 				CD4717D32110536400401169 /* MPMClassSettingImageTableViewCell.h in Headers */,
 				CD47177E2110536400401169 /* MPMAttendenceOneMonthModel.h in Headers */,
+				CDE1CFF7217C272E0047CF85 /* MPMProcessDetailApprovalNodeView.h in Headers */,
 				CD4717912110536400401169 /* MPMApprovalFirstSectionModel.h in Headers */,
+				CDE1D03C217C2AD50047CF85 /* MPMSettingClassListViewController.h in Headers */,
+				CDE1D098217C2F690047CF85 /* MPMSearchPopAnimate.h in Headers */,
 				CD47178A2110536400401169 /* MPMCalendarButton.h in Headers */,
+				CDE1D015217C29F80047CF85 /* MPMProcessSettingCommomViewController.h in Headers */,
 				CD4718122110536400401169 /* MPMImageTouchView.h in Headers */,
 				CD4717772110536400401169 /* MPMLerakageCardModel.h in Headers */,
 				CD4717752110536400401169 /* MPMApplyImageView.h in Headers */,
 				CD471856211053C100401169 /* MPMNetworkActivityIndicatorManager.h in Headers */,
-				CD4717722110536400401169 /* MPMSearchPopAnimate.h in Headers */,
+				CDE1CFDC217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.h in Headers */,
+				CDE1D037217C2A400047CF85 /* MPMSignTimeSections.h in Headers */,
+				CDE1D082217C2F330047CF85 /* MPMCommomDealingAddCellTableViewCell.h in Headers */,
+				CDE1D09E217C2F690047CF85 /* MPMSearchDepartViewController.h in Headers */,
 				CD471885211053CF00401169 /* NSArray+MPMAdditions.h in Headers */,
 				CD4717442110536400401169 /* MPMAttendenceMapViewController.h in Headers */,
+				CDE1CFAF217C1C1A0047CF85 /* OauthUser+CoreDataProperties.h in Headers */,
 				CD4717A92110536400401169 /* MPMApprovalProcessDetailTableViewCell.h in Headers */,
 				CD4718312110539600401169 /* MPMNetworkReachabilityManager.h in Headers */,
+				CDE1D039217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.h in Headers */,
 				CD47179B2110536400401169 /* MPMSiderDrawerCollectionReusableView.h in Headers */,
 				CD47183C211053A600401169 /* MPMURLRequestSerialization.h in Headers */,
+				CDE1D020217C29F80047CF85 /* MPMTaskApplyersScrollView.h in Headers */,
 				CD4717EA2110536400401169 /* MPMIntergralSettingViewController.h in Headers */,
 				CD4718A7211053DE00401169 /* MPMProgressHUD.h in Headers */,
+				CDE1D032217C2A400047CF85 /* MPMObjListModel.h in Headers */,
 				CD471853211053C100401169 /* UIButton+MPMNetworking.h in Headers */,
+				CDE1CFA9217C1A620047CF85 /* MPMInterfaceConst.h in Headers */,
 				CD4717362110536400401169 /* NSString+MPMAttention.h in Headers */,
-				CD4717682110536400401169 /* MPMSearchPushAnimate.h in Headers */,
 				CD4717B12110536400401169 /* MPMStatisticTableViewCell.h in Headers */,
 				CD47174F2110536400401169 /* MPMCommomGetPeopleViewController.h in Headers */,
 				CD471894211053CF00401169 /* MPMLayoutConstraint.h in Headers */,
-				CD47175A2110536400401169 /* MPMCommomDealingReasonTableViewCell.h in Headers */,
 				CD4717872110536400401169 /* MPMRepairSigninAddTimeTableViewCell.h in Headers */,
 				CD4717F72110536400401169 /* MPMAttendenceBaseTableViewCell.h in Headers */,
+				CDE1D05F217C2F0D0047CF85 /* MPMDealingModel.h in Headers */,
+				CDE1D064217C2F0D0047CF85 /* MPMGetPeopleModel.h in Headers */,
 				CD4717322110536400401169 /* MPMShareUser.h in Headers */,
 				CD4717842110536400401169 /* MPMAttendenceTableViewCell.h in Headers */,
+				CDE1CFEC217C26D30047CF85 /* MPMProcessDetailList.h in Headers */,
 				CD4718AB2110545900401169 /* MPMAttendanceHeader.h in Headers */,
-				CD4717552110536400401169 /* MPMCausationDetailModel.h in Headers */,
+				CDE1D051217C2CBD0047CF85 /* MPMAuthorityRoleModel.h in Headers */,
 				CD4718192110536400401169 /* MPMCustomDatePickerView.h in Headers */,
-				CD4717BB2110536400401169 /* MPMSchedulingDepartmentsModel.h in Headers */,
 				CD4717482110536400401169 /* JZLocationConverter.h in Headers */,
 				CD4717D52110536400401169 /* MPMClassSettingTableViewCell.h in Headers */,
 				CD4717332110536400401169 /* NSDateFormatter+MPMExtention.h in Headers */,
+				CDE1CFD4217C23E70047CF85 /* MPMAttendenceExceptionModel.h in Headers */,
 				CD4717A12110536400401169 /* MPMSiderDrawerCollectionViewTimeCell.h in Headers */,
-				CD47176B2110536400401169 /* MPMSearchDepartViewController.h in Headers */,
+				CDE1CFCF217C23E00047CF85 /* MPMAttendenceManageModel.h in Headers */,
+				CDE1D083217C2F330047CF85 /* MPMCommomDealingReasonTableViewCell.h in Headers */,
 				CD4718062110536400401169 /* MPMMainTabBarViewController.h in Headers */,
 				CD4718A4211053DE00401169 /* MPMIndefiniteAnimatedView.h in Headers */,
 				CD4717E42110536400401169 /* MPMAuthorityTableViewCell.h in Headers */,
-				CD4717902110536400401169 /* MPMApprovalCausationDetailModel.h in Headers */,
+				CDE1D024217C29F80047CF85 /* MPMProcessSettingTableViewCell.h in Headers */,
 				CD471852211053C100401169 /* MPMImageDownloader.h in Headers */,
 				CD4717E92110536400401169 /* MPMAuthoritySettingViewController.h in Headers */,
 				CD47180C2110536400401169 /* MPMBaseViewController.h in Headers */,
 				CD4717832110536400401169 /* MPMRepairSigninAddDealTableViewCell.h in Headers */,
+				CDE1D060217C2F0D0047CF85 /* MPMCausationDetailModel.h in Headers */,
 				CD4717B72110536400401169 /* MPMSettingSwitchValueModel.h in Headers */,
 				CD47185C211053C100401169 /* UIWebView+MPMNetworking.h in Headers */,
+				CDE1D084217C2F330047CF85 /* MPMGetPeopleTableViewCell.h in Headers */,
+				CDE1D0B5217C58FD0047CF85 /* MPMRoundPeopleView.h in Headers */,
 				CD4717B42110536400401169 /* MPMDepartScrollView.h in Headers */,
+				CDE1D045217C2AFF0047CF85 /* MPMSearchTableViewCell.h in Headers */,
 				CD471855211053C100401169 /* UIImageView+MPMNetworking.h in Headers */,
 				CD47177F2110536400401169 /* MPMRepairSigninViewController.h in Headers */,
 				CD4718052110536400401169 /* MPMBaseTableViewCell.h in Headers */,
-				CD4717702110536400401169 /* MPMSelectDepartmentViewController.h in Headers */,
-				CD4717652110536400401169 /* MPMCommomDealingAddCellTableViewCell.h in Headers */,
+				CDE1D056217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.h in Headers */,
 				CD47173D2110536400401169 /* UILabel+MPMExtention.h in Headers */,
 				CD4717A82110536400401169 /* MPMSideDrawerView.h in Headers */,
+				CDE1D026217C29F80047CF85 /* MPMTaskContentView.h in Headers */,
+				CDE1D01D217C29F80047CF85 /* MPMProcessTaskModel.h in Headers */,
 				CD4717CE2110536400401169 /* MPMClassSettingCycleModel.h in Headers */,
 				CD4717A02110536400401169 /* MPMDetailTimeMessageView.h in Headers */,
 				CD4717CB2110536400401169 /* MPMAttendenceSettingViewController.h in Headers */,
 				CD4717DC2110536400401169 /* MPMAddWiFiViewController.h in Headers */,
 				CD4717C62110536400401169 /* MPMSettingSwitchTableViewCell.h in Headers */,
+				CDE1D097217C2F690047CF85 /* MPMSearchPushAnimate.h in Headers */,
+				CDE1D081217C2F330047CF85 /* MPMCommomDealingGetPeopleTableViewCell.h in Headers */,
 				CD471880211053CF00401169 /* MPMUtilities.h in Headers */,
 				CD4718152110536400401169 /* MPMDatePickerView.h in Headers */,
 				CD47182D2110539100401169 /* MPMHTTPSessionManager.h in Headers */,
+				CDE1D040217C2AEA0047CF85 /* MPMSettingSearchTimeViewController.h in Headers */,
+				CDE1CFB8217C1F9F0047CF85 /* MPMOfflineView.h in Headers */,
 				CD4718142110536400401169 /* MPMTableHeaderView.h in Headers */,
 				CD47185D211053C100401169 /* UIImage+MPMNetworking.h in Headers */,
 				CD47188B211053CF00401169 /* MPMConstraint+Private.h in Headers */,
-				CD4717602110536400401169 /* MPMCommomDealingTableViewCell.h in Headers */,
 				CD4717E82110536400401169 /* MPMAuthorityModel.h in Headers */,
+				CDE1D01E217C29F80047CF85 /* MPMProcessSettingViewController.h in Headers */,
 				CD47180F2110536400401169 /* ColorConstant.h in Headers */,
+				CDE1D089217C2F330047CF85 /* MPMCommomDealingTableViewCell.h in Headers */,
 				CD47179F2110536400401169 /* MPMApprovalProcessHeaderSectionView.h in Headers */,
 				CD4717C42110536400401169 /* MPMCreateOrangeTableViewCell.h in Headers */,
 				CD471854211053C100401169 /* MPMAutoPurgingImageCache.h in Headers */,
-				CD4717F62110536400401169 /* MPMAttendenceSettingTableViewCell.h in Headers */,
+				CDE1CFA6217C18F20047CF85 /* MPMOauthUser.h in Headers */,
 				CD471887211053CF00401169 /* View+MPMAdditions.h in Headers */,
+				CDE1D04D217C2B680047CF85 /* MPMSettingClassListModel.h in Headers */,
 				CD4717E02110536400401169 /* MPMSettingCardTableViewCell.h in Headers */,
 				CD47185B211053C100401169 /* UIActivityIndicatorView+MPMNetworking.h in Headers */,
+				CDE1D0B6217C58FD0047CF85 /* MPMRoundPeopleButton.h in Headers */,
 				CD4717C82110536400401169 /* MPMSettingTimeModel.h in Headers */,
 				CD4717DB2110536400401169 /* MPMSettingCardViewController.h in Headers */,
+				CDE1CFE9217C26D30047CF85 /* MPMTaskInstGroups.h in Headers */,
+				CDE1D085217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.h in Headers */,
 				CD47180E2110536400401169 /* MPMIntergralConfig.h in Headers */,
 				CD471884211053CF00401169 /* ViewController+MPMAdditions.h in Headers */,
+				CDE1D01C217C29F80047CF85 /* MPMProcessPeople.h in Headers */,
 				CD47172E2110536400401169 /* MPMCheckRegexTool.h in Headers */,
+				CDE1D09B217C2F690047CF85 /* MPMSelectDepartmentTableViewCell.h in Headers */,
 				CD471883211053CF00401169 /* NSArray+MPMShorthandAdditions.h in Headers */,
 				CD4717A32110536400401169 /* MPMSiderDrawerCollectionViewButtonCell.h in Headers */,
 				CD47185F211053C100401169 /* UIKit+MPMNetworking.h in Headers */,
 				CD4717E12110536400401169 /* MPMSettingCardDetailTableViewCell.h in Headers */,
 				CD4717D22110536400401169 /* MPMClassSettingSelectWeekView.h in Headers */,
 				CD4718102110536400401169 /* MPMApplyAdditionConfig.h in Headers */,
-				CD47175E2110536400401169 /* MPMHiddenTableViewDeleteCell.h in Headers */,
 				CD4718042110536400401169 /* MPMBaseNavigationBar.h in Headers */,
+				CDE1D018217C29F80047CF85 /* MPMProcessDef.h in Headers */,
 				CD471893211053CF00401169 /* NSLayoutConstraint+MPMDebugAdditions.h in Headers */,
 				CD4717F32110536400401169 /* MPMIntergralSettingTableViewCell.h in Headers */,
-				CD4717962110536400401169 /* MPMApprovalFetchDetailModel.h in Headers */,
 				CD47183D211053A600401169 /* MPMURLResponseSerialization.h in Headers */,
 				CD4718022110536400401169 /* MPMBaseModel.h in Headers */,
-				CD4717562110536400401169 /* MPMGetPeopleModel.h in Headers */,
+				CDE1D033217C2A400047CF85 /* MPMAttendanceSettingModel.h in Headers */,
 				CD47174E2110536400401169 /* MPMBaseDealingViewController.h in Headers */,
 				CD471882211053CF00401169 /* View+MPMShorthandAdditions.h in Headers */,
 				CD4718A3211053DE00401169 /* MPMProgressAnimatedView.h in Headers */,
+				CDE1D09F217C2F690047CF85 /* MPMDepartEmployeeHelper.h in Headers */,
 				CD4717B82110536400401169 /* MPMDepartment.h in Headers */,
 				CD4718082110536400401169 /* MPMBaseNavigationController.h in Headers */,
 				CD471896211053CF00401169 /* MPMCompositeConstraint.h in Headers */,
-				CD4717692110536400401169 /* MPMSelectDepartmentTableViewCell.h in Headers */,
 				CD4717AD2110536400401169 /* MPMStatisticModel.h in Headers */,
 				CD4718012110536400401169 /* User+CoreDataProperties.h in Headers */,
 				CD4717422110536400401169 /* NSObject+MPMExtention.h in Headers */,
 				CD4717FF2110536400401169 /* MPMCoreDataManager.h in Headers */,
 				CD47173B2110536400401169 /* NSDate+MPMExtention.h in Headers */,
+				CDE1CFE7217C26D30047CF85 /* MPMProcessInst.h in Headers */,
 				CD4717CC2110536400401169 /* MPMAttendenceBaseSettingViewController.h in Headers */,
-				CD4717BA2110536400401169 /* MPMAttendenceSettingModel.h in Headers */,
 				CD4717B22110536400401169 /* MPMStatisticDepartmentTableViewCell.h in Headers */,
 				CD47185A211053C100401169 /* UIProgressView+MPMNetworking.h in Headers */,
 				CD4717452110536400401169 /* MPMPlaceInfoModel.h in Headers */,
@@ -1669,59 +2004,73 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD4717DF2110536400401169 /* MPMSettingCardDetailTableViewCell.m in Sources */,
+				CDE1D0B8217C58FD0047CF85 /* MPMRoundPeopleView.m in Sources */,
 				CD4717F52110536400401169 /* MPMAttendenceSetTableViewCell.m in Sources */,
-				CD4717952110536400401169 /* MPMApprovalCausationDetailModel.m in Sources */,
 				CD471895211053CF00401169 /* NSLayoutConstraint+MPMDebugAdditions.m in Sources */,
+				CDE1D086217C2F330047CF85 /* MPMCommomDealingReasonTableViewCell.m in Sources */,
+				CDE1D041217C2AEA0047CF85 /* MPMSettingSearchTimeViewController.m in Sources */,
 				CD47174A2110536400401169 /* MPMPlaceInfoModel.m in Sources */,
 				CD47174C2110536400401169 /* MPMMapSelectTableViewCell.m in Sources */,
 				CD4717802110536400401169 /* MPMAttendenceSigninViewController.m in Sources */,
 				CD47182C2110539100401169 /* MPMURLSessionManager.m in Sources */,
+				CDE1D052217C2CBD0047CF85 /* MPMAuthorityRoleModel.m in Sources */,
 				CD47188C211053CF00401169 /* MPMCompositeConstraint.m in Sources */,
 				CD47177C2110536400401169 /* MPMLerakageCardModel.m in Sources */,
+				CDE1CFEB217C26D30047CF85 /* MPMProcessDetailList.m in Sources */,
 				CD4717862110536400401169 /* MPMRepairSigninAddDealTableViewCell.m in Sources */,
 				CD4717D12110536400401169 /* MPMClassSettingTableViewCell.m in Sources */,
 				CD4717E72110536400401169 /* MPMAuthorityTableViewCell.m in Sources */,
+				CDE1D0A1217C2F690047CF85 /* MPMSelectDepartmentViewController.m in Sources */,
 				CD4717D02110536400401169 /* MPMClassSettingViewController.m in Sources */,
 				CD47172D2110536400401169 /* MPMCheckRegexTool.m in Sources */,
 				CD47185E211053C100401169 /* UIButton+MPMNetworking.m in Sources */,
 				CD4717BD2110536400401169 /* MPMSettingSwitchValueModel.m in Sources */,
 				CD47179D2110536400401169 /* MPMSideDrawerView.m in Sources */,
-				CD4717712110536400401169 /* MPMSearchDepartViewController.m in Sources */,
 				CD4717A42110536400401169 /* MPMSiderDrawerCollectionReusableView.m in Sources */,
-				CD47175D2110536400401169 /* MPMCommomDealingGetPeopleTableViewCell.m in Sources */,
+				CDE1CFD0217C23E00047CF85 /* MPMAttendenceManageModel.m in Sources */,
+				CDE1D08A217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.m in Sources */,
+				CDE1D019217C29F80047CF85 /* MPMProcessTaskModel.m in Sources */,
 				CD4717F12110536400401169 /* MPMIntergralScoreView.m in Sources */,
 				CD4718072110536400401169 /* MPMBaseViewController.m in Sources */,
-				CD47176F2110536400401169 /* MPMSearchPushAnimate.m in Sources */,
+				CDE1D07E217C2F330047CF85 /* MPMCommomDealingAddCellTableViewCell.m in Sources */,
 				CD4717852110536400401169 /* MPMRepairSigninAddTimeTableViewCell.m in Sources */,
+				CDE1D0A2217C2F690047CF85 /* MPMSelectDepartmentTableViewCell.m in Sources */,
 				CD4717FD2110536400401169 /* User+CoreDataProperties.m in Sources */,
-				CD4717922110536400401169 /* MPMApprovalFetchDetailModel.m in Sources */,
-				CD4717B62110536400401169 /* MPMSchedulingDepartmentsModel.m in Sources */,
 				CD4717E62110536400401169 /* MPMAuthoritySettingViewController.m in Sources */,
 				CD4717DA2110536400401169 /* MPMSettingCardAddressWifiModel.m in Sources */,
-				CD4717BF2110536400401169 /* MPMAttendenceSettingModel.m in Sources */,
 				CD47180B2110536400401169 /* MPMBaseNavigationBar.m in Sources */,
 				CD4717382110536400401169 /* NSMutableArray+MPMExtention.m in Sources */,
 				CD4717972110536400401169 /* MPMApprovalProcessDetailViewController.m in Sources */,
+				CDE1CFA7217C18F20047CF85 /* MPMOauthUser.m in Sources */,
 				CD4717302110536400401169 /* MPMShareUser.m in Sources */,
+				CDE1D01A217C29F80047CF85 /* MPMProcessPeople.m in Sources */,
+				CDE1D0A0217C2F690047CF85 /* MPMSearchPushAnimate.m in Sources */,
 				CD4718A1211053DE00401169 /* MPMProgressAnimatedView.m in Sources */,
 				CD4717BE2110536400401169 /* MPMDepartment.m in Sources */,
 				CD47183B211053A600401169 /* MPMURLResponseSerialization.m in Sources */,
+				CDE1D025217C29F80047CF85 /* MPMTaskApplyersScrollView.m in Sources */,
 				CD4717AF2110536400401169 /* MPMStatisticDepartmentTableViewCell.m in Sources */,
+				CDE1D09D217C2F690047CF85 /* MPMSearchDepartViewController.m in Sources */,
 				CD4717E52110536400401169 /* MPMAuthorityModel.m in Sources */,
+				CDE1D046217C2AFF0047CF85 /* MPMSearchTableViewCell.m in Sources */,
 				CD4717FB2110536400401169 /* MPMCoreDataManager.m in Sources */,
+				CDE1D099217C2F690047CF85 /* MPMSearchPopAnimate.m in Sources */,
 				CD4717762110536400401169 /* MPMApplyImageView.m in Sources */,
 				CD4718092110536400401169 /* MPMBaseModel.m in Sources */,
-				CD47178F2110536400401169 /* MPMApprovalCausationModel.m in Sources */,
+				CDE1D07C217C2F330047CF85 /* MPMCommomDealingGetPeopleTableViewCell.m in Sources */,
 				CD4717582110536400401169 /* MPMHiddenTableViewDataSourceDelegate.m in Sources */,
-				CD4717B92110536400401169 /* MPMSchedulingEmplyoeeModel.m in Sources */,
 				CD4717C32110536400401169 /* MPMCreateOrangeTableViewCell.m in Sources */,
 				CD471857211053C100401169 /* UIImageView+MPMNetworking.m in Sources */,
 				CD471890211053CF00401169 /* MPMConstraint.m in Sources */,
+				CDE1D09C217C2F690047CF85 /* MPMDepartEmployeeHelper.m in Sources */,
 				CD4717992110536400401169 /* MPMApprovalProcessViewController.m in Sources */,
 				CD47181A2110536400401169 /* MPMAttendencePickerView.m in Sources */,
 				CD4717C12110536400401169 /* MPMCreateOrangeClassViewController.m in Sources */,
 				CD4717A62110536400401169 /* MPMApprovalProcessHeaderSectionView.m in Sources */,
 				CD4717B32110536400401169 /* MPMStatisticTableViewCell.m in Sources */,
+				CDE1CFEA217C26D30047CF85 /* MPMProcessInst.m in Sources */,
+				CDE1D04A217C2B200047CF85 /* MPMSettingClassListTableViewCell.m in Sources */,
+				CDE1CFE0217C26B30047CF85 /* MPMProcessMyMetterModel.m in Sources */,
 				CD4717372110536400401169 /* NSDate+MPMExtention.m in Sources */,
 				CD47179C2110536400401169 /* MPMSiderDrawerCollectionViewButtonCell.m in Sources */,
 				CD4717792110536400401169 /* MPMAttendenceOneMonthModel.m in Sources */,
@@ -1735,16 +2084,19 @@
 				CD4717FE2110536400401169 /* User+CoreDataClass.m in Sources */,
 				CD4717AB2110536400401169 /* MPMAttendenceStatisticViewController.m in Sources */,
 				CD4717EB2110536400401169 /* MPMIntergralDefaultData.m in Sources */,
+				CDE1D028217C29F80047CF85 /* MPMProcessHeaderView.m in Sources */,
 				CD47180A2110536400401169 /* MPMBaseTableViewCell.m in Sources */,
 				CD4717EC2110536400401169 /* MPMIntergralModel.m in Sources */,
 				CD471859211053C100401169 /* UIProgressView+MPMNetworking.m in Sources */,
 				CD4717F02110536400401169 /* MPMIntergralSettingTableViewCell.m in Sources */,
 				CD4717432110536400401169 /* JZLocationConverter.m in Sources */,
+				CDE1D017217C29F80047CF85 /* MPMProcessSettingCommomViewController.m in Sources */,
 				CD4718032110536400401169 /* MPMBaseNavigationController.m in Sources */,
+				CDE1D066217C2F0D0047CF85 /* MPMDealingModel.m in Sources */,
 				CD4717D62110536400401169 /* MPMClassSettingSelectWeekView.m in Sources */,
 				CD47173E2110536400401169 /* UIImage+MPMExtention.m in Sources */,
+				CDE1D03D217C2AD50047CF85 /* MPMSettingClassListViewController.m in Sources */,
 				CD471865211053C100401169 /* MPMImageDownloader.m in Sources */,
-				CD4717612110536400401169 /* MPMCommomDealingReasonTableViewCell.m in Sources */,
 				CD4718A2211053DE00401169 /* MPMIndefiniteAnimatedView.m in Sources */,
 				CD47180D2110536400401169 /* MPMMainTabBarViewController.m in Sources */,
 				CD4717FC2110536400401169 /* MPMAtendence.xcdatamodeld in Sources */,
@@ -1752,8 +2104,11 @@
 				CD4717C52110536400401169 /* MPMSettingTimeViewController.m in Sources */,
 				CD47178C2110536400401169 /* MPMCalendarButton.m in Sources */,
 				CD4717E22110536400401169 /* MPMSettingCardTableViewCell.m in Sources */,
-				CD4717F92110536400401169 /* MPMAttendenceSettingTableViewCell.m in Sources */,
+				CDE1CFD3217C23E70047CF85 /* MPMAttendenceExceptionModel.m in Sources */,
+				CDE1D0A7217C54070047CF85 /* MPMRefreshFooter.m in Sources */,
+				CDE1CFE8217C26D30047CF85 /* MPMTaskInstGroups.m in Sources */,
 				CD47181E2110536400401169 /* MPMTableHeaderView.m in Sources */,
+				CDE1D023217C29F80047CF85 /* MPMTaskEditView.m in Sources */,
 				CD4718182110536400401169 /* MPMDatePickerView.m in Sources */,
 				CD471886211053CF00401169 /* MPMViewConstraint.m in Sources */,
 				CD47181C2110536400401169 /* MPMImageTouchView.m in Sources */,
@@ -1763,12 +2118,18 @@
 				CD471858211053C100401169 /* MPMAutoPurgingImageCache.m in Sources */,
 				CD471862211053C100401169 /* UIActivityIndicatorView+MPMNetworking.m in Sources */,
 				CD4717732110536400401169 /* MPMApplyAdditionViewController.m in Sources */,
+				CDE1D07B217C2F330047CF85 /* MPMCommomDealingTableViewCell.m in Sources */,
 				CD4718232110536C00401169 /* MPMLoginViewController.m in Sources */,
+				CDE1D036217C2A400047CF85 /* MPMObjListModel.m in Sources */,
+				CDE1D01B217C29F80047CF85 /* MPMProcessDef.m in Sources */,
 				CD4717FA2110536400401169 /* MPMAttendenceBaseTableViewCell.m in Sources */,
+				CDE1D079217C2F330047CF85 /* MPMBaseDealingHeader.m in Sources */,
 				CD4717E32110536400401169 /* MPMAttendenceSettingViewController.m in Sources */,
-				CD47175B2110536400401169 /* MPMCommomDealingTableViewCell.m in Sources */,
+				CDE1D063217C2F0D0047CF85 /* MPMGetPeopleModel.m in Sources */,
 				CD4717782110536400401169 /* MPMAttendenceModel.m in Sources */,
+				CDE1CFDB217C26A10047CF85 /* MPMApprovalProcessNodeDealingViewController.m in Sources */,
 				CD47177D2110536400401169 /* MPMAttendencePickerTypeModel.m in Sources */,
+				CDE1D038217C2A400047CF85 /* MPMAttendanceSettingModel.m in Sources */,
 				CD471864211053C100401169 /* UIWebView+MPMNetworking.m in Sources */,
 				CD4717942110536400401169 /* MPMApprovalFirstSectionModel.m in Sources */,
 				CD471860211053C100401169 /* MPMNetworkActivityIndicatorManager.m in Sources */,
@@ -1778,45 +2139,57 @@
 				CD4717CF2110536400401169 /* MPMClassSettingCycleModel.m in Sources */,
 				CD4717312110536400401169 /* MPMSessionManager.m in Sources */,
 				CD4717C72110536400401169 /* MPMSettingTimeModel.m in Sources */,
+				CDE1CFB1217C1C1A0047CF85 /* OauthUser+CoreDataClass.m in Sources */,
+				CDE1D021217C29F80047CF85 /* MPMTaskContentView.m in Sources */,
+				CDE1CFFB217C272E0047CF85 /* MPMProcessDetailDeliversView.m in Sources */,
 				CD4717812110536400401169 /* MPMRepairSigninViewController.m in Sources */,
 				CD47173F2110536400401169 /* NSDateFormatter+MPMExtention.m in Sources */,
 				CD4718302110539600401169 /* MPMNetworkReachabilityManager.m in Sources */,
+				CDE1D016217C29F80047CF85 /* MPMProcessSettingViewController.m in Sources */,
+				CDE1D034217C2A400047CF85 /* MPMSignTimeSections.m in Sources */,
 				CD47181F2110536400401169 /* MPMButton.m in Sources */,
 				CD4717D42110536400401169 /* MPMClassSettingSelectWeekTableViewCell.m in Sources */,
+				CDE1D087217C2F330047CF85 /* MPMCommomDealingMultiSelectTableViewCell.m in Sources */,
+				CDE1D0B7217C58FD0047CF85 /* MPMRoundPeopleButton.m in Sources */,
 				CD47182B2110539100401169 /* MPMHTTPSessionManager.m in Sources */,
 				CD4717392110536400401169 /* UIButton+MPMExtention.m in Sources */,
+				CDE1CFD7217C244C0047CF85 /* MPMAttendenceExceptionTableViewCell.m in Sources */,
 				CD471861211053C100401169 /* UIRefreshControl+MPMNetworking.m in Sources */,
 				CD4717A52110536400401169 /* MPMDetailTimeMessageView.m in Sources */,
+				CDE1D055217C2EF40047CF85 /* MPMDealingSeeTimeDetailViewController.m in Sources */,
 				CD47188A211053CF00401169 /* NSArray+MPMAdditions.m in Sources */,
-				CD47175C2110536400401169 /* MPMGetPeopleTableViewCell.m in Sources */,
-				CD47176C2110536400401169 /* MPMSelectDepartmentViewController.m in Sources */,
+				CDE1D065217C2F0D0047CF85 /* MPMCausationDetailModel.m in Sources */,
+				CDE1CFF5217C272E0047CF85 /* MPMProcessDetailApprovalView.m in Sources */,
+				CDE1CFB9217C1F9F0047CF85 /* MPMNoMessageView.m in Sources */,
 				CD4717BC2110536400401169 /* MPMSlotTimeDtosModel.m in Sources */,
 				CD471889211053CF00401169 /* MPMLayoutConstraint.m in Sources */,
 				CD4717472110536400401169 /* MPMSigninDateView.m in Sources */,
-				CD4717672110536400401169 /* MPMDepartEmployeeHelper.m in Sources */,
+				CDE1D07D217C2F330047CF85 /* MPMHiddenTableViewDeleteCell.m in Sources */,
 				CD4717EF2110536400401169 /* MPMIntergralSettingViewController.m in Sources */,
-				CD47175F2110536400401169 /* MPMCommomDealingAddCellTableViewCell.m in Sources */,
-				CD4717532110536400401169 /* MPMGetPeopleModel.m in Sources */,
+				CDE1D061217C2F0D0047CF85 /* MPMCausationTypeData.m in Sources */,
+				CDE1CFCC217C218B0047CF85 /* MPMDealingBorderButton.m in Sources */,
 				CD4717492110536400401169 /* MPMAttendenceMapViewController.m in Sources */,
 				CD471897211053CF00401169 /* View+MPMAdditions.m in Sources */,
+				CDE1D04E217C2B680047CF85 /* MPMSettingClassListModel.m in Sources */,
 				CD4717DE2110536400401169 /* MPMSettingCardViewController.m in Sources */,
 				CD4717C92110536400401169 /* MPMSettingSwitchTableViewCell.m in Sources */,
 				CD4717D82110536400401169 /* MPMClassSettingImageTableViewCell.m in Sources */,
-				CD47176E2110536400401169 /* MPMSelectDepartmentTableViewCell.m in Sources */,
 				CD4718A0211053DE00401169 /* MPMRadialGradientLayer.m in Sources */,
-				CD4717512110536400401169 /* MPMCausationDetailModel.m in Sources */,
 				CD4718A6211053DE00401169 /* MPMProgressHUD.m in Sources */,
+				CDE1CFF8217C272E0047CF85 /* MPMProcessDetailApprovalNodeView.m in Sources */,
 				CD4717AA2110536400401169 /* MPMSiderDrawerCollectionViewTimeCell.m in Sources */,
+				CDE1CFAE217C1C1A0047CF85 /* OauthUser+CoreDataProperties.m in Sources */,
 				CD4718172110536400401169 /* MPMCustomDatePickerView.m in Sources */,
 				CD471888211053CF00401169 /* ViewController+MPMAdditions.m in Sources */,
+				CDE1D01F217C29F80047CF85 /* MPMProcessSettingTableViewCell.m in Sources */,
+				CDE1D035217C2A400047CF85 /* MPMFixedTimeWorkScheduleModel.m in Sources */,
 				CD47183A211053A600401169 /* MPMURLRequestSerialization.m in Sources */,
 				CD47173C2110536400401169 /* NSString+MPMAttention.m in Sources */,
+				CDE1D07F217C2F330047CF85 /* MPMGetPeopleTableViewCell.m in Sources */,
+				CDE1CFF6217C272E0047CF85 /* MPMProcessDetailApprovalTriangleView.m in Sources */,
 				CD4717B02110536400401169 /* MPMDepartScrollView.m in Sources */,
-				CD4717622110536400401169 /* MPMHiddenTableViewDeleteCell.m in Sources */,
-				CD4717502110536400401169 /* MPMDealingModel.m in Sources */,
 				CD4717662110536400401169 /* MPMCommomGetPeopleViewController.m in Sources */,
-				CD47176A2110536400401169 /* MPMSearchPopAnimate.m in Sources */,
-				CD4717522110536400401169 /* MPMCausationTypeData.m in Sources */,
+				CDE1CFBA217C1F9F0047CF85 /* MPMOfflineView.m in Sources */,
 				CD4717892110536400401169 /* MPMCalendarScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

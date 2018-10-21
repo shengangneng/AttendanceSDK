@@ -12,7 +12,10 @@
 
 @interface MPMCommomDealingTableViewCell() <UITextFieldDelegate>
 
-@property (nonatomic, assign) BOOL checkNumber;// 是否限制TextField为数字
+/** 是否限制TextField为只能输入数字（包含小数点） */
+@property (nonatomic, assign) BOOL needCheckNumber;
+/** 限制数字位数：默认为4位 */
+@property (nonatomic, assign) NSInteger limitLength;
 
 @end
 
@@ -31,7 +34,9 @@
 - (void)setupAttributes {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    self.checkNumber = NO;
+    self.detailTextLabel.textColor = kMainLightGray;
+    self.needCheckNumber = NO;
+    self.limitLength = 4;
     [self.deleteCellButton addTarget:self action:@selector(deleteCell:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -72,15 +77,22 @@
     }
 }
 
-- (void)setupTextFieldCheck:(BOOL)check {
-    self.checkNumber = check;
+/** 是否限制输入数字，并限制数字的长度 */
+- (void)needCheckNumber:(BOOL)needCheckNumber limitLength:(NSInteger)length {
+    self.needCheckNumber = needCheckNumber;
+    if (self.needCheckNumber) {
+        self.limitLength = length;
+    }
+}
+
+- (void)setupDetailToBeUITextField {
     self.detailView = self.detailTextField;
     self.accessoryType = UITableViewCellAccessoryNone;
     self.detailTextField.hidden = NO;
     self.detailTextLabel.hidden = YES;
 }
 
-- (void)setupUILabel {
+- (void)setupDetailToBeLabel {
     self.detailView = self.detailTextLabel;
     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     self.detailTextField.hidden = YES;
@@ -98,8 +110,8 @@
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString *toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    // 限制数字，长度为4
-    BOOL pass = self.checkNumber ? [MPMCheckRegexTool checkString:toBeString onlyHasDigitAndLength:4 decimalLength:1] : YES;
+    // 限制数字，默认长度为4，预计费用为10位
+    BOOL pass = self.needCheckNumber ? [MPMCheckRegexTool checkString:toBeString onlyHasDigitAndLength:self.limitLength decimalLength:1] : YES;
     if (pass) {
         return YES;
     } else {
@@ -111,6 +123,11 @@
     if (self.textFieldChangeBlock) {
         self.textFieldChangeBlock(@"");
     }
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
     return YES;
 }
 
@@ -154,6 +171,7 @@
         _detailTextField = [[UITextField alloc] init];
         _detailTextField.delegate = self;
         _detailTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+        _detailTextField.returnKeyType = UIReturnKeyDone;
         _detailTextField.textColor = kMainLightGray;
         _detailTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
         _detailTextField.textAlignment = NSTextAlignmentRight;

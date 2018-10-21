@@ -114,8 +114,10 @@
 - (void)textViewDidChange:(UITextView *)textView {
     if (textView.text.length == 0 || [textView.text isEqualToString:UITextViewPlaceHolder1] || [textView.text isEqualToString:UITextViewPlaceHolder2]) {
         self.textViewClearButton.hidden = YES;
+        self.textViewTotalLength.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%d/30",0]];
     } else {
         self.textViewClearButton.hidden = NO;
+        self.textViewTotalLength.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%ld/30",textView.text.length]];
     }
 }
 

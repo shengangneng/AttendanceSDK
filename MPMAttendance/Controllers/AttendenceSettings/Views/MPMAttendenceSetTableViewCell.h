@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMBaseTableViewCell.h"
-#import "MPMAttendenceSettingModel.h"
+#import "MPMAttendanceSettingModel.h"
 
 @protocol MPMAttendenceSetTableViewCellDelegate <NSObject>
 
 /** 删除cell使用Delegate的方式，之前block的方式在里面进行多次网络请求导致循环引用没找到解决办法 */
-- (void)attendenceSetTableCellDidDeleteWithModel:(MPMAttendenceSettingModel *)model;
+- (void)attendenceSetTableCellDidDeleteWithModel:(MPMAttendanceSettingModel *)model;
 
 @end
 
@@ -26,7 +26,7 @@ typedef void(^SwipeShowBlock)(void);
 @property (nonatomic, copy) EditBlock editBlock;
 @property (nonatomic, copy) SwipeShowBlock swipeShowBlock;
 @property (nonatomic, weak) id<MPMAttendenceSetTableViewCellDelegate> delegate;
-@property (nonatomic, strong) MPMAttendenceSettingModel *model;
+@property (nonatomic, strong) MPMAttendanceSettingModel *model;
 
 
 // 头部视图
@@ -34,6 +34,8 @@ typedef void(^SwipeShowBlock)(void);
 @property (nonatomic, strong) UIImageView *headerIconView;
 @property (nonatomic, strong) UILabel *headerTitleLabel;
 @property (nonatomic, strong) UIButton *headerEditButton;
+@property (nonatomic, strong) UIButton *headerDeleteButton;
+@property (nonatomic, strong) UIView *headerSeperateLine;
 // 底部视图
 @property (nonatomic, strong) UIImageView *bottomImageView;
 // 范围
@@ -53,7 +55,7 @@ typedef void(^SwipeShowBlock)(void);
 @property (nonatomic, strong) UIView *swipeView;
 @property (nonatomic, strong) UILabel *swipeTitleLabel;
 
-- (void)resetCellWithModel:(MPMAttendenceSettingModel *)model cellHeight:(CGFloat)height;
+- (void)resetCellWithModel:(MPMAttendanceSettingModel *)model cellHeight:(CGFloat)height;
 /** 隐藏SwipeView */
 - (void)dismissSwipeView;
 

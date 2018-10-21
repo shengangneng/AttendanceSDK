@@ -17,7 +17,6 @@
 @interface MPMApplyAdditionViewController ()
 
 @property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIView *containerView;
 /** 请假 */
 @property (nonatomic, strong) MPMApplyImageView *leaveImageView;
 /** 出差 */
@@ -26,6 +25,8 @@
 @property (nonatomic, strong) MPMApplyImageView *overtimeImageView;
 /** 外出 */
 @property (nonatomic, strong) MPMApplyImageView *goOutImageView;
+/** 补签 */
+@property (nonatomic, strong) MPMApplyImageView *resignImageView;
 
 @end
 
@@ -45,17 +46,18 @@
     [self.evecationImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(evecation:)]];
     [self.overtimeImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(overtime:)]];
     [self.goOutImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goOut:)]];
+    [self.resignImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resign:)]];
 }
 
 - (void)setupSubViews {
     [super setupSubViews];
     [self.view addSubview:self.scrollView];
-    [self.scrollView addSubview:self.containerView];
     
-    [self.containerView addSubview:self.leaveImageView];
-    [self.containerView addSubview:self.evecationImageView];
-    [self.containerView addSubview:self.overtimeImageView];
-    [self.containerView addSubview:self.goOutImageView];
+    [self.scrollView addSubview:self.leaveImageView];
+    [self.scrollView addSubview:self.evecationImageView];
+    [self.scrollView addSubview:self.overtimeImageView];
+    [self.scrollView addSubview:self.goOutImageView];
+    [self.scrollView addSubview:self.resignImageView];
 }
 
 - (void)setupConstraints {
@@ -64,34 +66,36 @@
     [self.scrollView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    [self.containerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.edges.equalTo(self.scrollView);
-        make.width.equalTo(@(kScreenWidth));
-        make.height.equalTo(@554);
-    }];
     [self.leaveImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.containerView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
-        make.centerX.equalTo(self.containerView.mpm_centerX);
-        make.top.equalTo(self.containerView.mpm_top).offset(2.5);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.scrollView.mpm_centerX);
+        make.top.equalTo(self.scrollView.mpm_top).offset(5);
     }];
     [self.evecationImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.containerView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
-        make.centerX.equalTo(self.containerView.mpm_centerX);
-        make.top.equalTo(self.leaveImageView.mpm_bottom).offset(-5);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.scrollView.mpm_centerX);
+        make.top.equalTo(self.leaveImageView.mpm_bottom);
     }];
     [self.overtimeImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.containerView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
-        make.centerX.equalTo(self.containerView.mpm_centerX);
-        make.top.equalTo(self.evecationImageView.mpm_bottom).offset(-5);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.scrollView.mpm_centerX);
+        make.top.equalTo(self.evecationImageView.mpm_bottom);
     }];
     [self.goOutImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.containerView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.containerView.mpm_trailing).offset(-10);
-        make.centerX.equalTo(self.containerView.mpm_centerX);
-        make.top.equalTo(self.overtimeImageView.mpm_bottom).offset(-5);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.scrollView.mpm_centerX);
+        make.top.equalTo(self.overtimeImageView.mpm_bottom);
+    }];
+    [self.resignImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.centerX.equalTo(self.scrollView.mpm_centerX);
+        make.top.equalTo(self.goOutImageView.mpm_bottom);
+        make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-5);
     }];
 }
 
@@ -99,28 +103,36 @@
 
 - (void)leave:(UITapGestureRecognizer *)gesture {
     DLog(@"请假");
-    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:forCausationTypeLeave typeStatus:nil dealingModel:nil dealingFromType:kDealingFromTypeApply];
+    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:kCausationTypeAskLeave dealingModel:nil dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:dv animated:YES];
     self.hidesBottomBarWhenPushed = NO;
 }
 - (void)evecation:(UITapGestureRecognizer *)gesture {
     DLog(@"出差");
-    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:forCausationTypeevecation typeStatus:nil dealingModel:nil dealingFromType:kDealingFromTypeApply];
+    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:kCausationTypeevecation dealingModel:nil dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:dv animated:YES];
     self.hidesBottomBarWhenPushed = NO;
 }
 - (void)overtime:(UITapGestureRecognizer *)gesture {
     DLog(@"加班");
-    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:forCausationTypeOverTime typeStatus:nil dealingModel:nil dealingFromType:kDealingFromTypeApply];
+    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:kCausationTypeOverTime dealingModel:nil dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:dv animated:YES];
     self.hidesBottomBarWhenPushed = NO;
 }
 - (void)goOut:(UITapGestureRecognizer *)gesture {
     DLog(@"外出");
-    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:forCausationTypeOut typeStatus:nil dealingModel:nil dealingFromType:kDealingFromTypeApply];
+    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:kCausationTypeOut dealingModel:nil dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
+    self.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:dv animated:YES];
+    self.hidesBottomBarWhenPushed = NO;
+}
+
+- (void)resign:(UITapGestureRecognizer *)gesture {
+    DLog(@"补签");
+    MPMBaseDealingViewController *dv = [[MPMBaseDealingViewController alloc] initWithDealType:kCausationTypeRepairSign dealingModel:nil dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:dv animated:YES];
     self.hidesBottomBarWhenPushed = NO;
@@ -133,14 +145,6 @@
         _scrollView.backgroundColor = kWhiteColor;
     }
     return _scrollView;
-}
-
-- (UIView *)containerView {
-    if (!_containerView) {
-        _containerView = [[UIView alloc] init];
-        _containerView.backgroundColor = kWhiteColor;
-    }
-    return _containerView;
 }
 
 - (MPMApplyImageView *)leaveImageView {
@@ -181,6 +185,16 @@
         _goOutImageView.image = ImageName(@"apply_goout");
     }
     return _goOutImageView;
+}
+
+- (MPMApplyImageView *)resignImageView {
+    if (!_resignImageView) {
+        _resignImageView = [[MPMApplyImageView alloc] initWithTitle:@"补签" detailMessage:@"因事临时外出办事，需申请审批"];
+        _resignImageView.userInteractionEnabled = YES;
+        [_resignImageView sizeToFit];
+        _resignImageView.image = ImageName(@"apply_retroactive");
+    }
+    return _resignImageView;
 }
 
 - (void)didReceiveMemoryWarning {

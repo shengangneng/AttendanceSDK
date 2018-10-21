@@ -9,11 +9,24 @@
 #import "MPMBaseModel.h"
 
 @interface MPMLerakageCardModel : MPMBaseModel
-/** 有三个参数首字母是大写的，因为后台接口返回的字段就是大写的，不要改，否则获取不到数据 */
-@property (nonatomic, copy) NSString *AttendanceId;
-@property (nonatomic, copy) NSString *BrushDate;
-@property (nonatomic, copy) NSString *SignType;
-@property (nonatomic, copy) NSString *btn;
-@property (nonatomic, copy) NSString *time;
+
+@property (nonatomic, copy) NSString *schedulingEmployeeId; /** 处理id */
+@property (nonatomic, copy) NSString *brushTime;            /** 打卡时间 */
+@property (nonatomic, copy) NSString *signType;             /** 签到0、签退1 */
+@property (nonatomic, copy) NSString *btn;                  /** 签到、签退 */
+
+@end
+
+
+@interface MPMRepairSignLeadCardModel: MPMBaseModel
+
+- (instancetype)initWithThisMonth:(BOOL)isThisMonth;
+
+@property (nonatomic, assign, getter=isThisMonth) BOOL thisMonth;
+
+@property (nonatomic, copy) NSArray<NSIndexPath *> *thisMonthSelectIndexPaths;/** 保存当前月选中的Cell */
+
+@property (nonatomic, copy) NSArray<MPMLerakageCardModel *> *thisMonthLeadCards;
+@property (nonatomic, copy) NSArray<MPMLerakageCardModel *> *lastMonthLeadCards;
 
 @end

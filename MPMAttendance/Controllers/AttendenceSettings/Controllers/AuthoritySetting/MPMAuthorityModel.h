@@ -20,7 +20,9 @@
 @property (nonatomic, copy) NSString *parentId;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *roleId;
-@property (nonatomic, copy) NSString *userName;
 @property (nonatomic, copy) NSString *userType;
+// V2.0字段
+@property (nonatomic, copy) NSString *mpm_id;
+@property (nonatomic, copy) NSString *name;
 
 @end

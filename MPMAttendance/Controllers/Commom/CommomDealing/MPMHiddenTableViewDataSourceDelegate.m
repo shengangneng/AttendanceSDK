@@ -32,7 +32,12 @@
         cell = [[MPMHiddenTableViewDeleteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     MPMGetPeopleModel *model = self.peoplesArray[indexPath.row];
-    cell.textLabel.text = model.name;
+    cell.txLabel.text = model.name;
+    cell.isHuman = model.isHuman.integerValue;
+    if (cell.isHuman) {
+        cell.roundPeopleView.nameLabel.text = model.name.length > 2 ? [model.name substringFromIndex:model.name.length-2] : model.name;
+        [cell.roundPeopleView setNeedsDisplay];
+    }
     
     __weak typeof(self) weakself = self;
     cell.deleteBlock = ^(UIButton *sender) {

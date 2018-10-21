@@ -8,8 +8,6 @@
 
 #import "MPMApprovalProcessDetailViewController.h"
 #import "MPMButton.h"
-#import "MPMApprovalCausationModel.h"
-#import "MPMApprovalFetchDetailModel.h"
 #import "MPMApprovalProcessDetailTableViewCell.h"
 #import "MPMShareUser.h"
 #import "MPMSessionManager.h"
@@ -19,105 +17,248 @@
 #import "MPMDealingModel.h"
 #import "MPMCausationDetailModel.h"
 #import "UILabel+MPMExtention.h"
+#import "MPMHTTPSessionManager.h"
+#import "MPMOauthUser.h"
+#import "MPMDealingBorderButton.h"
+#import "MPMProcessDetailDeliversView.h"
+#import "MPMProcessDetailApprovalNodeView.h"
+#import "MPMApprovalProcessNodeDealingViewController.h"
+#import "MPMProcessSettingCommomViewController.h"
+#import "MPMTaskEditView.h"
+#import "MPMRoundPeopleView.h"
+// model
+#import "MPMProcessDef.h"
+#import "MPMTaskInstGroups.h"
+#import "MPMProcessInst.h"
+#import "MPMProcessPeople.h"
+#import "MPMProcessDetailList.h"
+#import "MPMProcessTaskModel.h"
 
-@interface MPMApprovalProcessDetailViewController () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
+@interface MPMApprovalProcessDetailViewController () <UITextFieldDelegate>
+
+@property (nonatomic, strong) UIScrollView *scrollView;         /** 所有的视图都加在scrollView上 */
 // header
-@property (nonatomic, strong) UIImageView *headerView;
-@property (nonatomic, strong) UIImageView *headerImageView;
-@property (nonatomic, strong) UILabel *headerName;
-@property (nonatomic, strong) UILabel *headerDepartment;
-// middle
-@property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIView *containerView;
-// reason
-@property (nonatomic, strong) UIView *contentReasonView;
-@property (nonatomic, strong) UILabel *contentReasonBeginTimeLabel;
-@property (nonatomic, strong) UILabel *contentReasonBeginTimeMessage;
-
-@property (nonatomic, strong) UILabel *contentTableHeaderView;
-@property (nonatomic, strong) UITableView *contentTableView;
-// bottom
-@property (nonatomic, strong) UIView *bottomView;
+@property (nonatomic, strong) UIImageView *headerView;          /** 头部视图：头像、姓名、部门、审核状态 */
+//@property (nonatomic, strong) UIImageView *headerImageView;     /** 头像 */
+@property (nonatomic, strong) MPMRoundPeopleView *headerImage;  /** 头像 */
+@property (nonatomic, strong) UILabel *headerNameDepartment;    /** 姓名和部门 */
+@property (nonatomic, strong) UILabel *headerStatusLabel;       /** 审核状态 */
+// 流程明细
+@property (nonatomic, strong) UIView *detailView;               /** 明细视图：考勤时间、签到时间、改签时间等信息 */
+// 申请原因
+@property (nonatomic, strong) UIView *reasonView;               /** 申请原因视图 */
+@property (nonatomic, strong) UILabel *reasonLabel;             /** 申请原因 */
+@property (nonatomic, strong) UILabel *reasonDetailLabel;       /** 申请原因明细 */
+// 审核信息
+@property (nonatomic, strong) UIView *bottomApprovedNodeView;                   /** 审核节点 */
+@property (nonatomic, strong) UILabel *bottomApprovedNodeTitleLabel;            /** 审核信息 */
+@property (nonatomic, strong) MPMProcessDetailDeliversView *bottomDeliversView; /** 抄送人视图 */
+// bottom操作按钮
+@property (nonatomic, strong) UIButton *addSignButton;          /** 终审加签按钮：只有在最后一个 */
+@property (nonatomic, strong) UIView *bottomView;               /** 底部操作按钮视图 */
 @property (nonatomic, strong) UIView *bottomLine;
 @property (nonatomic, strong) UIButton *bottomLeftButton;
 @property (nonatomic, strong) UIButton *bottomMiddleButton;
 @property (nonatomic, strong) UIButton *bottomRightButton;
+// 终审加签弹出界面
+@property (nonatomic, strong) MPMTaskEditView *taskView;        /** 终身加签弹出页面 */
 
-// Datas
-@property (nonatomic, strong) MPMApprovalCausationModel *causation;
-@property (nonatomic, copy) NSArray<MPMApprovalCausationDetailModel *> *causationDetailArray;
-@property (nonatomic, copy) NSArray *tableViewCellMessage;
-@property (nonatomic, copy) NSArray *bottonTitles;
+// 2.0
+@property (nonatomic, strong) MPMProcessMyMetterModel *model;
+@property (nonatomic, strong) NSIndexPath *selectIndexPath;
+@property (nonatomic, copy) NSArray<MPMProcessPeople *> *delivers;          /** 抄送人 */
+@property (nonatomic, strong) MPMProcessTaskConfig *config;                 /** 流程设置节点config */
+@property (nonatomic, strong) MPMProcessDef *processDef;                    /** 终审加签配置 */
+@property (nonatomic, strong) MPMProcessInst *processInst;
+@property (nonatomic, copy) NSArray<MPMTaskInstGroups *> *taskInstGroups;   /** 具体审批节点详情 */
+@property (nonatomic, copy) NSString *currentTaskInstCode;                  /** 当前审批节点code */
+@property (nonatomic, copy) NSArray<MPMProcessTaskModel *> *taskDefs;       /** 流程设置里的所有节点 */
+@property (nonatomic, copy) NSString *canAddSign;                           /** 是否可以终审加签：1是 0否 */
+
+@property (nonatomic, strong) MPMProcessDetailList *processDetailList;      /** 申请详情信息 */
+@property (nonatomic, assign) CausationType causationType;
 
 @end
 
 @implementation MPMApprovalProcessDetailViewController
 
-/** params：ButtonTitles从上一页面传入的底部按钮 */
-- (instancetype)initWithCausation:(MPMApprovalCausationModel *)causation CausationDetailArray:(NSArray *)causationDetail operationButtonTitles:(NSArray *)buttons image:(NSString *)image text:(NSString *)text {
+- (instancetype)initWithModel:(MPMProcessMyMetterModel *)model selectedIndexPath:(NSIndexPath *)selectIndexPath {
     self = [super init];
     if (self) {
-        self.bottonTitles = buttons;
-        if (causation.causationtypeNo.integerValue == 0 || causation.causationtypeNo.integerValue == 1) {
-            // 改签、补签
-            [self getDataOfExchangeId:causation.exchangeId image:image text:text];
-        } else {
-            self.causation = causation;
-            // 筛选数据
-            NSMutableArray *filterDetail = [NSMutableArray arrayWithCapacity:causationDetail.count];
-            for (int i = 0; i < causationDetail.count; i++) {
-                MPMApprovalCausationDetailModel *model = causationDetail[i];
-                if (kIsNilString(model.startTime) && kIsNilString(model.endTime) && kIsNilString(model.days)) {
-                    continue;
-                }
-                [filterDetail addObject:model];
-            }
-            self.causationDetailArray = filterDetail.copy;
-            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:3];
-            NSString *approveDate = kIsNilString(self.causation.approveDate) ? @"" : [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:(kSafeString(self.causation.approveDate)).doubleValue/1000] withDefineFormatterType:forDateFormatTypeYearMonthDayHourMinite];
-            [temp addObject:@{@"type":@"审批人",@"image":image,@"name":kSafeString(causation.nowApprove),@"date":approveDate,@"message":text}];
-            [temp addObject:@{@"type":@"抄送人",@"image":@"approval_detail_passed",@"name":kIsNilString(causation.mpm_copyName)?@"无":causation.mpm_copyName,@"date":[self formatdate:kSafeString(causation.applicantDate) time:kSafeString(causation.applicantTime)],@"message":@"无抄送信息"}];
-            [temp addObject:@{@"type":@"记录人",@"image":@"approval_detail_passed",@"name":kIsNilString(causation.approveName)?@"无":causation.approveName,@"date":[self formatdate:kSafeString(causation.applicantDate) time:kSafeString(causation.applicantTime)],@"message":@"无记录人信息"}];
-            self.tableViewCellMessage = temp.copy;
-            [self.contentReasonBeginTimeMessage setAttributedString:self.causation.reason font:SystemFont(15) lineSpace:2];
-//            self.contentReasonBeginTimeMessage.text = self.causation.reason;
-            [self setupSubViews];
-            [self setupAttributes];
-            [self setupConstraints];
-        }
+        self.selectIndexPath = selectIndexPath;
+        self.model = model;
     }
     return self;
 }
 
-// 改签、补签，需要调用另外的接口获取数据
-- (void)getDataOfExchangeId:(NSString *)exchangeId image:(NSString *)image text:(NSString *)text {
-    NSString *url = [NSString stringWithFormat:@"%@ApproveController/getAttendanceApproveList?token=%@",MPMHost,[MPMShareUser shareUser].token];
-    NSDictionary *params = @{@"exchangeId":kSafeString(exchangeId)};
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在加载" success:^(id response) {
-        if ([response[@"dataObj"][@"obj"] isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *dic = response[@"dataObj"][@"obj"];
-            self.causation = [[MPMApprovalCausationModel alloc] initWithDictionary:dic];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"信息详情";
+    self.view.backgroundColor = kWhiteColor;
+    [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
+    [self.addSignButton addTarget:self action:@selector(addSign:) forControlEvents:UIControlEventTouchUpInside];
+    [self.bottomLeftButton addTarget:self action:@selector(left:) forControlEvents:UIControlEventTouchUpInside];
+    [self.bottomMiddleButton addTarget:self action:@selector(middle:) forControlEvents:UIControlEventTouchUpInside];
+    [self.bottomRightButton addTarget:self action:@selector(right:) forControlEvents:UIControlEventTouchUpInside];
+    [self getData];
+}
+
+/**
+ * 待办、已办：先api/wfinst/fullprocessinstbytid，参数为model中的id，然后再调用processDef中bizReqApi的地址拼接上processInst中的bizOrderId
+ * 我的申请、抄送给我：先api/wfinst/fullprocessinstbypid，参数为processInstId，然类似。
+ */
+- (void)getData {
+    NSString *url;
+    if (0 == self.selectIndexPath.section) {
+        // 待办、已办
+        url = [NSString stringWithFormat:@"%@%@?taskInstId=%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_DETAIL,self.model.mpm_id];
+    } else if (3 == self.selectIndexPath.section) {
+        // 打卡页面的改签补签进入详情
+        url = [NSString stringWithFormat:@"%@%@?detailId=%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_ISEXISTDETAIL,self.model.mpm_id];
+    } else if (4 == self.selectIndexPath.section) {
+        // 打卡页面的改签补签进入详情
+        url = [NSString stringWithFormat:@"%@%@?bizOrderId=%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_DETAIL_BIZ,self.model.mpm_id];
+    } else {
+        // 我的申请、抄送给我
+        url = [NSString stringWithFormat:@"%@%@?processInstId=%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_FULLPROCESS,self.model.mpm_id];
+    }
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在加载" success:^(id response) {
+        DLog(@"%@",response);
+        if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *object = response[kResponseObjectKey];
+            self.canAddSign = kNumberSafeString(object[@"canAddSign"]);
+            if (1 == self.canAddSign.integerValue) {
+                self.addSignButton.hidden = NO;
+            }
+            // processDef - 用于传递给终审加签
+            if (object[@"processDef"] && [object[@"processDef"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *processDef = object[@"processDef"];
+                self.processDef = [[MPMProcessDef alloc] initWithDictionary:processDef];
+            }
+            // processInst
+            if (object[@"processInst"] && [object[@"processInst"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *processInst = object[@"processInst"];
+                self.processInst = [[MPMProcessInst alloc] initWithDictionary:processInst];
+            }
+            // 当前节点的流程配置
+            if (object[@"participantConfig"] && [object[@"participantConfig"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *participantConfig = object[@"participantConfig"];
+                self.config = [[MPMProcessTaskConfig alloc] initWithDictionary:participantConfig];
+            }
+            
+            // taskInstGroups-具体审批节点
+            if (object[@"taskInstGroups"] && [object[@"taskInstGroups"] isKindOfClass:[NSArray class]]) {
+                NSArray *taskInstGroups = object[@"taskInstGroups"];
+                NSMutableArray *tmpGroups = [NSMutableArray arrayWithCapacity:taskInstGroups.count];
+                for (int i = 0; i < taskInstGroups.count; i++) {
+                    NSDictionary *dic = taskInstGroups[i];
+                    MPMTaskInstGroups *group = [[MPMTaskInstGroups alloc] init];
+                    group.taskCode = dic[@"taskCode"];
+                    group.taskName = dic[@"taskName"];
+                    if (dic[@"taskInsts"] && [dic[@"taskInsts"] isKindOfClass:[NSArray class]]) {
+                        NSArray *taskInsets = dic[@"taskInsts"];
+                        NSMutableArray *tmpTks = [NSMutableArray arrayWithCapacity:taskInsets.count];
+                        for (int j = 0; j < taskInsets.count; j++) {
+                            MPMTaskInsts *tk = [[MPMTaskInsts alloc] initWithDictionary:taskInsets[j]];
+                            [tmpTks addObject:tk];
+                        }
+                        group.taskInst = tmpTks;
+                    }
+                    [tmpGroups addObject:group];
+                }
+                self.taskInstGroups = tmpGroups.copy;
+            }
+            // taskDefs-流程设置节点
+            if (object[@"taskDefs"] && [object[@"taskDefs"] isKindOfClass:[NSArray class]]) {
+                NSArray *taskDefs = object[@"taskDefs"];
+                NSMutableArray *temp = [NSMutableArray arrayWithCapacity:taskDefs.count];
+                for (int i = 0; i < taskDefs.count; i++) {
+                    NSDictionary *dic = taskDefs[i];
+                    MPMProcessTaskModel *task = [[MPMProcessTaskModel alloc] initWithDictionary:dic];
+                    if (dic[@"config"] && [dic[@"config"] isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *config = dic[@"config"];
+                        MPMProcessTaskConfig *cf = [[MPMProcessTaskConfig alloc] initWithDictionary:config];
+                        task.config = cf;
+                    } else {
+                        task.config = nil;
+                    }
+                    [temp addObject:task];
+                }
+                self.taskDefs = temp.copy;
+            }
+            
+            if (self.processDef && !kIsNilString(self.processDef.bizReqApi) && self.processInst && !kIsNilString(self.processInst.bizOrderId)) {
+                NSString *url = [NSString stringWithFormat:@"%@%@",self.processDef.bizReqApi,self.processInst.bizOrderId];
+                [self getApplyListDataWithURL:url];
+            }
         }
-        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:3];
-        NSString *approveDate = kIsNilString(self.causation.approveDate) ? @"" : [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:(kSafeString(self.causation.approveDate)).doubleValue/1000] withDefineFormatterType:forDateFormatTypeYearMonthDayHourMinite];
-        [temp addObject:@{@"type":@"审批人",@"image":image,@"name":kSafeString(self.causation.nowApprove),@"date":approveDate,@"message":text}];
-        [temp addObject:@{@"type":@"抄送人",@"image":@"approval_detail_passed",@"name":kIsNilString(self.causation.mpm_copyName)?@"无":self.causation.mpm_copyName,@"date":[self formatdate:kSafeString(self.causation.applicantDate) time:kSafeString(self.causation.applicantTime)],@"message":@"无抄送信息"}];
-        [temp addObject:@{@"type":@"记录人",@"image":@"approval_detail_passed",@"name":kIsNilString(self.causation.approveName)?@"无":self.causation.approveName,@"date":[self formatdate:kSafeString(self.causation.applicantDate) time:kSafeString(self.causation.applicantTime)],@"message":@"无记录人信息"}];
-        self.tableViewCellMessage = temp.copy;
-//        self.contentReasonBeginTimeMessage.text = self.causation.reason;
-        [self.contentReasonBeginTimeMessage setAttributedString:self.causation.reason font:SystemFont(15) lineSpace:2];
-        [self setupSubViews];
-        [self setupAttributes];
-        [self setupConstraints];
     } failure:^(NSString *error) {
-        [self setupSubViews];
-        [self setupAttributes];
-        [self setupConstraints];
+        DLog(@"%@",error);
     }];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+/** 获取申请详情列表信息 */
+- (void)getApplyListDataWithURL:(NSString *)url {
+    NSString *encodedUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+    [[MPMSessionManager shareManager] getRequestWithURL:encodedUrl setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        DLog(@"%@",response);
+        if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *object = response[kResponseObjectKey];
+            self.processDetailList = [[MPMProcessDetailList alloc] initWithDictionary:object];
+            // 转换为审批类型
+            self.causationType = ((NSString *)kGetCausationNumFromName[kException_GetNameFromNum[self.processDetailList.type]]).integerValue;
+            NSArray *detailDtoListArray;
+            if (object[@"kqBizLeaveDtoList"] && [object[@"kqBizLeaveDtoList"] isKindOfClass:[NSArray class]] && ((NSArray *)object[@"kqBizLeaveDtoList"]).count > 0) {
+                // 请假
+                detailDtoListArray = object[@"kqBizLeaveDtoList"];
+            } else if (object[@"kqBizBusinessTravelDtoList"] && [object[@"kqBizBusinessTravelDtoList"] isKindOfClass:[NSArray class]] && ((NSArray *)object[@"kqBizBusinessTravelDtoList"]).count > 0) {
+                // 出差
+                detailDtoListArray = object[@"kqBizBusinessTravelDtoList"];
+            } else if (object[@"otDetails"] && [object[@"otDetails"] isKindOfClass:[NSArray class]] && ((NSArray *)object[@"otDetails"]).count > 0) {
+                // 加班
+                detailDtoListArray = object[@"otDetails"];
+            } else if (object[@"gooutDetails"] && [object[@"gooutDetails"] isKindOfClass:[NSArray class]] && ((NSArray *)object[@"gooutDetails"]).count > 0) {
+                // 外出
+                detailDtoListArray = object[@"gooutDetails"];
+            } else if (object[@"kqBizReviseSignList"] && [object[@"kqBizReviseSignList"] isKindOfClass:[NSArray class]] && ((NSArray *)object[@"kqBizReviseSignList"]).count > 0) {
+                // 改签
+                detailDtoListArray = object[@"kqBizReviseSignList"];
+            } else if (object[@"kqBizFillupSignList"] && [object[@"kqBizFillupSignList"] isKindOfClass:[NSArray class]] && ((NSArray *)object[@"kqBizFillupSignList"]).count > 0) {
+                // 补签
+                detailDtoListArray = object[@"kqBizFillupSignList"];
+            }
+            
+            if (object[@"workFlow"] && [object[@"workFlow"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *workFlow = object[@"workFlow"];
+                // 抄送人
+                if (workFlow[@"delivers"] && [workFlow[@"delivers"] isKindOfClass:[NSArray class]]) {
+                    NSArray *delivers = workFlow[@"delivers"];
+                    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:delivers.count];
+                    for (int j = 0; j < delivers.count; j++) {
+                        NSDictionary *people = delivers[j];
+                        MPMProcessPeople *po = [[MPMProcessPeople alloc] initWithDictionary:people];
+                        [temp addObject:po];
+                    }
+                    self.delivers = temp.copy;
+                }
+            }
+            
+            if (detailDtoListArray.count > 0) {
+                NSMutableArray *temp = [NSMutableArray arrayWithCapacity:detailDtoListArray.count];
+                for (int i = 0; i < detailDtoListArray.count; i++) {
+                    NSDictionary *dic = detailDtoListArray[i];
+                    MPMDetailDtoList *list = [[MPMDetailDtoList alloc] initWithDictionary:dic];
+                    [temp addObject:list];
+                }
+                self.processDetailList.detailDtoList = temp.copy;
+            }
+        }
+        [self setupAttributes];
+        [self setupSubViews];
+        [self setupConstraints];
+    } failure:^(NSString *error) {
+        DLog(@"%@",error);
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -128,22 +269,37 @@
     [super viewDidAppear:animated];
 }
 
+#define kStateArray @[@"",@"待处理",@"已完成",@"已驳回"]
+- (void)setupAttributes {
+    [super setupAttributes];
+    [self.reasonDetailLabel setAttributedString:kIsNilString(self.processDetailList.reason) ? @"无" : self.processDetailList.reason font:SystemFont(15) lineSpace:2];
+    self.headerImage.nameLabel.text = [MPMOauthUser shareOauthUser].name_cn.length > 2 ? [[MPMOauthUser shareOauthUser].name_cn substringWithRange:NSMakeRange([MPMOauthUser shareOauthUser].name_cn.length - 2, 2)] : [MPMOauthUser shareOauthUser].name_cn;
+    self.headerNameDepartment.text = [NSString stringWithFormat:@"%@（%@）",[MPMOauthUser shareOauthUser].name_cn,[MPMOauthUser shareOauthUser].department_name];
+    self.headerStatusLabel.text = [NSString stringWithFormat:@"状态 : %@",(self.processInst.state.integerValue > kStateArray.count - 1) ? @"待处理" : kStateArray[self.processInst.state.integerValue]];
+    
+}
+
 - (void)setupSubViews {
     [super setupSubViews];
     
     [self.view addSubview:self.scrollView];
-    [self.view addSubview:self.headerView];
-    [self.headerView addSubview:self.headerImageView];
-    [self.headerView addSubview:self.headerName];
-    [self.headerView addSubview:self.headerDepartment];
-    
-    [self.scrollView addSubview:self.containerView];
+    // 申请明细
+    [self.scrollView addSubview:self.detailView];
+    // header
+    [self.scrollView addSubview:self.headerView];
+    [self.headerView addSubview:self.headerImage];
+    [self.headerView addSubview:self.headerNameDepartment];
+    [self.headerView addSubview:self.headerStatusLabel];
     // reason
-    [self.containerView addSubview:self.contentReasonView];
-    [self.contentReasonView addSubview:self.contentReasonBeginTimeLabel];
-    [self.contentReasonView addSubview:self.contentReasonBeginTimeMessage];
-    [self.scrollView addSubview:self.contentTableView];
-    
+    [self.scrollView addSubview:self.reasonView];
+    [self.reasonView addSubview:self.reasonLabel];
+    [self.reasonView addSubview:self.reasonDetailLabel];
+    // bottom
+    [self.scrollView addSubview:self.bottomApprovedNodeView];
+    [self.bottomApprovedNodeView addSubview:self.bottomApprovedNodeTitleLabel];
+    [self.scrollView addSubview:self.bottomDeliversView];
+    // bottom操作按钮
+    [self.scrollView addSubview:self.addSignButton];
     [self.view addSubview:self.bottomView];
     [self.bottomView addSubview:self.bottomLine];
     [self.bottomView addSubview:self.bottomLeftButton];
@@ -151,164 +307,142 @@
     [self.bottomView addSubview:self.bottomRightButton];
 }
 
-- (void)setupAttributes {
-    [super setupAttributes];
-    self.title = @"信息详情";
-    self.view.backgroundColor = kWhiteColor;
-    self.headerName.text = [MPMShareUser shareUser].employeeName;
-    self.headerDepartment.text = [MPMShareUser shareUser].departmentName;
-    [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
-    [self.bottomLeftButton addTarget:self action:@selector(left:) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomMiddleButton addTarget:self action:@selector(middle:) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomRightButton addTarget:self action:@selector(right:) forControlEvents:UIControlEventTouchUpInside];
-    
-}
-
 - (void)setupConstraints {
     [super setupConstraints];
-    // header
-    [self.headerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.top.equalTo(self.view);
-        make.height.equalTo(@70);
-    }];
-    [self.headerImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.headerView.mpm_leading).offset(12);
-        make.height.width.equalTo(@(49));
-        make.centerY.equalTo(self.headerView.mpm_centerY);
-    }];
-    [self.headerName mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.headerImageView.mpm_trailing).offset(10);
-        make.top.equalTo(self.headerImageView.mpm_top);
-        make.height.equalTo(@33);
-    }];
-    [self.headerDepartment mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.headerImageView.mpm_trailing).offset(10);
-        make.bottom.equalTo(self.headerImageView.mpm_bottom);
-        make.height.equalTo(@25);
-    }];
-    // middle
+    
     [self.scrollView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.equalTo(self.view);
-        make.top.equalTo(self.headerView.mpm_bottom);
+        make.top.leading.trailing.equalTo(self.view);
         make.bottom.equalTo(self.bottomView.mpm_top);
     }];
-    [self.containerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.bottom.top.equalTo(self.scrollView);
-        make.width.equalTo(@(kScreenWidth));
-        make.height.equalTo(@(kScreenHeight));
+    // header
+    [self.headerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.trailing.top.equalTo(self.scrollView);
+        make.height.equalTo(@70);
     }];
-    
-    UIView *lastView = self.containerView;
-    if (self.causation.causationtypeNo.integerValue == 0 || self.causation.causationtypeNo.integerValue == 1) {
-        NSInteger height = self.causation.causationtypeNo.integerValue == 0 ? 112 : 90;
-        MPMDetailTimeMessageView *messageView = [[MPMDetailTimeMessageView alloc] initWithFrame:CGRectZero typeName:kSausactionType[self.causation.causationtypeNo] model:self.causation detail:nil];
-        [self.containerView addSubview:messageView];
+    [self.headerImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.headerView.mpm_leading).offset(31);
+        make.height.width.equalTo(@(50));
+        make.centerY.equalTo(self.headerView.mpm_centerY);
+    }];
+    [self.headerNameDepartment mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.headerImage.mpm_trailing).offset(14);
+        make.top.equalTo(self.headerImage.mpm_top);
+        make.height.equalTo(@33);
+    }];
+    [self.headerStatusLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.headerImage.mpm_trailing).offset(14);
+        make.bottom.equalTo(self.headerImage.mpm_bottom);
+        make.height.equalTo(@22);
+    }];
+    // 申请明细
+    MPMViewAttribute *lastAttribute = self.headerView.mpm_bottom;
+    for (int i = 0; i < self.processDetailList.detailDtoList.count; i++) {
+        // 请假的每一节都有处理类型，其他的都是只有第一段才有处理类型
+        BOOL withTypeLabel = (kCausationTypeAskLeave == self.causationType) ? YES : (0 == i);
+        MPMDetailTimeMessageView *messageView = [[MPMDetailTimeMessageView alloc] initWithCausationType:self.causationType withTypeLabel:withTypeLabel detailDto:self.processDetailList.detailDtoList[i]];
+        [self.detailView addSubview:messageView];
         [messageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.trailing.equalTo(self.containerView);
-            make.height.equalTo(@(height));
-            make.top.equalTo(lastView.mpm_top);
+            make.leading.trailing.equalTo(self.detailView);
+            make.top.equalTo(lastAttribute).offset((0 == i) ? 0 : 8);
+            make.bottom.equalTo(messageView.contentIntegralLabel.mpm_bottom).offset(8);
         }];
-        lastView = messageView;
-    } else {
-        for (int i = 0; i < self.causationDetailArray.count; i++) {
-            NSString *name = (i == 0) ? @"处理类型" : @"";
-            NSInteger height = (i == 0) ? 112 : 90;
-            if (!kIsNilString(self.causationDetailArray[i].address)) {
-                height += 22;
-            }
-            MPMDetailTimeMessageView *messageView = [[MPMDetailTimeMessageView alloc] initWithFrame:CGRectZero typeName:name model:self.causation detail:self.causationDetailArray[i]];
-            [self.containerView addSubview:messageView];
-            [messageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-                make.leading.trailing.equalTo(self.containerView);
-                make.height.equalTo(@(height));
-                if (i == 0) {
-                    make.top.equalTo(lastView.mpm_top);
-                } else {
-                    make.top.equalTo(lastView.mpm_bottom).offset(10);
-                }
-            }];
-            lastView = messageView;
-        }
+        lastAttribute = messageView.mpm_bottom;
     }
     
-    // reason
-    [self.contentReasonView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.equalTo(self.containerView);
-        make.top.equalTo(lastView.mpm_bottom).offset(10);
-        make.height.equalTo(self.contentReasonBeginTimeMessage.mpm_height).offset(20);
+    [self.detailView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.trailing.equalTo(self.scrollView);
+        make.top.equalTo(self.headerView.mpm_bottom).offset(8);
+        make.bottom.equalTo(lastAttribute);
     }];
-    [self.contentReasonBeginTimeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.contentReasonView.mpm_leading);
-        make.top.equalTo(self.contentReasonView.mpm_top).offset(10);
+    
+    // reason
+    [self.reasonView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.trailing.equalTo(self.scrollView);
+        make.width.equalTo(@(kScreenWidth));
+        make.top.equalTo(self.detailView.mpm_bottom).offset(8);
+        make.bottom.equalTo(self.reasonDetailLabel.mpm_bottom).offset(8);
+    }];
+    [self.reasonLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.reasonView.mpm_leading);
+        make.top.equalTo(self.reasonView.mpm_top).offset(8);
         make.height.equalTo(@22);
         make.width.equalTo(@87);
     }];
-    [self.contentReasonBeginTimeMessage mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.contentReasonBeginTimeLabel.mpm_trailing).offset(5);
-        make.trailing.equalTo(self.contentReasonView.mpm_trailing).offset(-5);
-        make.top.equalTo(self.contentReasonBeginTimeLabel.mpm_top).offset(2);
-    }];
-    [self.contentTableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.equalTo(self.view);
-        make.top.equalTo(self.contentReasonView.mpm_bottom);
-        make.bottom.equalTo(self.containerView.mpm_bottom);
+    [self.reasonDetailLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.equalTo(self.reasonLabel.mpm_trailing).offset(8);
+        make.top.equalTo(self.reasonLabel.mpm_top).offset(2);
+        make.trailing.equalTo(self.reasonView.mpm_trailing).offset(-8);
     }];
     
     // bottom
-    [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.bottom.equalTo(self.view);
-        make.height.equalTo(@(BottomViewHeight));
+    [self.bottomApprovedNodeView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.trailing.equalTo(self.scrollView);
+        make.top.equalTo(self.reasonView.mpm_bottom).offset(8);
+        if (0 == self.delivers.count) {
+            make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-22);
+        }
     }];
-    [self.bottomLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.top.trailing.equalTo(self.bottomView);
-        make.height.equalTo(@0.5);
+    [self.bottomApprovedNodeTitleLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.top.equalTo(self.bottomApprovedNodeView);
+        make.width.equalTo(@87);
     }];
-    if (!self.bottonTitles || self.bottonTitles.count == 0) {
-        [self.bottomView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.trailing.bottom.equalTo(self.view);
-            make.height.equalTo(@(0));
+    
+    __block UIView *lastView;
+    MPMViewAttribute *lastAttributes = self.bottomApprovedNodeTitleLabel.mpm_bottom;
+    // 具体审批节点
+    for (int i = 0; i < self.taskInstGroups.count; i++) {
+        MPMTaskInstGroups *group = self.taskInstGroups[i];
+        MPMProcessDetailApprovalNodeView *nodeView = [[MPMProcessDetailApprovalNodeView alloc] initWithTaskGroup:group];
+        if (0 == i) {
+            nodeView.upLine.hidden = YES;
+        }
+        if (self.taskInstGroups.count - 1 == i) {
+            nodeView.bottomLine.hidden = YES;
+        }
+        nodeView.titleLabel.text = group.taskName;
+        [self.bottomApprovedNodeView addSubview:nodeView];
+        [nodeView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.trailing.equalTo(self.bottomApprovedNodeView);
+            make.top.equalTo(lastAttributes);
+            if (self.taskInstGroups.count - 1 == i) {
+                make.bottom.equalTo(self.bottomApprovedNodeView.mpm_bottom);
+                lastView = nodeView;
+            }
         }];
-    } else if (self.bottonTitles.count == 1) {
-        [self.bottomLeftButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.bottomView.mpm_leading);
-            make.width.equalTo(@0);
-            make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
-            make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
+        lastAttributes = nodeView.mpm_bottom;
+    }
+    
+    // 设置抄送人视图
+    if (self.delivers.count > 0) {
+        self.bottomDeliversView.delivers = self.delivers;
+        [self.bottomDeliversView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.trailing.equalTo(self.scrollView);
+            make.top.equalTo(lastView.mpm_bottom);
+            make.height.equalTo(@76);
+            make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-22);
         }];
-        [self.bottomRightButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.bottomLeftButton.mpm_trailing).offset(PX_H(23));
-            make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-PX_H(23));
-            make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
-            make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
-        }];
-        [self.bottomRightButton setTitle:self.bottonTitles.firstObject forState:UIControlStateNormal];
-        [self.bottomRightButton setTitle:self.bottonTitles.firstObject forState:UIControlStateHighlighted];
-    } else if (self.bottonTitles.count == 2) {
-        [self.bottomLeftButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.bottomView.mpm_leading).offset(PX_H(23));
-            make.width.equalTo(@((kScreenWidth - PX_H(69))/2));
-            make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
-            make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
-        }];
-        [self.bottomRightButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.bottomLeftButton.mpm_trailing).offset(PX_H(23));
-            make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-PX_H(23));
-            make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
-            make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
-        }];
-        [self.bottomLeftButton setTitle:self.bottonTitles.firstObject forState:UIControlStateNormal];
-        [self.bottomLeftButton setTitle:self.bottonTitles.firstObject forState:UIControlStateHighlighted];
-        [self.bottomRightButton setTitle:self.bottonTitles.lastObject forState:UIControlStateNormal];
-        [self.bottomRightButton setTitle:self.bottonTitles.lastObject forState:UIControlStateHighlighted];
+        lastView = self.bottomDeliversView;
     } else {
+        [self.bottomDeliversView removeFromSuperview];
+    }
+    if (0 == self.selectIndexPath.section && 0 == self.selectIndexPath.row) {
+        // bottom操作按钮
+        [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.bottom.equalTo(self.view.mpm_bottom);
+            make.leading.trailing.equalTo(self.view);
+            make.height.equalTo(@(BottomViewHeight));
+        }];
+        
+        [self.addSignButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.bottom.equalTo(self.bottomView.mpm_top);
+            make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-12);
+        }];
+        [self.bottomLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.top.trailing.equalTo(self.bottomView);
+            make.height.equalTo(@0.5);
+        }];
         [self.bottomLeftButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.leading.equalTo(self.bottomView.mpm_leading).offset(12);
-            make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
-            make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
-        }];
-        [self.bottomMiddleButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(self.bottomLeftButton.mpm_trailing).offset(12);
-            make.width.equalTo(self.bottomLeftButton.mpm_width);
             make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
             make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
         }];
@@ -319,16 +453,40 @@
             make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
             make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
         }];
-        [self.bottomLeftButton setTitle:self.bottonTitles.firstObject forState:UIControlStateNormal];
-        [self.bottomLeftButton setTitle:self.bottonTitles.firstObject forState:UIControlStateHighlighted];
-        [self.bottomMiddleButton setTitle:self.bottonTitles[1] forState:UIControlStateNormal];
-        [self.bottomMiddleButton setTitle:self.bottonTitles[1] forState:UIControlStateHighlighted];
-        [self.bottomRightButton setTitle:self.bottonTitles.lastObject forState:UIControlStateNormal];
-        [self.bottomRightButton setTitle:self.bottonTitles.lastObject forState:UIControlStateHighlighted];
+        if (1 == self.model.prevActionState.integerValue) {
+            // 我的待办-待处理
+            [self.bottomMiddleButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+                make.leading.equalTo(self.bottomLeftButton.mpm_trailing).offset(12);
+                make.width.equalTo(self.bottomLeftButton.mpm_width);
+                make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
+                make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
+            }];
+        } else {
+            // 我的待办-已驳回
+            [self.bottomMiddleButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+                make.leading.equalTo(self.bottomLeftButton.mpm_trailing);
+                make.width.equalTo(@0);
+                make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
+                make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
+            }];
+            [self.bottomLeftButton setTitle:@"取消申请" forState:UIControlStateNormal];
+            [self.bottomLeftButton setTitle:@"取消申请" forState:UIControlStateHighlighted];
+            [self.bottomLeftButton setTitle:@"取消申请" forState:UIControlStateSelected];
+            [self.bottomRightButton setTitle:@"编辑" forState:UIControlStateNormal];
+            [self.bottomRightButton setTitle:@"编辑" forState:UIControlStateHighlighted];
+            [self.bottomRightButton setTitle:@"编辑" forState:UIControlStateSelected];
+        }
+    } else {
+        [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.bottom.equalTo(self.view.mpm_bottom);
+            make.leading.trailing.equalTo(self.view);
+            make.height.equalTo(@(0));
+        }];
     }
 }
 
 #pragma mark - Private Method
+
 - (NSString *)formatdate:(NSString *)date time:(NSString *)time {
     if (kIsNilString(date) || date.length < 3) {
         return @"";
@@ -339,136 +497,180 @@
     return real;
 }
 
+/** 终审加签之后，修改审批节点视图 */
+- (void)updateViewAfterAddSignModel:(MPMProcessTaskModel *)model {
+    MPMTaskInstGroups *lastGroup = self.taskInstGroups.firstObject;
+    NSMutableArray *addTaskInst = [NSMutableArray arrayWithCapacity:lastGroup.taskInst.count + model.config.participants.count];
+    for (int i = 0; i < model.config.participants.count; i++) {
+        MPMProcessPeople *peo = model.config.participants[i];
+        MPMTaskInsts *addSignInst = [[MPMTaskInsts alloc] init];
+        addSignInst.userId = peo.userId;
+        addSignInst.username = peo.userName;
+        [addTaskInst addObject:addSignInst];
+    }
+    for (int i = 0; i < lastGroup.taskInst.count; i++) {
+        [addTaskInst addObject:lastGroup.taskInst[i]];
+    }
+    self.taskInstGroups.firstObject.taskInst = addTaskInst.copy;
+    
+    // 具体审批节点
+    
+    for (UIView *sub in self.bottomApprovedNodeView.subviews) {
+        if ([sub isKindOfClass:[MPMProcessDetailApprovalNodeView class]]) {
+            [sub removeFromSuperview];
+        }
+    }
+    
+    __block UIView *lastView;
+    MPMViewAttribute *lastAttributes = self.reasonView.mpm_bottom;
+    for (int i = 0; i < self.taskInstGroups.count; i++) {
+        MPMTaskInstGroups *group = self.taskInstGroups[i];
+        MPMProcessDetailApprovalNodeView *nodeView = [[MPMProcessDetailApprovalNodeView alloc] initWithTaskGroup:group];
+        if (0 == i) {
+            nodeView.upLine.hidden = YES;
+        }
+        if (self.taskInstGroups.count - 1 == i) {
+            nodeView.bottomLine.hidden = YES;
+        }
+        nodeView.titleLabel.text = group.taskName;
+        [self.bottomApprovedNodeView addSubview:nodeView];
+        [nodeView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.trailing.equalTo(self.bottomApprovedNodeView);
+            make.top.equalTo(lastAttributes);
+            if (self.taskInstGroups.count - 1 == i) {
+                make.bottom.equalTo(self.bottomApprovedNodeView.mpm_bottom);
+                lastView = nodeView;
+            }
+        }];
+        lastAttributes = nodeView.mpm_bottom;
+    }
+    // 设置抄送人视图
+    if (self.delivers.count > 0) {
+        self.bottomDeliversView.delivers = self.delivers;
+        [self.bottomDeliversView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.trailing.equalTo(self.scrollView);
+            make.top.equalTo(lastView.mpm_bottom);
+            make.height.equalTo(@76);
+            make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-22);
+        }];
+        lastView = self.bottomDeliversView;
+    }
+    
+    [self.bottomView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.view.mpm_bottom);
+        make.leading.trailing.equalTo(self.view);
+        make.height.equalTo(@(BottomViewHeight));
+    }];
+    self.canAddSign = @"0";
+    self.addSignButton.hidden = YES;
+    
+    [self.view layoutIfNeeded];
+}
+
 #pragma mark - Target Action
 - (void)back:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)left:(UIButton *)sender {
-    DLog(@"Left == 删除、通过...");
-    if (!self.bottonTitles || self.bottonTitles.count == 0) return;
-    NSString *title = sender.titleLabel.text;
-    if ([title isEqualToString:@"删除"]) {
-        // 删除操作，不需要status，可参考constants.js文件中的APPLYTYPECONFIG
-        NSString *url = [NSString stringWithFormat:@"%@exceptionBatch/deletApprove?&employeeId=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,[MPMShareUser shareUser].token];
-        NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-        NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":@"",@"status":self.causation.status};
-        [params addObject:dic];
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
-            // 需要跳回上一个页面
-            [self.navigationController popViewControllerAnimated:YES];
-        } failure:^(NSString *error) {
-            DLog(@"%@",error);
-        }];
-    } else if ([title isEqualToString:@"通过"]) {
-        // 通过操作，status传6，可参考constants.js文件中的APPLYTYPECONFIG
-        NSString *url = [NSString stringWithFormat:@"%@exceptionBatch/exceptionBatchApprove?status=%@&employeeId=%@&token=%@",MPMHost,@"6",[MPMShareUser shareUser].employeeId,[MPMShareUser shareUser].token];
-        NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-        NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":@"",@"status":self.causation.status};
-        [params addObject:dic];
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
-            // 跳回上一个页面
-            [self.navigationController popViewControllerAnimated:YES];
-        } failure:^(NSString *error) {
-            DLog(@"%@",error);
-        }];
+    if (1 == self.model.prevActionState.integerValue) {
+        // 我的待办-待处理-驳回
+        MPMApprovalProcessNodeDealingViewController *nodeVC = [[MPMApprovalProcessNodeDealingViewController alloc] initWithDealingNodeType:kDetailNodeDealingTypeReject taskInstId:self.model.mpm_id model:self.model];
+        self.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:nodeVC animated:YES];
+    } else {
+        // 我的待办-已驳回-取消申请
+        __weak typeof(self) weakself = self;
+        [self showAlertControllerToLogoutWithMessage:@"确定取消申请吗？" sureAction:^(UIAlertAction * _Nonnull action) {
+            __strong typeof(weakself) strongself = weakself;
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_COMPLETETASK];
+            params[@"route"] = @"2";
+            params[@"taskInstId"] = strongself.model.mpm_id;
+            [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在操作" success:^(id response) {
+                DLog(@"%@",response);
+                if (response && kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
+                    // 请求成功 - 往回跳两个控制器回到流程审批主页
+                    [strongself showAlertControllerToLogoutWithMessage:@"取消申请成功" sureAction:^(UIAlertAction * _Nonnull action) {
+                        __strong typeof(strongself) sstrongself = strongself;
+                        [sstrongself.navigationController popViewControllerAnimated:YES];
+                    } needCancleButton:NO];
+                } else {
+                    [strongself showAlertControllerToLogoutWithMessage:@"取消申请失败" sureAction:nil needCancleButton:NO];
+                }
+            } failure:^(NSString *error) {
+                DLog(@"%@",error);
+                [strongself showAlertControllerToLogoutWithMessage:@"取消申请失败" sureAction:nil needCancleButton:NO];
+            }];
+        } needCancleButton:YES];
     }
 }
 
 - (void)middle:(UIButton *)sender {
-    DLog(@"编辑");
-    
-    MPMDealingModel *dealingModel = [[MPMDealingModel alloc] init];
-    dealingModel.mpm_copyName = self.causation.mpm_copyName;
-    dealingModel.mpm_copyNameId = self.causation.mpm_copyNameId;
-    dealingModel.approvalName = self.causation.approveName;
-    dealingModel.approvalId = self.causation.approveId;
-    dealingModel.nowApproval = self.causation.nowApprove;
-    dealingModel.nowApprovalId = self.causation.nowApproveId;
-    dealingModel.status = self.causation.status;
-    dealingModel.type = @"0";
-    dealingModel.remark = self.causation.reason;
-    dealingModel.attendenceId = self.causation.exchangeId;
-    dealingModel.oriAttendenceDate = [NSString stringWithFormat:@"%.f",self.causation.schedulingDate.doubleValue/1000];
-    dealingModel.brushDate = [NSString stringWithFormat:@"%.f",[NSDateFormatter getZeroWithTimeInterverl:self.causation.attendanceDate.doubleValue/1000]*1000];
-    dealingModel.brushTime = [NSString stringWithFormat:@"%.f",fabs((self.causation.attendanceDate.doubleValue - dealingModel.brushDate.doubleValue - 28800000))];
-    dealingModel.attendenceDate = [NSString stringWithFormat:@"%.f",self.causation.attendanceDate.doubleValue/1000];
-    dealingModel.createTime = self.causation.attendanceTime;
-    dealingModel.causationDetail = [NSMutableArray arrayWithCapacity:self.causationDetailArray.count];
-    for (MPMApprovalCausationDetailModel *detail in self.causationDetailArray) {
-        MPMCausationDetailModel *model = [[MPMCausationDetailModel alloc] init];
-        model.address = detail.address;
-        model.attendenceId = detail.causationId;
-        model.startLongDate = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:(detail.startDate.doubleValue + detail.startTime.doubleValue)/1000 + 28800] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        model.startDate = detail.startDate;
-        model.startTime = detail.startTime;
-        model.endLongDate = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:(detail.endDate.doubleValue + detail.endTime.doubleValue)/1000 + 28800] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        model.endDate = detail.endDate;
-        model.endTime = detail.endTime;
-        model.days = detail.days;
-        [dealingModel.causationDetail addObject:model];
+    if (1 == self.model.prevActionState.integerValue) {
+        // 我的待办-待处理-转交
+        MPMApprovalProcessNodeDealingViewController *nodeVC = [[MPMApprovalProcessNodeDealingViewController alloc] initWithDealingNodeType:kDetailNodeDealingTypeTransToOthers taskInstId:self.model.mpm_id model:self.model];
+        nodeVC.config = self.config;
+        self.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:nodeVC animated:YES];
     }
-    MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:self.causation.causationtypeNo.integerValue typeStatus:nil dealingModel:dealingModel  dealingFromType:kDealingFromTypeEditing];
-    self.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:dealing animated:YES];
 }
 
 - (void)right:(UIButton *)sender {
-    DLog(@"Right == 撤回、核销、提交...");
-    if (!self.bottonTitles || self.bottonTitles.count == 0) return;
-    NSString *title = sender.titleLabel.text;
-    if ([title isEqualToString:@"撤回"]) {
-        // 撤回操作，status传5，可参考constants.js文件中的APPLYTYPECONFIG
-        NSString *url = [NSString stringWithFormat:@"%@exceptionBatch/exceptionBatchApprove?status=%@&employeeId=%@&token=%@",MPMHost,@"5",[MPMShareUser shareUser].employeeId,[MPMShareUser shareUser].token];
-        NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-        NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":@"",@"status":self.causation.status};
-        [params addObject:dic];
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
-            // 跳回上一个页面
-            [self.navigationController popViewControllerAnimated:YES];
-        } failure:^(NSString *error) {
-            DLog(@"%@",error);
-        }];
-    } else if ([title isEqualToString:@"提交"]) {
-        // 提交操作，status传1，可参考constants.js文件中的APPLYTYPECONFIG
-        NSString *url = [NSString stringWithFormat:@"%@exceptionBatch/exceptionBatchApprove?status=%@&employeeId=%@&token=%@",MPMHost,@"1",[MPMShareUser shareUser].employeeId,[MPMShareUser shareUser].token];
-        NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-        NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":@"",@"status":self.causation.status};
-        [params addObject:dic];
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
-            // 跳回上一个页面
-            [self.navigationController popViewControllerAnimated:YES];
-        } failure:^(NSString *error) {
-            DLog(@"%@",error);
-        }];
-    } else if ([title isEqualToString:@"驳回"]) {
-        // 驳回操作，status传4，可参考constants.js文件中的APPLYTYPECONFIG
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请输入驳回理由" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        __weak typeof (UIAlertController *) weakAlert = alertController;
-        UIAlertAction *sure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakAlert dismissViewControllerAnimated:YES completion:nil];
-            NSString *url = [NSString stringWithFormat:@"%@exceptionBatch/exceptionBatchApprove?status=%@&employeeId=%@&token=%@",MPMHost,@"4",[MPMShareUser shareUser].employeeId,[MPMShareUser shareUser].token];
-            NSMutableArray *params = [NSMutableArray arrayWithCapacity:1];
-            NSDictionary *dic = @{@"causationtypeNo":self.causation.causationtypeNo,@"exchangeId":self.causation.exchangeId,@"rejectReason":kSafeString(self.causation.rejectReason),@"status":self.causation.status};
-            [params addObject:dic];
-            [[MPMSessionManager shareManager] postRequestWithURL:url params:params loadingMessage:@"正在操作" success:^(id response) {
-                // 跳回上一个页面
-                [self.navigationController popViewControllerAnimated:YES];
-            } failure:^(NSString *error) {
-                DLog(@"%@",error);
-            }];
-        }];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            [weakAlert dismissViewControllerAnimated:YES completion:nil];
-        }];
-        [weakAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-            textField.delegate = self;
-            textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        }];
-        [weakAlert addAction:cancelAction];
-        [weakAlert addAction:sure];
-        [self presentViewController:weakAlert animated:YES completion:nil];
+    if (1 == self.model.prevActionState.integerValue) {
+        // 我的待办-待处理-通过
+        MPMApprovalProcessNodeDealingViewController *nodeVC = [[MPMApprovalProcessNodeDealingViewController alloc] initWithDealingNodeType:kDetailNodeDealingTypePass taskInstId:self.model.mpm_id model:self.model];
+        self.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:nodeVC animated:YES];
+    } else {
+        // 我的待办-驳回-编辑
+        if (kProcessDefCode_GetTypeFromCode[self.model.processDefCode]) {
+            CausationType dealingType = ((NSString *)kProcessDefCode_GetTypeFromCode[self.model.processDefCode]).integerValue;
+            MPMBaseDealingViewController *dealingVC = [[MPMBaseDealingViewController alloc] initWithDealType:dealingType dealingModel:nil dealingFromType:kDealingFromTypeEditing bizorderId:self.processInst.bizOrderId taskInstId:self.model.mpm_id];
+            self.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:dealingVC animated:YES];
+        }
     }
+}
+
+- (void)addSign:(UIButton *)sender {
+    self.processDef.currentTaskCode = self.processInst.currentTaskCode;
+    MPMProcessTaskModel *tm = [[MPMProcessTaskModel alloc] init];
+    tm.name = self.taskInstGroups.firstObject.taskName;
+    __weak typeof(self) weakself = self;
+    [self.taskView showWithModel:tm destinyVC:self completeBlock:^(MPMProcessTaskModel *taskModel) {
+        __weak typeof(weakself) strongself = weakself;
+        // 调用终审加签接口
+        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_ADDSIGN];
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSMutableDictionary *participantConfig = [NSMutableDictionary dictionary];
+        participantConfig[@"addsign"] = kSafeString(strongself.config.addsign);
+        participantConfig[@"decision"] = kSafeString(strongself.config.decision);
+        participantConfig[@"groupId"] = kSafeString(strongself.config.groupId);
+        participantConfig[@"mulitType"] = @"2";
+        NSMutableArray *participants = [NSMutableArray arrayWithCapacity:taskModel.config.participants.count];
+        for (int i = 0 ; i < taskModel.config.participants.count; i++) {
+            MPMProcessPeople *people = taskModel.config.participants[i];
+            [participants addObject:@{@"userId":people.userId,@"userName":people.userName}];
+        }
+        participantConfig[@"participants"] = participants;
+        params[@"participantConfig"] = participantConfig;
+        params[@"taskInstId"] = strongself.model.mpm_id;
+        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+            __weak typeof(strongself) wwself = strongself;
+            if (kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
+                [strongself showAlertControllerToLogoutWithMessage:@"加签成功" sureAction:^(UIAlertAction * _Nonnull action) {
+                    __weak typeof(wwself) sself = wwself;
+                    [sself.taskView dismiss];
+                    [sself updateViewAfterAddSignModel:taskModel];
+                } needCancleButton:NO];
+            } else {
+                [strongself showAlertControllerToLogoutWithMessage:@"加签失败" sureAction:nil needCancleButton:NO];
+            }
+        } failure:^(NSString *error) {
+            [strongself showAlertControllerToLogoutWithMessage:@"加签失败" sureAction:nil needCancleButton:NO];
+        }];
+    }];
 }
 
 // 限制驳回理由输入框字数50个以内
@@ -481,61 +683,20 @@
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    self.causation.rejectReason = textField.text;
     return YES;
 }
 
-#pragma mark - UITabelViewDelegate && UITableViewDataSource
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.tableViewCellMessage.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 80;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 30;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    return self.contentTableHeaderView;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MPMApprovalProcessDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ApprovalDetailCell" forIndexPath:indexPath];
-    NSDictionary *dic = self.tableViewCellMessage[indexPath.row];
-    cell.detailTitleLabel.text = dic[@"type"];
-    cell.detailMessageIcon.image = ImageName(dic[@"image"]);
-    cell.detailMessageName.text = dic[@"name"];
-    cell.detailMessageTime.text = dic[@"date"];
-    cell.detailMessageDetailText.text = dic[@"message"];
-    if (indexPath.row == 0) {
-        if ([dic[@"message"] containsString:@"待处理"]) {
-            cell.detailMessageDetailText.textColor = kMainBlueColor;
-        } else if ([dic[@"message"] containsString:@"已通过"]) {
-            cell.detailMessageDetailText.textColor = kRGBA(160, 202, 78, 1);
-        } else {
-            cell.detailMessageDetailText.textColor = kRedColor;
-        }
-    } else {
-        cell.detailMessageDetailText.textColor = kMainLightGray;
-    }
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
 #pragma mark - Lazy Init
+
+- (UIScrollView *)scrollView {
+    if (!_scrollView) {
+        _scrollView = [[UIScrollView alloc] init];
+        _scrollView.backgroundColor = kTableViewBGColor;
+    }
+    return _scrollView;
+}
 // header
-#define kShadowOffset 1
+#define kShadowOffset 0.5
 - (UIImageView *)headerView {
     if (!_headerView) {
         _headerView = [[UIImageView alloc] init];
@@ -549,113 +710,119 @@
     return _headerView;
 }
 
-- (UIImageView *)headerImageView {
-    if (!_headerImageView) {
-        _headerImageView = [[UIImageView alloc] init];
-        _headerImageView.image = ImageName(@"approval_useravatar_big");
+- (MPMRoundPeopleView *)headerImage {
+    if (!_headerImage) {
+        _headerImage = [[MPMRoundPeopleView alloc] initWithWidth:50];
+        _headerImage.backgroundColor = kWhiteColor;
+        _headerImage.nameLabel.font = SystemFont(18);
     }
-    return _headerImageView;
+    return _headerImage;
 }
 
-- (UILabel *)headerName {
-    if (!_headerName) {
-        _headerName = [[UILabel alloc] init];
-        _headerName.text = @"迪丽热巴";
-        [_headerName sizeToFit];
-        _headerName.font = SystemFont(17);
+- (UILabel *)headerNameDepartment {
+    if (!_headerNameDepartment) {
+        _headerNameDepartment = [[UILabel alloc] init];
+        _headerNameDepartment.text = @"迪丽热巴 技术部";
+        [_headerNameDepartment sizeToFit];
+        _headerNameDepartment.font = SystemFont(17);
     }
-    return _headerName;
+    return _headerNameDepartment;
 }
 
-- (UILabel *)headerDepartment {
-    if (!_headerDepartment) {
-        _headerDepartment = [[UILabel alloc] init];
-        _headerDepartment.text = @"技术开发部";
-        _headerDepartment.textColor = kMainBlueColor;
-        _headerDepartment.font = SystemFont(15);
+- (UILabel *)headerStatusLabel {
+    if (!_headerStatusLabel) {
+        _headerStatusLabel = [[UILabel alloc] init];
+        _headerStatusLabel.text = @"状态：已完成";
+        _headerStatusLabel.textColor = kMainLightGray;
+        _headerStatusLabel.font = SystemFont(15);
     }
-    return _headerDepartment;
-}
-// middle
-- (UIScrollView *)scrollView {
-    if (!_scrollView) {
-        _scrollView = [[UIScrollView alloc] init];
-        _scrollView.backgroundColor = kTableViewBGColor;
-    }
-    return _scrollView;
+    return _headerStatusLabel;
 }
 
-- (UIView *)containerView {
-    if (!_containerView) {
-        _containerView = [[UIView alloc] init];
-        _containerView.backgroundColor = kTableViewBGColor;
+- (UIView *)detailView {
+    if (!_detailView) {
+        _detailView = [[UIView alloc] init];
+        [_detailView sizeToFit];
+        _detailView.backgroundColor = kTableViewBGColor;
     }
-    return _containerView;
+    return _detailView;
 }
 
 // reason
-- (UIView *)contentReasonView {
-    if (!_contentReasonView) {
-        _contentReasonView = [[UIView alloc] init];
-        [_contentReasonView sizeToFit];
-        _contentReasonView.backgroundColor = kWhiteColor;
+- (UIView *)reasonView {
+    if (!_reasonView) {
+        _reasonView = [[UIView alloc] init];
+        [_reasonView sizeToFit];
+        _reasonView.backgroundColor = kWhiteColor;
     }
-    return _contentReasonView;
+    return _reasonView;
 }
-- (UILabel *)contentReasonBeginTimeLabel {
-    if (!_contentReasonBeginTimeLabel) {
-        _contentReasonBeginTimeLabel = [[UILabel alloc] init];
-        _contentReasonBeginTimeLabel.text = @"申请原因:";
-        [_contentReasonBeginTimeLabel sizeToFit];
-        _contentReasonBeginTimeLabel.textColor = kMainLightGray;
-        _contentReasonBeginTimeLabel.textAlignment = NSTextAlignmentRight;
-        _contentReasonBeginTimeLabel.font = SystemFont(15);
+- (UILabel *)reasonLabel {
+    if (!_reasonLabel) {
+        _reasonLabel = [[UILabel alloc] init];
+        _reasonLabel.text = @"申请原因";
+        [_reasonLabel sizeToFit];
+        _reasonLabel.textColor = kMainLightGray;
+        _reasonLabel.textAlignment = NSTextAlignmentRight;
+        _reasonLabel.font = SystemFont(15);
     }
-    return _contentReasonBeginTimeLabel;
+    return _reasonLabel;
 }
-- (UILabel *)contentReasonBeginTimeMessage {
-    if (!_contentReasonBeginTimeMessage) {
-        _contentReasonBeginTimeMessage = [[UILabel alloc] init];
-        _contentReasonBeginTimeMessage.numberOfLines = 0;
-        [_contentReasonBeginTimeMessage sizeToFit];
-        [_contentReasonBeginTimeMessage setAttributedString:@"去参加阿里巴巴管理会议，了解积分制管理。" font:SystemFont(15) lineSpace:2];
-        _contentReasonBeginTimeMessage.font = SystemFont(15);
+- (UILabel *)reasonDetailLabel {
+    if (!_reasonDetailLabel) {
+        _reasonDetailLabel = [[UILabel alloc] init];
+        _reasonDetailLabel.textAlignment = NSTextAlignmentLeft;
+        [_reasonDetailLabel sizeToFit];
+        _reasonDetailLabel.numberOfLines = 0;
+        _reasonDetailLabel.font = SystemFont(15);
     }
-    return _contentReasonBeginTimeMessage;
-}
-// TableView
-- (UITableView *)contentTableView {
-    if (!_contentTableView) {
-        _contentTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        _contentTableView.delegate = self;
-        _contentTableView.dataSource = self;
-        _contentTableView.backgroundColor = kTableViewBGColor;
-        _contentTableView.contentInset = UIEdgeInsetsMake(0, 0, 5, 0);
-        [_contentTableView registerClass:[MPMApprovalProcessDetailTableViewCell class] forCellReuseIdentifier:@"ApprovalDetailCell"];
-        _contentTableView.tableFooterView = [[UIView alloc] init];
-        _contentTableView.layer.masksToBounds = YES;
-        _contentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    }
-    return _contentTableView;
-}
-
-- (UILabel *)contentTableHeaderView {
-    if (!_contentTableHeaderView) {
-        _contentTableHeaderView = [[UILabel alloc] init];
-        _contentTableHeaderView.text = @"  审核信息";
-        _contentTableHeaderView.textColor = kMainLightGray;
-        _contentTableHeaderView.font = SystemFont(14);
-        _contentTableHeaderView.backgroundColor = kTableViewBGColor;
-    }
-    return _contentTableHeaderView;
+    return _reasonDetailLabel;
 }
 
 // bottom
+- (UIView *)bottomApprovedNodeView {
+    if (!_bottomApprovedNodeView) {
+        _bottomApprovedNodeView = [[UIView alloc] init];
+        _bottomApprovedNodeView.backgroundColor = kTableViewBGColor;
+    }
+    return _bottomApprovedNodeView;
+}
+- (UILabel *)bottomApprovedNodeTitleLabel {
+    if (!_bottomApprovedNodeTitleLabel) {
+        _bottomApprovedNodeTitleLabel = [[UILabel alloc] init];
+        _bottomApprovedNodeTitleLabel.text = @"审核信息";
+        _bottomApprovedNodeTitleLabel.textAlignment = NSTextAlignmentRight;
+        _bottomApprovedNodeTitleLabel.textColor = kMainLightGray;
+        _bottomApprovedNodeTitleLabel.font = SystemFont(15);
+        [_bottomApprovedNodeTitleLabel sizeToFit];
+    }
+    return _bottomApprovedNodeTitleLabel;
+}
+
+- (MPMProcessDetailDeliversView *)bottomDeliversView {
+    if (!_bottomDeliversView) {
+        _bottomDeliversView = [[MPMProcessDetailDeliversView alloc] init];
+        _bottomDeliversView.backgroundColor = kTableViewBGColor;
+    }
+    return _bottomDeliversView;
+}
+
 - (UIView *)bottomView {
     if (!_bottomView) {
         _bottomView = [[UIView alloc] init];
+        _bottomView.backgroundColor = kWhiteColor;
     }
     return _bottomView;
+}
+
+- (UIButton *)addSignButton {
+    if (!_addSignButton) {
+        _addSignButton = [MPMButton titleButtonWithTitle:@"+终审加签" nTitleColor:kMainBlueColor hTitleColor:kMainBlueColor bgColor:kTableViewBGColor];
+        _addSignButton.titleLabel.font = SystemFont(15);
+        [_addSignButton sizeToFit];
+        _addSignButton.hidden = YES;
+    }
+    return _addSignButton;
 }
 
 - (UIView *)bottomLine {
@@ -668,14 +835,14 @@
 
 - (UIButton *)bottomLeftButton {
     if (!_bottomLeftButton) {
-        _bottomLeftButton = [MPMButton titleButtonWithTitle:@"删除" nTitleColor:kMainBlueColor hTitleColor:kMainBlackColor nBGImage:ImageName(@"approval_but_default_reset") hImage:ImageName(@"approval_but_default_reset")];
+        _bottomLeftButton = [[MPMDealingBorderButton alloc] initWithTitle:@"驳回" nColor:kMainBlueColor sColor:kMainLightGray font:SystemFont(18) cornerRadius:5 borderWidth:1];
         _bottomLeftButton.titleLabel.font = SystemFont(18);
     }
     return _bottomLeftButton;
 }
 - (UIButton *)bottomMiddleButton {
     if (!_bottomMiddleButton) {
-        _bottomMiddleButton = [MPMButton titleButtonWithTitle:@"删除" nTitleColor:kMainBlueColor hTitleColor:kMainBlackColor nBGImage:ImageName(@"approval_but_default_reset") hImage:ImageName(@"approval_but_default_reset")];
+        _bottomMiddleButton = [[MPMDealingBorderButton alloc] initWithTitle:@"转交" nColor:kMainBlueColor sColor:kMainLightGray font:SystemFont(18) cornerRadius:5 borderWidth:1];
         _bottomMiddleButton.titleLabel.font = SystemFont(18);
     }
     return _bottomMiddleButton;
@@ -683,11 +850,18 @@
 
 - (UIButton *)bottomRightButton {
     if (!_bottomRightButton) {
-        _bottomRightButton = [MPMButton titleButtonWithTitle:@"撤回" nTitleColor:kWhiteColor hTitleColor:kMainLightGray bgColor:kMainBlueColor];
+        _bottomRightButton = [MPMButton titleButtonWithTitle:@"通过" nTitleColor:kWhiteColor hTitleColor:kMainLightGray bgColor:kMainBlueColor];
         _bottomRightButton.layer.cornerRadius = 5;
         _bottomRightButton.titleLabel.font = SystemFont(18);
     }
     return _bottomRightButton;
+}
+
+- (MPMTaskEditView *)taskView {
+    if (!_taskView) {
+        _taskView = [[MPMTaskEditView alloc] initWithFrame:self.view.bounds];
+    }
+    return _taskView;
 }
 
 - (void)didReceiveMemoryWarning {

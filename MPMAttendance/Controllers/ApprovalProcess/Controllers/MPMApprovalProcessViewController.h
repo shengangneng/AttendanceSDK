@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMBaseViewController.h"
-typedef NS_ENUM(NSInteger, FirstSectionType) {
-    forMyApplyType = 1,
-    forMyApprovalType = 2,
-    forCCListType = 3,
+typedef NS_ENUM(NSInteger, ProgcessFirstSectionType) {
+    kMyMatterType = 0,  /** 我的事项 */
+    kMyApplyType = 1,   /** 我的申请 */
+    kCCToMeType = 2,    /** 抄送给我 */
 };
 
 @interface MPMApprovalProcessViewController : MPMBaseViewController

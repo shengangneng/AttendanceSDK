@@ -7,26 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MPMSchedulingDepartmentsModel.h"
-#import "MPMSchedulingEmplyoeeModel.h"
 #import "MPMDepartment.h"
 
 @interface MPMDepartEmployeeHelper : NSObject
 
 
-@property (nonatomic, strong) NSMutableArray<MPMSchedulingDepartmentsModel *> *departments;
-@property (nonatomic, strong) NSMutableArray<MPMSchedulingEmplyoeeModel *> *employees;
-
-@property (nonatomic, strong) NSMutableArray<NSString *> *allStringData;
-@property (nonatomic, strong) NSMutableArray<NSArray *> *allArrayData;
+@property (nonatomic, strong) NSMutableArray<MPMDepartment *> *departments; /** 保存选中的部门 */
+@property (nonatomic, strong) NSMutableArray<MPMDepartment *> *employees;   /** 保存选中的部门 */
 
 + (instancetype)shareInstance;
-
-/** 去掉allStringData里面数据的'-1,'，并且转成数组存起来 */
-- (void)dealingAllStringData;
-
-/** allStringData移出之下的所有对象 */
-- (void)allStringDataRemoveSubOfId:(NSString *)string;
 
 /** 部门的增加操作 */
 - (void)departmentArrayAddDepartModel:(MPMDepartment *)dep;
@@ -37,7 +26,6 @@
 - (void)employeeArrayAddDepartModel:(MPMDepartment *)dep;
 /** 员工的删除操作 */
 - (void)employeeArrayRemoveDepartModel:(MPMDepartment *)dep;
-
 
 /** 清空所有数据 */
 - (void)clearData;

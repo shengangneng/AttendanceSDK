@@ -19,8 +19,9 @@
 #define kCollectionViewCellTimeIdentifier @"MPMSiderDrawerCollectionViewTimeCell"
 #define kCollectionViewCellReuseViewIdentifier @"ReusableView"
 
-#define kSelectedSectionKey0 @"Section0"
-#define kSelectedSectionKey1 @"Section1"
+#define kSelectStatsKey @"SelectionStatsKey"
+#define kSelectTypesKey @"SelectionTypesKey"
+#define kSelectTimesKey @"SelectionTimesKey"
 
 @interface MPMSideDrawerView() <UICollectionViewDelegate, UICollectionViewDataSource, MPMSiderDrawerTimeCellDelegate, MPMCustomDatePickerViewDelegate>
 // Views
@@ -30,20 +31,16 @@
 @property (nonatomic, strong) UICollectionView *contentViewCollectionView;
 @property (nonatomic, strong) UIButton *resetButton;
 @property (nonatomic, strong) UIButton *doneButton;
-// 日历
-@property (nonatomic, strong) MPMCustomDatePickerView *customDatePickerView;
+@property (nonatomic, strong) MPMCustomDatePickerView *customDatePickerView;/** 日历控件 */
 // Datas
-@property (nonatomic, copy) NSArray *collectionViewTypesArray;
-@property (nonatomic, copy) NSArray *collectionViewTimesArray;
-// 高级筛选已选数组：里面再存放两个数组:数组里面存放的是选中的indexPath
-@property (nonatomic, strong) NSMutableDictionary *collectionViewSelectedDictionay;
+@property (nonatomic, copy) NSArray *collectionViewStatsArray;              /** 节点状态 */
+@property (nonatomic, copy) NSArray *collectionViewTypesArray;              /** 类型 */
+@property (nonatomic, copy) NSArray *collectionViewTimesArray;              /** 时间 */
+@property (nonatomic, strong) NSMutableDictionary *collectionViewSelectedDictionay;/** 存放每个Section选中的indexPath */
 // 记录当前选中的“开始时间”还是“结束时间”按钮
 @property (nonatomic, strong) UIButton *currentTimeButton;
 @property (nonatomic, strong) UIButton *startTimeButton;
 @property (nonatomic, strong) UIButton *endTimeButton;
-// 保存选中的时间
-@property (nonatomic, strong) NSDate *startDate;
-@property (nonatomic, strong) NSDate *endDate;
 
 @end
 
@@ -60,9 +57,10 @@
 }
 
 - (void)setupAttributes {
-    self.collectionViewSelectedDictionay = [NSMutableDictionary dictionaryWithObjectsAndKeys:@[], kSelectedSectionKey0, @[], kSelectedSectionKey1, nil];
-    self.collectionViewTypesArray = @[@"改签",@"补签",@"请假",@"出差",@"外出",@"调班",@"加班"];
+    self.collectionViewSelectedDictionay = [NSMutableDictionary dictionaryWithObjectsAndKeys:@[], kSelectStatsKey, @[], kSelectTypesKey, @[], kSelectTimesKey, nil];
+    self.collectionViewTypesArray = @[@"全部",@"补签",@"改签",@"请假",@"出差",@"加班",@"外出"];
     self.collectionViewTimesArray = @[@"",@"最近三天",@"最近一周",@"最近一月"];
+    [self reset:nil];
     [self.contentView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDrawerView:)]];
     [self.mainMaskView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapMaskView:)]];
     [self.resetButton addTarget:self action:@selector(reset:) forControlEvents:UIControlEventTouchUpInside];
@@ -80,7 +78,7 @@
         make.top.equalTo(self.contentView.mpm_top).offset(12);
         make.leading.equalTo(self.contentView.mpm_leading).offset(6);
         make.trailing.equalTo(self.contentView.mpm_trailing).offset(-6);
-        make.height.equalTo(@(450));
+        make.bottom.equalTo(self.resetButton.mpm_top).offset(-BottomViewBottomMargin);
     }];
     [self.resetButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.contentView.mpm_leading).offset(10);
@@ -132,10 +130,15 @@
 }
 
 - (void)reset:(UIButton *)sender {
-    self.collectionViewSelectedDictionay[kSelectedSectionKey0] = @[];
-    self.collectionViewSelectedDictionay[kSelectedSectionKey1] = @[];
+    DLog(@"重置");
+    self.collectionViewSelectedDictionay[kSelectStatsKey] = @[];
+    self.collectionViewSelectedDictionay[kSelectTypesKey] = @[];
+    self.collectionViewSelectedDictionay[kSelectTimesKey] = @[];
+    self.state = nil;
+    self.type = nil;
     self.startDate = nil;
     self.endDate = nil;
+    self.pagesize = 10;
     [self.startTimeButton setTitle:@"开始时间" forState:UIControlStateNormal];
     [self.endTimeButton setTitle:@"结束时间" forState:UIControlStateNormal];
     [self.contentViewCollectionView reloadData];
@@ -143,21 +146,34 @@
 
 - (void)done:(UIButton *)sender {
     DLog(@"完成");
-    NSMutableArray *mdic = [NSMutableArray array];
-    NSArray *arr = self.collectionViewSelectedDictionay[kSelectedSectionKey0];
-    if (arr.count > 0) {
-        for (int i = 0; i < arr.count; i++) {
-            NSIndexPath *index = arr[i];
-            NSString *name = self.collectionViewTypesArray[index.row];
-            NSString *status = kSausactionNo[name];
-            [mdic addObject:@(status.integerValue)];
+    // 筛选选中的‘节点状态’
+    NSArray *statArray = self.collectionViewSelectedDictionay[kSelectStatsKey];
+    if (statArray.count > 0) {
+        for (int i = 0; i < statArray.count; i++) {
+            NSIndexPath *index = statArray[i];
+            if (0 == index.row) {
+                self.state = @"";
+            } else {
+                self.state = [NSString stringWithFormat:@"%ld",index.row];
+            }
         }
     }
-    NSString *startDateString = self.startDate ? [NSDateFormatter formatterDate:self.startDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar] : @"";
-    NSString *endDateString = self.endDate ? [NSDateFormatter formatterDate:self.endDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar] : @"";
+    // 筛选选中的‘类型’
+    NSArray *typeArray = self.collectionViewSelectedDictionay[kSelectTypesKey];
+    if (typeArray.count > 0) {
+        for (int i = 0; i < typeArray.count; i++) {
+            NSIndexPath *index = typeArray[i];
+            if (0 == index.row) {
+                self.type = @"";
+            } else {
+                NSString *name = self.collectionViewTypesArray[index.row];
+                self.type = kProcessDefCode_GetCodeFromType[kGetCausationNumFromName[name]];
+            }
+        }
+    }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(siderDrawerView:didCompleteWithCausationtypeNo:startDate:endDate:)]) {
-        [self.delegate siderDrawerView:self didCompleteWithCausationtypeNo:mdic.copy startDate:startDateString endDate:endDateString];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(siderDrawerViewDidCompleteSelected)]) {
+        [self.delegate siderDrawerViewDidCompleteSelected];
     }
     [self dismiss];
 }
@@ -178,11 +194,11 @@
 #pragma mark - MPMPickerViewDelegate
 - (void)customDatePickerViewDidCompleteSelectDate:(NSDate *)date {
     // 0、如果之前有选中section1中的“最近三天、最近一周、最近一个月”，则需要清空
-    if (((NSArray *)self.collectionViewSelectedDictionay[kSelectedSectionKey1]).count > 0) {
+    if (((NSArray *)self.collectionViewSelectedDictionay[kSelectTimesKey]).count > 0) {
         self.startDate = self.endDate = nil;
     }
     // 1、取消section1中选中的按钮
-    self.collectionViewSelectedDictionay[kSelectedSectionKey1] = @[];
+    self.collectionViewSelectedDictionay[kSelectTimesKey] = @[];
     // 2、更新按钮title
     NSDateFormatter *formater = [[NSDateFormatter alloc] init];
     [self.currentTimeButton setTitle:[formater formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar] forState:UIControlStateNormal];
@@ -198,13 +214,16 @@
 
 #pragma mark - Public Method
 
-- (void)showInView:(UIView *)superView maskViewFrame:(CGRect)mFrame drawerViewFrame:(CGRect)dFrame {
+- (void)showInView:(UIView *)superView maskViewFrame:(CGRect)mFrame drawerViewFrame:(CGRect)dFrame statusTitles:(NSArray *)statusTitles {
     if (!superView) {
         return;
     }
     self.siderSuperView = superView;
     self.mainMaskView.frame = mFrame;
     self.contentView.frame = dFrame;
+    // 节点状态
+    self.collectionViewStatsArray = statusTitles;
+    [self.contentViewCollectionView reloadData];
     [superView addSubview:self.mainMaskView];
     [superView addSubview:self.contentView];
     
@@ -214,6 +233,9 @@
         frame.origin.x = mFrame.size.width - dFrame.size.width;
         self.contentView.frame = frame;
     }];
+}
+- (void)showInView:(UIView *)superView maskViewFrame:(CGRect)mFrame drawerViewFrame:(CGRect)dFrame {
+    
 }
 
 - (void)dismiss {
@@ -234,29 +256,51 @@
 #pragma mark - UICollectionViewDataSource && UICollectionViewDelegate
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 2;
+    if (self.collectionViewStatsArray.count > 0) {
+        return 3;
+    } else {
+        return 2;
+    }
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    switch (section) {
+    
+    NSInteger trueSection;
+    if (self.collectionViewStatsArray.count > 0) {
+        trueSection = section;
+    } else {
+        trueSection = section + 1;
+    }
+    switch (trueSection) {
         case 0: {
-            return self.collectionViewTypesArray.count;
+            return self.collectionViewStatsArray.count;
         }break;
         case 1: {
+            return self.collectionViewTypesArray.count;
+        }break;
+        case 2: {
             return self.collectionViewTimesArray.count;
         }break;
         default:
             return 0;
             break;
     }
+    
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    switch (indexPath.section) {
+    NSInteger section;
+    if (self.collectionViewStatsArray.count > 0) {
+        section = indexPath.section;
+    } else {
+        section = indexPath.section + 1;
+    }
+    
+    switch (section) {
         case 0:{
             MPMSiderDrawerCollectionViewButtonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCollectionViewCellTypeIdentifier forIndexPath:indexPath];
-            [cell.collectionCellButton setTitle:self.collectionViewTypesArray[indexPath.row] forState:UIControlStateNormal];
-            NSArray *arr = self.collectionViewSelectedDictionay[kSelectedSectionKey0];
+            [cell.collectionCellButton setTitle:self.collectionViewStatsArray[indexPath.row] forState:UIControlStateNormal];
+            NSArray *arr = self.collectionViewSelectedDictionay[kSelectStatsKey];
             BOOL hasCell = NO;
             if (arr.count > 0) {
                 for (NSIndexPath *index in arr) {
@@ -271,6 +315,23 @@
         }
             break;
         case 1:{
+            MPMSiderDrawerCollectionViewButtonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCollectionViewCellTypeIdentifier forIndexPath:indexPath];
+            [cell.collectionCellButton setTitle:self.collectionViewTypesArray[indexPath.row] forState:UIControlStateNormal];
+            NSArray *arr = self.collectionViewSelectedDictionay[kSelectTypesKey];
+            BOOL hasCell = NO;
+            if (arr.count > 0) {
+                for (NSIndexPath *index in arr) {
+                    if ([index compare:indexPath] == NSOrderedSame) {
+                        hasCell = YES;
+                        break;
+                    }
+                }
+            }
+            cell.collectionCellButton.selected = hasCell;
+            return cell;
+        }
+            break;
+        case 2:{
             if (indexPath.row == 0) {
                 MPMSiderDrawerCollectionViewTimeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCollectionViewCellTimeIdentifier forIndexPath:indexPath];
                 cell.delegate = self;
@@ -278,7 +339,7 @@
             } else {
                 MPMSiderDrawerCollectionViewButtonCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCollectionViewCellTypeIdentifier forIndexPath:indexPath];
                 [cell.collectionCellButton setTitle:self.collectionViewTimesArray[indexPath.row] forState:UIControlStateNormal];
-                NSArray *arr = self.collectionViewSelectedDictionay[kSelectedSectionKey1];
+                NSArray *arr = self.collectionViewSelectedDictionay[kSelectTimesKey];
                 if (arr.count > 0 && [(NSIndexPath *)arr.firstObject compare:indexPath] == NSOrderedSame) {
                     cell.collectionCellButton.selected = YES;
                 } else {
@@ -295,9 +356,15 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    switch (indexPath.section) {
+    NSInteger section;
+    if (self.collectionViewStatsArray.count > 0) {
+        section = indexPath.section;
+    } else {
+        section = indexPath.section + 1;
+    }
+    switch (section) {
         case 0:{
-            NSArray *arr = self.collectionViewSelectedDictionay[kSelectedSectionKey0];
+            NSArray *arr = self.collectionViewSelectedDictionay[kSelectStatsKey];
             if (arr && [arr containsObject:indexPath]) {
                 // 包含，则移出去
                 NSMutableArray *marr = [NSMutableArray array];
@@ -308,28 +375,39 @@
                 }
                 arr = marr.copy;
             } else {
-                if (arr.count == 0) {
-                    arr = @[indexPath];
-                } else {
-                    // 不包含，则加入
-                    NSMutableArray *marr = [NSMutableArray array];
-                    for (id object in arr) {
-                        [marr addObject:object];
-                    }
-                    [marr addObject:indexPath];
-                    arr = marr.copy;
-                }
+                // 不包含，则清空再移入
+                arr = @[indexPath];
             }
             // 赋值回去
-            self.collectionViewSelectedDictionay[kSelectedSectionKey0] = arr;
+            self.collectionViewSelectedDictionay[kSelectStatsKey] = arr;
             [collectionView reloadData];
         }
             break;
         case 1:{
+            NSArray *arr = self.collectionViewSelectedDictionay[kSelectTypesKey];
+            if (arr && [arr containsObject:indexPath]) {
+                // 包含，则移出去
+                NSMutableArray *marr = [NSMutableArray array];
+                for (id object in arr) {
+                    if (object != indexPath) {
+                        [marr addObject:object];
+                    }
+                }
+                arr = marr.copy;
+            } else {
+                // 不包含，则清空再移入
+                arr = @[indexPath];
+            }
+            // 赋值回去
+            self.collectionViewSelectedDictionay[kSelectTypesKey] = arr;
+            [collectionView reloadData];
+        }
+            break;
+        case 2:{
             if (indexPath.row == 0) {
                 return;
             }
-            NSArray *arr = self.collectionViewSelectedDictionay[kSelectedSectionKey1];
+            NSArray *arr = self.collectionViewSelectedDictionay[kSelectTimesKey];
             if (arr.count == 0) {
                 arr = @[indexPath];
             } else {
@@ -338,7 +416,7 @@
                     arr = @[indexPath];
                 }
             }
-            self.collectionViewSelectedDictionay[kSelectedSectionKey1] = arr;
+            self.collectionViewSelectedDictionay[kSelectTimesKey] = arr;
             [collectionView reloadData];
             // 选择了“最近三天、最近一周、最近一月”，需要清空“开始时间”、“结束时间”
             if (self.startTimeButton) {
@@ -359,7 +437,6 @@
                 self.startDate = [NSDate dateWithTimeIntervalSinceNow:-24*60*60*30];
                 self.endDate = [NSDate date];
             }
-            DLog(@"heheh");
         }
             break;
         default:
@@ -369,17 +446,30 @@
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     
-    switch (indexPath.section) {
+    NSInteger section;
+    if (self.collectionViewStatsArray.count > 0) {
+        section = indexPath.section;
+    } else {
+        section = indexPath.section + 1;
+    }
+    switch (section) {
         case 0:{
             MPMSiderDrawerCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:
-                                                                   UICollectionElementKindSectionHeader withReuseIdentifier:kCollectionViewCellReuseViewIdentifier forIndexPath:indexPath];
-            headerView.label.text = @"类型";
+                                                                UICollectionElementKindSectionHeader withReuseIdentifier:kCollectionViewCellReuseViewIdentifier forIndexPath:indexPath];
+            headerView.label.text = @"节点状态";
             return headerView;
         }
             break;
         case 1:{
             MPMSiderDrawerCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:
-                                                                   UICollectionElementKindSectionHeader withReuseIdentifier:kCollectionViewCellReuseViewIdentifier forIndexPath:indexPath];
+                                                                UICollectionElementKindSectionHeader withReuseIdentifier:kCollectionViewCellReuseViewIdentifier forIndexPath:indexPath];
+            headerView.label.text = @"类型";
+            return headerView;
+        }
+            break;
+        case 2:{
+            MPMSiderDrawerCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:
+                                                                UICollectionElementKindSectionHeader withReuseIdentifier:kCollectionViewCellReuseViewIdentifier forIndexPath:indexPath];
             headerView.label.text = @"时间";
             return headerView;
         }
@@ -393,7 +483,13 @@
 #pragma mark - UICollectionViewDelegateFlowLayout
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 1 && indexPath.row == 0) {
+    NSInteger section;
+    if (self.collectionViewStatsArray.count > 0) {
+        section = indexPath.section;
+    } else {
+        section = indexPath.section + 1;
+    }
+    if (section == 2 && indexPath.row == 0) {
         return CGSizeMake(241, 55);
     } else {
         return CGSizeMake(120, 43);
@@ -438,6 +534,7 @@
         _contentViewCollectionView.backgroundColor = kWhiteColor;
         _contentViewCollectionView.delegate = self;
         _contentViewCollectionView.dataSource = self;
+        _contentViewCollectionView.showsVerticalScrollIndicator = NO;
         [_contentViewCollectionView registerClass:[MPMSiderDrawerCollectionViewButtonCell class] forCellWithReuseIdentifier:kCollectionViewCellTypeIdentifier];
         [_contentViewCollectionView registerClass:[MPMSiderDrawerCollectionViewTimeCell class] forCellWithReuseIdentifier:kCollectionViewCellTimeIdentifier];
         [_contentViewCollectionView registerClass:[MPMSiderDrawerCollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kCollectionViewCellReuseViewIdentifier];

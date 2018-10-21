@@ -91,9 +91,9 @@
         make.leading.equalTo(self.bgroundView.mpm_leading).offset(15);
     }];
     [self.ticketButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.top.equalTo(self.bgroundView.mpm_top).offset(12.5);
         make.width.equalTo(@75);
         make.height.equalTo(@25);
+        make.centerY.equalTo(self.titleLabel.mpm_centerY);
         make.trailing.equalTo(self.bgroundView.mpm_trailing).offset(-15);
     }];
     [self.seperateLine mpm_makeConstraints:^(MPMConstraintMaker *make) {

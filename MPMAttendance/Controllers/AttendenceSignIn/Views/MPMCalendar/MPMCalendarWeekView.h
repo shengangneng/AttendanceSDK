@@ -27,7 +27,7 @@ typedef void(^CurrentWeekButtonClickBlock)(NSInteger offsetDay);
 @property (nonatomic, copy) CurrentWeekButtonClickBlock clickBlock;
 
 - (void)changeDays:(NSArray *)days;
-/** 选中当前月份当前日 */ 
+/** 选中当前月份当前日 */
 - (void)selectCurrentDate;
 - (void)updateButtonsView:(NSArray *)arr;
 

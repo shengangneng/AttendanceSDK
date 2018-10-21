@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMBaseTableViewCell.h"
+#import "MPMDepartment.h"
 
 typedef void(^FoldButtonBlock)(UIButton *sender);
 typedef void(^AddPeoplesBlock)(UIButton *sender);
@@ -22,6 +23,6 @@ typedef void(^AddPeoplesBlock)(UIButton *sender);
 @property (nonatomic, copy) FoldButtonBlock foldBlock;
 @property (nonatomic, copy) AddPeoplesBlock addpBlock;
 
-- (void)setPeopleViewData:(NSString *)data fold:(BOOL)fold;
+- (void)setPeopleViewArray:(NSArray<MPMDepartment *> *)peoples fold:(BOOL)fold;
 
 @end

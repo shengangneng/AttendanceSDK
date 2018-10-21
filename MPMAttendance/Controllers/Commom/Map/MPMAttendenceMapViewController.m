@@ -476,9 +476,7 @@
 }
 - (UIButton *)bottomSureButton {
     if (!_bottomSureButton) {
-        _bottomSureButton = [MPMButton titleButtonWithTitle:@"确定" nTitleColor:kWhiteColor hTitleColor:kMainLightGray bgColor:kMainBlueColor];
-        _bottomSureButton.layer.cornerRadius = 5;
-        _bottomSureButton.titleLabel.font = SystemFont(PX_H(40));
+        _bottomSureButton = [MPMButton titleButtonWithTitle:@"确定" nTitleColor:kWhiteColor hTitleColor:kMainLightGray nBGImage:ImageName(@"approval_but_complete") hImage:ImageName(@"approval_but_complete")];
     }
     return _bottomSureButton;
 }

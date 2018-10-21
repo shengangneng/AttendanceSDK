@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMBaseTableViewCell.h"
-#import "MPMApprovalCausationModel.h"
 
 @interface MPMApprovalProcessTableViewCell : MPMBaseTableViewCell
 

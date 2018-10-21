@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, MPMDateFormatType) {
     forDateFormatTypeHourMinute,                /** 21:38(HH:mm) */
     forDateFormatTypeHourMinuteSeconds,         /** 21:38:55(HH:mm:ss) */
     forDateFormatTypeMonthYearDayWeek,          /** 4月,2018年,25,周五(MM月,yyyy年,d,EEE) */
+    forDateFormatTypeMonthYearDayWeek2,         /** 2018-05-04 星期五(yyyy-MM-dd EEE) */
     forDateFormatTypeSpecial,                   /** 2018-05-10T21:33:03.000Z(yyyy-MM-ddTHH:mm:ss.000Z) */
 };
 
@@ -39,7 +40,8 @@ typedef NS_ENUM(NSInteger, MPMDateFormatType) {
 + (double)getZeroWithTimeInterverl:(NSTimeInterval)timeInterval;
 /** 通过Java后台返回的时分秒组装成年月日时分秒 */
 + (NSDate *)getDateFromJaveTime:(NSTimeInterval)inter;
-/** 比较date2是否在date1后 */
-+ (BOOL)isDate1:(NSDate *)date1 beforeDate2:(NSDate *)date2;
+
+/** 比较两个日期是否为同一天 */
++ (BOOL)isDate1:(NSDate *)date1 equalToDate2:(NSDate *)date2;
 
 @end

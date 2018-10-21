@@ -11,3 +11,15 @@
 @implementation MPMLerakageCardModel
 
 @end
+
+@implementation MPMRepairSignLeadCardModel
+
+- (instancetype)initWithThisMonth:(BOOL)isThisMonth {
+    self = [super init];
+    if (self) {
+        self.thisMonth = isThisMonth;
+    }
+    return self;
+}
+
+@end

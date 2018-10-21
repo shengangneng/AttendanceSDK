@@ -26,16 +26,21 @@
 #import <MapKit/MapKit.h>
 #import "MPMSigninDateView.h"
 #import "JZLocationConverter.h"
-// model
-#import "MPMShareUser.h"
+#import "MPMAttendenceExceptionTableViewCell.h"
 #import "MPMAttendenceModel.h"
 #import "MPMAttendenceOneMonthModel.h"
 #import "MPMSettingCardAddressWifiModel.h"
+#import "MPMOauthUser.h"
+#import "MPMAttendenceManageModel.h"
+#import "MPMAttendenceExceptionModel.h"
+#import "MPMCausationDetailModel.h"
+#import "MPMApprovalProcessDetailViewController.h"
+#import "MPMProcessMyMetterModel.h"
+#import <AVFoundation/AVFoundation.h>
 
-
-#define kViewBounds             (kScreenWidth / 7)
-#define kMPMCalendarButtonTag   999
 #define kAddressKeyPath         @"address"
+const double NeedRefreshLocationInterval = 600; /** 在打卡页面停留10分钟未操作，需要刷新地址 */
+const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击打卡 */
 
 @interface MPMAttendenceSigninViewController () <UIScrollViewDelegate, CAAnimationDelegate, UITableViewDelegate, UITableViewDataSource, MPMCalendarScrollViewDelegate, CLLocationManagerDelegate>
 
@@ -54,8 +59,9 @@
 @property (nonatomic, strong) UIView *bottomLine;
 @property (nonatomic, strong) UIButton *bottomRoundButton;
 @property (nonatomic, strong) CAShapeLayer *bottomAnimateLayer;
-@property (nonatomic, strong) UIButton *bottomLocationButton;
-@property (nonatomic, strong) MPMCalendarButton *lastCalendarSelectedButton;
+@property (nonatomic, strong) UIImageView *bottomLocationIcon;      /** 地理位置图标 */
+@property (nonatomic, strong) UILabel *bottomLocationLabel;         /** 显示地理位置 */
+@property (nonatomic, strong) UIButton *bottomRefreshLocationButton;/** 刷新地址 */
 // pickerView
 @property (nonatomic, strong) MPMAttendencePickerView *pickView;
 // location
@@ -63,13 +69,9 @@
 // timer
 @property (nonatomic, strong) CADisplayLink *timer; /** 定时器：用于获取当前系统时间 */
 // data
-@property (nonatomic, copy) NSArray *attendenceArray;
-@property (nonatomic, copy) NSArray *attendenceAddressArray;
-@property (nonatomic, copy) NSArray *attendenceOneMonthArray;
-@property (nonatomic, copy) NSArray *attendenceThreeMonthArray;
-@property (nonatomic, assign) NSInteger brushDateCount;
-@property (nonatomic, strong) NSDate *currentMiddleDate;
-@property (nonatomic, assign) MKCoordinateRegion region;
+@property (nonatomic, strong) MPMAttendenceManageModel *attendenceManageModel;  /** 打卡信息model */
+@property (nonatomic, strong) NSDate *lastSigninDate;                           /** 记录上一次打卡时间（15秒钟不允许操作） */
+@property (nonatomic, strong) NSDate *lastRefreshLocationDate;                  /** 记录上一次刷新定位的时间 */
 
 @end
 
@@ -78,15 +80,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupAttributes];
-    [self setupSubViews];
-    [self setupConstraints];
+    __weak typeof(self) weakself = self;
+    [self addNetworkMonitoringWithGoodNetworkBlock:^{
+        __strong typeof(weakself) strongself = weakself;
+        [strongself setupSubViews];
+        [strongself setupConstraints];
+        if (strongself.goodNetworkToLoadBlock) {
+            strongself.goodNetworkToLoadBlock();
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     // 签到按钮的layer动画
     [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
+    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     [self setupLocation];
+    __weak typeof(self) weakself = self;
+    self.goodNetworkToLoadBlock = ^{
+        __strong typeof(weakself) strongself = weakself;
+        [strongself.headerScrollView changeToCurrentWeekDate];
+    };
     [self.headerScrollView changeToCurrentWeekDate];
 }
 
@@ -99,7 +114,7 @@
 }
 
 - (void)dealloc {
-    [[MPMShareUser shareUser] removeObserver:self forKeyPath:kAddressKeyPath];
+    [[MPMOauthUser shareOauthUser] removeObserver:self forKeyPath:kAddressKeyPath];
 }
 
 - (void)setupSubViews {
@@ -113,17 +128,19 @@
     [super setupAttributes];
     self.navigationItem.title = @"考勤打卡";
     self.view.backgroundColor = kWhiteColor;
-    [[MPMShareUser shareUser] addObserver:self forKeyPath:kAddressKeyPath options:NSKeyValueObservingOptionNew context:nil];
+    [[MPMOauthUser shareOauthUser] addObserver:self forKeyPath:kAddressKeyPath options:NSKeyValueObservingOptionNew context:nil];
+    self.attendenceManageModel = [[MPMAttendenceManageModel alloc] init];
     [self.headerDateView setDetailDate:[NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeMonthYearDayWeek]];
     self.timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(timeChange:)];
     [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     
+    [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
     // 刷新
     UIButton *rightButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton1 sizeToFit];// 这句不能少，少了按钮就会消失了
-    [rightButton1 setImage:ImageName(@"attendence_refresh") forState:UIControlStateNormal];
-    [rightButton1 setImage:ImageName(@"attendence_refresh") forState:UIControlStateHighlighted];
-    [rightButton1 addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton1 setImage:ImageName(@"attendence_backtotoday") forState:UIControlStateNormal];
+    [rightButton1 setImage:ImageName(@"attendence_backtotoday") forState:UIControlStateHighlighted];
+    [rightButton1 addTarget:self action:@selector(backToToday:) forControlEvents:UIControlEventTouchUpInside];
     // 进去漏卡页面
     UIButton *rightButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton2 sizeToFit];
@@ -132,10 +149,8 @@
     [rightButton2 addTarget:self action:@selector(right:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:rightButton1],[[UIBarButtonItem alloc] initWithCustomView:rightButton2]];
     
-    [self setLeftBarButtonWithTitle:@"返回" action:@selector(logout:)];
     [self.bottomRoundButton addTarget:self action:@selector(signin:) forControlEvents:UIControlEventTouchUpInside];
-    // TODO：地理位置，可以点击：用来矫正自己的位置
-    //    [self.bottomLocationButton addTarget:self action:@selector(toMapView:) forControlEvents:UIControlEventTouchUpInside];
+    [self.bottomRefreshLocationButton addTarget:self action:@selector(refreshLocation:) forControlEvents:UIControlEventTouchUpInside];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -148,8 +163,9 @@
     
     // headerScrollView
     NSArray *week = @[@"日",@"一",@"二",@"三",@"四",@"五",@"六"];
+    double width = kScreenWidth / week.count;
     for (NSInteger i = 0; i < week.count; i++) {
-        UILabel *wl = [[UILabel alloc] initWithFrame:CGRectMake(i * kViewBounds, 0, kViewBounds, PX_H(50))];
+        UILabel *wl = [[UILabel alloc] initWithFrame:CGRectMake(i * width, 0, width, PX_H(50))];
         wl.textAlignment = NSTextAlignmentCenter;
         wl.font = SystemFont(14);
         wl.text = week[i];
@@ -169,7 +185,9 @@
     [self.view addSubview:self.bottomView];
     [self.bottomView addSubview:self.bottomLine];
     [self.bottomView addSubview:self.bottomRoundButton];
-    [self.bottomView addSubview:self.bottomLocationButton];
+    [self.bottomView addSubview:self.bottomLocationIcon];
+    [self.bottomView addSubview:self.bottomLocationLabel];
+    [self.bottomView addSubview:self.bottomRefreshLocationButton];
 }
 
 - (void)setupConstraints {
@@ -229,177 +247,230 @@
         make.centerX.equalTo(self.view.mpm_centerX);
         make.width.height.equalTo(@94);
     }];
-    [self.bottomLocationButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+    [self.bottomLocationIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.width.equalTo(@9);
+        make.height.equalTo(@11);
+        make.centerY.equalTo(self.bottomLocationLabel.mpm_centerY);
+        make.trailing.equalTo(self.bottomLocationLabel.mpm_leading).offset(-1);
+    }];
+    [self.bottomLocationLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.bottom.equalTo(self.view.mpm_bottom).offset(-15);
         make.centerX.equalTo(self.view.mpm_centerX);
         make.height.equalTo(@(17));
-        make.leading.greaterThanOrEqualTo(self.view.mpm_leading).offset(30);
-        make.trailing.greaterThanOrEqualTo(self.view.mpm_trailing).offset(-30);
+        make.width.lessThanOrEqualTo(@(kScreenWidth-50));
+    }];
+    [self.bottomRefreshLocationButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.width.height.equalTo(@16);
+        make.centerY.equalTo(self.bottomLocationLabel.mpm_centerY);
+        make.leading.equalTo(self.bottomLocationLabel.mpm_trailing).offset(8);
     }];
 }
 
 - (void)getDataWithDate:(NSDate *)date {
     [self getAttendanceSigninDataWithDate:date];
-    //    [self getOneMonthAttendanceDataWithDate:date];
-    [self getThreeWeekDateWithDate:date];
+    [self getThreeWeekDataWithDate:date];
 }
+
 /** 获取当前日期的签到信息 */
 - (void)getAttendanceSigninDataWithDate:(NSDate *)date {
-    NSString *dateString = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
-    NSString *url = [NSString stringWithFormat:@"%@schedulingSetting/getPunchTheClockTime?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateString,[MPMShareUser shareUser].token];
-    NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateString,@"token":[MPMShareUser shareUser].token};
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
-        if ([response[@"dataObj"] isKindOfClass:[NSDictionary class]]) {
+    NSString *dateString = [NSString stringWithFormat:@"%.f",(date.timeIntervalSince1970 - 28800) * 1000];
+    NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_CLOCKTIME];
+    NSDictionary *params = @{@"day":dateString};
+    [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMJSONRequestSerializer serializer];
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+        DLog(@"%@",response);
+        if (response && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
             // 清空之前的数据
-            self.attendenceAddressArray = nil;
-            self.attendenceArray = nil;
-            NSDictionary *dataObj = response[@"dataObj"];
-            if ([dataObj[@"cardSettings"] isKindOfClass:[NSArray class]]) {
-                NSArray *cardSettigns = dataObj[@"cardSettings"];
+            self.attendenceManageModel.attendenceAddressArray = nil;
+            self.attendenceManageModel.attendenceArray = nil;
+            self.attendenceManageModel.attendenceExceptionArray = nil;
+            self.attendenceManageModel.schedulingEmployeeType = nil;
+            
+            NSDictionary *object = response[kResponseObjectKey];
+            if (object[@"cardSettings"] && [object[@"cardSettings"] isKindOfClass:[NSArray class]]) {
+                NSArray *cardSettigns = object[@"cardSettings"];
                 NSMutableArray *tempAddress = [NSMutableArray arrayWithCapacity:cardSettigns.count];
                 for (int i = 0; i < cardSettigns.count; i++) {
                     MPMSettingCardAddressWifiModel *address = [[MPMSettingCardAddressWifiModel alloc] initWithDictionary:cardSettigns[i]];
                     [tempAddress addObject:address];
                 }
-                self.attendenceAddressArray = tempAddress.copy;
+                self.attendenceManageModel.attendenceAddressArray = tempAddress.copy;
             }
             
-            if ([dataObj[@"employeeAttendances"] isKindOfClass:[NSArray class]]) {
-                NSArray *attens = dataObj[@"employeeAttendances"];
+            // 打卡类型
+            if (object[@"schedulingEmployeeType"] && [object[@"schedulingEmployeeType"] isKindOfClass:[NSNumber class]]) {
+                NSNumber *schedulingEmployeeType = object[@"schedulingEmployeeType"];
+                self.attendenceManageModel.schedulingEmployeeType = schedulingEmployeeType.stringValue;
+            }
+            
+            if (object[@"employeeAttendances"] && [object[@"employeeAttendances"] isKindOfClass:[NSArray class]]) {
+                NSArray *attens = object[@"employeeAttendances"];
                 NSMutableArray *tempattens = [NSMutableArray arrayWithCapacity:attens.count];
                 for (int i = 0; i < attens.count; i++) {
                     MPMAttendenceModel *model = [[MPMAttendenceModel alloc] initWithDictionary:attens[i]];
                     [tempattens addObject:model];
                 }
-                if (![NSDateFormatter isDate1:[NSDate date] beforeDate2:self.currentMiddleDate]) {
+                if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+                    // 自由打卡
+                    if (kFreeSignMaxCount == tempattens.count) {
+                        [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
+                        [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
+                        if (self.bottomAnimateLayer) {
+                            [self.bottomAnimateLayer removeFromSuperlayer];
+                            self.bottomAnimateLayer = nil;
+                        }
+                    } else {
+                        [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateNormal];
+                        [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateHighlighted];
+                        if (!self.bottomAnimateLayer) {
+                            [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
+                            [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+                        }
+                    }
+                } else {
+                    if ([NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
+                        for (int i = 0; i < tempattens.count; i++) {
+                            MPMAttendenceModel *model = tempattens[i];
+                            // 如果没有brushTime（并且不是漏卡），那么就是等待刷卡状态
+                            if (kIsNilString(model.brushTime) && model.status.integerValue != 3) {
+                                model.isNeedFirstBrush = YES;
+                                break;
+                            }
+                        }
+                    }
                     for (int i = 0; i < tempattens.count; i++) {
                         MPMAttendenceModel *model = tempattens[i];
-                        // 如果没有attendanceId，那么就是等待刷卡状态
-                        if (kIsNilString(model.attendanceId)) {
-                            model.isNeedFirstBrush = YES;
-                            break;
-                        }
-                    }
-                }
-                for (int i = 0; i < tempattens.count; i++) {
-                    MPMAttendenceModel *model = tempattens[i];
-                    if (i % 2 == 0) {
-                        model.classType = @"上班";
-                    } else {
-                        model.classType = @"下班";
-                    }
-                    if (i == tempattens.count - 1) {
-                        // 判断最后一个数据是否已有数据，如果已有数据，说明已经打完，不再允许打卡，按钮置灰(有数据，但是不是当前日期，也置灰）
-                        if (!kIsNilString(model.attendanceId) || [NSDateFormatter isDate1:[NSDate date] beforeDate2:self.currentMiddleDate]) {
-                            [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
-                            [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
-                            if (_bottomAnimateLayer) {
-                                [_bottomAnimateLayer removeFromSuperlayer];
-                                _bottomAnimateLayer = nil;
-                            }
-                        } else {
-                            // 如果最后一个数据还没打，则按钮恢复
-                            [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateNormal];
-                            [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateHighlighted];
-                            if (!_bottomAnimateLayer) {
-                                [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
+                        if (i == tempattens.count - 1) {
+                            // 判断最后一个数据是否已有数据，如果已有数据，说明已经打完，不再允许打卡，按钮置灰(有数据，但是不是当前日期，也置灰）
+                            if (!kIsNilString(model.brushTime) || ![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
+                                [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
+                                [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
+                                if (self.bottomAnimateLayer) {
+                                    [self.bottomAnimateLayer removeFromSuperlayer];
+                                    self.bottomAnimateLayer = nil;
+                                }
+                            } else {
+                                // 如果最后一个数据还没打，则按钮恢复
+                                [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateNormal];
+                                [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateHighlighted];
+                                if (!self.bottomAnimateLayer) {
+                                    [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
+                                    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+                                }
                             }
                         }
                     }
                 }
-                self.attendenceArray = tempattens;
+                self.attendenceManageModel.attendenceArray = tempattens;
             }
-        } else if ([response[@"dataObj"] isKindOfClass:[NSArray class]]) {
-            // 适配1.0版本的接口
-            self.attendenceArray = nil;
-            NSArray *dataObj = response[@"dataObj"];
-            NSMutableArray *tempattens = [NSMutableArray arrayWithCapacity:dataObj.count];
-            for (int i = 0; i < dataObj.count; i++) {
-                MPMAttendenceModel *model = [[MPMAttendenceModel alloc] initWithDictionary:dataObj[i]];
-                [tempattens addObject:model];
+            // 例外申请信息
+            if (object[@"kqBizOrderVo"] && [object[@"kqBizOrderVo"] isKindOfClass:[NSArray class]]) {
+                NSArray *kqBizOrderVo = object[@"kqBizOrderVo"];
+                NSMutableArray *temp = [NSMutableArray arrayWithCapacity:kqBizOrderVo.count];
+                for (int i = 0; i < kqBizOrderVo.count; i++) {
+                    NSDictionary *dic = kqBizOrderVo[i];
+                    MPMAttendenceExceptionModel *excep = [[MPMAttendenceExceptionModel alloc] initWithDictionary:dic];
+                    [temp addObject:excep];
+                }
+                self.attendenceManageModel.attendenceExceptionArray = temp.copy;
             }
-            self.attendenceArray = tempattens;
+            
+            // 设置打卡按钮
+            if (self.attendenceManageModel.attendenceArray.count == 0 && 3 != self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+                [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
+                [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
+                if (self.bottomAnimateLayer) {
+                    [self.bottomAnimateLayer removeFromSuperlayer];
+                    self.bottomAnimateLayer = nil;
+                }
+            }
+            [self.middleTableView reloadData];
         }
-        
-        if (self.attendenceArray.count == 0) {
-            [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
-            [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
-            if (_bottomAnimateLayer) {
-                [_bottomAnimateLayer removeFromSuperlayer];
-                _bottomAnimateLayer = nil;
-            }
-        }
-        [self.middleTableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
 }
 
-// 获取前后共三周的数据
-- (void)getThreeWeekDateWithDate:(NSDate *)date {
-    NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:date];
-    NSString *dateCurrentMonth = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
-    [comp setMonth:comp.day-7];
-    NSDate *lastMonthDate = [cal dateFromComponents:comp];
-    NSString *dateLastMonth = [NSDateFormatter formatterDate:lastMonthDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
-    [comp setMonth:comp.day+14];
-    NSDate *nextMonthDate = [cal dateFromComponents:comp];
-    NSString *dateNextMonth = [NSDateFormatter formatterDate:nextMonthDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
+/** 当前接口可以获取当前月份和前后共三个星期的班次信息 */
+- (void)getThreeWeekDataWithDate:(NSDate *)date {
     
-    __block NSArray *lastMonthArray;
-    __block NSArray *currentMonthArray;
-    __block NSArray *nextMonthArray;
+    NSDate *dateOfLastWeek;             /** 当前日期减7天 */
+    NSDate *dateOfCurrentWeek = date;   /** 当前日期 */
+    NSDate *dateOfNextWeek;             /** 当前日期加7天 */
+    
+    __block NSArray *lastWeekArray;             /** 保存上个星期的7天 */
+    __block NSArray *currentWeekArray;          /** 保存当前星期的7天 */
+    __block NSArray *nextWeekArray;             /** 保存下个星期的7天 */
+    
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday fromDate:dateOfCurrentWeek];
+    [comp setDay:comp.day - 7];
+    dateOfLastWeek = [cal dateFromComponents:comp];
+    [comp setDay:comp.day + 7 + 7];
+    dateOfNextWeek = [cal dateFromComponents:comp];
     
     dispatch_group_t group = dispatch_group_create();
+    
     dispatch_group_enter(group);
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getAttendanceStatusListYearWeek?queryDate=%@&token=%@",MPMHost,dateCurrentMonth,[MPMShareUser shareUser].token];
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
-            NSArray *dataObj = response[@"dataObj"];
-            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
-            for (int i = 0; i < dataObj.count; i++) {
-                NSDictionary *dic = dataObj[i];
-                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
-                [tempArr addObject:model];
+        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_GETSTATUS];
+        NSDictionary *params = @{@"day":[NSString stringWithFormat:@"%.f",dateOfCurrentWeek.timeIntervalSince1970*1000]};
+        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+            if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                NSArray *object = response[kResponseObjectKey];
+                NSMutableArray *temp = @[].mutableCopy;
+                for (int i = 0; i < object.count; i++) {
+                    NSDictionary *dic = object[i];
+                    MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
+                    [temp addObject:model];
+                }
+                currentWeekArray = temp.copy;
             }
-            currentMonthArray = tempArr.copy;
             dispatch_group_leave(group);
         } failure:^(NSString *error) {
             DLog(@"%@",error);
             dispatch_group_leave(group);
         }];
     });
+    
     dispatch_group_enter(group);
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getAttendanceStatusListYearWeek?queryDate=%@&token=%@",MPMHost,dateLastMonth,[MPMShareUser shareUser].token];
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
-            NSArray *dataObj = response[@"dataObj"];
-            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
-            for (int i = 0; i < dataObj.count; i++) {
-                NSDictionary *dic = dataObj[i];
-                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
-                [tempArr addObject:model];
+        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_GETSTATUS];
+        NSDictionary *params = @{@"day":[NSString stringWithFormat:@"%.f",dateOfLastWeek.timeIntervalSince1970*1000]};
+        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+            if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                NSArray *object = response[kResponseObjectKey];
+                NSMutableArray *temp = @[].mutableCopy;
+                for (int i = 0; i < object.count; i++) {
+                    NSDictionary *dic = object[i];
+                    MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
+                    [temp addObject:model];
+                }
+                lastWeekArray = temp.copy;
             }
-            lastMonthArray = tempArr.copy;
             dispatch_group_leave(group);
         } failure:^(NSString *error) {
             DLog(@"%@",error);
             dispatch_group_leave(group);
         }];
     });
+    
+    
     dispatch_group_enter(group);
     dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getAttendanceStatusListYearWeek?queryDate=%@&token=%@",MPMHost,dateNextMonth,[MPMShareUser shareUser].token];
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:nil success:^(id response) {
-            NSArray *dataObj = response[@"dataObj"];
-            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
-            for (int i = 0; i < dataObj.count; i++) {
-                NSDictionary *dic = dataObj[i];
-                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
-                [tempArr addObject:model];
+        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_GETSTATUS];
+        NSDictionary *params = @{@"day":[NSString stringWithFormat:@"%.f",dateOfNextWeek.timeIntervalSince1970*1000]};
+        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+            if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                NSArray *object = response[kResponseObjectKey];
+                NSMutableArray *temp = @[].mutableCopy;
+                for (int i = 0; i < object.count; i++) {
+                    NSDictionary *dic = object[i];
+                    MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
+                    [temp addObject:model];
+                }
+                nextWeekArray = temp.copy;
             }
-            nextMonthArray = tempArr.copy;
             dispatch_group_leave(group);
         } failure:^(NSString *error) {
             DLog(@"%@",error);
@@ -408,94 +479,12 @@
     });
     
     dispatch_group_notify(group, kMainQueue, ^{
-        if (lastMonthArray.count > 0 && currentMonthArray.count > 0 && nextMonthArray.count > 0) {
-            [self.headerScrollView reloadLast:lastMonthArray current:currentMonthArray next:nextMonthArray];
-        }
-    });
-}
-
-/** 获取当前月份+前一个月份+后一个月份数据 */
-- (void)getThreeMonthDateWithDate:(NSDate *)date {
-    NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth fromDate:date];
-    NSString *dateCurrentMonth = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
-    [comp setMonth:comp.month-1];
-    NSDate *lastMonthDate = [cal dateFromComponents:comp];
-    NSString *dateLastMonth = [NSDateFormatter formatterDate:lastMonthDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
-    [comp setMonth:comp.month+2];
-    NSDate *nextMonthDate = [cal dateFromComponents:comp];
-    NSString *dateNextMonth = [NSDateFormatter formatterDate:nextMonthDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
-    
-    __block NSArray *lastMonthArray;
-    __block NSArray *currentMonthArray;
-    __block NSArray *nextMonthArray;
-    
-    dispatch_group_t group = dispatch_group_create();
-    dispatch_group_enter(group);
-    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getExchangeWorkByApprover?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateCurrentMonth,[MPMShareUser shareUser].token];
-        NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateCurrentMonth,@"token":[MPMShareUser shareUser].token};
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
-            NSArray *dataObj = response[@"dataObj"];
-            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
-            for (int i = 0; i < dataObj.count; i++) {
-                NSDictionary *dic = dataObj[i];
-                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
-                [tempArr addObject:model];
-            }
-            currentMonthArray = tempArr.copy;
-            dispatch_group_leave(group);
-        } failure:^(NSString *error) {
-            DLog(@"%@",error);
-            dispatch_group_leave(group);
-        }];
-    });
-    dispatch_group_enter(group);
-    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getExchangeWorkByApprover?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateLastMonth,[MPMShareUser shareUser].token];
-        NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateLastMonth,@"token":[MPMShareUser shareUser].token};
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
-            NSArray *dataObj = response[@"dataObj"];
-            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
-            for (int i = 0; i < dataObj.count; i++) {
-                NSDictionary *dic = dataObj[i];
-                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
-                [tempArr addObject:model];
-            }
-            lastMonthArray = tempArr.copy;
-            dispatch_group_leave(group);
-        } failure:^(NSString *error) {
-            DLog(@"%@",error);
-            dispatch_group_leave(group);
-        }];
-    });
-    dispatch_group_enter(group);
-    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        NSString *url = [NSString stringWithFormat:@"%@attendanceStatus/getExchangeWorkByApprover?employeeId=%@&date=%@&token=%@",MPMHost,[MPMShareUser shareUser].employeeId,dateNextMonth,[MPMShareUser shareUser].token];
-        NSDictionary *params = @{@"employeeId":[MPMShareUser shareUser].employeeId,@"date":dateNextMonth,@"token":[MPMShareUser shareUser].token};
-        [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
-            NSArray *dataObj = response[@"dataObj"];
-            NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:dataObj.count];
-            for (int i = 0; i < dataObj.count; i++) {
-                NSDictionary *dic = dataObj[i];
-                MPMAttendenceOneMonthModel *model = [[MPMAttendenceOneMonthModel alloc] initWithDictionary:dic];
-                [tempArr addObject:model];
-            }
-            nextMonthArray = tempArr.copy;
-            dispatch_group_leave(group);
-        } failure:^(NSString *error) {
-            DLog(@"%@",error);
-            dispatch_group_leave(group);
-        }];
-    });
-    
-    dispatch_group_notify(group, kMainQueue, ^{
-        NSMutableArray *temp = [NSMutableArray arrayWithArray:lastMonthArray];
-        [temp addObjectsFromArray:currentMonthArray];
-        [temp addObjectsFromArray:nextMonthArray];
+        NSMutableArray *temp = [NSMutableArray arrayWithArray:lastWeekArray];
+        [temp addObjectsFromArray:currentWeekArray];
+        [temp addObjectsFromArray:nextWeekArray];
+        self.attendenceManageModel.attendenceThreeWeekArray = temp.copy;
         if (temp.count > 0) {
-            self.attendenceThreeMonthArray = temp.copy;
-            [self.headerScrollView reloadData:self.attendenceThreeMonthArray];
+            [self.headerScrollView reloadData:self.attendenceManageModel.attendenceThreeWeekArray];
         }
     });
 }
@@ -506,6 +495,7 @@
     return [loc1 distanceFromLocation:loc2];
 }
 
+/** 设置、重新获取地理位置 */
 - (void)setupLocation {
     if ([CLLocationManager locationServicesEnabled]) {
         [self.locationManager requestWhenInUseAuthorization];
@@ -513,27 +503,37 @@
     }
 }
 
+/** 打卡成功 */
+- (void)signinSuccess {
+    self.lastSigninDate = [NSDate date];// 打卡成功，记录下此次打卡时间，再次打卡校验不能在15秒内立即打卡
+    [MPMProgressHUD showSuccessWithStatus:@"打卡成功"];
+    /*
+     AVSpeechSynthesizer *speech = [[AVSpeechSynthesizer alloc] init];
+     AVSpeechUtterance *utt = [AVSpeechUtterance speechUtteranceWithString:@"打卡成功"];
+     [speech speakUtterance:utt];
+     */
+    [self getDataWithDate:[NSDate date]];
+}
+
 #pragma mark - Target Action
 
-- (void)logout:(UIButton *)sender {
-    UIViewController *lastRoot = [MPMShareUser shareUser].lastRootViewController;
-    UIViewController *lastPop = [MPMShareUser shareUser].lastCanPopViewController;
-    kAppDelegate.window.rootViewController = lastRoot;
-    // 推进来的时候隐藏了，现在需要取消隐藏
-    if (lastPop.navigationController.navigationBar.hidden == YES) {
-        lastPop.navigationController.navigationBar.hidden = NO;
-    }
-    [lastPop.navigationController popViewControllerAnimated:YES];
-    [[MPMShareUser shareUser] clearData];
+- (void)back:(UIButton *)sender {
+    [[MPMSessionManager shareManager] back];
 }
 
 - (void)right:(UIButton *)sender {
-    MPMRepairSigninViewController *rs = [[MPMRepairSigninViewController alloc] init];
+    MPMRepairSigninViewController *rs = [[MPMRepairSigninViewController alloc] initWithRepairFromType:kRepairFromTypeSigning];
+    self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:rs animated:YES];
+    self.hidesBottomBarWhenPushed = NO;
 }
 
-- (void)refresh:(UIButton *)sender {
+- (void)backToToday:(UIButton *)sender {
     [self.headerScrollView changeToCurrentWeekDate];
+}
+
+- (void)refreshLocation:(UIButton *)sender {
+    self.bottomLocationLabel.text = @"地理位置:重新定位中...";
     [self setupLocation];
 }
 
@@ -542,102 +542,141 @@
     [self.headerScrollView changeToCurrentWeekDate];
 }
 
-- (void)signin:(UIButton *)sender {
-    DLog(@"签到");
-    
-    // 有考勤地址，需要判断考勤距离是否在范围内。没有考勤地址，则让它进行请求
-    BOOL canSign = NO;
-    NSString *alertMessage = @"当前无法签到";
-    // TODO：签到之前需要判断用户是否已经定位。如果用户没有完成定位或者没有
-    if (![MPMShareUser shareUser].location) {
-        alertMessage = @"请先完成定位再进行打卡，如果当前没有开启定位，请在手机“设置”中开启";
+/** 打卡验证 */
+- (BOOL)validateSignin {
+    // 如果不是当天，不允许打卡
+    if (![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
+        [self showAlertControllerToLogoutWithMessage:@"当前日期不允许打卡" sureAction:nil needCancleButton:NO];return NO;
+    }
+    // 判断是否已打满卡
+    BOOL hasSignAll = NO;
+    if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+        // 自由打卡，只能打20个
+        if (kFreeSignMaxCount == self.attendenceManageModel.attendenceArray.count) {
+            hasSignAll = YES;
+        }
     } else {
-        if (self.attendenceAddressArray.count > 0) {
-            for (MPMSettingCardAddressWifiModel *model in self.attendenceAddressArray) {
-                CLLocation *loc = [[CLLocation alloc] initWithLatitude:model.latitude.doubleValue longitude:model.longitude.doubleValue];
-                CLLocation *myLoc = [MPMShareUser shareUser].location;
-                double distance = [loc distanceFromLocation:myLoc];
-                DLog(@"===当前位置与考勤地点的距离是：%.f===",distance);
-                if (distance <= fabs(model.deviation.doubleValue)) {
-                    // 如果发现我的地址在考勤地址库中的其中一个并且在考勤范围内，那么就允许签到
-                    canSign = YES;
-                }
+        // 其他打卡类型
+        for (int i = 0; i < self.attendenceManageModel.attendenceArray.count; i++) {
+            MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[i];
+            if (i == self.attendenceManageModel.attendenceArray.count - 1 && !kIsNilString(model.brushTime)) {
+                hasSignAll = YES;
             }
-            if (!canSign) {
-                alertMessage = @"当前位置不在考勤范围内，不允许考勤";
-            }
-        } else {
-            canSign = YES;
         }
     }
-    if (canSign) {
-        [self signForEarly:NO];
+    if (hasSignAll) {
+        [self showAlertControllerToLogoutWithMessage:@"考勤已打满，无需打卡" sureAction:nil needCancleButton:NO];return NO;
+    }
+    
+    if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+        // 自由打卡，不校验打卡位置
     } else {
-        [self showAlertControllerToLogoutWithMessage:alertMessage sureAction:nil needCancleButton:NO];
+        if (![MPMOauthUser shareOauthUser].location) {
+            [self showAlertControllerToLogoutWithMessage:@"请先完成定位再进行打卡，如果当前没有开启定位，请在手机“设置”中开启" sureAction:nil needCancleButton:NO];return NO;
+        } else {
+            // 10分钟
+            if ([NSDate date].timeIntervalSince1970 - self.lastRefreshLocationDate.timeIntervalSince1970 >= NeedRefreshLocationInterval) {
+                __weak typeof(self) weakself = self;
+                [self showAlertControllerToLogoutWithMessage:@"需要刷新至最新定位哦~" sureAction:^(UIAlertAction * _Nonnull action) {
+                    __strong typeof(weakself) strongself = weakself;
+                    [strongself setupLocation];
+                } sureActionTitle:@"刷新"needCancleButton:NO];return NO;
+            }
+            BOOL canSign = NO;
+            if (self.attendenceManageModel.attendenceAddressArray.count > 0) {
+                for (MPMSettingCardAddressWifiModel *model in self.attendenceManageModel.attendenceAddressArray) {
+                    CLLocation *loc = [[CLLocation alloc] initWithLatitude:model.latitude.doubleValue longitude:model.longitude.doubleValue];
+                    CLLocation *myLoc = [MPMOauthUser shareOauthUser].location;
+                    double distance = [loc distanceFromLocation:myLoc];
+                    DLog(@"===当前位置与考勤地点的距离是：%.f===",distance);
+                    if (distance <= fabs(model.deviation.doubleValue) || model.deviation.doubleValue == 0) {
+                        // 如果发现我的地址在考勤地址库中的其中一个并且在考勤范围内，那么就允许签到
+                        canSign = YES;
+                    }
+                }
+                if (!canSign) {
+                    [self showAlertControllerToLogoutWithMessage:@"当前位置不在考勤范围内，不允许考勤" sureAction:nil needCancleButton:NO];return NO;
+                }
+            }
+        }
+    }
+    
+    if ([NSDate date].timeIntervalSince1970 - self.lastSigninDate.timeIntervalSince1970 <= ContinueSigninInterval) {
+        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"%.f秒内不允许打卡",ContinueSigninInterval] sureAction:nil needCancleButton:NO];return NO;
+    }
+    
+    return YES;
+}
+
+- (void)signin:(UIButton *)sender {
+    DLog(@"签到");
+    if ([self validateSignin]) {
+        [self signForEarly:NO];
     }
 }
 
 - (void)signForEarly:(BOOL)early {
     
-    BOOL hasSignAll = NO;
+    // 筛选出需要打卡的model
     MPMAttendenceModel *signModel;
-    for (int i = 0; i < self.attendenceArray.count; i++) {
-        MPMAttendenceModel *model = self.attendenceArray[i];
-        // 筛选出需要打卡的model
-        if (model.isNeedFirstBrush) {
-            signModel = model;
-            break;
+    NSString *address;
+    NSString *signType;
+    if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+        signModel = self.attendenceManageModel.attendenceArray.firstObject;
+        address = kIsNilString([MPMOauthUser shareOauthUser].address) ? @"自由打卡无地址" : [MPMOauthUser shareOauthUser].address;
+        signType = [NSString stringWithFormat:@"%ld",self.attendenceManageModel.attendenceArray.count % 2];
+    } else {
+        for (int i = 0; i < self.attendenceManageModel.attendenceArray.count; i++) {
+            MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[i];
+            if (model.isNeedFirstBrush) {
+                signModel = model;
+                break;
+            }
         }
-        if (i == self.attendenceArray.count - 1 && !kIsNilString(model.attendanceId)) {
-            hasSignAll = YES;
-        }
+        address = kSafeString([MPMOauthUser shareOauthUser].address);
+        signType = kSafeString(signModel.type);// 0代表上班 1代表下班 使用接口传给我们的就好了（感觉传空也可以）
     }
     
-    if (hasSignAll) {
-        [self showAlertControllerToLogoutWithMessage:@"考勤已打满，无需打卡" sureAction:nil needCancleButton:NO];return;
-    }
-    
-    NSDate *bursh = self.currentMiddleDate ? [NSDate changeToFitJavaDate:self.currentMiddleDate] : [NSDate changeToFitJavaDate:[NSDate date]];
+    NSDate *bursh = self.attendenceManageModel.currentMiddleDate ? [NSDate changeToFitJavaDate:self.attendenceManageModel.currentMiddleDate] : [NSDate changeToFitJavaDate:[NSDate date]];
     DLog(@"打卡时间 == %@",bursh);
-    NSString *url = [NSString stringWithFormat:@"%@attend/insert?token=%@",MPMHost,[MPMShareUser shareUser].token];
-    NSString *address = kSafeString([MPMShareUser shareUser].address);
+    NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_PUNCHCARD];
     NSString *brushDate = [NSDateFormatter formatterDate:bursh withDefineFormatterType:forDateFormatTypeSpecial];
-    NSString *brushDateCount = [NSString stringWithFormat:@"%ld",self.attendenceArray.count + 1];
-    NSString *employeeId = [MPMShareUser shareUser].employeeId;
-    NSString *status = @"0";
-    NSString *type = kSafeString(signModel.type);
     NSString *schedulingEmployeeId = kSafeString(signModel.schedulingEmployeeId);
-    NSString *schedulingEmployeeType = kSafeString(signModel.schedulingEmployeeType);
-    NSString *signType = kSafeString(signModel.type);// 0代表上班 1代表下班 使用接口传给我们的就好了（感觉传空也可以）
+    NSString *schedulingEmployeeType = kSafeString(self.attendenceManageModel.schedulingEmployeeType);
     NSDictionary *params;
     if (early) {
-        params = @{@"address":address,@"brushDate":brushDate,@"brushDateCount":brushDateCount,@"employeeId":employeeId,@"status":status,@"type":type,@"early":@1,@"schedulingEmployeeId":schedulingEmployeeId,@"schedulingEmployeeType":schedulingEmployeeType,@"signType":signType};
+        params = @{@"address":address,@"brushDate":brushDate,@"early":@1,@"schedulingEmployeeId":schedulingEmployeeId,@"schedulingEmployeeType":schedulingEmployeeType,@"signType":signType};
     } else {
-        params = @{@"address":address,@"brushDate":brushDate,@"brushDateCount":brushDateCount,@"employeeId":employeeId,@"status":status,@"type":type,@"schedulingEmployeeId":schedulingEmployeeId,@"schedulingEmployeeType":schedulingEmployeeType,@"signType":signType};
+        params = @{@"address":address,@"brushDate":brushDate,@"early":@0,@"schedulingEmployeeId":schedulingEmployeeId,@"schedulingEmployeeType":schedulingEmployeeType,@"signType":signType};
     }
     [MPMProgressHUD showWithStatus:@"正在打卡"];
     
-    [[MPMSessionManager shareManager] postRequestWithURL:url params:params success:^(id response) {
+    [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMJSONRequestSerializer serializer];
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
         [MPMProgressHUD dismiss];
         DLog(@"%@",response);
-        id dataObj = response[@"dataObj"];
+        id dataObj = response[kResponseObjectKey];
         if ([dataObj isKindOfClass:[NSNull class]] || ([dataObj isKindOfClass:[NSArray class]] && ((NSArray *)dataObj).count == 0)) {
-            [MPMProgressHUD showErrorWithStatus:response[@"message"]];
-        } else {
-            [self getDataWithDate:[NSDate date]];
-        }
-    } failure:^(NSString *error) {
-        DLog(@"%@",error);
-        if ([error containsString:@"早退"]) {
-            [MPMProgressHUD dismiss];
+            if (response[kResponseDataKey] &&
+                [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] && !kIsNilString(((NSString *)response[kResponseDataKey][@"message"]))) {
+                [MPMProgressHUD showErrorWithStatus:(NSString *)response[kResponseDataKey][@"message"]];
+            } else {
+                [MPMProgressHUD showErrorWithStatus:response[@"打卡异常，请稍后重试！"]];
+            }
+        } else if (response[kResponseDataKey] &&
+                   [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
+                   [((NSString *)response[kResponseDataKey][@"message"])containsString:@"早退"]) {
             __weak typeof (self) weakself = self;
-            [self showAlertControllerToLogoutWithMessage:error sureAction:^(UIAlertAction * _Nonnull action) {
+            [self showAlertControllerToLogoutWithMessage:(NSString *)response[@"responseData"][@"message"] sureAction:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
                 [strongself signForEarly:YES];
             } needCancleButton:YES];
         } else {
-            [MPMProgressHUD showErrorWithStatus:error];
+            [self signinSuccess];
         }
+    } failure:^(NSString *error) {
+        DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -646,13 +685,6 @@
     NSString *str = [NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeHourMinute];
     [self.bottomRoundButton setTitle:str forState:UIControlStateNormal];
     [self.bottomRoundButton setTitle:str forState:UIControlStateHighlighted];
-}
-
-- (void)toMapView:(UIButton *)sender {
-    MPMAttendenceMapViewController *map = [[MPMAttendenceMapViewController alloc] init];
-    self.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:map animated:YES];
-    self.hidesBottomBarWhenPushed = NO;
 }
 
 #pragma mark - Notification
@@ -666,33 +698,24 @@
     [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
     [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     // 如果最后一个打卡数据不为空，或者当前时间不是今天，置灰打卡按钮
-    if (self.attendenceArray.count > 0) {
-        MPMAttendenceModel *model = self.attendenceArray.lastObject;
-        if (!kIsNilString(model.attendanceId) || [NSDateFormatter isDate1:[NSDate date] beforeDate2:self.currentMiddleDate]) {
+    if (self.attendenceManageModel.attendenceArray.count > 0) {
+        MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray.lastObject;
+        if (!kIsNilString(model.brushTime) || ![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
             [self.bottomAnimateLayer removeFromSuperlayer];
             self.bottomAnimateLayer = nil;
         }
-    } else if (self.attendenceArray.count == 0) {
+    } else if (self.attendenceManageModel.attendenceArray.count == 0) {
         [self.bottomAnimateLayer removeFromSuperlayer];
         self.bottomAnimateLayer = nil;
     }
+    // 从后台切换回前台，刷新定位
+    [self setupLocation];
 }
 
 #pragma mark - KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:@"address"]) {
-        NSString *detailText;
-        if ([MPMShareUser shareUser].address) {
-            detailText = [NSString stringWithFormat:@"地理位置:%@",[MPMShareUser shareUser].address];
-            self.bottomLocationButton.selected = YES;
-            [self.bottomLocationButton setTitle:detailText forState:UIControlStateNormal];
-            [self.bottomLocationButton setTitle:detailText forState:UIControlStateSelected];
-        } else {
-            detailText = @"地理位置:";
-            self.bottomLocationButton.selected = NO;
-            [self.bottomLocationButton setTitle:detailText forState:UIControlStateNormal];
-            [self.bottomLocationButton setTitle:detailText forState:UIControlStateSelected];
-        }
+        self.bottomLocationLabel.text = [NSString stringWithFormat:@"地理位置:%@",kSafeString([MPMOauthUser shareOauthUser].address)];
     }
 }
 
@@ -705,6 +728,8 @@
     }
     // 处理相关定位信息
     [manager stopUpdatingLocation];
+    // 每次获取到新的定位的时候，更新获取到定位时间（打卡的时候会与当前时间对比，如果超过10分钟，则需要重新刷新定位）
+    self.lastRefreshLocationDate = [NSDate date];
     
     MKCoordinateSpan span;
     // 设置经度的缩放级别
@@ -712,58 +737,73 @@
     // 设置纬度的缩放级别
     span.latitudeDelta = 0.05;
     // 反向编码部分
-    self.region = MKCoordinateRegionMake(newLocation.coordinate, span);
     CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
     [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         if (placemarks.count > 0) {
             CLPlacemark * placeMark = placemarks[0];
-            [MPMShareUser shareUser].address = [NSString stringWithFormat:@"%@%@%@",placeMark.locality,placeMark.subLocality,placeMark.thoroughfare];
+            [MPMOauthUser shareOauthUser].address = [NSString stringWithFormat:@"%@%@%@",kSafeString(placeMark.locality),kSafeString(placeMark.subLocality),kSafeString(placeMark.thoroughfare)];
             CLLocationCoordinate2D convert = [JZLocationConverter wgs84ToGcj02:newLocation.coordinate];
-            [MPMShareUser shareUser].location = [[CLLocation alloc] initWithLatitude:convert.latitude longitude:convert.longitude];
+            [MPMOauthUser shareOauthUser].location = [[CLLocation alloc] initWithLatitude:convert.latitude longitude:convert.longitude];
         } else if (error == nil && placemarks.count == 0) {
-            [MPMShareUser shareUser].address = nil;
-            [MPMShareUser shareUser].location = nil;
+            [MPMOauthUser shareOauthUser].address = nil;
+            [MPMOauthUser shareOauthUser].location = nil;
             DLog(@"没有找到地址");
         } else if (error) {
-            [MPMShareUser shareUser].address = nil;
-            [MPMShareUser shareUser].location = nil;
+            [MPMOauthUser shareOauthUser].address = nil;
+            [MPMOauthUser shareOauthUser].location = nil;
             DLog(@"定位错误==%@",error);
         }
     }];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    [MPMShareUser shareUser].address = nil;
-    [MPMShareUser shareUser].location = nil;
+    [MPMOauthUser shareOauthUser].address = nil;
+    [MPMOauthUser shareOauthUser].location = nil;
     DLog(@"定位失败==%@",error);
 }
 
 #pragma mark - MPMScrollViewDelegate
 - (void)mpmCalendarScrollViewDidChangeYearMonth:(NSString *)yearMonth currentMiddleDate:(NSDate *)date {
     [self.headerDateView setDetailDate:yearMonth];
-    self.currentMiddleDate = date;
+    self.attendenceManageModel.currentMiddleDate = date;
     [self getDataWithDate:date];
 }
 
 #pragma mark - UITableViewDelegate && UITableVeiwDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.attendenceArray.count > 0) {
+    if (self.attendenceManageModel.attendenceArray.count > 0) {
         self.noMessageView.hidden = YES;
         self.tableViewLine.hidden = NO;
     } else {
         self.noMessageView.hidden = NO;
         self.tableViewLine.hidden = YES;
     }
-    return self.attendenceArray.count;
+    if (0 == section) {
+        return self.attendenceManageModel.attendenceExceptionArray.count;
+    } else {
+        return self.attendenceManageModel.attendenceArray.count;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (0 == indexPath.section) {
+        static NSString *identifier = @"ExceptionCell";
+        MPMAttendenceExceptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if (!cell) {
+            cell = [[MPMAttendenceExceptionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        }
+        MPMAttendenceExceptionModel *excep = self.attendenceManageModel.attendenceExceptionArray[indexPath.row];
+        cell.typeLabel.text = kException_GetNameFromNum[excep.type];
+        cell.detailTimeLabel.text = [NSString stringWithFormat:@"%@  %@",[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds],[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds]];
+        return cell;
+    }
+    
     static NSString *cellIdentifier = @"CalendarCell";
-    MPMAttendenceModel *model = self.attendenceArray[indexPath.row];
+    MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[indexPath.row];
     MPMAttendenceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
         cell = [[MPMAttendenceTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -771,8 +811,21 @@
     NSDate *tt = [NSDate dateWithTimeIntervalSince1970:model.fillCardTime.integerValue/1000];
     NSString *time = [NSDateFormatter formatterDate:tt withDefineFormatterType:forDateFormatTypeHourMinute];
     cell.timeLabel.text = time;
-    cell.classTypeLabel.text = model.classType;
-    if (model.isNeedFirstBrush) {
+    cell.classTypeLabel.text = model.type.integerValue == 0 ? @"上班" : @"下班";
+    
+    if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+        // 自由打卡
+        cell.timeLabel.hidden = YES;
+        cell.classTypeLabel.hidden = YES;
+        cell.waitBrushLabel.hidden = YES;
+        cell.accessaryIcon.hidden = NO;
+        cell.contentImageView.hidden = NO;
+        cell.textLabel.text = @"";
+        cell.classTypeLabel.textColor = kMainLightGray;
+        cell.timeLabel.textColor = kMainLightGray;
+        cell.exceptionBtn.hidden = YES;
+    } else if (model.isNeedFirstBrush) {
+        // 等待打卡中~~
         cell.accessaryIcon.hidden = YES;
         cell.contentImageView.hidden = YES;
         cell.statusImageView.image = nil;
@@ -783,8 +836,10 @@
         cell.waitBrushLabel.hidden = NO;
         cell.classTypeLabel.textColor = kMainBlueColor;
         cell.timeLabel.textColor = kMainBlueColor;
+        cell.exceptionBtn.hidden = YES;
         return cell;
     } else if (model.status.length == 0) {
+        // 只有时间点的打卡节点
         cell.accessaryIcon.hidden = YES;
         cell.contentImageView.hidden = YES;
         cell.statusImageView.image = nil;
@@ -796,17 +851,30 @@
         cell.waitBrushLabel.hidden = YES;
         cell.classTypeLabel.textColor = kMainLightGray;
         cell.timeLabel.textColor = kMainLightGray;
+        cell.exceptionBtn.hidden = YES;
         return cell;
     } else {
+        // 常用形态
         cell.waitBrushLabel.hidden = YES;
         cell.accessaryIcon.hidden = NO;
         cell.contentImageView.hidden = NO;
         cell.textLabel.text = @"";
         cell.classTypeLabel.textColor = kMainLightGray;
         cell.timeLabel.textColor = kMainLightGray;
+        if (kIsNilString(model.statusException)) {
+            cell.exceptionBtn.hidden = YES;
+        } else {
+            cell.exceptionBtn.hidden = NO;
+            [cell.exceptionBtn setTitle:kException_GetNameFromNum[model.statusException] forState:UIControlStateNormal];
+            [cell.exceptionBtn setTitle:kException_GetNameFromNum[model.statusException] forState:UIControlStateHighlighted];
+        }
     }
     // 状态及图片
-    if (model.status.integerValue == 0) {
+    if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+        // 自由打卡
+        cell.statusImageView.image = ImageName(@"attendence_finish");
+        cell.messageLabel.text = nil;
+    } else if (model.status.integerValue == 0) {
         cell.statusImageView.image = ImageName(@"attendence_finish");
         cell.messageLabel.text = @"正常";
     } else if (model.status.integerValue == 1) {
@@ -829,7 +897,7 @@
         cell.messageLabel.text = @"加班";
     }
     // 加减分
-    if (kIsNilString(model.integral)) {
+    if (kIsNilString(model.integral) || model.integral.integerValue == 0) {
         cell.scoreButton.hidden = YES;
     } else if (model.integral.integerValue >= 0) {
         cell.scoreButton.hidden = NO;
@@ -852,51 +920,64 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // 弹出选中处理页面：例外申请、改签
-    MPMAttendenceModel *model = self.attendenceArray[indexPath.row];
+    if (0 == indexPath.section) {
+        MPMAttendenceExceptionModel *excep = self.attendenceManageModel.attendenceExceptionArray[indexPath.row];
+        MPMProcessMyMetterModel *md = [[MPMProcessMyMetterModel alloc] init];
+        md.mpm_id = excep.mpm_id;
+        MPMApprovalProcessDetailViewController *detail = [[MPMApprovalProcessDetailViewController alloc] initWithModel:md selectedIndexPath:[NSIndexPath indexPathForRow:0 inSection:4]];
+        self.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:detail animated:YES];
+        self.hidesBottomBarWhenPushed = NO;
+        return;
+    }
+    // 补签、改签。如果已经处理过，则跳到详情页面。
+    MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[indexPath.row];
     if (model.status.length == 0) {
     } else {
-        NSArray *pickerData;
-        if (model.status.integerValue == 3) {
-            // 漏卡
-            pickerData = @[@"例外申请",@"补签"];
-        } else {
-            pickerData = @[@"例外申请",@"改签"];
-        }
-        [self.pickView showInView:kAppDelegate.window withPickerData:pickerData selectRow:0];
-        __weak typeof(self) weakself = self;
-        self.pickView.completeSelectBlock = ^(NSString *data) {
-            __strong typeof(weakself) strongself = weakself;
-            CausationType type;
-            NSString *typeStatus;
-            MPMDealingModel *dealingModel = [[MPMDealingModel alloc] init];
-            if ([data isEqualToString:@"例外申请"]) {
-                // 例外申请
-                type = forCausationTypeExcetionApply;
-                typeStatus = @"2";
-            } else if ([data isEqualToString:@"补签"]) {
-                // 补签
-                type = forCausationTypeRepairSign;
-                typeStatus = @"1";
-                dealingModel.attendenceId = model.attendanceId;
+        
+        NSString *url = [NSString stringWithFormat:@"%@%@?detailId=%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_ISEXISTDETAIL,model.schedulingEmployeeId];
+        [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在操作" success:^(id response) {
+            if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]] && response[kResponseDataKey] && [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] && kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
+                // 已经申请过，则直接跳到详情
+                MPMProcessMyMetterModel *md = [[MPMProcessMyMetterModel alloc] init];
+                md.mpm_id = model.schedulingEmployeeId;
+                MPMApprovalProcessDetailViewController *detail = [[MPMApprovalProcessDetailViewController alloc] initWithModel:md selectedIndexPath:[NSIndexPath indexPathForRow:0 inSection:3]];
+                self.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:detail animated:YES];
+                self.hidesBottomBarWhenPushed = NO;
             } else {
+                // 没有申请过，则重新申请
+                CausationType type;
+                NSInteger addCount;
+                NSString *typeStatus;
+                if (model.status.integerValue == 3) {
+                    // 漏卡-补签
+                    type = kCausationTypeRepairSign;
+                    addCount = 1;
+                    typeStatus = @"1";
+                } else {
+                    // 其他状态-改签
+                    type = kCausationTypeChangeSign;
+                    addCount = 0;
+                    typeStatus = @"0";
+                }
+                MPMDealingModel *dealingModel = [[MPMDealingModel alloc] initWithCausationType:type addCount:1];
+                // 补签
+                dealingModel.causationDetail[0].detailId = model.schedulingEmployeeId;
+                dealingModel.causationDetail[0].fillupTime = model.brushTime;
                 // 改签
-                type = forCausationTypeChangeSign;
-                typeStatus = @"0";
-                dealingModel.attendenceId = model.attendanceId;
+                dealingModel.status = model.status;
+                dealingModel.causationDetail[0].type = model.type;
+                dealingModel.causationDetail[0].attendanceTime = model.fillCardTime;/** 打卡节点时间 */
+                dealingModel.causationDetail[0].signTime = model.brushTime;         /** 实际打卡时间 */
+                MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:type dealingModel:dealingModel dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
+                self.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:dealing animated:YES];
+                self.hidesBottomBarWhenPushed = NO;
             }
-            
-            dealingModel.oriAttendenceDate = [NSString stringWithFormat:@"%.f",(model.fillCardDate.doubleValue + model.fillCardTime.doubleValue)/1000+28800];
-            dealingModel.attendenceDate = [NSString stringWithFormat:@"%.f",(model.brushDate.doubleValue + model.brushTime.doubleValue)/1000+28800];
-            dealingModel.status = model.status;
-            dealingModel.brushDate = model.brushDate;
-            dealingModel.brushTime = model.brushTime;
-            dealingModel.type = model.type;
-            MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:type typeStatus:typeStatus dealingModel:dealingModel dealingFromType:kDealingFromTypeChangeRepair];
-            strongself.hidesBottomBarWhenPushed = YES;
-            [strongself.navigationController pushViewController:dealing animated:YES];
-            strongself.hidesBottomBarWhenPushed = NO;
-        };
+        } failure:^(NSString *error) {
+            DLog(@"获取节点补签改签失败");
+        }];
     }
 }
 
@@ -992,20 +1073,29 @@
     return _bottomRoundButton;
 }
 
-- (UIButton *)bottomLocationButton {
-    if (!_bottomLocationButton) {
-        _bottomLocationButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_bottomLocationButton setImage:ImageName(@"attendence_location_small") forState:UIControlStateNormal];
-        [_bottomLocationButton setImage:ImageName(@"attendence_location_small") forState:UIControlStateSelected];
-        [_bottomLocationButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 1, 0, 0)];
-        [_bottomLocationButton setTitle:@"地理位置:" forState:UIControlStateNormal];
-        [_bottomLocationButton setTitle:@"地理位置:" forState:UIControlStateSelected];
-        _bottomLocationButton.titleLabel.font = SystemFont(13);
-        [_bottomLocationButton sizeToFit];
-        [_bottomLocationButton setTitleColor:kMainLightGray forState:UIControlStateNormal];
-        [_bottomLocationButton setTitleColor:kMainBlueColor forState:UIControlStateSelected];
+- (UIImageView *)bottomLocationIcon {
+    if (!_bottomLocationIcon) {
+        _bottomLocationIcon = [[UIImageView alloc] initWithImage:ImageName(@"attendence_location_gray")];
     }
-    return _bottomLocationButton;
+    return _bottomLocationIcon;
+}
+- (UILabel *)bottomLocationLabel {
+    if (!_bottomLocationLabel) {
+        _bottomLocationLabel = [[UILabel alloc] init];
+        _bottomLocationLabel.font = SystemFont(13);
+        _bottomLocationLabel.textColor = kMainLightGray;
+        _bottomLocationLabel.textAlignment = NSTextAlignmentCenter;
+        _bottomLocationLabel.text = @"地理位置:";
+        [_bottomLocationLabel sizeToFit];
+    }
+    return _bottomLocationLabel;
+}
+
+- (UIButton *)bottomRefreshLocationButton {
+    if (!_bottomRefreshLocationButton) {
+        _bottomRefreshLocationButton = [MPMButton imageButtonWithImage:ImageName(@"attendence_refresh") hImage:ImageName(@"attendence_refresh")];
+    }
+    return _bottomRefreshLocationButton;
 }
 
 // pickerView

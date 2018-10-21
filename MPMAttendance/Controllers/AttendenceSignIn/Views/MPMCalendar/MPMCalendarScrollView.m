@@ -10,7 +10,6 @@
 #import "MPMCalendarWeekView.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import "MPMAttendenceOneMonthModel.h"
-#import "MPMAttendanceHeader.h"
 
 #define kOneWeekInterval 604800
 
@@ -49,7 +48,6 @@
 }
 
 - (void)setupAttributes {
-    // TODO：这里的日期[NSDate date]不知道有没有偏差
     self.needBackToToday = NO;
     self.currentMiddleDate = [NSDate date];
     self.leftBoundarsDate = [NSDate dateWithTimeInterval:-90*24*60*60 sinceDate:self.currentMiddleDate];
@@ -74,6 +72,7 @@
 }
 
 #pragma mark - Public Method
+
 /** 一次性查找前后共三周信息的接口 */
 - (void)reloadLast:(NSArray *)lastArray current:(NSArray *)currentArray next:(NSArray *)nextArray {
     // 找到当天的标识
@@ -98,6 +97,7 @@
     [self.nextWeekView updateButtonsView:nextArray];
 }
 
+/** 一次性查找前后共三个星期信息的接口 */
 - (void)reloadData:(NSArray *)data {
     // 传入当前月份的信息
     NSMutableArray *currArray = [NSMutableArray arrayWithCapacity:7];
@@ -172,7 +172,7 @@
 
 - (void)changeToNextWeek {
     NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday fromDate:self.currentMiddleDate];
+    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:self.currentMiddleDate];
     [comp setDay:([comp day] + 7 + 7 - (comp.weekday - 1))];
     NSDate *rightEndDate  = [cal dateFromComponents:comp];
     if ([rightEndDate compare:self.rightBoundarsDate] == NSOrderedDescending) return;
@@ -183,7 +183,7 @@
 
 - (void)changeToLastWeek {
     NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday fromDate:self.currentMiddleDate];
+    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:self.currentMiddleDate];
     [comp setDay:([comp day] - 7)];
     NSDate *lastWeek  = [cal dateFromComponents:comp];
     [comp setDay:(comp.day - comp.weekday + 1)];
@@ -211,7 +211,7 @@
 - (NSArray *)getLeftWeek {
     // 当前日期减去7天
     NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday fromDate:self.currentMiddleDate];
+    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:self.currentMiddleDate];
     [comp setDay:([comp day] - 7)];
     NSDate *lastWeek  = [cal dateFromComponents:comp];
     NSArray *left = [self getWeekFromDate:lastWeek];
@@ -231,7 +231,7 @@
 /** 通过某一天，获取这一天所属周的信息 */
 - (NSArray *)getWeekFromDate:(NSDate *)date {
     NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *comp = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday fromDate:date];
+    NSDateComponents *comp = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:date];
     // 得到星期几
     NSInteger weekDay = [comp weekday];
     
@@ -302,7 +302,7 @@
             if (!kIsNilString(self.currentWeekView.currentSelectedYearMonth) && strongself.mpmDelegate && [strongself.mpmDelegate respondsToSelector:@selector(mpmCalendarScrollViewDidChangeYearMonth:currentMiddleDate:)]) {
                 
                 NSCalendar *cal = [NSCalendar currentCalendar];
-                NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday fromDate:strongself.currentMiddleDate];
+                NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:strongself.currentMiddleDate];
                 [comp setDay:([comp day] + offsetDay)];
                 strongself.currentMiddleDate  = [cal dateFromComponents:comp];
                 

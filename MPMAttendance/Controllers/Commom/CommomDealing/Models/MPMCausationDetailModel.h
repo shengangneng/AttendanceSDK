@@ -7,18 +7,34 @@
 //
 
 #import "MPMBaseModel.h"
+#import "MPMCausationTypeData.h"
 
 @interface MPMCausationDetailModel : MPMBaseModel
 
-@property (nonatomic, copy) NSString *address;          /** 签到地址 */
-@property (nonatomic, copy) NSString *attendenceId;     /** 选中的补签处理类型id */
-@property (nonatomic, copy) NSString *startLongDate;
-@property (nonatomic, copy) NSString *startDate;
-@property (nonatomic, copy) NSString *startTime;
-@property (nonatomic, copy) NSString *endLongDate;
-@property (nonatomic, copy) NSString *endDate;
-@property (nonatomic, copy) NSString *endTime;
-@property (nonatomic, copy) NSString *days;
+@property (nonatomic, copy) NSString *causationType;    /** 记录类型 */
+// 通用属性
+@property (nonatomic, copy) NSString *dayAccount;       /** 时长（半天） */
+@property (nonatomic, copy) NSString *startTime;        /** 开始时间 */
+@property (nonatomic, copy) NSString *endTime;          /** 结束时间 */
+@property (nonatomic, copy) NSString *hourAccount;      /** 时长（小时） */
+// 出差
+@property (nonatomic, copy) NSString *expectCost;       /** 出差预计费用 */
+@property (nonatomic, copy) NSString *address;          /** 出差地址 */
+@property (nonatomic, copy) NSString *isShareRoom;      /** 出差住宿是否共享 */
+@property (nonatomic, copy) NSString *traffic;          /** 出差交通工具 */
+// 请假
+@property (nonatomic, copy) NSString *type;             /** 请假类型 */
+// 补签、改签
+@property (nonatomic, copy) NSString *detailId;         /** 排班id，有则为修改，无则为新增 */
+@property (nonatomic, copy) NSString *fillupTime;       /** 漏卡时间 */
+@property (nonatomic, copy) NSString *signTime;         /** 补签时间、改签的实际签到时间 */
+@property (nonatomic, copy) NSString *mpm_id;           /** 漏卡处理id */
+// 改签
+@property (nonatomic, copy) NSString *attendanceTime;   /** 考勤时间 */
+@property (nonatomic, copy) NSString *reviseSignTime;   /** 改签时间 */
+@property (nonatomic, copy) NSString *status;           /** 改签，之前的迟到早退等状态 */
+
+@property (nonatomic, assign) BOOL trafficNeedFold;     /** "交通工具"控件是否需要折叠：YES需要 NO不需要 */
 
 - (void)clearData;
 - (void)copyWithOtherModel:(MPMCausationDetailModel *)model;

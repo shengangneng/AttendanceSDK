@@ -10,615 +10,256 @@
 
 @implementation MPMCausationTypeData
 
-/**
- <action>
- picker1:请假、出差、补签
- picker2:时间:年月日时分
- picker3:时间:年月日
- picker4:上班、下班
- picker5:早班、中班、晚班
- */
 + (NSArray *)getTableViewDataWithCausationType:(CausationType)type addCount:(NSInteger)addCount {
     switch (type) {
-        case forCausationTypeAskLeave:{  // 请假申请
-            return  @[@{@"title":@"请假明细",@"cell":@[@"处理类型,请假申请"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                      @{@"title":@"处理",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                      @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理理由,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                      @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                      @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-        }break;
-        case forCausationTypeChangeSign:{ // 改签
-            return @[@{@"title":@"班次：",@"cell":@[@"处理类型,改签"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                     @{@"title":@"处理",@"cell":@[@"实际时间,请选择"],@"cellType":@[@"UILabel"],@"action":@[@"picker2"]},
-                     @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"改签原因,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                     @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                     @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-        }break;
-        case forCausationTypeRepairSign:{   // 补签
-            return @[@{@"title":@"漏卡：",@"cell":@[@"处理类型,补签"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                     @{@"title":@"处理",@"cell":@[@"处理签到时间,请选择"],@"cellType":@[@"UILabel"],@"action":@[@"picker2"]},
-                     @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理理由,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                     @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                     @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-        }break;
-        case forCausationTypeLeave:{        // 请假
+        // 请假
+        case kCausationTypeAskLeave:
+        case kCausationTypeThingLeave:
+        case kCausationTypeSickLeave:
+        case kCausationTypeChangeRestLeave:
+        case kCausationTypeLactationLeave:
+        case kCausationTypeYearLeave:
+        case kCausationTypeMonthLeave:
+        case kCausationTypeSeeRelativeLeave:
+        case kCausationTypeMarryLeave:
+        case kCausationTypeBabyLeave:
+        case kCausationTypeCompanyBabyLeave:
+        case kCausationTypeFuneralLeave:
+        case kCausationTypeInjuryLeave:
+        {
             switch(addCount) {
                 case 0: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,请假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 1: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,请假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加请假明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"请假理由,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 2: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,请假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加请假明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"请假理由,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 3: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,请假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假理由,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 default:{
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,请假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }
             }
         }break;
-        case forCausationTypeevecation:{    // 出差
+            
+        // 出差
+        case kCausationTypeevecation:{
             switch(addCount) {
                 case 0: {
-                    return @[@{@"title":@"出差类型",@"cell":@[@"处理类型,出差"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"出差地点,如：北京、上海、广州",@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UITextField",@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"",@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理理由,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"处理理由,请输入处理理由"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 1: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,出差"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"出差地点,如：北京、上海、广州",@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UITextField",@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"",@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加出差明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"出差原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加出差明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"出差原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 2: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,出差"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"出差地点,如：北京、上海、广州",@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UITextField",@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"",@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"出差地点,如：北京、上海、广州",@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UITextField",@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"",@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加出差明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"出差原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加出差明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"出差原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 3: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,出差"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"出差地点,如：北京、上海、广州",@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UITextField",@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"",@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"出差地点,如：北京、上海、广州",@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UITextField",@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"",@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"出差地点,如：北京、上海、广州",@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UITextField",@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"",@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"出差原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"出差原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 default:{
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,出差"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"出差地点,如：北京、上海、广州",@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UITextField",@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"",@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加出差明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"出差原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"处理理由,请输入处理理由"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }
             }
             
         }break;
-        case forCausationTypeeveYearLeave:{ // 年假
+        // 加班
+        case kCausationTypeOverTime:{
             switch(addCount) {
                 case 0: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,年假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"加班原因,请输入",@"加班补偿,"],kCellDetailTypeKey:@[kCellDetailTypeUITextView,kCellDetailTypeSelectTool]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 1: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,年假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加加班明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"加班原因,请输入",@"加班补偿,"],kCellDetailTypeKey:@[kCellDetailTypeUITextView,kCellDetailTypeSelectTool]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 2: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,年假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加加班明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"加班原因,请输入",@"加班补偿,"],kCellDetailTypeKey:@[kCellDetailTypeUITextView,kCellDetailTypeSelectTool]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 3: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,年假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"加班原因,请输入",@"加班补偿,"],kCellDetailTypeKey:@[kCellDetailTypeUITextView,kCellDetailTypeSelectTool]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 default:{
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,年假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"加班原因,请输入",@"加班补偿,"],kCellDetailTypeKey:@[kCellDetailTypeUITextView,kCellDetailTypeSelectTool]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }
             }
         }break;
-        case forCausationTypeeveSickLeave:{ // 病假
+        // 外出
+        case kCausationTypeOut:{
             switch(addCount) {
                 case 0: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,病假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"处理理由,请输入处理理由"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 1: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,病假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加外出明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"外出原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 2: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,病假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加外出明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"外出原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 3: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,病假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"外出原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 default:{
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,病假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }
-            }
-        }break;
-        case forCausationTypeeveBabyLeave:{ // 产假
-            switch(addCount) {
-                case 0: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 1: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 2: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 3: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                default:{
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }
-            }
-        }break;
-        case forCausationTypeeveChirdBirthLeave:{ // 陪产假
-            switch(addCount) {
-                case 0: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,陪产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 1: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,陪产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 2: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,陪产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 3: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,陪产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                default:{
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,陪产假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }
-            }
-        }break;
-        case forCausationTypeeveMaryLeave:{ // 婚假
-            switch(addCount) {
-                case 0: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,婚假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 1: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,婚假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 2: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,婚假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 3: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,婚假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                default:{
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,婚假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }
-            }
-        }break;
-        case forCausationTypeeveDeadLeave:{ // 丧假
-            switch(addCount) {
-                case 0: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,丧假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 1: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,丧假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 2: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,丧假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 3: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,丧假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                default:{
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,丧假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }
-            }
-        }break;
-        case forCausationTypeeveThingLeave:{ // 事假
-            switch(addCount) {
-                case 0: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,事假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 1: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,事假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 2: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,事假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 3: {
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,事假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                default:{
-                    return @[@{@"title":@"请假明细",@"cell":@[@"处理类型,事假"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"请假",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加请假明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"请假原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }
-            }
-        }break;
-        case forCausationTypeOut:{          // 外出
-            switch(addCount) {
-                case 0: {
-                    return @[@{@"title":@"漏卡",@"cell":@[@"处理类型,外出"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"处理",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理理由,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 1: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,外出"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加外出明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"外出原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 2: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,外出"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加外出明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"外出原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 3: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,外出"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"外出原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                default:{
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,外出"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"行程明细",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加外出明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"外出原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                    return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"+增加外出明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"外出原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }
             }
             
         }break;
-        case forCausationTypeChangeRest:{   // 调休
-            switch(addCount) {
-                case 0: {
-                    return @[@{@"title":@"调休明细",@"cell":@[@"处理类型,调休"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"调休",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"调休原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+        // 补签
+        case kCausationTypeRepairSign:{
+            switch (addCount) {
+                case 0:{
+                    return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
-                case 1: {
-                    return @[@{@"title":@"调休明细",@"cell":@[@"处理类型,调休"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"调休",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加调休明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"调休原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                case 1:{
+                    return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
-                case 2: {
-                    return @[@{@"title":@"调休明细",@"cell":@[@"处理类型,调休"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"调休",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加调休明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"调休原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                case 2:{
+                    return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
-                case 3: {
-                    return @[@{@"title":@"调休明细",@"cell":@[@"处理类型,调休"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"调休",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"调休原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                case 3:{
+                    return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
-                default:{
-                    return @[@{@"title":@"调休明细",@"cell":@[@"处理类型,调休"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"调休",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加调休明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"调休原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }
-            }
-        }break;
-        case forCausationTypeChangeClass:{  // 调班
-            return @[@{@"title":@"处理:自由补签时间",@"cell":@[@"处理类型,调班"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                     @{@"title":@"处理",@"cell":@[@"请选择调班日期,请选择",@"原班次,请选择"],@"cellType":@[@"UILabel",@"UILabel"],@"action":@[@"picker3",@"picker5"]},
-                     @{@"title":@"",@"cell":@[@"请选择新调班日期,请选择",@"新班次,请选择",@"调整班次人员,方绪雷"],@"cellType":@[@"UILabel",@"UILabel",@"UILabel"],@"action":@[@"picker3",@"picker5",@"next"]},
-                     @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"调班原因,请输入"],@"cellType":@[@"UITextView"]},
-                     @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                     @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-        }break;
-        case forCausationTypeOverTime:{     // 加班
-            switch(addCount) {
-                case 0: {
-                    return @[@{@"title":@"加班类型",@"cell":@[@"处理类型,加班"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"加班",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"加班原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                case 4:{
+                    return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
-                case 1: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,加班"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"加班明细",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加加班明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"加班原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 2: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,加班"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"加班明细",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加加班明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"加班原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }break;
-                case 3: {
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,加班"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"加班明细",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"加班原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+                case 5:{
+                    return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 default:{
-                    return @[@{@"title":@"",@"cell":@[@"处理类型,加班"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                             @{@"title":@"加班明细",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                             @{@"title":@"时长将自动计入考勤统计",@"cell":@[@"+增加加班明细"],@"cellType":@[@"UIButton"],@"action":@[@"addCell"]},
-                             @{@"title":@"",@"cell":@[@"加班原因,请输入"],@"cellType":@[@"UITextView"]},
-                             @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                             @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-                }
+                    return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
+                }break;
             }
         }break;
-        case forCausationTypeDealing:{     // 处理
-            return @[@{@"title":@"漏卡",@"cell":@[@"处理类型,处理"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                     @{@"title":@"处理",@"cell":@[@"处理开始签到时间,请选择"],@"cellType":@[@"UILabel"],@"action":@[@"picker2"]},
-                     @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理理由,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                     @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                     @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
+        // 改签
+        case kCausationTypeChangeSign:{
+            return @[@{kCellHeaderTitleKey:@"处理",kCellTitleDetailKey:@[@"改签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne]},
+                     @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"改签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                     @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
+                     @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
         }break;
-        case forCausationTypeExcetionApply:{  // 例外申请
-            return @[@{@"title":@"漏卡",@"cell":@[@"处理类型,例外申请"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                     @{@"title":@"处理",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                     @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理理由,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                     @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                     @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-        }break;
-        case forCausationTypeAddFreeSign:{    // 增加自由补签
-            return @[@{@"title":@"漏卡",@"cell":@[@"处理类型,补签"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                     @{@"title":@"处理",@"cell":@[@"处理补签时间,请选择",@"选择上下班,上班"],@"cellType":@[@"UILabel",@"UILabel"],@"action":@[@"picker2",@"picker4"]},
-                     @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理理由,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                     @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                     @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-        }break;
-        default:
-            return @[@{@"title":@"漏卡",@"cell":@[@"处理类型,无类型"],@"cellType":@[@"UILabel"],@"action":@[@"picker1"]},
-                     @{@"title":@"处理",@"cell":@[@"开始时间,请选择",@"结束时间,请选择",@"时长(时),"],@"cellType":@[@"UILabel",@"UILabel",@"UITextField"],@"action":@[@"picker2",@"picker2",@""]},
-                     @{@"title":@"处理签到将自动计入考勤统计",@"cell":@[@"处理理由,请输入处理理由"],@"cellType":@[@"UITextView"]},
-                     @{@"title":@"",@"cell":@[@"审批人,请选择"],@"cellType":@[@"People"]},
-                     @{@"title":@"",@"cell":@[@"抄送人,添加"],@"cellType":@[@"People"]}];
-            break;
+        default:return @[];
     }
 }
 

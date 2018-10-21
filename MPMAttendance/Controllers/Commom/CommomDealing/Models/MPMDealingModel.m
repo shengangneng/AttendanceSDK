@@ -12,12 +12,23 @@
 
 @implementation MPMDealingModel
 
-- (instancetype)init {
+- (instancetype)initWithCausationType:(CausationType)type addCount:(NSInteger)addCount {
     self = [super init];
     if (self) {
+        self.causationType = type;
+        self.addCount = addCount;
         self.causationDetail = [[NSMutableArray alloc] init];
-        for (int i = 0; i < 3; i++) {
+        if (kCausationTypeRepairSign == self.causationType) {
+            self.addMaxCount = 5;
+        } else {
+            self.addMaxCount = 3;
+        }
+        self.mpm_copyNameNeedFold = YES;
+        self.mpm_applyNameNeedFold = YES;
+        for (int i = 0; i < self.addMaxCount; i++) {
             MPMCausationDetailModel *model = [[MPMCausationDetailModel alloc] init];
+            model.trafficNeedFold = YES;
+            model.causationType = [NSString stringWithFormat:@"%ld",type];
             [self.causationDetail addObject:model];
         }
     }
@@ -25,17 +36,11 @@
 }
 
 - (void)clearData {
-    self.mpm_copyName = nil;     /** 抄送人 */
-    self.mpm_copyNameId = nil;   /** 抄送人id */
-    self.approvalName = nil;     /** 审批人 */
-    self.approvalId = nil;       /** 审批人id */
-    self.nowApproval = nil;      /** 审批人 */
-    self.nowApprovalId = nil;    /** 审批人id */
+    
     self.status = nil;           /** 打卡状态：0正常、1异常 */
     self.type = nil;             /** 考勤状态：0考勤、1会议 */
     self.remark = nil;           /** 备注、处理理由 */
     self.attendence = nil;   /** 签到信息 */
-    self.address = nil;          /** 签到地址 */
     self.attendenceId = nil;     /** 选中的补签处理类型id */
     self.brushDate = nil;        /** 签到日期 */
     self.brushTime = nil;        /** 签到时间 */

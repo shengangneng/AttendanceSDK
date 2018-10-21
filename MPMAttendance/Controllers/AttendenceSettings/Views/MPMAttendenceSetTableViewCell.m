@@ -23,7 +23,7 @@
 }
 
 #define kShadowOffset 2
-- (void)resetCellWithModel:(MPMAttendenceSettingModel *)model cellHeight:(CGFloat)height {
+- (void)resetCellWithModel:(MPMAttendanceSettingModel *)model cellHeight:(CGFloat)height {
     // 设置Cell底部的阴影
     self.bottomImageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, height - 42.5 - 10 - kShadowOffset/2, kScreenWidth - 20, kShadowOffset)].CGPath;
     
@@ -34,7 +34,7 @@
         make.trailing.equalTo(self.bottomImageView.mpm_trailing);
         make.top.equalTo(preAttribute).offset(8);
     }];
-    if (model.schedulingDepartments.count > 0 || model.schedulingEmplyoees.count > 0) {
+    if (model.objList.count > 0) {
         preAttribute = self.workScopeLabel.mpm_bottom;
     }
     
@@ -44,7 +44,8 @@
         make.top.equalTo(preAttribute).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
-    if (model.slotTimeDtos.count >= 1) {
+    NSArray *timeSections = model.fixedTimeWorkSchedule[@"signTimeSections"];
+    if (timeSections.count >= 1) {
         preAttribute = self.classLabel1.mpm_bottom;
     }
     [self.classLabel2 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
@@ -52,7 +53,7 @@
         make.top.equalTo(preAttribute).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
-    if (model.slotTimeDtos.count >= 2) {
+    if (timeSections.count >= 2) {
         preAttribute = self.classLabel2.mpm_bottom;
     }
     [self.classLabel3 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
@@ -60,27 +61,30 @@
         make.top.equalTo(preAttribute).offset(8);
         make.trailing.equalTo(self.bottomImageView);
     }];
-    if (model.slotTimeDtos.count >= 3) {
+    if (timeSections.count >= 3) {
         preAttribute = self.classLabel3.mpm_bottom;
     }
     
     // 考勤日期
     [self.workDateLabel mpm_remakeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.bottomImageView);
+        make.trailing.equalTo(self.bottomImageView.mpm_trailing).offset(-8);
         make.top.equalTo(preAttribute).offset(8);
     }];
-    if (!kIsNilString(model.cycle)) {
+    NSArray *daysOfWeek = model.fixedTimeWorkSchedule[@"daysOfWeek"];
+    if (daysOfWeek.count > 0) {
         preAttribute = self.workDateLabel.mpm_bottom;
     }
     
     // 地点
     [self.workLocationLabel mpm_remakeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.bottomImageView);
+        make.trailing.equalTo(self.bottomImageView.mpm_trailing).offset(-8);
         make.top.equalTo(self.workDateLabel.mpm_bottom).offset(8);
     }];
-    if (!kIsNilString(model.address)) {
+    
+    NSArray *locations = model.fixedTimeWorkSchedule[@"locatioinSettings"];
+    if (locations.count > 0) {
         preAttribute = self.workLocationLabel.mpm_bottom;
     }
     // wifi名称
@@ -133,7 +137,7 @@
     } completion:nil];
 }
 
-- (void)delete:(UITapGestureRecognizer *)gesture {
+- (void)delete:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(attendenceSetTableCellDidDeleteWithModel:)]) {
         [self.delegate attendenceSetTableCellDidDeleteWithModel:self.model];
     }
@@ -151,6 +155,7 @@
     [self addGestureRecognizer:rightswipe];
     [self addGestureRecognizer:cellTap];
     [self.headerEditButton addTarget:self action:@selector(edit:) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerDeleteButton addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
     [self.swipeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(delete:)]];
 }
 
@@ -161,6 +166,8 @@
     [self.headerImageView addSubview:self.headerIconView];
     [self.headerImageView addSubview:self.headerTitleLabel];
     [self.headerImageView addSubview:self.headerEditButton];
+    [self.headerImageView addSubview:self.headerDeleteButton];
+    [self.headerImageView addSubview:self.headerSeperateLine];
     
     // 范围
     [self.bottomImageView addSubview:self.workScopeLabel];
@@ -201,10 +208,22 @@
         make.leading.equalTo(self.headerIconView.mpm_trailing).offset(10);
         make.centerY.equalTo(self.headerImageView.mpm_centerY);
     }];
+    [self.headerDeleteButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.width.equalTo(@19.5);
+        make.height.equalTo(@20.5);
+        make.trailing.equalTo(self.headerImageView.mpm_trailing).offset(-15);
+        make.centerY.equalTo(self.headerImageView.mpm_centerY);
+    }];
+    [self.headerSeperateLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.height.equalTo(@22);
+        make.width.equalTo(@0.5);
+        make.centerY.equalTo(self.headerImageView.mpm_centerY);
+        make.trailing.equalTo(self.headerDeleteButton.mpm_leading).offset(-15);
+    }];
     [self.headerEditButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.width.equalTo(@19);
-        make.height.equalTo(@19.5);
-        make.trailing.equalTo(self.headerImageView.mpm_trailing).offset(-10);
+        make.width.equalTo(@20.5);
+        make.height.equalTo(@20.5);
+        make.trailing.equalTo(self.headerSeperateLine.mpm_leading).offset(-15);
         make.centerY.equalTo(self.headerImageView.mpm_centerY);
     }];
     
@@ -242,14 +261,14 @@
     // 考勤日期
     [self.workDateLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.bottomImageView);
+        make.trailing.equalTo(self.bottomImageView.mpm_trailing).offset(-8);
         make.top.equalTo(self.classLabel3.mpm_bottom).offset(8);
     }];
     
     // 地点
     [self.workLocationLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.bottomImageView);
+        make.trailing.equalTo(self.bottomImageView.mpm_trailing).offset(-8);
         make.top.equalTo(self.workDateLabel.mpm_bottom).offset(8);
     }];
     // wifi名称
@@ -303,6 +322,19 @@
         _headerEditButton = [MPMButton imageButtonWithImage:ImageName(@"setting_scheduleditor") hImage:ImageName(@"setting_scheduleditor")];
     }
     return _headerEditButton;
+}
+- (UIButton *)headerDeleteButton {
+    if (!_headerDeleteButton) {
+        _headerDeleteButton = [MPMButton imageButtonWithImage:ImageName(@"setting_scheduldelete") hImage:ImageName(@"setting_scheduleditor")];
+    }
+    return _headerDeleteButton;
+}
+- (UIView *)headerSeperateLine {
+    if (!_headerSeperateLine) {
+        _headerSeperateLine = [[UIView alloc] init];
+        _headerSeperateLine.backgroundColor = kWhiteColor;
+    }
+    return _headerSeperateLine;
 }
 
 // 底部视图
