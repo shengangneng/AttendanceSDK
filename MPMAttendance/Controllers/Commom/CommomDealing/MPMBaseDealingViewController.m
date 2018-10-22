@@ -1131,7 +1131,7 @@
                 ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
             } else if ([cellTitle isEqualToString:@"预计费用"]) {
                 cell.startIcon.hidden = YES;// 预计费用非必填项
-                [cell needCheckNumber:YES limitLength:10];
+                [cell needCheckNumber:YES limitLength:6];
                 NSString *currentString = ((MPMCausationDetailModel *)self.dealingModel.causationDetail[indexPath.section]).expectCost;
                 ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
             } else if ([cellTitle containsString:@"时长"]) {
