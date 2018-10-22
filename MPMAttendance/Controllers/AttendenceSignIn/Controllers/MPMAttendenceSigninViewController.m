@@ -304,11 +304,6 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     }
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    [self setupSigninButton];
-}
-
 - (void)getDataWithDate:(NSDate *)date {
     [self getAttendanceSigninDataWithDate:date];
     [self getThreeWeekDataWithDate:date];
@@ -379,6 +374,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 }
                 self.attendenceManageModel.attendenceExceptionArray = temp.copy;
             }
+            
+            [self setupSigninButton];
             
             [self.middleTableView reloadData];
         }
