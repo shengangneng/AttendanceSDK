@@ -978,9 +978,10 @@
             cell = [[MPMCommomDealingGetPeopleTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
         }
         if (indexPath.section == self.tableViewTitleArray.count - 1) {
-            // 抄送人
+            // 抄送人：可以删除
             cell.startIcon.hidden = YES;
             cell.accessoryButton.hidden = NO;
+            cell.peopleCanDelete = YES;
             [cell setPeopleViewArray:self.dealingModel.delivers fold:self.dealingModel.mpm_copyNameNeedFold];
             __weak typeof(self) weakself = self;
             cell.addpBlock = ^(UIButton *sender) {
@@ -1015,18 +1016,24 @@
                 strongself.dealingModel.mpm_copyNameNeedFold = !sender.selected;
                 [strongself.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             };
+            cell.deleteBlock = ^(UIButton *sender) {
+                __strong typeof (weakself) strongself = weakself;
+                NSMutableArray *temp = [NSMutableArray arrayWithArray:strongself.dealingModel.delivers];
+                [temp removeObjectAtIndex:sender.tag - kButtonTag];
+                strongself.dealingModel.delivers = temp.copy;
+                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            };
         } else if (self.tableViewTitleArray.count - 2 == indexPath.section) {
-            // 审批人/提交至
+            // 提交至：如果流程有节点，则不可以删除，如果流程没有节点，是自己增加的，则可以删除
             cell.startIcon.hidden = NO;
-            if (!kIsNilString(self.dealingModel.decision)) {
+            if (!kIsNilString(self.dealingModel.decision) && self.dealingModel.participants.count != 0) {
                 // 如果已经有决策数据，说明管理员设置过审批人，则隐藏按钮，不给更改
-                if (self.dealingModel.participants.count != 0) {
-                    cell.accessoryButton.hidden = YES;
-                } else {
-                    cell.accessoryButton.hidden = NO;
-                }
+                cell.accessoryButton.hidden = YES;
+                cell.peopleCanDelete = NO;
+            } else {
+                cell.accessoryButton.hidden = NO;
+                cell.peopleCanDelete = YES;
             }
-            cell.accessoryButton.hidden = NO;
             [cell setPeopleViewArray:self.dealingModel.participants fold:self.dealingModel.mpm_applyNameNeedFold];
             __weak typeof (self) weakself = self;
             cell.addpBlock = ^(UIButton *sender) {
@@ -1059,6 +1066,13 @@
                 __strong typeof (weakself) strongself = weakself;
                 strongself.dealingModel.mpm_applyNameNeedFold = !sender.selected;
                 [strongself.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            };
+            cell.deleteBlock = ^(UIButton *sender) {
+                __strong typeof (weakself) strongself = weakself;
+                NSMutableArray *temp = [NSMutableArray arrayWithArray:strongself.dealingModel.participants];
+                [temp removeObjectAtIndex:sender.tag - kButtonTag];
+                strongself.dealingModel.participants = temp.copy;
+                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             };
         } else {
             cell.startIcon.hidden = NO;

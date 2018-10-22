@@ -15,7 +15,6 @@
 @property (nonatomic, strong) UIButton *firstMyMatterButton;    /** 我的事项 */
 @property (nonatomic, strong) UIButton *firstMyApplyButton;     /** 我的申请 */
 @property (nonatomic, strong) UIButton *firstCCToMeButton;      /** 抄送列表 */
-@property (nonatomic, strong) UIButton *firstFillterButton;     /** 筛选按钮 */
 @property (nonatomic, strong) UIView *firstUnderBlueLine;       /** 底部跟随线条 */
 
 @property (nonatomic, strong) UIImageView *secondSectionView;   /** 二级导航 */
@@ -340,7 +339,7 @@
     if (!_firstFillterButton) {
         _firstFillterButton = [MPMButton buttonWithType:UIButtonTypeCustom];
         [_firstFillterButton setImage:ImageName(@"approval_advancedfilter") forState:UIControlStateNormal];
-        [_firstFillterButton setImage:ImageName(@"approval_advancedfilter") forState:UIControlStateNormal];
+        [_firstFillterButton setImage:ImageName(@"approval_advancedfilter_s") forState:UIControlStateSelected];
         [_firstFillterButton setTitle:@"筛选" forState:UIControlStateNormal];
         [_firstFillterButton setTitle:@"筛选" forState:UIControlStateSelected];
         [_firstFillterButton setTitleColor:kMainTextFontColor forState:UIControlStateNormal];

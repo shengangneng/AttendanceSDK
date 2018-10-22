@@ -104,6 +104,7 @@
         if (indexPath != strongself.lastSelectIndexPath) {
             // 如果切换成不同类型，则重置“高级筛选”中选中的数据
             [strongself.siderDrawerView reset:nil];
+            strongself.headerSectionView.firstFillterButton.selected = NO;
         }
         strongself.lastSelectIndexPath = indexPath;
         strongself.firstSectionType = indexPath.section;
@@ -324,6 +325,11 @@
 
 /** 高级筛选返回筛选数据 */
 - (void)siderDrawerViewDidCompleteSelected {
+    if (self.siderDrawerView.state || self.siderDrawerView.type || self.siderDrawerView.startDate || self.siderDrawerView.endDate) {
+        self.headerSectionView.firstFillterButton.selected = YES;
+    } else {
+        self.headerSectionView.firstFillterButton.selected = NO;
+    }
     [self getData:self.firstSectionType indexPath:self.lastSelectIndexPath];
 }
 

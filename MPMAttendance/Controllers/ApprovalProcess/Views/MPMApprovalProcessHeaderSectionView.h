@@ -18,6 +18,8 @@ typedef void(^AnimateSecondSectionBlock)(BOOL needHideSecondSection);
 
 @interface MPMApprovalProcessHeaderSectionView : UIView
 
+@property (nonatomic, strong) UIButton *firstFillterButton;     /** 筛选按钮 */
+
 // 通过设置Data来动态创建视图
 @property (nonatomic, copy) NSArray *firstSectionTitlesArray;
 @property (nonatomic, copy) SelectButtonBlock selectBlock;

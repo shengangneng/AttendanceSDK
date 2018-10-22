@@ -98,6 +98,15 @@
         int line = i % count;
         MPMRoundPeopleButton *btn = [[MPMRoundPeopleButton alloc] init];
         btn.roundPeople.nameLabel.text = depart.name.length > 2 ? [depart.name substringWithRange:NSMakeRange(depart.name.length - 2, 2)] : depart.name;
+        if (self.peopleCanDelete) {
+            btn.userInteractionEnabled = YES;
+            btn.deleteIcon.hidden = NO;
+            btn.tag = kButtonTag + i;
+            [btn addTarget:self action:@selector(deletePeople:) forControlEvents:UIControlEventTouchUpInside];
+        } else {
+            btn.userInteractionEnabled = NO;
+            btn.deleteIcon.hidden = YES;
+        }
         btn.nameLabel.text = depart.name;
         btn.frame = CGRectMake(margin + line*(margin+width), row*(bord + heigth), width, heigth);
         [self.peopleView addSubview:btn];
@@ -145,6 +154,12 @@
 - (void)addPeople:(UIButton *)sender {
     if (self.addpBlock) {
         self.addpBlock(sender);
+    }
+}
+
+- (void)deletePeople:(UIButton *)sender {
+    if (self.deleteBlock) {
+        self.deleteBlock(sender);
     }
 }
 
