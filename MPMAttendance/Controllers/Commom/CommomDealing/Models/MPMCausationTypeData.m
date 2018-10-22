@@ -194,51 +194,51 @@
             switch (addCount) {
                 case 0:{
                     return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
-                             @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"补签时间将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 1:{
                     return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细1",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
                              @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 2:{
                     return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细1",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细2",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
                              @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 3:{
                     return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细1",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细2",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细3",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
                              @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 4:{
                     return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细1",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细2",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细3",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细4",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
                              @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
                 case 5:{
                     return @[@{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签明细,"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细1",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细2",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细3",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细4",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
+                             @{kCellHeaderTitleKey:@"漏签明细5",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"漏签时间,请选择",@"补签时间,请选择"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne]},
                              @{kCellHeaderTitleKey:@"处理签到将自动计入考勤统计",kCellTitleDetailKey:@[@"补签原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];

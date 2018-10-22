@@ -130,7 +130,7 @@
             singleLine.backgroundColor = kSeperateColor;
         }
     }
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, (kScreenWidth - 30) / 3, 40)];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, 40)];
     label.textAlignment = NSTextAlignmentCenter;
     label.font = SystemFont(18);
     label.text = [self pickerView:pickerView titleForRow:row forComponent:component];

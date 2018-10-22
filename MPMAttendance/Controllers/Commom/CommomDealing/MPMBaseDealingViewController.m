@@ -836,7 +836,9 @@
         header.deleteBlock = ^{
             // 删除
             __strong typeof(weakself) strongself = weakself;
-            [strongself.dealingModel.causationDetail removeModelAtIndex:section];
+            // 如果是补签，则index是section-1
+            NSInteger index = (kCausationTypeRepairSign == strongself.dealingModel.causationType) ? section - 1 : section;
+            [strongself.dealingModel.causationDetail removeModelAtIndex:index];
             strongself.dealingModel.addCount--;
             if (strongself.dealingModel.addCount < 1 && kCausationTypeRepairSign != strongself.dealingModel.causationType) {
                 strongself.dealingModel.addCount = 1;
