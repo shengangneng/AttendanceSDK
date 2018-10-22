@@ -184,7 +184,7 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 - (void)setupAttributes {
     [super setupAttributes];
     self.navigationItem.title = @"考勤统计";
-    [self setRightBarButtonType:forBarButtonTypeTitle title:@"退出" image:nil action:@selector(logout:)];
+//    [self setRightBarButtonType:forBarButtonTypeTitle title:@"退出" image:nil action:@selector(logout:)];
     self.titleTextField.text = [NSString stringWithFormat:@"%@  %@",[MPMOauthUser shareOauthUser].name_cn,[MPMOauthUser shareOauthUser].department_name];
     self.currentType = forDataTypePerson;
     [self.selectDateButton addTarget:self action:@selector(selectData:) forControlEvents:UIControlEventTouchUpInside];
