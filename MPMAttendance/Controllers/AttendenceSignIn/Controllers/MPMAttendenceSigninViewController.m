@@ -68,6 +68,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 @property (nonatomic, strong) CLLocationManager *locationManager;
 // timer
 @property (nonatomic, strong) CADisplayLink *timer; /** 定时器：用于获取当前系统时间 */
+@property (nonatomic, strong) CAKeyframeAnimation *alpha;
 // data
 @property (nonatomic, strong) MPMAttendenceManageModel *attendenceManageModel;  /** 打卡信息model */
 @property (nonatomic, strong) NSDate *lastSigninDate;                           /** 记录上一次打卡时间（15秒钟不允许操作） */
@@ -94,8 +95,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     // 签到按钮的layer动画
-    [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
-    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self canSignIn:YES];
     [self setupLocation];
     __weak typeof(self) weakself = self;
     self.goodNetworkToLoadBlock = ^{
@@ -108,8 +108,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     // 签到按钮的layer动画
-    [self.bottomAnimateLayer removeFromSuperlayer];
-    self.bottomAnimateLayer = nil;
+    [self canSignIn:NO];
     [self.locationManager stopUpdatingLocation];
 }
 
@@ -133,7 +132,6 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [self.headerDateView setDetailDate:[NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeMonthYearDayWeek]];
     self.timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(timeChange:)];
     [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
     // 刷新
     UIButton *rightButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -188,6 +186,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [self.bottomView addSubview:self.bottomLocationIcon];
     [self.bottomView addSubview:self.bottomLocationLabel];
     [self.bottomView addSubview:self.bottomRefreshLocationButton];
+    [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
 }
 
 - (void)setupConstraints {
@@ -266,6 +265,50 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     }];
 }
 
+- (void)setupSigninButton {
+    // 设置打卡按钮
+    if (![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
+        [self canSignIn:NO];
+    } else {
+        if (self.attendenceManageModel.attendenceArray.count == 0) {
+            if (3 != self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+                // 如果不是自由打卡，不继续打
+                [self canSignIn:NO];
+            } else {
+                // 如果是自由打卡，可以继续打
+                [self canSignIn:YES];
+            }
+        } else {
+            if (3 != self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+                for (int i = 0; i < self.attendenceManageModel.attendenceArray.count; i++) {
+                    MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[i];
+                    if (i == self.attendenceManageModel.attendenceArray.count - 1) {
+                        // 判断最后一个数据是否已有数据，如果已有数据，说明已经打完，不再允许打卡，按钮置灰(有数据，但是不是当前日期，也置灰）
+                        if (!kIsNilString(model.brushTime)) {
+                            [self canSignIn:NO];
+                        } else {
+                            // 如果最后一个数据还没打，则按钮恢复
+                            [self canSignIn:YES];
+                        }
+                    }
+                }
+            } else {
+                // 如果是自由打卡，可以继续打
+                if (kFreeSignMaxCount == self.attendenceManageModel.attendenceArray.count) {
+                    [self canSignIn:NO];
+                } else {
+                    [self canSignIn:YES];
+                }
+            }
+        }
+    }
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self setupSigninButton];
+}
+
 - (void)getDataWithDate:(NSDate *)date {
     [self getAttendanceSigninDataWithDate:date];
     [self getThreeWeekDataWithDate:date];
@@ -287,6 +330,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
             self.attendenceManageModel.schedulingEmployeeType = nil;
             
             NSDictionary *object = response[kResponseObjectKey];
+            // 打卡定位信息
             if (object[@"cardSettings"] && [object[@"cardSettings"] isKindOfClass:[NSArray class]]) {
                 NSArray *cardSettigns = object[@"cardSettings"];
                 NSMutableArray *tempAddress = [NSMutableArray arrayWithCapacity:cardSettigns.count];
@@ -303,6 +347,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 self.attendenceManageModel.schedulingEmployeeType = schedulingEmployeeType.stringValue;
             }
             
+            // 打卡数据
             if (object[@"employeeAttendances"] && [object[@"employeeAttendances"] isKindOfClass:[NSArray class]]) {
                 NSArray *attens = object[@"employeeAttendances"];
                 NSMutableArray *tempattens = [NSMutableArray arrayWithCapacity:attens.count];
@@ -310,54 +355,14 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                     MPMAttendenceModel *model = [[MPMAttendenceModel alloc] initWithDictionary:attens[i]];
                     [tempattens addObject:model];
                 }
-                if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
-                    // 自由打卡
-                    if (kFreeSignMaxCount == tempattens.count) {
-                        [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
-                        [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
-                        if (self.bottomAnimateLayer) {
-                            [self.bottomAnimateLayer removeFromSuperlayer];
-                            self.bottomAnimateLayer = nil;
-                        }
-                    } else {
-                        [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateNormal];
-                        [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateHighlighted];
-                        if (!self.bottomAnimateLayer) {
-                            [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
-                            [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-                        }
-                    }
-                } else {
-                    if ([NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
-                        for (int i = 0; i < tempattens.count; i++) {
-                            MPMAttendenceModel *model = tempattens[i];
-                            // 如果没有brushTime（并且不是漏卡），那么就是等待刷卡状态
-                            if (kIsNilString(model.brushTime) && model.status.integerValue != 3) {
-                                model.isNeedFirstBrush = YES;
-                                break;
-                            }
-                        }
-                    }
+                // 筛选等待打卡状态：当天+最新一个未打卡的节点
+                if ([NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
                     for (int i = 0; i < tempattens.count; i++) {
                         MPMAttendenceModel *model = tempattens[i];
-                        if (i == tempattens.count - 1) {
-                            // 判断最后一个数据是否已有数据，如果已有数据，说明已经打完，不再允许打卡，按钮置灰(有数据，但是不是当前日期，也置灰）
-                            if (!kIsNilString(model.brushTime) || ![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
-                                [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
-                                [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
-                                if (self.bottomAnimateLayer) {
-                                    [self.bottomAnimateLayer removeFromSuperlayer];
-                                    self.bottomAnimateLayer = nil;
-                                }
-                            } else {
-                                // 如果最后一个数据还没打，则按钮恢复
-                                [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateNormal];
-                                [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateHighlighted];
-                                if (!self.bottomAnimateLayer) {
-                                    [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
-                                    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-                                }
-                            }
+                        // 如果没有brushTime（并且不是漏卡），那么就是等待刷卡状态
+                        if (kIsNilString(model.brushTime) && model.status.integerValue != 3) {
+                            model.isNeedFirstBrush = YES;
+                            break;
                         }
                     }
                 }
@@ -375,20 +380,26 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 self.attendenceManageModel.attendenceExceptionArray = temp.copy;
             }
             
-            // 设置打卡按钮
-            if (self.attendenceManageModel.attendenceArray.count == 0 && 3 != self.attendenceManageModel.schedulingEmployeeType.integerValue) {
-                [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
-                [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
-                if (self.bottomAnimateLayer) {
-                    [self.bottomAnimateLayer removeFromSuperlayer];
-                    self.bottomAnimateLayer = nil;
-                }
-            }
             [self.middleTableView reloadData];
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
+}
+
+- (void)canSignIn:(BOOL)canSign {
+    dispatch_async(kMainQueue, ^{
+        if (canSign) {
+            [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateNormal];
+            [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateHighlighted];
+            [self.bottomAnimateLayer removeAllAnimations];
+            [self.bottomAnimateLayer addAnimation:self.alpha forKey:@"animate"];
+        } else {
+            [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
+            [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
+            [self.bottomAnimateLayer removeAllAnimations];
+        }
+    });
 }
 
 /** 当前接口可以获取当前月份和前后共三个星期的班次信息 */
@@ -516,10 +527,6 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 
 #pragma mark - Target Action
-
-- (void)back:(UIButton *)sender {
-    [[MPMSessionManager shareManager] back];
-}
 
 - (void)right:(UIButton *)sender {
     MPMRepairSigninViewController *rs = [[MPMRepairSigninViewController alloc] initWithRepairFromType:kRepairFromTypeSigning];
@@ -687,27 +694,31 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [self.bottomRoundButton setTitle:str forState:UIControlStateHighlighted];
 }
 
+- (void)back:(UIButton *)sender {
+    [[MPMSessionManager shareManager] back];
+}
+
 #pragma mark - Notification
 - (void)appResignActive:(NSNotification *)noti {
-    [self.bottomAnimateLayer removeFromSuperlayer];
-    self.bottomAnimateLayer = nil;
-    [self.timer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 }
 
 - (void)appBecomeActive:(NSNotification *)noti {
-    [self.bottomView.layer insertSublayer:self.bottomAnimateLayer atIndex:0];
-    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    // 如果最后一个打卡数据不为空，或者当前时间不是今天，置灰打卡按钮
-    if (self.attendenceManageModel.attendenceArray.count > 0) {
-        MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray.lastObject;
-        if (!kIsNilString(model.brushTime) || ![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
-            [self.bottomAnimateLayer removeFromSuperlayer];
-            self.bottomAnimateLayer = nil;
-        }
-    } else if (self.attendenceManageModel.attendenceArray.count == 0) {
-        [self.bottomAnimateLayer removeFromSuperlayer];
-        self.bottomAnimateLayer = nil;
-    }
+    [self setupSigninButton];
+    [self.timer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    /*
+     // 如果最后一个打卡数据不为空，或者当前时间不是今天，置灰打卡按钮
+     if (self.attendenceManageModel.attendenceArray.count > 0) {
+     MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray.lastObject;
+     if (!kIsNilString(model.brushTime) || ![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
+     [self.bottomAnimateLayer removeFromSuperlayer];
+     self.bottomAnimateLayer = nil;
+     }
+     } else if (self.attendenceManageModel.attendenceArray.count == 0) {
+     [self.bottomAnimateLayer removeFromSuperlayer];
+     self.bottomAnimateLayer = nil;
+     }
+     */
     // 从后台切换回前台，刷新定位
     [self setupLocation];
 }
@@ -1115,15 +1126,21 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         _bottomAnimateLayer.fillColor = kMainBlueColor.CGColor;
         _bottomAnimateLayer.opacity = 0;
         _bottomAnimateLayer.position = CGPointMake(kScreenWidth / 2, 76);
-        CAKeyframeAnimation *alpha = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
-        alpha.delegate = self;
-        alpha.values = @[@0.0000001,@0.5,@0.0000001];
-        alpha.duration = 1.5;
-        alpha.repeatCount = HUGE;
-        alpha.autoreverses = NO;
-        [_bottomAnimateLayer addAnimation:alpha forKey:@"animate"];
+        [_bottomAnimateLayer addAnimation:self.alpha forKey:@"animate"];
     }
     return _bottomAnimateLayer;
+}
+
+- (CAKeyframeAnimation *)alpha {
+    if (!_alpha) {
+        _alpha = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+        _alpha.delegate = self;
+        _alpha.values = @[@0.0000001,@0.5,@0.0000001];
+        _alpha.duration = 1.5;
+        _alpha.repeatCount = HUGE;
+        _alpha.autoreverses = NO;
+    }
+    return _alpha;
 }
 
 - (CLLocationManager *)locationManager {
