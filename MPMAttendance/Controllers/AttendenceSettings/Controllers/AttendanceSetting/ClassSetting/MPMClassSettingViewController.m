@@ -182,6 +182,11 @@
             [self showAlertControllerToLogoutWithMessage:@"请选择开始签到时间" sureAction:nil needCancleButton:NO];
             return;
         }
+        NSArray *signTimeSection = self.model.fixedTimeWorkSchedule[@"signTimeSections"];
+        if (!signTimeSection || signTimeSection.count == 0) {
+            [self showAlertControllerToLogoutWithMessage:@"请选择考勤班次" sureAction:nil needCancleButton:NO];
+            return;
+        }
     } else if (self.model.type.integerValue == 1) {
         // 自由排班
         NSArray *daysOfWeek = self.model.flexibleTimeWorkSchedule[@"daysOfWeek"];
