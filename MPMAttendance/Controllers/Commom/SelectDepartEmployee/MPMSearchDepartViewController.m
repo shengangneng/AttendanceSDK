@@ -173,6 +173,7 @@
         }
         self.searchArray[indexPath.row].selectedStatus = kSelectedStatusAllSelected;
     }
+    [[MPMDepartEmployeeHelper shareInstance] clearData];
     self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选（%ld)",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
