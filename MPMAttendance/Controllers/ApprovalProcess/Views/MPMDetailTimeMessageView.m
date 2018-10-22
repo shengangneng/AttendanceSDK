@@ -99,7 +99,7 @@
     } else if (kCausationTypeOverTime == self.type) {
         // 加班：加班补偿
         self.contentCostMoneyLabel.text = @"加班补偿";
-        self.contentCostMoneyMessage.text = !kIsNilString(self.detailDto.redress) ? (self.detailDto.redress.integerValue > 3 ? @"" : @[@"无",@"调休",@"加班费"][self.detailDto.redress.integerValue - 1]) : @"";
+        self.contentCostMoneyMessage.text = !kIsNilString(self.detailDto.redress) ? ((self.detailDto.redress.integerValue > 3 || self.detailDto.redress.integerValue < 1) ? @"" : @[@"无",@"调休",@"加班费"][self.detailDto.redress.integerValue - 1]) : @"";
     }
     // 积分
     self.contentIntegralMessage.text = self.detailDto.bScore;
