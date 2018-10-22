@@ -392,6 +392,10 @@
         [self showAlertControllerToLogoutWithMessage:@"请选择部门或员工" sureAction:nil needCancleButton:NO];
         return;
     }
+    if ([MPMDepartEmployeeHelper shareInstance].employees.count > 0 && [MPMDepartEmployeeHelper shareInstance].limitEmployeeCount > 0 && [MPMDepartEmployeeHelper shareInstance].employees.count > [MPMDepartEmployeeHelper shareInstance].limitEmployeeCount) {
+        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"最多只能选择%ld人",[MPMDepartEmployeeHelper shareInstance].limitEmployeeCount] sureAction:nil needCancleButton:NO];
+        return;
+    }
     // 使用Delegate的方式回传数据
     if (self.delegate && [self.delegate respondsToSelector:@selector(departCompleteSelectWithDepartments:employees:)]) {
         [self.delegate departCompleteSelectWithDepartments:[MPMDepartEmployeeHelper shareInstance].departments.copy employees:[MPMDepartEmployeeHelper shareInstance].employees.copy];

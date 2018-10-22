@@ -403,6 +403,10 @@
 }
 
 - (void)addPeople:(UIButton *)sender {
+    if (kDetailNodeDealingTypeTransToOthers == self.dealingNodeType) {
+        // 转交限制只能选择一个人
+        [MPMDepartEmployeeHelper shareInstance].limitEmployeeCount = 1;
+    }
     // 跳入人员选择功能
     [[MPMDepartEmployeeHelper shareInstance].employees removeAllObjects];
     [[MPMDepartEmployeeHelper shareInstance].employees addObjectsFromArray:self.selectedPeople];

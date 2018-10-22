@@ -89,6 +89,7 @@ static MPMDepartEmployeeHelper *shareHelper;
 - (void)clearData {
     [shareHelper.departments removeAllObjects];
     [shareHelper.employees removeAllObjects];
+    shareHelper.limitEmployeeCount = 0;
 }
 
 @end
