@@ -607,6 +607,28 @@
                 // 如果是部门-其实是删除里面的员工
                 [[MPMDepartEmployeeHelper shareInstance] departmentArrayRemoveSub:depart];
             }
+        } else if (depart.isHuman && [MPMDepartEmployeeHelper shareInstance].limitEmployees.count > 0) {
+            // 如果选中的是员工，有限制选中的员工
+            BOOL canPass = YES;
+            for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].limitEmployees.count; i++) {
+                MPMDepartment *limE = [MPMDepartEmployeeHelper shareInstance].limitEmployees[i];
+                if ([limE.mpm_id isEqualToString:depart.mpm_id]) {
+                    canPass = NO;
+                    break;
+                }
+            }
+            if (canPass) {
+                ((MPMDepartment *)strongself.departsArray[indexPath.row]).selectedStatus = kSelectedStatusAllSelected;
+                [strongself.allSelectedIndexArray addObject:indexPath];
+                if (depart.isHuman) {
+                    [[MPMDepartEmployeeHelper shareInstance] employeeArrayAddDepartModel:depart];
+                } else {
+                    [[MPMDepartEmployeeHelper shareInstance] departmentArrayAddDepartModel:depart];
+                }
+            } else {
+                NSString *limitMessage = kIsNilString([MPMDepartEmployeeHelper shareInstance].limitEmployeeMessage) ? @"不允许选择此员工" : [MPMDepartEmployeeHelper shareInstance].limitEmployeeMessage;
+                [strongself showAlertControllerToLogoutWithMessage:limitMessage sureAction:nil needCancleButton:NO];
+            }
         } else {
             // 如果之前为不选中，则变为全选
             if (strongself.selectionType == kSelectionTypeOnlyEmployee && !depart.isHuman) {

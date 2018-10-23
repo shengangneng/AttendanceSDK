@@ -7,7 +7,6 @@
 //
 
 #import "MPMTaskEditView.h"
-#import "MPMTaskContentView.h"
 #import "MPMProcessTaskModel.h"
 #import "MPMBaseViewController.h"
 #import "MPMTaskApplyersScrollView.h"
@@ -17,8 +16,6 @@ typedef void(^CompleteBlock)(MPMProcessTaskModel *);
 #define kTaskAnimateDuration 0.5
 
 @interface MPMTaskEditView () <MPMTaskContentViewDelegate>
-
-@property (nonatomic, strong) MPMTaskContentView *taskContentView;
 
 @property (nonatomic, copy) CompleteBlock completeBlock;
 

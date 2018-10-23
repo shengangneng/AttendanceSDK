@@ -9,8 +9,11 @@
 #import <UIKit/UIKit.h>
 @class MPMProcessTaskModel;
 @class MPMBaseViewController;
+#import "MPMTaskContentView.h"
 
 @interface MPMTaskEditView : UIView
+
+@property (nonatomic, strong) MPMTaskContentView *taskContentView;
 
 - (void)showWithModel:(MPMProcessTaskModel *)model destinyVC:(MPMBaseViewController *)destinyVC completeBlock:(void(^)(MPMProcessTaskModel *))completeBlock;
 - (void)dismiss;

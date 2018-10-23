@@ -90,6 +90,8 @@ static MPMDepartEmployeeHelper *shareHelper;
     [shareHelper.departments removeAllObjects];
     [shareHelper.employees removeAllObjects];
     shareHelper.limitEmployeeCount = 0;
+    shareHelper.limitEmployees = nil;
+    shareHelper.limitEmployeeMessage = nil;
 }
 
 @end

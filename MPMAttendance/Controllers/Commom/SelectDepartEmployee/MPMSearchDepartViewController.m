@@ -165,13 +165,37 @@
         }
         self.searchArray[indexPath.row].selectedStatus = kSelectedStatusUnselected;
     } else {
-        [self.allSelectIndexPath addObject:indexPath];
-        if (model.isHuman) {
-            [[MPMDepartEmployeeHelper shareInstance] employeeArrayAddDepartModel:model];
+        if (model.isHuman && [MPMDepartEmployeeHelper shareInstance].limitEmployees.count > 0) {
+            // 如果选中的是员工，有限制选中的员工
+            BOOL canPass = YES;
+            for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].limitEmployees.count; i++) {
+                MPMDepartment *limE = [MPMDepartEmployeeHelper shareInstance].limitEmployees[i];
+                if ([limE.mpm_id isEqualToString:model.mpm_id]) {
+                    canPass = NO;
+                    break;
+                }
+            }
+            if (canPass) {
+                [self.allSelectIndexPath addObject:indexPath];
+                if (model.isHuman) {
+                    [[MPMDepartEmployeeHelper shareInstance] employeeArrayAddDepartModel:model];
+                } else {
+                    [[MPMDepartEmployeeHelper shareInstance] departmentArrayAddDepartModel:model];
+                }
+                self.searchArray[indexPath.row].selectedStatus = kSelectedStatusAllSelected;
+            } else {
+                NSString *limitMessage = kIsNilString([MPMDepartEmployeeHelper shareInstance].limitEmployeeMessage) ? @"不允许选择此员工" : [MPMDepartEmployeeHelper shareInstance].limitEmployeeMessage;
+                [self showAlertControllerToLogoutWithMessage:limitMessage sureAction:nil needCancleButton:NO];
+            }
         } else {
-            [[MPMDepartEmployeeHelper shareInstance] departmentArrayAddDepartModel:model];
+            [self.allSelectIndexPath addObject:indexPath];
+            if (model.isHuman) {
+                [[MPMDepartEmployeeHelper shareInstance] employeeArrayAddDepartModel:model];
+            } else {
+                [[MPMDepartEmployeeHelper shareInstance] departmentArrayAddDepartModel:model];
+            }
+            self.searchArray[indexPath.row].selectedStatus = kSelectedStatusAllSelected;
         }
-        self.searchArray[indexPath.row].selectedStatus = kSelectedStatusAllSelected;
     }
     [[MPMDepartEmployeeHelper shareInstance] clearData];
     self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选（%ld)",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];

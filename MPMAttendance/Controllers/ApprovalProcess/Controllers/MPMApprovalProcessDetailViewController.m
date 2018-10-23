@@ -127,9 +127,6 @@
         if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *object = response[kResponseObjectKey];
             self.canAddSign = kNumberSafeString(object[@"canAddSign"]);
-            if (1 == self.canAddSign.integerValue) {
-                self.addSignButton.hidden = NO;
-            }
             // processDef - 用于传递给终审加签
             if (object[@"processDef"] && [object[@"processDef"] isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *processDef = object[@"processDef"];
@@ -144,6 +141,13 @@
             if (object[@"participantConfig"] && [object[@"participantConfig"] isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *participantConfig = object[@"participantConfig"];
                 self.config = [[MPMProcessTaskConfig alloc] initWithDictionary:participantConfig];
+            }
+            
+            // 设置是否可以加签：如果可以加签，并且没有加签过
+            if (1 == self.canAddSign.integerValue && 0 == self.config.addsign.integerValue) {
+                self.addSignButton.hidden = NO;
+            } else {
+                self.addSignButton.hidden = YES;
             }
             
             // taskInstGroups-具体审批节点
@@ -273,8 +277,8 @@
 - (void)setupAttributes {
     [super setupAttributes];
     [self.reasonDetailLabel setAttributedString:kIsNilString(self.processDetailList.reason) ? @"无" : self.processDetailList.reason font:SystemFont(15) lineSpace:2];
-    self.headerImage.nameLabel.text = [MPMOauthUser shareOauthUser].name_cn.length > 2 ? [[MPMOauthUser shareOauthUser].name_cn substringWithRange:NSMakeRange([MPMOauthUser shareOauthUser].name_cn.length - 2, 2)] : [MPMOauthUser shareOauthUser].name_cn;
-    self.headerNameDepartment.text = [NSString stringWithFormat:@"%@（%@）",[MPMOauthUser shareOauthUser].name_cn,[MPMOauthUser shareOauthUser].department_name];
+    self.headerImage.nameLabel.text = self.processDetailList.userName.length > 2 ? [self.processDetailList.userName substringWithRange:NSMakeRange(self.processDetailList.userName.length - 2, 2)] : self.processDetailList.userName;
+    self.headerNameDepartment.text = [NSString stringWithFormat:@"%@（%@）",self.processDetailList.userName,self.processDetailList.departmentName];
     self.headerStatusLabel.text = [NSString stringWithFormat:@"状态 : %@",(self.processInst.state.integerValue > kStateArray.count - 1) ? @"待处理" : kStateArray[self.processInst.state.integerValue]];
     
 }
@@ -425,6 +429,10 @@
     } else {
         [self.bottomDeliversView removeFromSuperview];
     }
+    [self.addSignButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.bottom.equalTo(self.scrollView.mpm_bottom);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-12);
+    }];
     if (0 == self.selectIndexPath.section && 0 == self.selectIndexPath.row) {
         // bottom操作按钮
         [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -433,10 +441,6 @@
             make.height.equalTo(@(BottomViewHeight));
         }];
         
-        [self.addSignButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-            make.bottom.equalTo(self.bottomView.mpm_top);
-            make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-12);
-        }];
         [self.bottomLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.leading.top.trailing.equalTo(self.bottomView);
             make.height.equalTo(@0.5);
@@ -522,7 +526,7 @@
     }
     
     __block UIView *lastView;
-    MPMViewAttribute *lastAttributes = self.reasonView.mpm_bottom;
+    MPMViewAttribute *lastAttributes = self.bottomApprovedNodeTitleLabel.mpm_bottom;
     for (int i = 0; i < self.taskInstGroups.count; i++) {
         MPMTaskInstGroups *group = self.taskInstGroups[i];
         MPMProcessDetailApprovalNodeView *nodeView = [[MPMProcessDetailApprovalNodeView alloc] initWithTaskGroup:group];
@@ -637,9 +641,18 @@
     self.processDef.currentTaskCode = self.processInst.currentTaskCode;
     MPMProcessTaskModel *tm = [[MPMProcessTaskModel alloc] init];
     tm.name = self.taskInstGroups.firstObject.taskName;
+    self.taskView.taskContentView.nameTextField.enabled = NO;
     __weak typeof(self) weakself = self;
     [self.taskView showWithModel:tm destinyVC:self completeBlock:^(MPMProcessTaskModel *taskModel) {
         __weak typeof(weakself) strongself = weakself;
+        if (kIsNilString(taskModel.name)) {
+            [strongself showAlertControllerToLogoutWithMessage:@"请输入节点名称" sureAction:nil needCancleButton:NO];
+            return;
+        }
+        if (0 == taskModel.config.participants.count) {
+            [strongself showAlertControllerToLogoutWithMessage:@"请添加审批人" sureAction:nil needCancleButton:NO];
+            return;
+        }
         // 调用终审加签接口
         NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_ADDSIGN];
         NSMutableDictionary *params = [NSMutableDictionary dictionary];

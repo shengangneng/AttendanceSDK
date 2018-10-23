@@ -323,12 +323,14 @@
     self.reasonLimitNumberLabel.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%ld/30",textView.text.length]];
 }
 
+/*
 - (void)textViewDidEndEditing:(UITextView *)textView {
     if (textView.text.length > 30) {
         textView.text = [textView.text substringToIndex:30];
     }
     self.reasonLimitNumberLabel.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%ld/30",textView.text.length]];
 }
+ */
 
 #pragma mark - SelectPeopleDelegate
 - (void)departCompleteSelectWithDepartments:(NSArray<MPMDepartment *> *)departments employees:(NSArray<MPMDepartment *> *)employees {
@@ -402,10 +404,23 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+/** 转交和通过（下一节点没设置人） */
 - (void)addPeople:(UIButton *)sender {
     if (kDetailNodeDealingTypeTransToOthers == self.dealingNodeType) {
         // 转交限制只能选择一个人
         [MPMDepartEmployeeHelper shareInstance].limitEmployeeCount = 1;
+        [MPMDepartEmployeeHelper shareInstance].limitEmployeeMessage = @"你选择的转交人已包含在当前审批节点中，请重新选择";
+        if (self.config && self.config.participants.count > 0) {
+            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:self.config.participants.count];
+            for (int i = 0; i < self.config.participants.count; i++) {
+                MPMProcessPeople *peo = self.config.participants[i];
+                MPMDepartment *dep = [[MPMDepartment alloc] init];
+                dep.mpm_id = peo.userId;
+                dep.name = peo.userName;
+                [temp addObject:dep];
+            }
+            [MPMDepartEmployeeHelper shareInstance].limitEmployees = temp.copy;
+        }
     }
     // 跳入人员选择功能
     [[MPMDepartEmployeeHelper shareInstance].employees removeAllObjects];
@@ -517,11 +532,17 @@
 - (BOOL)validateSubmitData {
     if (kDetailNodeDealingTypeReject == self.dealingNodeType) {
         if (kIsNilString(self.reasonTextView.text)) {
-            [self showAlertControllerToLogoutWithMessage:@"请选择驳回意见" sureAction:nil needCancleButton:NO];return NO;
+            [self showAlertControllerToLogoutWithMessage:@"请输入驳回意见" sureAction:nil needCancleButton:NO];return NO;
+        }
+        if (self.reasonTextView.text.length > 30) {
+            [self showAlertControllerToLogoutWithMessage:@"驳回意见不能超过30个字，请重新编辑" sureAction:nil needCancleButton:NO];return NO;
         }
     } else if (kDetailNodeDealingTypeTransToOthers == self.dealingNodeType) {
         if (kIsNilString(self.reasonTextView.text)) {
-            [self showAlertControllerToLogoutWithMessage:@"请选择转交意见" sureAction:nil needCancleButton:NO];return NO;
+            [self showAlertControllerToLogoutWithMessage:@"请输入转交意见" sureAction:nil needCancleButton:NO];return NO;
+        }
+        if (self.reasonTextView.text.length > 30) {
+            [self showAlertControllerToLogoutWithMessage:@"转交意见不能超过30个字，请重新编辑" sureAction:nil needCancleButton:NO];return NO;
         }
         if (self.selectedPeople.count == 0) {
             [self showAlertControllerToLogoutWithMessage:@"请选择转交人" sureAction:nil needCancleButton:NO];return NO;
@@ -530,6 +551,9 @@
         // 通过意见可以为空
         if (self.needNextApplyer && 0 == self.selectedPeople.count) {
             [self showAlertControllerToLogoutWithMessage:@"请选择下一级审批人" sureAction:nil needCancleButton:NO];return NO;
+        }
+        if (self.reasonTextView.text.length > 30) {
+            [self showAlertControllerToLogoutWithMessage:@"通过意见不能超过30个字，请重新编辑" sureAction:nil needCancleButton:NO];return NO;
         }
         if (self.needNextApplyer && self.selectedPeople.count > 1 && self.checkButton1.selected == NO && self.checkButton2.selected == NO) {
             [self showAlertControllerToLogoutWithMessage:@"请选择审批人审批通过方式" sureAction:nil needCancleButton:NO];return NO;
