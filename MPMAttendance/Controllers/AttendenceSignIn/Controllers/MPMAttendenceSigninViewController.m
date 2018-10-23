@@ -697,12 +697,12 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 #pragma mark - Notification
 - (void)appResignActive:(NSNotification *)noti {
-    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self.timer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 }
 
 - (void)appBecomeActive:(NSNotification *)noti {
     [self setupSigninButton];
-    [self.timer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     /*
      // 如果最后一个打卡数据不为空，或者当前时间不是今天，置灰打卡按钮
      if (self.attendenceManageModel.attendenceArray.count > 0) {
