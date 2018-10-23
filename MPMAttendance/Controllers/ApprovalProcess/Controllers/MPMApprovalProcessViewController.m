@@ -422,7 +422,7 @@
     } else {
         cell.selectImageView.image = ImageName(@"setting_none_mid");
     }
-    cell.applyPersonMessageLabel.text = (kMyApplyType == self.firstSectionType) ? model.applyUserName : model.username;
+    cell.applyPersonMessageLabel.text = (kMyMatterType == self.firstSectionType) ? model.applyUserName : model.username;
     cell.extraApplyMessageLabel.text = model.name;
     // 设置AttributeString
     NSString *reason;
