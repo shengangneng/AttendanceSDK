@@ -152,11 +152,13 @@
         for (int i = 0; i < statArray.count; i++) {
             NSIndexPath *index = statArray[i];
             if (0 == index.row) {
-                self.state = @"";
+                self.state = nil;
             } else {
                 self.state = [NSString stringWithFormat:@"%ld",index.row];
             }
         }
+    } else {
+        self.state = nil;
     }
     // 筛选选中的‘类型’
     NSArray *typeArray = self.collectionViewSelectedDictionay[kSelectTypesKey];
@@ -164,12 +166,14 @@
         for (int i = 0; i < typeArray.count; i++) {
             NSIndexPath *index = typeArray[i];
             if (0 == index.row) {
-                self.type = @"";
+                self.type = nil;
             } else {
                 NSString *name = self.collectionViewTypesArray[index.row];
                 self.type = kProcessDefCode_GetCodeFromType[kGetCausationNumFromName[name]];
             }
         }
+    } else {
+        self.type = nil;
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(siderDrawerViewDidCompleteSelected)]) {

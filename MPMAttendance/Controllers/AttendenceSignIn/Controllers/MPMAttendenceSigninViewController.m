@@ -125,7 +125,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 - (void)setupAttributes {
     [super setupAttributes];
-    self.navigationItem.title = @"考勤打卡";
+    self.navigationItem.title = @"考勤签到";
     self.view.backgroundColor = kWhiteColor;
     [[MPMOauthUser shareOauthUser] addObserver:self forKeyPath:kAddressKeyPath options:NSKeyValueObservingOptionNew context:nil];
     self.attendenceManageModel = [[MPMAttendenceManageModel alloc] init];
@@ -513,8 +513,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 /** 打卡成功 */
 - (void)signinSuccess {
-    self.lastSigninDate = [NSDate date];// 打卡成功，记录下此次打卡时间，再次打卡校验不能在15秒内立即打卡
-    [MPMProgressHUD showSuccessWithStatus:@"打卡成功"];
+    self.lastSigninDate = [NSDate date];// 签到成功，记录下此次打卡时间，再次打卡校验不能在15秒内立即打卡
+    [MPMProgressHUD showSuccessWithStatus:@"签到成功"];
     /*
      AVSpeechSynthesizer *speech = [[AVSpeechSynthesizer alloc] init];
      AVSpeechUtterance *utt = [AVSpeechUtterance speechUtteranceWithString:@"打卡成功"];
@@ -818,7 +818,19 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     }
     NSDate *tt = [NSDate dateWithTimeIntervalSince1970:model.fillCardTime.integerValue/1000];
     NSString *time = [NSDateFormatter formatterDate:tt withDefineFormatterType:forDateFormatTypeHourMinute];
-    cell.timeLabel.text = time;
+    if (1 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+        cell.timeLabel.text = nil;
+        [cell.classTypeLabel mpm_updateConstraints:^(MPMConstraintMaker *make) {
+            make.centerY.equalTo(cell.mpm_centerY);
+        }];
+        cell.timeLabel.hidden = YES;
+    } else {
+        [cell.classTypeLabel mpm_updateConstraints:^(MPMConstraintMaker *make) {
+            make.centerY.equalTo(cell.mpm_centerY).offset(-8.5);
+        }];
+        cell.timeLabel.text = time;
+        cell.timeLabel.hidden = NO;
+    }
     cell.classTypeLabel.text = model.type.integerValue == 0 ? @"上班" : @"下班";
     
     if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
@@ -884,7 +896,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         cell.messageLabel.text = nil;
     } else if (model.status.integerValue == 0) {
         cell.statusImageView.image = ImageName(@"attendence_finish");
-        cell.messageLabel.text = @"正常";
+        cell.messageLabel.text = @"准时";
     } else if (model.status.integerValue == 1) {
         cell.statusImageView.image = ImageName(@"attendence_vacate");
         cell.messageLabel.text = @"迟到";
@@ -899,7 +911,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         cell.messageLabel.text = @"早到";
     } else if (model.status.integerValue == 5) {
         cell.statusImageView.image = ImageName(@"attendence_finish");
-        cell.messageLabel.text = @"正常";
+        cell.messageLabel.text = @"准时";
     } else if (model.status.integerValue == 6) {
         cell.statusImageView.image = ImageName(@"attendence_vacate");
         cell.messageLabel.text = @"加班";
