@@ -39,17 +39,17 @@
 - (void)setupAttributes {
     self.userInteractionEnabled = NO;
     self.backgroundColor = kWhiteColor;
-    // 处理类型:
-    self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
     self.contentAddressMessage.text = self.detailDto.address;
     if (kCausationTypeRepairSign == self.type) {
         // 补签
+        self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
         self.contentTimeBeginTimeLabel.text = @"补签时间";
         self.contentTimeendTimeLabel.text = @"漏签时间";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.signTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.fillupTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
     } else if (kCausationTypeChangeSign == self.type) {
         // 改签
+        self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
         self.contentTimeBeginTimeLabel.text = @"考勤时间";
         self.contentTimeendTimeLabel.text = @"签到时间";
         self.contentTimeIntervalLabel.text = @"改签时间";
@@ -58,14 +58,28 @@
         self.contentTimeIntervalMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.reviseSignTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
     } else if (kCausationTypeAskLeave == self.type) {
         // 请假
+        self.contentTimeLeaveTypeMessage.text = [NSString stringWithFormat:@"%@（%@）",kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]],kLeaveType_GetTypeNameFromNum[self.detailDto.type]];
         self.contentTimeBeginTimeLabel.text = @"开始时间";
         self.contentTimeendTimeLabel.text = @"结束时间";
         self.contentTimeIntervalLabel.text = @"时长";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（小时）",self.detailDto.hourAccount];
+        if (kCausationTypeYearLeave == self.detailDto.type.integerValue ||
+            kCausationTypeMonthLeave == self.detailDto.type.integerValue ||
+            kCausationTypeSeeRelativeLeave == self.detailDto.type.integerValue ||
+            kCausationTypeMarryLeave == self.detailDto.type.integerValue ||
+            kCausationTypeBabyLeave == self.detailDto.type.integerValue ||
+            kCausationTypeCompanyBabyLeave == self.detailDto.type.integerValue ||
+            kCausationTypeFuneralLeave == self.detailDto.type.integerValue ||
+            kCausationTypeInjuryLeave == self.detailDto.type.integerValue) {
+            self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（天）",self.detailDto.dayAccount];
+        } else {
+            self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（小时）",self.detailDto.hourAccount];
+        }
+        
     } else if (kCausationTypeOut == self.type) {
         // 外出
+        self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
         self.contentTimeBeginTimeLabel.text = @"开始时间";
         self.contentTimeendTimeLabel.text = @"结束时间";
         self.contentTimeIntervalLabel.text = @"时长";
@@ -74,14 +88,16 @@
         self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（小时）",self.detailDto.hourAccount];
     } else if (kCausationTypeevecation == self.type) {
         // 出差
+        self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
         self.contentTimeBeginTimeLabel.text = @"开始时间";
         self.contentTimeendTimeLabel.text = @"结束时间";
         self.contentTimeIntervalLabel.text = @"时长";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（小时）",self.detailDto.hourAccount];
+        self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（天）",self.detailDto.dayAccount];
     } else if (kCausationTypeOverTime == self.type) {
         // 加班
+        self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
         self.contentTimeBeginTimeLabel.text = @"开始时间";
         self.contentTimeendTimeLabel.text = @"结束时间";
         self.contentTimeIntervalLabel.text = @"时长";
