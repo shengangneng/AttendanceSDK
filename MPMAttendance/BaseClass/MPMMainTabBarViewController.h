@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NSString *const UnreadCountNotification = @"UnreadCountNotification";
+
 @interface MPMMainTabBarViewController : UITabBarController
 
 /** 获取流程审批待办未读信息 */

@@ -60,6 +60,11 @@
     }];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     __weak typeof(self) weakself = self;
@@ -70,6 +75,19 @@
     };
     // 重新获取一下页面数据
     [self.headerSectionView setDefaultSelect];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUnreadCount:) name:UnreadCountNotification object:nil];
+}
+
+#pragma mark - Notification
+
+- (void)updateUnreadCount:(NSNotification *)notification {
+    if (notification.object && [notification.object isKindOfClass:[NSNumber class]]) {
+        if (0 == ((NSNumber *)notification.object).integerValue) {
+            self.headerSectionView.myMatterHasUnreadCount = NO;
+        } else {
+            self.headerSectionView.myMatterHasUnreadCount = YES;
+        }
+    }
 }
 
 - (void)setupSubViews {
@@ -271,9 +289,6 @@
                 [temp addObject:model];
             }
             self.fetchDetailDataArray = temp.copy;
-            if (SectionType == kMyMatterType && 0 == indexPath.row && 0 == self.fetchDetailDataArray.count) {
-                self.headerSectionView.myMatterHasUnreadCount = NO;
-            }
             [self.tableView reloadData];
             dispatch_async(kMainQueue, ^{
                 if (self.tableView.contentSize.height < self.tableView.frame.size.height) {
