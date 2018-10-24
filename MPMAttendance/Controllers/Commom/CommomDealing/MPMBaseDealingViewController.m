@@ -1245,12 +1245,23 @@
             // 时分秒picker
             NSInteger index = indexPath.section;
             NSDate *defaultDate;
-            if ([cell.txLabel.text isEqualToString:@"开始时间"] &&
-                !kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).startTime)) {
-                defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].startTime.doubleValue/1000];
-            } else if ([cell.txLabel.text isEqualToString:@"结束时间"] &&
-                       !kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).endTime)) {
-                defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].endTime.doubleValue/1000];
+            if ([cell.txLabel.text isEqualToString:@"开始时间"]) {
+                if (!kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).startTime)) {
+                    defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].startTime.doubleValue/1000];
+                } else if (kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).startTime) && !kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).endTime)) {
+                    defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].endTime.doubleValue/1000];
+                } else {
+                    defaultDate = [NSDate date];
+                }
+            } else if ([cell.txLabel.text isEqualToString:@"结束时间"]) {
+                
+                if (!kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).endTime)) {
+                    defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].endTime.doubleValue/1000];
+                } else if (kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).endTime) && !kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).startTime)) {
+                    defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].startTime.doubleValue/1000];
+                } else {
+                    defaultDate = [NSDate date];
+                }
             } else if ([cell.txLabel.text isEqualToString:@"漏签时间"] &&
                        !kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index - 1]).fillupTime)) {
                 defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index - 1].fillupTime.doubleValue/1000];
@@ -1273,10 +1284,15 @@
             __weak typeof (self) weakself = self;
             self.customDatePickerView.completeBlock = ^(NSDate *date) {
                 __strong typeof (weakself) strongself = weakself;
-                cell.detailTextLabel.text = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
                 if ([cell.txLabel.text isEqualToString:@"开始时间"]) {
+                    if (!kIsNilString(strongself.dealingModel.causationDetail[index].endTime) && strongself.dealingModel.causationDetail[index].endTime.doubleValue <= [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000].doubleValue) {
+                        [strongself showAlertControllerToLogoutWithMessage:@"结束时间必须大于开始时间" sureAction:nil needCancleButton:NO];return;
+                    }
                     strongself.dealingModel.causationDetail[index].startTime = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000];
                 } else if ([cell.txLabel.text isEqualToString:@"结束时间"]) {
+                    if (!kIsNilString(strongself.dealingModel.causationDetail[index].startTime) && strongself.dealingModel.causationDetail[index].startTime.doubleValue >= [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000].doubleValue) {
+                        [strongself showAlertControllerToLogoutWithMessage:@"结束时间必须大于开始时间" sureAction:nil needCancleButton:NO];return;
+                    }
                     strongself.dealingModel.causationDetail[index].endTime = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000];
                 } else if ([cell.txLabel.text isEqualToString:@"漏签时间"]) {
                     strongself.dealingModel.causationDetail[index-1].fillupTime = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000];
@@ -1285,6 +1301,7 @@
                 } else if ([cell.txLabel.text isEqualToString:@"改签时间"]) {
                     strongself.dealingModel.causationDetail[index].reviseSignTime = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000];
                 }
+                cell.detailTextLabel.text = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
                 // 开始时间、结束时间 自动计算时长
                 if (!kIsNilString(strongself.dealingModel.causationDetail[index].startTime) && !kIsNilString(strongself.dealingModel.causationDetail[index].endTime)) {
                     __weak typeof(strongself) wweakself = strongself;
