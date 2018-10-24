@@ -43,7 +43,7 @@
 
 - (void)setupConstraints {
     [self.line mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.mpm_leading).offset(29);
+        make.leading.equalTo(self.mpm_leading).offset(27);
         make.height.equalTo(@(60));
         make.width.equalTo(@1);
     }];
@@ -70,14 +70,14 @@
         make.width.equalTo(@43);
     }];
     [self.waitBrushLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.mpm_leading).offset(59);
+        make.leading.equalTo(self.mpm_leading).offset(55);
         make.trailing.equalTo(self.mpm_trailing).offset(-18);
         make.height.equalTo(@44);
         make.centerY.equalTo(self.mpm_centerY);
     }];
     [self.contentImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.mpm_leading).offset(59);
-        make.trailing.equalTo(self.mpm_trailing).offset(-18);
+        make.leading.equalTo(self.mpm_leading).offset(55);
+        make.trailing.equalTo(self.mpm_trailing).offset(-12);
         make.height.equalTo(@44);
         make.centerY.equalTo(self.mpm_centerY);
     }];
@@ -102,13 +102,13 @@
     }];
     [self.scoreButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.centerY.equalTo(self.contentImageView.mpm_centerY);
-        make.trailing.equalTo(self.contentImageView.mpm_trailing).offset(-30.5);
+        make.trailing.equalTo(self.contentImageView.mpm_trailing).offset(-26.5);
         make.height.equalTo(@18);
         make.width.equalTo(@56);
     }];
     [self.accessaryIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.centerY.equalTo(self.contentImageView.mpm_centerY);
-        make.trailing.equalTo(self.contentImageView.mpm_trailing).offset(-12);
+        make.trailing.equalTo(self.contentImageView.mpm_trailing).offset(-10);
         make.height.equalTo(@11);
         make.width.equalTo(@6.5);
     }];

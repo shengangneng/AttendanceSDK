@@ -222,7 +222,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         make.top.equalTo(self.headerView.mpm_bottom);
         make.bottom.equalTo(self.bottomView.mpm_top);
         make.width.equalTo(@1);
-        make.leading.equalTo(self.middleTableView.mpm_leading).offset(29);
+        make.leading.equalTo(self.middleTableView.mpm_leading).offset(27);
     }];
     [self.noMessageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.equalTo(@150);
