@@ -57,10 +57,13 @@ static MPMSessionManager *instance;
             // 用refresh token去刷新token，并更新过期时间
             [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
                 canEnter = YES;
-                MPMOauthUser *updateUser = [[MPMOauthUser alloc] initWithDictionary:responseObject];
-                updateUser.expiresIn = updateUser.expires_in;
-                updateUser.expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 + [MPMOauthUser shareOauthUser].expires_in.doubleValue - 60];
-                [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
+                if (responseObject && [responseObject isKindOfClass:[NSDictionary class]]) {
+                    NSString *expires_in = kNumberSafeString(responseObject[@"expires_in"]);
+                    [MPMOauthUser shareOauthUser].expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 + expires_in.doubleValue - 60];
+                    [MPMOauthUser shareOauthUser].access_token = responseObject[@"access_token"];
+                    [MPMOauthUser shareOauthUser].refresh_token = responseObject[@"refresh_token"];
+                    [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
+                }
                 strongBlock();
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 canEnter = YES;
