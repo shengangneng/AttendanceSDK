@@ -47,6 +47,7 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 @property (nonatomic, strong) UIImageView *totalLine1;
 @property (nonatomic, strong) UIImageView *totalLine2;
 @property (nonatomic, strong) UITableView *bottomTableView;
+@property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 // 选择器
 @property (nonatomic, strong) MPMCustomDatePickerView *customDatePickerView;
 // 用于区分个人和团队
@@ -130,8 +131,10 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 - (void)getData:(forGetDataType)type {
     NSString *url = [NSString stringWithFormat:@"%@%@?month=%@",MPMINTERFACE_HOST,MPMINTERFACE_STATISTIC_COUNT,self.currentDateType1];
     NSString *encodingUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+    [self.indicatorView startAnimating];
     [[MPMSessionManager shareManager] getRequestWithURL:encodingUrl setAuth:YES params:nil loadingMessage:nil success:^(id response) {
         DLog(@"%@",response);
+        [self.indicatorView stopAnimating];
         if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *object = response[kResponseObjectKey];
             self.model = [[MPMStatisticModel alloc] initWithDictionary:object];
@@ -147,6 +150,7 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
         [self.bottomTableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [self.indicatorView stopAnimating];
     }];
 }
 
@@ -168,6 +172,7 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
     [self.containerView addSubview:self.selectDateButton];
     [self.containerView addSubview:self.titleTextField];
     [self.containerView addSubview:self.bottomTableView];
+    [self.containerView addSubview:self.indicatorView];
     [self.containerView addSubview:self.totalMessageView];
     // 个人总视图
     [self.totalMessageView addSubview:self.totalDate];
@@ -276,6 +281,10 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
         make.leading.trailing.equalTo(self.containerView);
         make.bottom.equalTo(self.containerView.mpm_bottom);
         make.top.equalTo(self.backImageView.mpm_bottom);
+    }];
+    [self.indicatorView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerX.equalTo(self.bottomTableView.mpm_centerX);
+        make.centerY.equalTo(self.bottomTableView.mpm_centerY);
     }];
     
 }
@@ -515,6 +524,13 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
         [_bottomTableView setSeparatorColor:kSeperateColor];
     }
     return _bottomTableView;
+}
+
+- (UIActivityIndicatorView *)indicatorView {
+    if (!_indicatorView) {
+        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    }
+    return _indicatorView;
 }
 
 #pragma mark -
