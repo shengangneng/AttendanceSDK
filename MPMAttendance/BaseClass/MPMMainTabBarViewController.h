@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-NSString *const UnreadCountNotification = @"UnreadCountNotification";
+#define kUnreadCountNotification @"UnreadCountNotification"
 
 @interface MPMMainTabBarViewController : UITabBarController
 

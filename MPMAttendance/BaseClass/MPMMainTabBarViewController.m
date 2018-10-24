@@ -45,7 +45,7 @@
                         ((MPMApprovalProcessViewController *)((MPMBaseNavigationController *)vc).viewControllers.firstObject).tabBarItem.badgeValue = unreadCount.stringValue;
                     }
                     // 以发通知的方式发出未读消息数
-                    [[NSNotificationCenter defaultCenter] postNotificationName:NSCurrentLocaleDidChangeNotification object:unreadCount];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kUnreadCountNotification object:unreadCount];
                 }
             }
         }

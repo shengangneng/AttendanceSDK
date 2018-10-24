@@ -75,7 +75,7 @@
     };
     // 重新获取一下页面数据
     [self.headerSectionView setDefaultSelect];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUnreadCount:) name:UnreadCountNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUnreadCount:) name:kUnreadCountNotification object:nil];
 }
 
 #pragma mark - Notification
