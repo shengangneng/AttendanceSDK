@@ -179,7 +179,7 @@
             }break;
             case kMyApplyType:{
                 // 我的申请
-                statusTitles = @[@"全部",@"进行中",@"已完成",@"已取消"];
+                statusTitles = @[@"全部",@"运行中",@"已完成",@"已取消"];
             }break;
             case kCCToMeType:{
                 // 抄送给我

@@ -72,12 +72,19 @@
 
 /** 获取当前日期0点的时间戳 */
 + (double)getZeroWithTimeInterverl:(NSTimeInterval)timeInterval {
+    /*
     NSDate *originalDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
     NSDateFormatter *dateFomater = [[NSDateFormatter alloc]init];
     dateFomater.dateFormat = @"yyyy年MM月dd日";
     NSString *original = [dateFomater stringFromDate:originalDate];
     NSDate *ZeroDate = [dateFomater dateFromString:original];
     return [ZeroDate timeIntervalSince1970];
+    */
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *currentDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate:currentDate];
+    NSDate *zeroDate = [calendar dateFromComponents:components];
+    return zeroDate.timeIntervalSince1970;
 }
 
 /** 通过Java后台返回的时分秒组装成年月日时分秒 */
