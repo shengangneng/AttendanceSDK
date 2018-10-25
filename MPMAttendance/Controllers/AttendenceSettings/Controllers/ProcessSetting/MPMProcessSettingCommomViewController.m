@@ -109,7 +109,7 @@
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
     // 通过model里面的addSignAble属性设置Switch的开关
     [self.headerView.addSignSwitch setOn:(self.model.addSignAble.integerValue == 1)];
-    [self setRightBarButtonType:forBarButtonTypeTitle title:@"编辑" image:nil action:@selector(edit:)];
+    [self setRightBarButtonType:forBarButtonTypeTitle title:@"排序" image:nil action:@selector(edit:)];
     [self.bottomSaveButton addTarget:self action:@selector(save:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -149,7 +149,7 @@
 - (void)edit:(UIButton *)sender {
     sender.selected = !sender.selected;
     self.tableView.editing = sender.isSelected;
-    NSString *title = sender.isSelected ? @"完成" : @"编辑";
+    NSString *title = sender.isSelected ? @"完成" : @"排序";
     [sender setTitle:title forState:UIControlStateNormal];
     [sender setTitle:title forState:UIControlStateSelected];
     [sender setTitle:title forState:UIControlStateHighlighted];
@@ -361,11 +361,12 @@
     static NSString *identifier = kCellIdentifier;
     MPMProcessSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[MPMProcessSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier canDelete:self.model.canDelete];
+        cell = [[MPMProcessSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     MPMProcessTaskModel *model = self.tasksArray[indexPath.row];
     cell.flagNameLabel.text = [NSString stringWithFormat:@"节点%ld",indexPath.row + 1];
     cell.flagDetailLabel.text = model.name;
+    cell.canDelete = self.model.canDelete;
     NSString *name;
     if (model.config && [model.config.participants isKindOfClass:[NSArray class]] && model.config.participants.count > 0) {
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:model.config.participants.count];

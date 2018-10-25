@@ -11,15 +11,32 @@
 
 @implementation MPMProcessSettingTableViewCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier canDelete:(BOOL)canDelete {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.canDelete = canDelete;
         [self setupAttributes];
         [self setupSubViews];
         [self setupConstraints];
     }
     return self;
+}
+
+- (void)setCanDelete:(BOOL)canDelete {
+    _canDelete = canDelete;
+    if (canDelete) {
+        [self.deleteButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.width.equalTo(@24);
+            make.trailing.equalTo(self.bgImageView.mas_trailing).offset(-12);
+            make.top.equalTo(self.bgImageView.mas_top).offset(8.5);
+        }];
+    } else {
+        [self.deleteButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.width.equalTo(@24);
+            make.width.equalTo(@0);
+            make.trailing.equalTo(self.bgImageView.mas_trailing);
+            make.top.equalTo(self.bgImageView.mas_top).offset(8.5);
+        }];
+    }
 }
 
 - (void)setupAttributes {
@@ -46,6 +63,9 @@
     [self addSubview:self.bgImageView];
     [self.bgImageView addSubview:self.flagImageView];
     [self.flagImageView addSubview:self.flagNameLabel];
+    [self.bgImageView addSubview:self.flagNameLabel];
+    [self.bgImageView addSubview:self.updateButton];
+    [self.bgImageView addSubview:self.deleteButton];
     [self.bgImageView addSubview:self.line];
     [self.bgImageView addSubview:self.flagTitleLable];
     [self.bgImageView addSubview:self.flagDetailLabel];
@@ -65,6 +85,16 @@
         make.height.equalTo(@34.5);
         make.leading.equalTo(self.bgImageView.mpm_leading).offset(-6.5);
         make.top.equalTo(self.bgImageView.mpm_top);
+    }];
+    [self.updateButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.width.equalTo(@24);
+        make.centerY.equalTo(self.deleteButton.mas_centerY);
+        make.trailing.equalTo(self.deleteButton.mas_leading).offset(-12);
+    }];
+    [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.width.equalTo(@24);
+        make.trailing.equalTo(self.bgImageView.mas_trailing).offset(-12);
+        make.top.equalTo(self.bgImageView.mas_top).offset(8.5);
     }];
     [self.flagNameLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.equalTo(self.flagImageView.mpm_top).offset(4);

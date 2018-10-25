@@ -21,6 +21,6 @@
 @property (nonatomic, copy) NSArray<MPMAttendenceModel *> *attendenceArray;                     /** 当前的打卡信息 */
 @property (nonatomic, copy) NSArray<MPMSettingCardAddressWifiModel *> *attendenceAddressArray;  /** 接口获取到的打卡位置信息 */
 @property (nonatomic, copy) NSArray<MPMAttendenceOneMonthModel *> *attendenceThreeWeekArray;    /** 接口获取到的打卡三个星期的信息 */
-@property (nonatomic, copy) NSArray<MPMAttendenceExceptionModel *> *attendenceExceptionArray;   /** 接口获取打卡节点例外申请信息 */
+@property (nonatomic, copy) NSArray<NSArray *> *attendenceExceptionArray;   /** 接口获取打卡节点例外申请信息 */
 
 @end

@@ -284,7 +284,7 @@
     }
     // 使用Delegate的方式回传数据
     if (self.delegate && [self.delegate respondsToSelector:@selector(departCompleteSelectWithDepartments:employees:)]) {
-        [self.delegate departCompleteSelectWithDepartments:[MPMDepartEmployeeHelper shareInstance].departments employees:[MPMDepartEmployeeHelper shareInstance].employees];
+        [self.delegate departCompleteSelectWithDepartments:[MPMDepartEmployeeHelper shareInstance].departments.copy employees:[MPMDepartEmployeeHelper shareInstance].employees.copy];
     }
     // 使用Block的方式回传数据
     if (self.sureSelectBlock) {

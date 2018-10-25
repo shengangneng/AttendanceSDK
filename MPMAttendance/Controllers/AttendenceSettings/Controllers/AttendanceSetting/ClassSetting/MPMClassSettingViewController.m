@@ -64,6 +64,10 @@
             } else {
                 [self.model.fixedTimeWorkSchedule setValue:[NSString stringWithFormat:@"%.0f",([NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970]) * 1000] forKey:@"startSignTime"];
             }
+            if (!self.model.fixedTimeWorkSchedule[@"daysOfWeek"]) {
+                self.model.fixedTimeWorkSchedule[@"daysOfWeek"] = @[@"2",@"3",@"4",@"5",@"6"];
+                [self.model translateCycle];
+            }
         } else if (type == kClassTypeFree) {
             if (self.model.flexibleTimeWorkSchedule[@"startSignTime"]) {
                 if ([self.model.flexibleTimeWorkSchedule[@"startSignTime"] isKindOfClass:[NSNumber class]]) {
@@ -71,6 +75,10 @@
                 }
             } else {
                 [self.model.flexibleTimeWorkSchedule setValue:[NSString stringWithFormat:@"%.0f",([NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970]) * 1000] forKey:@"startSignTime"];
+            }
+            if (!self.model.flexibleTimeWorkSchedule[@"daysOfWeek"]) {
+                self.model.flexibleTimeWorkSchedule[@"daysOfWeek"] = @[@"2",@"3",@"4",@"5",@"6"];
+                [self.model translateCycle];
             }
         }
         self.dulingType = dulingType;
@@ -247,7 +255,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (section == 0) {
         MPMTableHeaderView *header = [[MPMTableHeaderView alloc] init];
-        header.headerTextLabel.text = @"对考勤组”名称”的规则进行设置";
+        header.headerTextLabel.text = [NSString stringWithFormat:@"对考勤组”%@”的规则进行设置",kSafeString(self.model.name)];
         return header;
     } else {
         return [[UIView alloc] init];
@@ -312,7 +320,7 @@
             if (arr.count > 0) {
                 NSString *firstSignTime = arr.firstObject[@"signTime"];
                 NSString *lastReturnTime = arr.lastObject[@"returnTime"];
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@-%@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:firstSignTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:lastReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@-%@",kSafeString(((NSString *)self.model.fixedTimeWorkSchedule[@"name"])),[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:firstSignTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:lastReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
             } else {
                 cell.detailTextLabel.text = @"";
             }

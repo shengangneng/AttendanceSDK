@@ -12,7 +12,7 @@ typedef void(^DeleteBlock)(void);
 
 @interface MPMProcessSettingTableViewCell : MPMBaseTableViewCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier canDelete:(BOOL)canDelete;
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 
 @property (nonatomic, strong) UIImageView *bgImageView;     /** 背景 */
 @property (nonatomic, strong) UIImageView *flagImageView;   /** flag背景图 */

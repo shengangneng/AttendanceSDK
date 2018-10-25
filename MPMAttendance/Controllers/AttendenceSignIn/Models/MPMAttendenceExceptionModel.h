@@ -17,4 +17,6 @@
 @property (nonatomic, copy) NSString *bScore;       /** b分：加减分 */
 @property (nonatomic, copy) NSString *mpm_id;       /** id */
 
+@property (nonatomic, assign) BOOL hasJoin;         /** 自定义字段，用于分隔数组 */
+
 @end

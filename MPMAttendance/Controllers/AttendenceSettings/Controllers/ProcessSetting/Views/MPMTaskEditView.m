@@ -161,7 +161,7 @@ typedef void(^CompleteBlock)(MPMProcessTaskModel *);
         [self updateViewConstaintsWithHasPeople:YES];
     }
     
-    self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
+    self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     self.alpha = 0.2;
     [destinyVC.view addSubview:self];
     [self show];

@@ -23,6 +23,7 @@
 #define kSearchCell     @"SearchCell"
 #define kAddListCell    @"AddListCell"
 #define kClassListCell  @"ClassListCell"
+#define kAlertMessage @"当前排班或者其他排班已经使用，修改后会影响排班，是否要修改"
 
 @interface MPMSettingClassListViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -311,9 +312,20 @@
         case 2:{
             // 编辑时间
             MPMSettingClassListModel *model = self.classListArray[indexPath.row];
-            MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:model dulingType:self.dulingType resetTime:nil];
-            self.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:st animated:YES];
+            // 如果已经被使用，弹出提示
+            if (1 == model.isUsed.integerValue) {
+                __weak typeof(self) weakself = self;
+                [self showAlertControllerToLogoutWithMessage:kAlertMessage sureAction:^(UIAlertAction * _Nonnull action) {
+                    __strong typeof(weakself) strongself = weakself;
+                    MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:model dulingType:strongself.dulingType resetTime:nil];
+                    strongself.hidesBottomBarWhenPushed = YES;
+                    [strongself.navigationController pushViewController:st animated:YES];
+                } sureActionTitle:@"修改" needCancleButton:YES];
+            } else {
+                MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:model dulingType:self.dulingType resetTime:nil];
+                self.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:st animated:YES];
+            }
         } break;
         default:
             break;

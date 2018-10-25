@@ -311,7 +311,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 /** 获取当前日期的签到信息 */
 - (void)getAttendanceSigninDataWithDate:(NSDate *)date {
-    NSString *dateString = [NSString stringWithFormat:@"%.f",(date.timeIntervalSince1970 - 28800) * 1000];
+    NSString *dateString = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970 * 1000];
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_CLOCKTIME];
     NSDictionary *params = @{@"day":dateString};
     [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMJSONRequestSerializer serializer];
@@ -366,13 +366,34 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
             // 例外申请信息
             if (object[@"kqBizOrderVo"] && [object[@"kqBizOrderVo"] isKindOfClass:[NSArray class]]) {
                 NSArray *kqBizOrderVo = object[@"kqBizOrderVo"];
-                NSMutableArray *temp = [NSMutableArray arrayWithCapacity:kqBizOrderVo.count];
+                // 根据id筛选出相同的
+                NSMutableArray *allArray = [NSMutableArray array];
                 for (int i = 0; i < kqBizOrderVo.count; i++) {
                     NSDictionary *dic = kqBizOrderVo[i];
                     MPMAttendenceExceptionModel *excep = [[MPMAttendenceExceptionModel alloc] initWithDictionary:dic];
-                    [temp addObject:excep];
+                    [allArray addObject:excep];
                 }
-                self.attendenceManageModel.attendenceExceptionArray = temp.copy;
+                NSMutableArray *newSeperateArray = [NSMutableArray array];
+                for (int i = 0; i < allArray.count; i++) {
+                    NSMutableArray *temparray = [NSMutableArray array];
+                    MPMAttendenceExceptionModel *excep = allArray[i];
+                    [temparray addObject:excep];
+                    if (excep.hasJoin) {
+                        continue;
+                    } else {
+                        excep.hasJoin = YES;
+                    }
+                    for (int j = i + 1; j < allArray.count; j++) {
+                        MPMAttendenceExceptionModel *sub = allArray[j];
+                        if (!sub.hasJoin && [sub.mpm_id isEqualToString:excep.mpm_id]) {
+                            sub.hasJoin = YES;
+                            [temparray addObject:sub];
+                        }
+                        continue;
+                    }
+                    [newSeperateArray addObject:temparray.copy];
+                }
+                self.attendenceManageModel.attendenceExceptionArray = newSeperateArray.copy;
             }
             
             [self setupSigninButton];
@@ -668,14 +689,22 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 [MPMProgressHUD showErrorWithStatus:response[@"打卡异常，请稍后重试！"]];
             }
         } else if (response[kResponseDataKey] &&
-                   [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
-                   [((NSString *)response[kResponseDataKey][@"message"])containsString:@"早退"]) {
+                  [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
+                  ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 202) {
+            // 早退
             __weak typeof (self) weakself = self;
             [self showAlertControllerToLogoutWithMessage:(NSString *)response[@"responseData"][@"message"] sureAction:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
                 [strongself signForEarly:YES];
             } needCancleButton:YES];
-        } else {
+        } else if (response[kResponseDataKey] &&
+                   [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
+                   ((NSString *)response[kResponseDataKey][@"code"]).integerValue != 200) {
+            NSString *message = (NSString *)response[kResponseDataKey][@"message"];
+            [self showAlertControllerToLogoutWithMessage:kSafeString(message) sureAction:nil needCancleButton:NO];
+        } else if (response[kResponseDataKey] &&
+                   [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
+                   ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 200) {
             [self signinSuccess];
         }
     } failure:^(NSString *error) {
@@ -782,6 +811,15 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     return 2;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (1 == indexPath.section) {
+        return 60;
+    } else {
+        NSInteger count = self.attendenceManageModel.attendenceExceptionArray[indexPath.row].count;
+        return 60 + (count - 1)*15;
+    }
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.attendenceManageModel.attendenceArray.count > 0) {
         self.noMessageView.hidden = YES;
@@ -804,9 +842,20 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         if (!cell) {
             cell = [[MPMAttendenceExceptionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         }
-        MPMAttendenceExceptionModel *excep = self.attendenceManageModel.attendenceExceptionArray[indexPath.row];
+        NSArray *array = self.attendenceManageModel.attendenceExceptionArray[indexPath.row];
+        MPMAttendenceExceptionModel *excep = self.attendenceManageModel.attendenceExceptionArray[indexPath.row].firstObject;
+        
+        NSString *formatter;
+        for (int i = 0; i < array.count; i++) {
+            if (0 == i) {
+                formatter = [NSString stringWithFormat:@"%@  %@",[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds],[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds]];
+            } else {
+                formatter = [formatter stringByAppendingString:[NSString stringWithFormat:@"\n%@  %@",[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds],[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds]]];
+            }
+        }
+        
         cell.typeLabel.text = kException_GetNameFromNum[excep.type];
-        cell.detailTimeLabel.text = [NSString stringWithFormat:@"%@  %@",[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds],[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds]];
+        cell.detailTimeLabel.text = formatter;
         return cell;
     }
     
@@ -941,7 +990,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (0 == indexPath.section) {
-        MPMAttendenceExceptionModel *excep = self.attendenceManageModel.attendenceExceptionArray[indexPath.row];
+        MPMAttendenceExceptionModel *excep = (MPMAttendenceExceptionModel *)((NSArray *)self.attendenceManageModel.attendenceExceptionArray[indexPath.row]).firstObject;
         MPMProcessMyMetterModel *md = [[MPMProcessMyMetterModel alloc] init];
         md.mpm_id = excep.mpm_id;
         MPMApprovalProcessDetailViewController *detail = [[MPMApprovalProcessDetailViewController alloc] initWithModel:md selectedIndexPath:[NSIndexPath indexPathForRow:0 inSection:4]];
@@ -952,7 +1001,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     }
     // 补签、改签。如果已经处理过，则跳到详情页面。
     MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[indexPath.row];
-    if (model.status.length == 0) {
+    if (model.status.length == 0 || [model.status isEqualToString:@""] || model.isNeedFirstBrush) {
     } else {
         
         NSString *url = [NSString stringWithFormat:@"%@%@?detailId=%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_ISEXISTDETAIL,model.schedulingEmployeeId];
@@ -990,6 +1039,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 dealingModel.causationDetail[0].type = model.type;
                 dealingModel.causationDetail[0].attendanceTime = model.fillCardTime;/** 打卡节点时间 */
                 dealingModel.causationDetail[0].signTime = model.brushTime;         /** 实际打卡时间 */
+                dealingModel.causationDetail[0].reviseSignTime = model.fillCardTime;/** 实际打卡时间 */
                 MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:type dealingModel:dealingModel dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
                 self.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:dealing animated:YES];

@@ -38,7 +38,7 @@
     
     [self.line mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.mpm_leading).offset(27);
-        make.height.equalTo(@(60));
+        make.top.bottom.equalTo(self);
         make.width.equalTo(@1);
     }];
     [self.roundView mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -54,7 +54,8 @@
     [self.contentImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.mpm_leading).offset(55);
         make.trailing.equalTo(self.mpm_trailing).offset(-12);
-        make.height.equalTo(@44);
+        make.top.equalTo(self.mpm_top).offset(8);
+        make.bottom.equalTo(self.mpm_bottom).offset(-8);
         make.centerY.equalTo(self.mpm_centerY);
     }];
     [self.typeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -134,6 +135,7 @@
         _detailTimeLabel = [[UILabel alloc] init];
         _detailTimeLabel.text = @"2018-10-09 10：00";
         _detailTimeLabel.font = SystemFont(12);
+        _detailTimeLabel.numberOfLines = 0;
         _detailTimeLabel.textColor = kMainLightGray;
         _detailTimeLabel.textAlignment = NSTextAlignmentLeft;
     }

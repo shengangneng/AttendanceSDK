@@ -21,8 +21,6 @@
 #import "MPMOauthUser.h"
 #import "MPMSessionManager.h"
 
-#define kAlertMessage @"当前排班或者其他排班已经使用，则修改后会影响排班是否要修改"
-
 @interface MPMSettingTimeViewController () <UITableViewDataSource, UITableViewDelegate, MPMSettingSwitchTableViewCellSwitchDelegate, UITextFieldDelegate>
 // header
 @property (nonatomic, strong) UIView *headerNameView;
@@ -32,6 +30,8 @@
 @property (nonatomic, strong) UIButton *headerOneButton;
 @property (nonatomic, strong) UIButton *headerTwoButton;
 @property (nonatomic, strong) UIButton *headerTreButton;
+@property (nonatomic, strong) UIView *seperateLine;
+@property (nonatomic, strong) UIView *seperateLine2;
 // table
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MPMTableHeaderView *footer;
@@ -83,8 +83,16 @@
                 if (arr.count > i) {
                     NSDictionary *dic = arr[i];
                     mo = [[MPMSettingTimeModel alloc] initWithDictionary:dic];
-                    mo.signTimeString = [dic[@"signTime"] isKindOfClass:[NSNull class]] ? @"" : [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:((NSString *)dic[@"signTime"]).doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
-                    mo.returnTimeString = [dic[@"returnTime"] isKindOfClass:[NSNull class]] ? @"" : [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:((NSString *)dic[@"returnTime"]).doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
+                    DLog(@"%.f===%.f",[NSDateFormatter getZeroWithTimeInterverl:mo.signTime.integerValue/1000],[NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970]);
+                    DLog(@"%.f===%.f",[NSDateFormatter getZeroWithTimeInterverl:mo.returnTime.integerValue/1000],[NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970]);
+                    NSTimeInterval signTimeZero = [NSDateFormatter getZeroWithTimeInterverl:mo.signTime.doubleValue/1000];
+                    NSTimeInterval returnTimeZero = [NSDateFormatter getZeroWithTimeInterverl:mo.returnTime.doubleValue/1000];
+                    NSTimeInterval currentTimeZero = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                    
+                    mo.signTime = [NSString stringWithFormat:@"%.f",(mo.signTime.doubleValue/1000 - signTimeZero + currentTimeZero)*1000];
+                    mo.returnTime = [NSString stringWithFormat:@"%.f",(mo.returnTime.doubleValue/1000 - returnTimeZero + currentTimeZero)*1000];
+                    mo.signTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:((NSString *)mo.signTime).doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
+                    mo.returnTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:((NSString *)mo.returnTime).doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
                 } else {
                     mo = [[MPMSettingTimeModel alloc] init];
                 }
@@ -134,12 +142,14 @@
     [self.view addSubview:self.headerNameView];
     [self.headerNameView addSubview:self.headerNameLabel];
     [self.headerNameView addSubview:self.headerNameTextField];
+    [self.view addSubview:self.seperateLine];
     [self.view addSubview:self.headerButtonView];
     [self.headerButtonView addSubview:self.headerOneButton];
     [self.headerButtonView addSubview:self.headerTwoButton];
     [self.headerButtonView addSubview:self.headerTreButton];
     // table
     [self.view addSubview:self.tableView];
+    [self.view addSubview:self.seperateLine2];
     [self.view addSubview:self.bottomView];
     [self.bottomView addSubview:self.bottomLine];
     [self.bottomView addSubview:self.bottomSaveButton];
@@ -161,6 +171,16 @@
         make.top.bottom.equalTo(self.headerNameView);
         make.trailing.equalTo(self.headerNameView.mpm_trailing).offset(-10);
         make.leading.equalTo(self.headerNameLabel.mpm_trailing).offset(10);
+    }];
+    [self.seperateLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.trailing.equalTo(self.view);
+        make.top.equalTo(self.headerNameView.mpm_bottom);
+        make.bottom.equalTo(self.headerButtonView.mpm_top);
+    }];
+    [self.seperateLine2 mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.trailing.equalTo(self.view);
+        make.top.equalTo(self.headerButtonView.mpm_bottom);
+        make.height.equalTo(@0.5);
     }];
     
     [self.headerButtonView mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -232,12 +252,15 @@
     }
 }
 
-/** isUsed为空、isUsed为“0”则isUpdate为@"0"，isUsed不为空，且选择了“修改”，则isUpdate为@"1" */
-- (void)saveTimeSectionsWithisUpdate:(NSString *)isUpdate {
+/** isUsed为空、isUsed为“0”则isUpdate为@"0"，isUsed不为空，且选择了“修改”，则isUpdate为@"1" isEffective：0生效 1生效*/
+- (void)saveTimeSectionsWithisUpdate:(NSString *)isUpdate isElective:(NSString *)isElective {
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"id"] = kSafeString(self.model.mpm_id);
     params[@"isUpdate"] = isUpdate;
+    if ([isElective isEqualToString:@"1"]) {
+        params[@"isElective"] = isElective;
+    }
     NSMutableDictionary *schedule = [NSMutableDictionary dictionary];
     
     schedule[@"name"] = self.headerNameTextField.text;
@@ -253,8 +276,8 @@
         MPMSettingTimeModel *model = self.signTimeSections[i];
         NSDictionary *dic = @{@"corssReturnDay":kSafeString(model.corssReturnDay),
                               @"corssStartDay":kSafeString(model.corssStartDay),
-                              @"returnTime":kSafeString(model.returnTimeString),
-                              @"signTime":kSafeString(model.signTimeString)
+                              @"returnTime":kSafeString(model.returnTime),
+                              @"signTime":kSafeString(model.signTime)
                               };
         [signTimeSections addObject:dic];
     }
@@ -266,8 +289,22 @@
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_TIME_SAVE];
     [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在保存" success:^(id response) {
         DLog(@"%@",response);
+        if (response && ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 200) {
+            __weak typeof(self) weakself = self;
+            [self showAlertControllerToLogoutWithMessage:@"修改成功" sureAction:^(UIAlertAction * _Nonnull action) {
+                __strong typeof(weakself) strongself = weakself;
+                [strongself.navigationController popViewControllerAnimated:YES];
+            } needCancleButton:NO];
+            [self.navigationController popViewControllerAnimated:YES];
+        } else if (response && ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 204) {
+            NSString *message = response[kResponseDataKey][@"message"];
+            __weak typeof(self) weakself = self;
+            [self showAlertControllerToLogoutWithMessage:message sureAction:^(UIAlertAction * _Nonnull action) {
+                __strong typeof(weakself) strongself = weakself;
+                [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"1"];
+            } sureActionTitle:@"立即生效" needCancleButton:YES];
+        }
         // 无论是设置还是创建，成功后，都跳回上一页
-        [self.navigationController popViewControllerAnimated:YES];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
@@ -291,7 +328,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         if (indexPath.row == 1) {
@@ -299,14 +336,14 @@
                                 return @"请选择";
                             } else {
                                 NSString *time = self.freeTimeSection.signTime;
-                                return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                                return time;
                             }
                         } else if (indexPath.row == 2) {
                             if (kIsNilString(self.freeTimeSection.returnTime)) {
                                 return @"请选择";
                             } else {
                                 NSString *time = self.freeTimeSection.returnTime;
-                                return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                                return time;
                             }
                         }
                     }break;
@@ -332,7 +369,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         return @"请选择";
@@ -354,7 +391,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         return @"请选择";
@@ -376,7 +413,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         return @"请选择";
@@ -406,7 +443,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         return @"请选择";
@@ -428,7 +465,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         MPMSettingTimeModel *model = self.signTimeSections[indexPath.section];
@@ -441,7 +478,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     default:
                         break;
@@ -460,7 +497,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         MPMSettingTimeModel *model = self.signTimeSections[indexPath.section];
@@ -473,7 +510,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     default:
                         break;
@@ -500,7 +537,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         return @"请选择";
@@ -525,7 +562,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         MPMSettingTimeModel *model = self.signTimeSections[indexPath.section];
@@ -538,7 +575,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 2:{
                         return @"请选择";
@@ -560,7 +597,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 1:{
                         MPMSettingTimeModel *model = self.signTimeSections[indexPath.section];
@@ -573,7 +610,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     case 2:{
                         MPMSettingTimeModel *model = self.signTimeSections[indexPath.section];
@@ -586,7 +623,7 @@
                         if (kIsNilString(time)) {
                             return @"请选择";
                         }
-                        return [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:time.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
+                        return time;
                     }break;
                     default:
                         break;
@@ -778,6 +815,7 @@
             // 赋值跨天
             self.signTimeSections[0].corssStartDay = @"0";
             if (signTime > returnTime) {
+                [self showAlertControllerToLogoutWithMessage:@"目前时间段设置暂不支持跨天" sureAction:nil needCancleButton:NO];return;
                 self.signTimeSections[0].corssReturnDay = @"1";
             } else {
                 self.signTimeSections[0].corssReturnDay = @"0";
@@ -789,6 +827,7 @@
             // 赋值跨天
             self.signTimeSections[0].corssStartDay = @"0";
             if (signTime > returnTime) {
+                [self showAlertControllerToLogoutWithMessage:@"目前时间段设置暂不支持跨天" sureAction:nil needCancleButton:NO];return;
                 self.signTimeSections[0].corssReturnDay = @"1";
             } else {
                 self.signTimeSections[0].corssReturnDay = @"0";
@@ -876,6 +915,7 @@
                 self.signTimeSections[i].corssStartDay = @"0";
             }
             if (returnTime.hourMinuteToString.timeValue < returnTime0) {
+                [self showAlertControllerToLogoutWithMessage:@"目前时间段设置暂不支持跨天" sureAction:nil needCancleButton:NO];return;
                 self.signTimeSections[i].corssReturnDay = @"1";
             } else {
                 self.signTimeSections[i].corssReturnDay = @"0";
@@ -993,6 +1033,7 @@
                 self.signTimeSections[i].corssStartDay = @"0";
             }
             if (returnTime.hourMinuteToString.timeValue < returnTime0) {
+                [self showAlertControllerToLogoutWithMessage:@"目前时间段设置暂不支持跨天" sureAction:nil needCancleButton:NO];return;
                 self.signTimeSections[i].corssReturnDay = @"1";
             } else {
                 self.signTimeSections[i].corssReturnDay = @"0";
@@ -1000,25 +1041,7 @@
         }
     }
     
-    if (kIsNilString(self.model.isUsed)) {
-        [self saveTimeSectionsWithisUpdate:@"0"];
-    } else {
-        // 立即生效，考勤结果将按新规则重算(明天生效，立即生效）
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:kAlertMessage message:nil preferredStyle:UIAlertControllerStyleAlert];
-        __weak typeof(UIAlertController *) weakAlert = alertController;
-        __weak typeof(self) weakself = self;
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakAlert dismissViewControllerAnimated:YES completion:nil];
-        }];
-        UIAlertAction *change = [UIAlertAction actionWithTitle:@"修改" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            __strong typeof(weakself) strongself = weakself;
-            [strongself saveTimeSectionsWithisUpdate:@"1"];
-            [weakAlert dismissViewControllerAnimated:YES completion:nil];
-        }];
-        [weakAlert addAction:cancel];
-        [weakAlert addAction:change];
-        [self presentViewController:weakAlert animated:YES completion:nil];
-    }
+    [self saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -1064,6 +1087,9 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (0 == section) {
+        return 0;
+    }
     return 10;
 }
 
@@ -1364,7 +1390,7 @@
     if ([detailText isEqualToString:@"请选择"]) {
         defaultDate = self.preSelectDate ? self.preSelectDate : nil;
     } else {
-        defaultDate = [NSDate dateWithTimeIntervalSince1970:[NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970] + detailText.timeValue*60];
+        defaultDate = [NSDate dateWithTimeIntervalSince1970:detailText.doubleValue/1000];
     }
     
     [self.customDatePickerView showPicerViewWithType:kCustomPickerViewTypeHourMinute defaultDate:defaultDate];
@@ -1375,53 +1401,61 @@
         if (indexPath.section == 0) {
             if (indexPath.row == 0) {
                 MPMSettingTimeModel *model = strongself.signTimeSections[0];
-                NSTimeInterval start = date.timeIntervalSince1970 - 28800000;
+                NSTimeInterval start = date.timeIntervalSince1970;
                 NSTimeInterval inte = [NSDateFormatter getZeroWithTimeInterverl:start];
-                model.signTime = [NSString stringWithFormat:@"%.0f",(start - inte)*1000];
+                NSTimeInterval now = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                model.signTime = [NSString stringWithFormat:@"%.0f",(now + start - inte)*1000];
                 model.signTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:date.timeIntervalSince1970-28800] withDefineFormatterType:forDateFormatTypeSpecial];
             } else if (indexPath.row == 1) {
                 MPMSettingTimeModel *model = strongself.signTimeSections[0];
-                NSTimeInterval start = date.timeIntervalSince1970 - 28800000;
+                NSTimeInterval start = date.timeIntervalSince1970;
                 NSTimeInterval inte = [NSDateFormatter getZeroWithTimeInterverl:start];
-                model.returnTime = [NSString stringWithFormat:@"%.0f",(start - inte)*1000];
+                NSTimeInterval now = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                model.returnTime = [NSString stringWithFormat:@"%.0f",(now + start - inte)*1000];
                 model.returnTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:date.timeIntervalSince1970-28800] withDefineFormatterType:forDateFormatTypeSpecial];
             }
         } else if (indexPath.section == 1) {
             if (strongself.headerOneButton.selected) {
                 if (indexPath.row == 1) {
-                    NSTimeInterval start = date.timeIntervalSince1970 - 28800000;
+                    NSTimeInterval start = date.timeIntervalSince1970;
                     NSTimeInterval inte = [NSDateFormatter getZeroWithTimeInterverl:start];
-                    strongself.freeTimeSection.signTime = [NSString stringWithFormat:@"%.0f",(start - inte)*1000];
+                    NSTimeInterval now = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                    strongself.freeTimeSection.signTime = [NSString stringWithFormat:@"%.0f",(now + start - inte)*1000];
                     strongself.freeTimeSection.noonBreakStartTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:date.timeIntervalSince1970-28800] withDefineFormatterType:forDateFormatTypeSpecial];
                 } else if (indexPath.row == 2) {
-                    NSTimeInterval start = date.timeIntervalSince1970 - 28800000;
+                    NSTimeInterval start = date.timeIntervalSince1970;
                     NSTimeInterval inte = [NSDateFormatter getZeroWithTimeInterverl:start];
-                    strongself.freeTimeSection.returnTime = [NSString stringWithFormat:@"%.0f",(start - inte)*1000];
+                    NSTimeInterval now = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                    strongself.freeTimeSection.returnTime = [NSString stringWithFormat:@"%.0f",(now + start - inte)*1000];
                     strongself.freeTimeSection.noonBreakEndTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:date.timeIntervalSince1970-28800] withDefineFormatterType:forDateFormatTypeSpecial];
                 }
             } else {
                 if (indexPath.row == 0) {
-                    NSTimeInterval start = date.timeIntervalSince1970 - 28800000;
+                    NSTimeInterval start = date.timeIntervalSince1970;
                     NSTimeInterval inte = [NSDateFormatter getZeroWithTimeInterverl:start];
-                    ((MPMSettingTimeModel *)strongself.signTimeSections[1]).signTime = [NSString stringWithFormat:@"%.0f",(start - inte)*1000];
+                    NSTimeInterval now = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                    ((MPMSettingTimeModel *)strongself.signTimeSections[1]).signTime = [NSString stringWithFormat:@"%.0f",(now + start - inte)*1000];
                     ((MPMSettingTimeModel *)strongself.signTimeSections[1]).signTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:date.timeIntervalSince1970-28800] withDefineFormatterType:forDateFormatTypeSpecial];
                 } else if (indexPath.row == 1) {
-                    NSTimeInterval start = date.timeIntervalSince1970 - 28800000;
+                    NSTimeInterval start = date.timeIntervalSince1970;
                     NSTimeInterval inte = [NSDateFormatter getZeroWithTimeInterverl:start];
-                    ((MPMSettingTimeModel *)strongself.signTimeSections[1]).returnTime = [NSString stringWithFormat:@"%.0f",(start - inte)*1000];
+                    NSTimeInterval now = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                    ((MPMSettingTimeModel *)strongself.signTimeSections[1]).returnTime = [NSString stringWithFormat:@"%.0f",(now + start - inte)*1000];
                     ((MPMSettingTimeModel *)strongself.signTimeSections[1]).returnTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:date.timeIntervalSince1970-28800] withDefineFormatterType:forDateFormatTypeSpecial];
                 }
             }
         } else {
             if (indexPath.row == 0) {
-                NSTimeInterval start = date.timeIntervalSince1970 - 28800000;
+                NSTimeInterval start = date.timeIntervalSince1970;
                 NSTimeInterval inte = [NSDateFormatter getZeroWithTimeInterverl:start];
-                ((MPMSettingTimeModel *)strongself.signTimeSections[2]).signTime = [NSString stringWithFormat:@"%.0f",(start - inte)*1000];
+                NSTimeInterval now = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                ((MPMSettingTimeModel *)strongself.signTimeSections[2]).signTime = [NSString stringWithFormat:@"%.0f",(now + start - inte)*1000];
                 ((MPMSettingTimeModel *)strongself.signTimeSections[2]).signTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:date.timeIntervalSince1970-28800] withDefineFormatterType:forDateFormatTypeSpecial];
             } else if (indexPath.row == 1) {
-                NSTimeInterval start = date.timeIntervalSince1970 - 28800000;
+                NSTimeInterval start = date.timeIntervalSince1970;
                 NSTimeInterval inte = [NSDateFormatter getZeroWithTimeInterverl:start];
-                ((MPMSettingTimeModel *)strongself.signTimeSections[2]).returnTime = [NSString stringWithFormat:@"%.0f",(start - inte)*1000];
+                NSTimeInterval now = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
+                ((MPMSettingTimeModel *)strongself.signTimeSections[2]).returnTime = [NSString stringWithFormat:@"%.0f",(now + start - inte)*1000];
                 ((MPMSettingTimeModel *)strongself.signTimeSections[2]).returnTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:date.timeIntervalSince1970-28800] withDefineFormatterType:forDateFormatTypeSpecial];
             }
         }
@@ -1552,6 +1586,21 @@
         _customDatePickerView = [[MPMCustomDatePickerView alloc] init];
     }
     return _customDatePickerView;
+}
+
+- (UIView *)seperateLine {
+    if (!_seperateLine) {
+        _seperateLine = [[UIView alloc] init];
+        _seperateLine.backgroundColor = kTableViewBGColor;
+    }
+    return _seperateLine;
+}
+- (UIView *)seperateLine2 {
+    if (!_seperateLine2) {
+        _seperateLine2 = [[UIView alloc] init];
+        _seperateLine2.backgroundColor = kTableViewBGColor;
+    }
+    return _seperateLine2;
 }
 
 @end

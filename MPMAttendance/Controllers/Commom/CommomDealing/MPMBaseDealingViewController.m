@@ -332,12 +332,14 @@
                 com(day,hour);
             }
         } else {
+            [SVProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
             if (com) {
                 com(nil,nil);
             }
         }
     } failure:^(NSString *error) {
         DLog(@"计算时长失败 === %@",error);
+        [SVProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
         if (com) {
             com(nil,nil);
         }
@@ -458,8 +460,8 @@
                 [self showAlertControllerToLogoutWithMessage:@"请选择开始时间" sureAction:nil needCancleButton:NO];return canPass = NO;
             } else if (kIsNilString(detail.endTime)) {
                 [self showAlertControllerToLogoutWithMessage:@"请选择结束时间" sureAction:nil needCancleButton:NO];return canPass = NO;
-            } else if (kIsNilString(detail.hourAccount) && kIsNilString(detail.dayAccount)) {
-                [self showAlertControllerToLogoutWithMessage:@"请输入时长" sureAction:nil needCancleButton:NO];return canPass = NO;
+            } else if (kIsNilString(detail.hourAccount) || kIsNilString(detail.dayAccount)) {
+                [self showAlertControllerToLogoutWithMessage:@"时长计算有误，请重新选择" sureAction:nil needCancleButton:NO];return canPass = NO;
             } else if (detail.endTime.doubleValue <= detail.startTime.doubleValue) {
                 [self showAlertControllerToLogoutWithMessage:@"开始时间必须小于结束时间" sureAction:nil needCancleButton:NO];return canPass = NO;
             }
@@ -838,13 +840,23 @@
             __strong typeof(weakself) strongself = weakself;
             // 如果是补签，则index是section-1
             NSInteger index = (kCausationTypeRepairSign == strongself.dealingModel.causationType) ? section - 1 : section;
-            [strongself.dealingModel.causationDetail removeModelAtIndex:index];
-            strongself.dealingModel.addCount--;
-            if (strongself.dealingModel.addCount < 1 && kCausationTypeRepairSign != strongself.dealingModel.causationType) {
-                strongself.dealingModel.addCount = 1;
+            BOOL canDelete = YES;
+            for (int i = 0; i < strongself.dealingModel.causationDetail.count; i++) {
+                if (strongself.dealingModel.causationDetail[i].calculatingTime) {
+                    canDelete = NO;
+                    break;
+                }
             }
-            strongself.tableViewTitleArray = [MPMCausationTypeData getTableViewDataWithCausationType:strongself.dealingModel.causationDetail[section].causationType.integerValue addCount:strongself.dealingModel.addCount];
-            [strongself.tableView reloadData];
+            if (canDelete) {
+                [strongself.dealingModel.causationDetail removeModelAtIndex:index];
+                strongself.dealingModel.addCount--;
+                if (strongself.dealingModel.addCount < 1 && kCausationTypeRepairSign != strongself.dealingModel.causationType) {
+                    strongself.dealingModel.addCount = 1;
+                }
+                
+                strongself.tableViewTitleArray = [MPMCausationTypeData getTableViewDataWithCausationType:strongself.dealingModel.causationDetail[section].causationType.integerValue addCount:strongself.dealingModel.addCount];
+                [strongself.tableView reloadData];
+            }
         };
         return header;
     }
@@ -1123,6 +1135,7 @@
         if ([detailType isEqualToString:kCellDetailTypeUITextField]) {
             // detail类型为输入框
             [cell setupDetailToBeUITextField];
+            cell.detailView.userInteractionEnabled = YES;
             NSString *cellTitle = cell.txLabel.text;
             ((UITextField *)cell.detailView).placeholder = [cellArr[indexPath.row] componentsSeparatedByString:@","].lastObject;
             if ([cellTitle isEqualToString:@"出差地点"]) {
@@ -1136,6 +1149,7 @@
                 ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
             } else if ([cellTitle containsString:@"时长"]) {
                 [cell needCheckNumber:YES limitLength:4];
+                cell.detailView.userInteractionEnabled = YES;
                 if (kCausationTypeYearLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
                     kCausationTypeMonthLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
                     kCausationTypeSeeRelativeLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
@@ -1245,6 +1259,7 @@
             // 时分秒picker
             NSInteger index = indexPath.section;
             NSDate *defaultDate;
+            CustomPickerViewType pickerType = kCustomPickerViewTypeYearMonthDayHourMinute;//  时间选择器类型
             if ([cell.txLabel.text isEqualToString:@"开始时间"]) {
                 if (!kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).startTime)) {
                     defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].startTime.doubleValue/1000];
@@ -1272,6 +1287,7 @@
                     defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index - 1].fillupTime.doubleValue/1000];
                 }
             } else if ([cell.txLabel.text isEqualToString:@"改签时间"]) {
+                pickerType = kCustomPickerViewTypeHourMinute;
                 if (!kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).reviseSignTime)) {
                     defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].reviseSignTime.doubleValue/1000];
                 } else if (!kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).signTime)) {
@@ -1280,7 +1296,7 @@
             } else {
                 defaultDate = [NSDate date];
             }
-            [self.customDatePickerView showPicerViewWithType:kCustomPickerViewTypeYearMonthDayHourMinute defaultDate:defaultDate];
+            [self.customDatePickerView showPicerViewWithType:pickerType defaultDate:defaultDate];
             __weak typeof (self) weakself = self;
             self.customDatePickerView.completeBlock = ^(NSDate *date) {
                 __strong typeof (weakself) strongself = weakself;
@@ -1304,9 +1320,11 @@
                 cell.detailTextLabel.text = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
                 // 开始时间、结束时间 自动计算时长
                 if (!kIsNilString(strongself.dealingModel.causationDetail[index].startTime) && !kIsNilString(strongself.dealingModel.causationDetail[index].endTime)) {
+                    strongself.dealingModel.causationDetail[index].calculatingTime = YES;
                     __weak typeof(strongself) wweakself = strongself;
                     [strongself calculateDayAndHourWithStart:strongself.dealingModel.causationDetail[index].startTime end:strongself.dealingModel.causationDetail[index].endTime complete:^(NSString *day, NSString *hour) {
                         __strong typeof(wweakself) wstrongself = wweakself;
+                        wstrongself.dealingModel.causationDetail[index].calculatingTime = NO;
                         wstrongself.dealingModel.causationDetail[index].dayAccount = day;
                         wstrongself.dealingModel.causationDetail[index].hourAccount = hour;
                         [wstrongself.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -1354,13 +1372,22 @@
                 }
             };
         } else if ([actionTitle isEqualToString:kAction_AddCell]) {
-            self.dealingModel.addCount++;
-            if (self.dealingModel.addCount > 3) {
-                self.dealingModel.addCount = 1;
+            BOOL canAdd = YES;
+            for (int i = 0; i < self.dealingModel.causationDetail.count; i++) {
+                if (self.dealingModel.causationDetail[i].calculatingTime) {
+                    canAdd = NO;
+                    break;
+                }
             }
-            // 增加一行数据
-            self.tableViewTitleArray = [MPMCausationTypeData getTableViewDataWithCausationType:self.dealingModel.causationType addCount:self.dealingModel.addCount];
-            [self.tableView reloadData];
+            if (canAdd) {
+                self.dealingModel.addCount++;
+                if (self.dealingModel.addCount > 3) {
+                    self.dealingModel.addCount = 1;
+                }
+                // 增加一行数据
+                self.tableViewTitleArray = [MPMCausationTypeData getTableViewDataWithCausationType:self.dealingModel.causationType addCount:self.dealingModel.addCount];
+                [self.tableView reloadData];
+            }
         }
     }
 }

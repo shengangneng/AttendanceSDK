@@ -99,8 +99,9 @@
 #pragma mark - Public Method
 - (void)selectCurrentDate {
     if (self.weekType != forCurrentWeek) return;
+    self.currentMiddleDate = [NSDate date];
     NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday fromDate:self.currentMiddleDate];
+    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekdayOrdinal|NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:self.currentMiddleDate];
     MPMCalendarButton *btn = self.buttons[comp.weekday-1];
     [self selectDate:btn];
 }

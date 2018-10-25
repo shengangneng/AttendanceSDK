@@ -35,6 +35,7 @@
 @property (nonatomic, copy) NSString *status;           /** 改签，之前的迟到早退等状态 */
 
 @property (nonatomic, assign) BOOL trafficNeedFold;     /** "交通工具"控件是否需要折叠：YES需要 NO不需要 */
+@property (nonatomic, assign) BOOL calculatingTime;     /** 记录是否正在计算时间，如果正在计算时间，不能增加和删除cell */
 
 - (void)clearData;
 - (void)copyWithOtherModel:(MPMCausationDetailModel *)model;
