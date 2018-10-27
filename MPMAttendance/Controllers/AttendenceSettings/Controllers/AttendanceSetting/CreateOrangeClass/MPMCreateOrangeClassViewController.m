@@ -227,11 +227,11 @@
             }
         }
         if (departCount.count > 0 && peopleCount.count > 0) {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"参与人员:%ld人  参与部门:%ld个",peopleCount.count,departCount.count];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"人员%ld人(部门%ld个)",peopleCount.count,departCount.count];
         } else if (peopleCount.count > 0) {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"参与人员:%ld人",peopleCount.count];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"人员%ld人",peopleCount.count];
         } else if (departCount.count > 0) {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"参与部门:%ld个",departCount.count];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"部门%ld个",departCount.count];
         } else {
             cell.detailTextLabel.text = nil;
         }

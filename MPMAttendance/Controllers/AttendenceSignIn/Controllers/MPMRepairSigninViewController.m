@@ -140,6 +140,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 

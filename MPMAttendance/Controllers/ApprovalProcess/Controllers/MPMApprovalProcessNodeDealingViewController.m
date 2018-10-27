@@ -525,6 +525,7 @@
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -659,7 +660,7 @@
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
-        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"%@失败",alertMessage] sureAction:nil needCancleButton:NO];
+        [MPMProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@失败",alertMessage]];
     }];
 }
 

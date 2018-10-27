@@ -179,7 +179,7 @@
             }break;
             case kMyApplyType:{
                 // 我的申请
-                statusTitles = @[@"全部",@"运行中",@"已完成",@"已取消"];
+                statusTitles = @[@"全部",@"进行中",@"已完成",@"已取消"];
             }break;
             case kCCToMeType:{
                 // 抄送给我
@@ -276,7 +276,7 @@
             break;
     }
     DLog(@"%@",url);
-    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在加载" success:^(id response) {
         DLog(@"%@",response);
         if (response[kResponseObjectKey] &&
             [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]] &&
@@ -301,6 +301,7 @@
         [self.refreshFooter endRefreshFooter];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
         [self.refreshFooter endRefreshFooter];
     }];
 }
@@ -405,7 +406,7 @@
             // 我的申请：1运行中2结束3撤销
             switch (model.state.integerValue) {
                 case 1:{
-                    text = @"运行中";
+                    text = @"进行中";
                     imageName = @"approval_blueFlag";
                 }break;
                 case 2:{
@@ -417,7 +418,7 @@
                     imageName = @"approval_orangeFlag";
                 }break;
                 default:{
-                    text = @"运行中";
+                    text = @"进行中";
                     imageName = @"approval_blueFlag";
                 }break;
             }

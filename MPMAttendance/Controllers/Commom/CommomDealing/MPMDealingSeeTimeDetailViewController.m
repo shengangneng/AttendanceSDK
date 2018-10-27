@@ -79,6 +79,7 @@
         [self.tableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"计算时长失败 === %@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
         [self.tableView reloadData];
     }];
 }

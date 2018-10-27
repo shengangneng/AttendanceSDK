@@ -89,51 +89,45 @@ static MPMSessionManager *instance;
             __strong typeof(weakself) strongself = weakself;
             [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
             [strongself.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+                if (needHUD) {
+                    [MPMProgressHUD dismiss];
+                }
                 if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                    if (needHUD) {
-                        [MPMProgressHUD dismiss];
-                    }
                     success(responseObject);
                 } else {
-                    if (needHUD) {
-                        [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
-                    }
-                    failure(nil);
+                    failure([instance getAlertMessageFromError:nil]);
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 if (needHUD) {
-                    [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                    [MPMProgressHUD dismiss];
                 }
                 NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
                 if (responses.statusCode == kRequestErrorUnauthorized) {
                     [self back];
                 } else {
-                    failure(error.localizedDescription);
+                    failure([instance getAlertMessageFromError:error]);
                 }
             }];
         }];
     } else {
         [self.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+            if (needHUD) {
+                [MPMProgressHUD dismiss];
+            }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                if (needHUD) {
-                    [MPMProgressHUD dismiss];
-                }
                 success(responseObject);
             } else {
-                if (needHUD) {
-                    [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
-                }
-                failure(nil);
+                failure([instance getAlertMessageFromError:nil]);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                [MPMProgressHUD dismiss];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self back];
             } else {
-                failure(error.localizedDescription);
+                failure([instance getAlertMessageFromError:error]);
             }
         }];
     }
@@ -151,51 +145,45 @@ static MPMSessionManager *instance;
             __strong typeof(weakself) strongself = weakself;
             [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
             [strongself.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+                if (needHUD) {
+                    [MPMProgressHUD dismiss];
+                }
                 if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                    if (needHUD) {
-                        [MPMProgressHUD dismiss];
-                    }
                     success(responseObject);
                 } else {
-                    if (needHUD) {
-                        [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
-                    }
-                    failure(nil);
+                    failure([instance getAlertMessageFromError:nil]);
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
                 if (needHUD) {
-                    [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                    [MPMProgressHUD dismiss];
                 }
                 if (responses.statusCode == kRequestErrorUnauthorized) {
                     [self back];
                 } else {
-                    failure(error.localizedDescription);
+                    failure([instance getAlertMessageFromError:error]);
                 }
             }];
         }];
     } else {
         [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+            if (needHUD) {
+                [MPMProgressHUD dismiss];
+            }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                if (needHUD) {
-                    [MPMProgressHUD dismiss];
-                }
                 success(responseObject);
             } else {
-                if (needHUD) {
-                    [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
-                }
-                failure(nil);
+                failure([instance getAlertMessageFromError:nil]);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                [MPMProgressHUD dismiss];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self back];
             } else {
-                failure(error.localizedDescription);
+                failure([instance getAlertMessageFromError:error]);
             }
         }];
     }
@@ -213,51 +201,65 @@ static MPMSessionManager *instance;
             __strong typeof(weakself) strongself = weakself;
             [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
             [strongself.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                if (needHUD) {
+                    [MPMProgressHUD dismiss];
+                }
                 if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                    if (needHUD) {
-                        [MPMProgressHUD dismiss];
-                    }
                     success(responseObject);
                 } else {
-                    if (needHUD) {
-                        [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
-                    }
-                    failure(nil);
+                    failure([instance getAlertMessageFromError:nil]);
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
-                [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                if (needHUD) {
+                    [MPMProgressHUD dismiss];
+                }
                 if (responses.statusCode == kRequestErrorUnauthorized) {
                     [self back];
                 } else {
-                    failure(error.localizedDescription);
+                    failure([instance getAlertMessageFromError:error]);
                 }
             }];
         }];
     } else {
         [self.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            if (needHUD) {
+                [MPMProgressHUD dismiss];
+            }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                if (needHUD) {
-                    [MPMProgressHUD dismiss];
-                }
                 success(responseObject);
             } else {
-                if (needHUD) {
-                    [MPMProgressHUD showErrorWithStatus:@"返回数据格式不正确"];
-                }
-                failure(nil);
+                failure([instance getAlertMessageFromError:nil]);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD showErrorWithStatus:error.localizedDescription];
+                [MPMProgressHUD dismiss];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self back];
             } else {
-                failure(error.localizedDescription);
+                failure([instance getAlertMessageFromError:error]);
             }
         }];
+    }
+}
+
+- (NSString *)getAlertMessageFromError:(NSError *)error {
+    if (!error) {
+        return @"网络连接失败";
+    } else {
+        if (NSURLErrorNotConnectedToInternet == error.code) {
+            return @"网络连接失败";
+        } else if (NSURLErrorBadServerResponse == error.code) {
+            return @"请求失败";
+        } else if (NSURLErrorTimedOut == error.code) {
+            return @"网络请求超时";
+        } else if (NSURLErrorCannotConnectToHost == error.code) {
+            return @"连接不上服务器";
+        } else {
+            return @"网络连接失败";
+        }
     }
 }
 

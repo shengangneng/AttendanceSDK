@@ -215,7 +215,7 @@
         make.centerY.equalTo(self.headerImageView.mpm_centerY);
     }];
     [self.headerSeperateLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.height.equalTo(@22);
+        make.height.equalTo(@28.5);
         make.width.equalTo(@0.5);
         make.centerY.equalTo(self.headerImageView.mpm_centerY);
         make.trailing.equalTo(self.headerDeleteButton.mpm_leading).offset(-15);
@@ -332,7 +332,7 @@
 - (UIView *)headerSeperateLine {
     if (!_headerSeperateLine) {
         _headerSeperateLine = [[UIView alloc] init];
-        _headerSeperateLine.backgroundColor = kWhiteColor;
+        _headerSeperateLine.backgroundColor = kSeperateColor;
     }
     return _headerSeperateLine;
 }

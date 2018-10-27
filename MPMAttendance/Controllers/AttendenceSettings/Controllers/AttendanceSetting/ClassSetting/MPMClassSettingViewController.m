@@ -155,6 +155,12 @@
         if (((NSArray *)self.model.flexibleTimeWorkSchedule[@"daysOfWeek"]).count > 0) {
             self.model.fixedTimeWorkSchedule[@"daysOfWeek"] = self.model.flexibleTimeWorkSchedule[@"daysOfWeek"];
         }
+        if (((NSArray *)self.model.flexibleTimeWorkSchedule[@"locatioinSettings"]).count > 0) {
+            self.model.fixedTimeWorkSchedule[@"locatioinSettings"] = self.model.flexibleTimeWorkSchedule[@"locatioinSettings"];
+        }
+        if (self.model.flexibleTimeWorkSchedule[@"offset"]) {
+            self.model.fixedTimeWorkSchedule[@"offset"] = self.model.flexibleTimeWorkSchedule[@"offset"];
+        }
     } else if (classType == kClassTypeFree) {
         // 自由排班
         self.titlesArray = @[@[@"排班方式",@"每天开始签到时间",@"考勤日期"],
@@ -166,9 +172,54 @@
         if (((NSArray *)self.model.fixedTimeWorkSchedule[@"daysOfWeek"]).count > 0) {
             self.model.flexibleTimeWorkSchedule[@"daysOfWeek"] = self.model.fixedTimeWorkSchedule[@"daysOfWeek"];
         }
+        if (((NSArray *)self.model.fixedTimeWorkSchedule[@"locatioinSettings"]).count > 0) {
+            self.model.flexibleTimeWorkSchedule[@"locatioinSettings"] = self.model.fixedTimeWorkSchedule[@"locatioinSettings"];
+        }
+        if (self.model.fixedTimeWorkSchedule[@"offset"]) {
+            self.model.flexibleTimeWorkSchedule[@"offset"] = self.model.fixedTimeWorkSchedule[@"offset"];
+        }
         self.model.startTime = kIsNilString(self.model.startTime) ? [NSString stringWithFormat:@"%.f",[NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970] * 1000] : self.model.startTime;
         self.model.endTime = kIsNilString(self.model.endTime) ? [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 * 1000] : self.model.endTime;
     }
+}
+
+/** 根据班次返回拼接的字符串 */
+- (NSString *)getTimeStringWithTimeSchedule:(NSMutableDictionary *)schedule {
+    NSString *timeString;
+    NSArray *signTimeSections = schedule[@"signTimeSections"];
+    NSDictionary *freeTimeSection = [schedule[@"freeTimeSection"] isKindOfClass:[NSDictionary class]] ? schedule[@"freeTimeSection"] : nil;
+    NSString *hour = schedule[@"hour"];
+    
+    if (!signTimeSections || signTimeSections.count == 0) {
+        timeString = @"";
+    } else if (signTimeSections.count == 1) {
+        // 这里可能还要考虑‘间休’
+        NSString *signTime = signTimeSections.firstObject[@"signTime"];
+        NSString *returnTime = signTimeSections.firstObject[@"returnTime"];
+        if (freeTimeSection && ![freeTimeSection[@"start"] isKindOfClass:[NSNull class]] && ![freeTimeSection[@"end"] isKindOfClass:[NSNull class]]) {
+            NSString *start = kNumberSafeString(freeTimeSection[@"start"]);
+            NSString *end = kNumberSafeString(freeTimeSection[@"end"]);
+            timeString = [NSString stringWithFormat:@"%@ A%@-%@间休%@-%@ %@小时",kSafeString(((NSString *)schedule[@"name"])),[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:start.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:end.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],hour];
+        } else {
+            timeString = [NSString stringWithFormat:@"%@ A%@-%@ %@小时",kSafeString(((NSString *)schedule[@"name"])),[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],hour];
+        }
+    } else if (signTimeSections.count == 2) {
+        NSString *signTime0 = signTimeSections.firstObject[@"signTime"];
+        NSString *returnTime0 = signTimeSections.firstObject[@"returnTime"];
+        NSString *signTime1 = signTimeSections[1][@"signTime"];
+        NSString *returnTime1 = signTimeSections[1][@"returnTime"];
+        timeString = [NSString stringWithFormat:@"%@ A%@-%@ B%@-%@ %@小时",kSafeString(((NSString *)schedule[@"name"])),[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime0.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime0.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime1.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime1.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],hour];
+    } else if (signTimeSections.count == 3) {
+        NSString *signTime0 = signTimeSections.firstObject[@"signTime"];
+        NSString *returnTime0 = signTimeSections.firstObject[@"returnTime"];
+        NSString *signTime1 = signTimeSections[1][@"signTime"];
+        NSString *returnTime1 = signTimeSections[1][@"returnTime"];
+        NSString *signTime2 = signTimeSections[2][@"signTime"];
+        NSString *returnTime2 = signTimeSections[2][@"returnTime"];
+        timeString = [NSString stringWithFormat:@"%@ A%@-%@ B%@-%@ C%@-%@ %@小时",kSafeString(((NSString *)schedule[@"name"])),[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime0.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime0.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime1.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime1.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime2.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime2.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],hour];
+    }
+    
+    return timeString;
 }
 
 #pragma mark - Target Action
@@ -219,7 +270,7 @@
     self.model.fixedTimeWorkSchedule[@"signTimeSections"] = model.schedule.signTimeSections;
     self.model.fixedTimeWorkSchedule[@"freeTimeSection"] = model.schedule.freeTimeSection;
     NSString *startTime = model.schedule.signTimeSections.firstObject[@"signTime"];
-    NSString *endTime = model.schedule.signTimeSections.firstObject[@"returnTime"];
+    NSString *endTime = model.schedule.signTimeSections.lastObject[@"returnTime"];
     self.model.startTime = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:startTime.doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
     self.model.endTime = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:endTime.doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -315,12 +366,9 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.textLabel.text = self.titlesArray[indexPath.section][indexPath.row];
         if (indexPath.row == 3) {
-            
             NSArray *arr = self.model.fixedTimeWorkSchedule[@"signTimeSections"];
             if (arr.count > 0) {
-                NSString *firstSignTime = arr.firstObject[@"signTime"];
-                NSString *lastReturnTime = arr.lastObject[@"returnTime"];
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@-%@",kSafeString(((NSString *)self.model.fixedTimeWorkSchedule[@"name"])),[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:firstSignTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:lastReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
+                cell.detailTextLabel.text = [self getTimeStringWithTimeSchedule:self.model.fixedTimeWorkSchedule];
             } else {
                 cell.detailTextLabel.text = @"";
             }

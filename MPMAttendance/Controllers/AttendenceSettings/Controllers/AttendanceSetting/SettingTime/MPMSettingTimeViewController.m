@@ -107,9 +107,20 @@
         
         if (self.model.schedule.freeTimeSection && [self.model.schedule.freeTimeSection isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dic = self.model.schedule.freeTimeSection;
+            NSString *start = [dic[@"start"] isKindOfClass:[NSNull class]] ? @"" : kNumberSafeString(dic[@"start"]);
+            NSString *end = [dic[@"end"] isKindOfClass:[NSNull class]] ? @"" : kNumberSafeString(dic[@"end"]);
+            NSTimeInterval startTimeZero = [NSDateFormatter getZeroWithTimeInterverl:start.doubleValue/1000];
+            NSTimeInterval endTimeZero = [NSDateFormatter getZeroWithTimeInterverl:end.doubleValue/1000];
+            NSTimeInterval currentTimeZero = [NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970];
             self.freeTimeSection = [[MPMSettingTimeModel alloc] initWithDictionary:dic];
-            self.freeTimeSection.noonBreakStartTimeString = [dic[@"start"] isKindOfClass:[NSNull class]] ? @"" : [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:((NSString *)dic[@"start"]).doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
-            self.freeTimeSection.noonBreakEndTimeString = [dic[@"start"] isKindOfClass:[NSNull class]] ? @"" : [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:((NSString *)dic[@"end"]).doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
+            if (!kIsNilString(start)) {
+                self.freeTimeSection.signTime = [NSString stringWithFormat:@"%.f",(start.doubleValue/1000 - startTimeZero + currentTimeZero)*1000];
+                self.freeTimeSection.noonBreakStartTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:(start).doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
+            }
+            if (!kIsNilString(end)) {
+                self.freeTimeSection.returnTime = [NSString stringWithFormat:@"%.f",(end.doubleValue/1000 - endTimeZero + currentTimeZero)*1000];
+                self.freeTimeSection.noonBreakEndTimeString = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:(end).doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
+            }
         } else {
             self.freeTimeSection = [[MPMSettingTimeModel alloc] init];
         }
@@ -264,10 +275,9 @@
     NSMutableDictionary *schedule = [NSMutableDictionary dictionary];
     
     schedule[@"name"] = self.headerNameTextField.text;
-    
     if (self.switchOn && self.headerOneButton.isSelected) {
-        NSDictionary *freeTimeSection = @{@"start":kSafeString(self.freeTimeSection.noonBreakStartTimeString),
-                                          @"end":kSafeString(self.freeTimeSection.noonBreakEndTimeString)};
+        NSDictionary *freeTimeSection = @{@"start":kSafeString(self.freeTimeSection.signTime),
+                                          @"end":kSafeString(self.freeTimeSection.returnTime)};
         schedule[@"freeTimeSection"] = freeTimeSection;
     }
     NSInteger count = self.headerOneButton.isSelected ? 1 : (self.headerTwoButton.isSelected ? 2 : 3);
@@ -303,10 +313,13 @@
                 __strong typeof(weakself) strongself = weakself;
                 [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"1"];
             } sureActionTitle:@"立即生效" needCancleButton:YES];
+        } else {
+            [MPMProgressHUD showErrorWithStatus:@"操作失败"];
         }
         // 无论是设置还是创建，成功后，都跳回上一页
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:@"操作失败"];
     }];
 }
 

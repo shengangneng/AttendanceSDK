@@ -16,6 +16,7 @@
 #import "MPMOauthUser.h"
 #import "MPMAttendanceSettingModel.h"
 #import "MPMSignTimeSections.h"
+#import "MPMSettingTimeModel.h"
 /** 创建排班 */
 #import "MPMCreateOrangeClassViewController.h"
 /** 班次设置 */
@@ -115,6 +116,7 @@
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -221,8 +223,14 @@
     
     if (fixed.count == 1) {
         MPMSignTimeSections *slt = [[MPMSignTimeSections alloc] initWithDictionary:fixed[0]];
-        cell.classLabel1.text = [NSString stringWithFormat:@"班次:A %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.startReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
-        cell.classLabel2.text = cell.classLabel3.text = nil;
+        id free = model.fixedTimeWorkSchedule[@"freeTimeSection"];
+        if (free && [free isKindOfClass:[NSDictionary class]] && free[@"start"] && ![free[@"start"] isKindOfClass:[NSNull class]] && free[@"end"] && ![free[@"end"] isKindOfClass:[NSNull class]]) {
+            NSString *start = kNumberSafeString(free[@"start"]);
+            NSString *end = kNumberSafeString(free[@"end"]);
+            cell.classLabel1.text = [NSString stringWithFormat:@"班次:A %@ - %@ 间休:%@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.startReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:start.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:end.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
+        } else {
+            cell.classLabel1.text = [NSString stringWithFormat:@"班次:A %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.startReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
+        }
     } else if (fixed.count == 2) {
         MPMSignTimeSections *slt0 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[0]];
         MPMSignTimeSections *slt1 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[1]];
@@ -279,6 +287,7 @@
             [self.lastCell dismissSwipeView];
         } failure:^(NSString *error) {
             DLog(@"删除失败");
+            [MPMProgressHUD showErrorWithStatus:@"删除排班失败"];
         }];
     } needCancleButton:YES];
 }

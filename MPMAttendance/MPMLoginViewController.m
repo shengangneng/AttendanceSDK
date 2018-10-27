@@ -371,6 +371,7 @@
         }
     } failure:^(NSString *error) {
         NSLog(@"获取菜单失败...");
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -389,6 +390,7 @@
         }
     } failure:^(NSString *error) {
         NSLog(@"获取用户信息失败...%@--%@",[MPMOauthUser shareOauthUser].user_id,[MPMOauthUser shareOauthUser].company_code);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 

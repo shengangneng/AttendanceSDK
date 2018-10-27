@@ -262,6 +262,7 @@
         [self setupConstraints];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -604,7 +605,7 @@
                 }
             } failure:^(NSString *error) {
                 DLog(@"%@",error);
-                [strongself showAlertControllerToLogoutWithMessage:@"取消申请失败" sureAction:nil needCancleButton:NO];
+                [MPMProgressHUD showErrorWithStatus:@"取消申请失败"];
             }];
         } needCancleButton:YES];
     }
@@ -681,7 +682,7 @@
                 [strongself showAlertControllerToLogoutWithMessage:@"加签失败" sureAction:nil needCancleButton:NO];
             }
         } failure:^(NSString *error) {
-            [strongself showAlertControllerToLogoutWithMessage:@"加签失败" sureAction:nil needCancleButton:NO];
+            [MPMProgressHUD showErrorWithStatus:@"加签失败"];
         }];
     }];
 }

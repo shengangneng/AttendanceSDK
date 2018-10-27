@@ -154,6 +154,7 @@
         [self.tableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -177,6 +178,7 @@
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -303,6 +305,7 @@
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -332,14 +335,14 @@
                 com(day,hour);
             }
         } else {
-            [SVProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
+            [MPMProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
             if (com) {
                 com(nil,nil);
             }
         }
     } failure:^(NSString *error) {
         DLog(@"计算时长失败 === %@",error);
-        [SVProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
+        [MPMProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
         if (com) {
             com(nil,nil);
         }
@@ -726,7 +729,7 @@
             [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"%@失败",message] sureAction:nil needCancleButton:NO];
         }
     } failure:^(NSString *error) {
-        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"%@失败",message] sureAction:nil needCancleButton:NO];
+        [MPMProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@失败",message]];
     }];
 }
 

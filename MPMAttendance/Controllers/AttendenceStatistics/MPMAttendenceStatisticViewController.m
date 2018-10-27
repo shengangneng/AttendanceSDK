@@ -150,12 +150,13 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
         [self.bottomTableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
         [self.indicatorView stopAnimating];
     }];
 }
 
 - (void)updateTotalMessage {
-    self.totalDate.text = [NSString stringWithFormat:@"%@ / %@",self.model.actualAttendance,self.model.shouldAttendance];
+    self.totalDate.text = [NSString stringWithFormat:@"%d / %d",self.model.actualAttendance.intValue,self.model.shouldAttendance.intValue];
     self.totalScore.text = self.model.awardCount;
     self.totalDeScore.text = self.model.buckleCount;
 }
@@ -189,8 +190,7 @@ typedef NS_ENUM(NSInteger, forGetDataType) {
 - (void)setupAttributes {
     [super setupAttributes];
     self.navigationItem.title = @"考勤统计";
-//    [self setRightBarButtonType:forBarButtonTypeTitle title:@"退出" image:nil action:@selector(logout:)];
-    self.titleTextField.text = [NSString stringWithFormat:@"%@  %@",[MPMOauthUser shareOauthUser].name_cn,[MPMOauthUser shareOauthUser].department_name];
+    self.titleTextField.text = [NSString stringWithFormat:@"%@  %@",kSafeString([MPMOauthUser shareOauthUser].name_cn),kSafeString([MPMOauthUser shareOauthUser].department_name)];
     self.currentType = forDataTypePerson;
     [self.selectDateButton addTarget:self action:@selector(selectData:) forControlEvents:UIControlEventTouchUpInside];
 }

@@ -79,7 +79,7 @@
         classDic = self.model.flexibleTimeWorkSchedule;
     }
     NSArray *locations = classDic[@"locatioinSettings"];
-    NSString *offset;
+    NSString *offset = @"100";
     if (classDic[@"offset"]) {
         if ([classDic[@"offset"] isKindOfClass:[NSString class]]) {
             offset = classDic[@"offset"];
@@ -215,6 +215,9 @@
         fixedTimeWorkSchedule[@"offset"] = self.deviation;
         fixedTimeWorkSchedule[@"signTimeSections"] = self.model.fixedTimeWorkSchedule[@"signTimeSections"];
         fixedTimeWorkSchedule[@"startSignTime"] = self.model.fixedTimeWorkSchedule[@"startSignTime"];
+        if (self.model.fixedTimeWorkSchedule[@"freeTimeSection"] && [self.model.fixedTimeWorkSchedule[@"freeTimeSection"] isKindOfClass:[NSDictionary class]]) {
+            fixedTimeWorkSchedule[@"freeTimeSection"] = self.model.fixedTimeWorkSchedule[@"freeTimeSection"];
+        }
         params[@"fixedTimeWorkSchedule"] = fixedTimeWorkSchedule;
     } else {
         flexibleTimeWorkSchedule[@"daysOfWeek"] = self.model.flexibleTimeWorkSchedule[@"daysOfWeek"];
@@ -245,11 +248,12 @@
         params[@"isTransfer"] = isTransfer;
     }
     
+    NSString *message = (kDulingTypeCreate == self.dulingType) ? @"创建" : @"修改";
     [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:NO params:params loadingMessage:@"正在加载" success:^(id response) {
         DLog(@"%@",response);
         if (response && kRequestSuccess == ((NSString *)response[@"responseData"][kCode]).integerValue) {
             __weak typeof(self) weakself = self;
-            [self showAlertControllerToLogoutWithMessage:@"保存成功！" sureAction:^(UIAlertAction * _Nonnull action) {
+            [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"%@成功",message] sureAction:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
                 for (UIViewController *vc in self.navigationController.viewControllers) {
                     if ([vc isKindOfClass:[MPMAttendenceSettingViewController class]]) {
@@ -276,11 +280,12 @@
             [weakAlert addAction:change];
             [self presentViewController:weakAlert animated:YES completion:nil];
         } else {
-            [self showAlertControllerToLogoutWithMessage:@"保存失败" sureAction:nil needCancleButton:NO];
+            NSString *message = response[@"responseData"][@"message"];
+            [MPMProgressHUD showErrorWithStatus:kSafeString(message)];
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
-        [self showAlertControllerToLogoutWithMessage:@"保存失败" sureAction:nil needCancleButton:NO];
+        [MPMProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"%@失败",message]];
     }];
 }
 

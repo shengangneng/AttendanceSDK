@@ -119,6 +119,7 @@ typedef void(^CompleteBlock)(NSArray *cycle);
         }
     }
     [kAppDelegate.window addSubview:self];
+    [self.tableView reloadData];
     [UIView animateWithDuration:0.6 animations:^{
         self.backMaskView.alpha = 0.5;
         self.mainContentView.alpha = 1.0;

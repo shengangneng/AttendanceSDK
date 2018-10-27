@@ -24,17 +24,17 @@
 - (void)setCanDelete:(BOOL)canDelete {
     _canDelete = canDelete;
     if (canDelete) {
-        [self.deleteButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.deleteButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
             make.height.width.equalTo(@24);
-            make.trailing.equalTo(self.bgImageView.mas_trailing).offset(-12);
-            make.top.equalTo(self.bgImageView.mas_top).offset(8.5);
+            make.trailing.equalTo(self.bgImageView.mpm_trailing).offset(-12);
+            make.top.equalTo(self.bgImageView.mpm_top).offset(8.5);
         }];
     } else {
-        [self.deleteButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.height.width.equalTo(@24);
+        [self.deleteButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+            make.height.equalTo(@24);
             make.width.equalTo(@0);
-            make.trailing.equalTo(self.bgImageView.mas_trailing);
-            make.top.equalTo(self.bgImageView.mas_top).offset(8.5);
+            make.trailing.equalTo(self.bgImageView.mpm_trailing);
+            make.top.equalTo(self.bgImageView.mpm_top).offset(8.5);
         }];
     }
 }
@@ -86,15 +86,15 @@
         make.leading.equalTo(self.bgImageView.mpm_leading).offset(-6.5);
         make.top.equalTo(self.bgImageView.mpm_top);
     }];
-    [self.updateButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.updateButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.height.width.equalTo(@24);
-        make.centerY.equalTo(self.deleteButton.mas_centerY);
-        make.trailing.equalTo(self.deleteButton.mas_leading).offset(-12);
+        make.centerY.equalTo(self.deleteButton.mpm_centerY);
+        make.trailing.equalTo(self.deleteButton.mpm_leading).offset(-12);
     }];
-    [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.deleteButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.height.width.equalTo(@24);
-        make.trailing.equalTo(self.bgImageView.mas_trailing).offset(-12);
-        make.top.equalTo(self.bgImageView.mas_top).offset(8.5);
+        make.trailing.equalTo(self.bgImageView.mpm_trailing).offset(-12);
+        make.top.equalTo(self.bgImageView.mpm_top).offset(8.5);
     }];
     [self.flagNameLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.equalTo(self.flagImageView.mpm_top).offset(4);
@@ -145,28 +145,6 @@
             [reorderView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
                 make.edges.equalTo(self);
             }];
-            // 把三个操作按钮加到这个排序视图上
-            [reorderView addSubview:self.updateButton];
-            [reorderView addSubview:self.deleteButton];
-            [self.updateButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-                make.height.width.equalTo(@24);
-                make.centerY.equalTo(self.deleteButton.mpm_centerY);
-                make.trailing.equalTo(self.deleteButton.mpm_leading).offset(-12);
-            }];
-            if (self.canDelete) {
-                [self.deleteButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-                    make.height.width.equalTo(@24);
-                    make.trailing.equalTo(self.bgImageView.mpm_trailing).offset(-12);
-                    make.top.equalTo(self.bgImageView.mpm_top).offset(8.5);
-                }];
-            } else {
-                [self.deleteButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-                    make.height.equalTo(@24);
-                    make.width.equalTo(@0);
-                    make.trailing.equalTo(self.bgImageView.mpm_trailing);
-                    make.top.equalTo(self.bgImageView.mpm_top).offset(8.5);
-                }];
-            }
             [self layoutIfNeeded];
         }
     }

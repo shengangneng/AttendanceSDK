@@ -315,7 +315,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_CLOCKTIME];
     NSDictionary *params = @{@"day":dateString};
     [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMJSONRequestSerializer serializer];
-    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在加载" success:^(id response) {
         DLog(@"%@",response);
         if (response && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
             // 清空之前的数据
@@ -402,6 +402,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -535,7 +536,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 /** 打卡成功 */
 - (void)signinSuccess {
     self.lastSigninDate = [NSDate date];// 签到成功，记录下此次打卡时间，再次打卡校验不能在15秒内立即打卡
-    [MPMProgressHUD showSuccessWithStatus:@"签到成功"];
+    [MPMProgressHUD showSuccessWithStatus:@"打卡成功"];
     /*
      AVSpeechSynthesizer *speech = [[AVSpeechSynthesizer alloc] init];
      AVSpeechUtterance *utt = [AVSpeechUtterance speechUtteranceWithString:@"打卡成功"];
@@ -821,13 +822,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.attendenceManageModel.attendenceArray.count > 0) {
-        self.noMessageView.hidden = YES;
-        self.tableViewLine.hidden = NO;
-    } else {
-        self.noMessageView.hidden = NO;
-        self.tableViewLine.hidden = YES;
-    }
+    self.noMessageView.hidden = (self.attendenceManageModel.attendenceArray.count > 0 || self.attendenceManageModel.attendenceExceptionArray.count > 0);
+    self.tableViewLine.hidden = (self.attendenceManageModel.attendenceArray.count == 0);
     if (0 == section) {
         return self.attendenceManageModel.attendenceExceptionArray.count;
     } else {
@@ -907,7 +903,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         cell.timeLabel.textColor = kMainBlueColor;
         cell.exceptionBtn.hidden = YES;
         return cell;
-    } else if (model.status.length == 0) {
+    } else if (!model.brushTime || model.brushTime.length == 0) {
         // 只有时间点的打卡节点
         cell.accessaryIcon.hidden = YES;
         cell.contentImageView.hidden = YES;
@@ -1001,7 +997,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     }
     // 补签、改签。如果已经处理过，则跳到详情页面。
     MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[indexPath.row];
-    if (model.status.length == 0 || [model.status isEqualToString:@""] || model.isNeedFirstBrush) {
+    if (!model.brushTime || model.brushTime.length == 0) {
     } else {
         
         NSString *url = [NSString stringWithFormat:@"%@%@?detailId=%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_ISEXISTDETAIL,model.schedulingEmployeeId];
@@ -1047,6 +1043,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
             }
         } failure:^(NSString *error) {
             DLog(@"获取节点补签改签失败");
+            [MPMProgressHUD showErrorWithStatus:error];
         }];
     }
 }

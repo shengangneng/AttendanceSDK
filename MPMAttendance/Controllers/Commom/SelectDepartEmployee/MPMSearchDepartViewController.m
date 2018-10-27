@@ -384,6 +384,7 @@
         [self.tableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 

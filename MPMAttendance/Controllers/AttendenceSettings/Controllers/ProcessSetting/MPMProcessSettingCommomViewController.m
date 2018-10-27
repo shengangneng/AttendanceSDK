@@ -99,6 +99,7 @@
         [self.tableView reloadData];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -149,6 +150,7 @@
 - (void)edit:(UIButton *)sender {
     sender.selected = !sender.selected;
     self.tableView.editing = sender.isSelected;
+    [self.tableView reloadData];
     NSString *title = sender.isSelected ? @"完成" : @"排序";
     [sender setTitle:title forState:UIControlStateNormal];
     [sender setTitle:title forState:UIControlStateSelected];
@@ -195,7 +197,7 @@
     }
     [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在保存" success:^(id response) {
         DLog(@"%@",response);
-        if (response && kRequestSuccess == ((NSString *)response[@"responseData"][kCode]).integerValue) {
+        if (response && kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
             __weak typeof(self) weakself = self;
             [self showAlertControllerToLogoutWithMessage:@"保存成功" sureAction:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
@@ -203,28 +205,56 @@
                 [strongself getData];
             } needCancleButton:NO];
         } else {
-            [self showAlertControllerToLogoutWithMessage:@"保存失败" sureAction:nil needCancleButton:NO];
+            NSString *message = (NSString *)response[kResponseDataKey][@"message"];
+            [self showAlertControllerToLogoutWithMessage:kSafeString(message) sureAction:nil needCancleButton:NO];
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
-        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"保存失败：%@",error] sureAction:nil needCancleButton:NO];
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
 /** 自己先排好序的taskArray，再调用排序接口进行重新排序 */
-- (void)orderTask {
+- (void)orderTaskWithIndexPath:(NSArray *)indexPaths {
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_SETTING_ORDERTASK];
     NSMutableArray *params = [NSMutableArray array];
     for (int i = 0; i < self.tasksArray.count; i++) {
         MPMProcessTaskModel *model = self.tasksArray[i];
         [params addObject:@{@"id":kSafeString(model.mpm_id),@"order":kSafeString(model.order)}];
     }
-    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在修改" success:^(id response) {
         DLog(@"%@",response);
         // 自己已经排好序并修改好数据，不需要再重新请求
-//        [self getData];
+        NSString *url = [NSString stringWithFormat:@"%@%@?processDefCode=%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_SETTING_TASKDEFSWA,self.model.code];
+        [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+            DLog(@"%@",response);
+            if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+                NSArray *object = response[kResponseObjectKey];
+                [self.tasksArray removeAllObjects];
+                for (int i = 0; i < object.count; i++) {
+                    NSDictionary *dic = object[i];
+                    MPMProcessTaskModel *model = [[MPMProcessTaskModel alloc] initWithDictionary:dic];
+                    if (dic[@"config"] && [dic[@"config"] isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *config = dic[@"config"];
+                        model.config = [[MPMProcessTaskConfig alloc] initWithDictionary:config];
+                    } else {
+                        model.config = nil;
+                    }
+                    [self.tasksArray addObject:model];
+                    if (self.tasksArray.count <= 1) {
+                        self.model.canDelete = NO;
+                    } else {
+                        self.model.canDelete = YES;
+                    }
+                }
+            }
+            [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+        } failure:^(NSString *error) {
+            DLog(@"%@",error);
+        }];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -245,7 +275,7 @@
             [self showAlertControllerToLogoutWithMessage:@"删除失败" sureAction:nil needCancleButton:NO];
         }
     } failure:^(NSString *error) {
-        [self showAlertControllerToLogoutWithMessage:@"删除失败" sureAction:nil needCancleButton:NO];
+        [MPMProgressHUD showErrorWithStatus:@"删除失败"];
     }];
 }
 
@@ -286,7 +316,7 @@
             [strongself.navigationController popViewControllerAnimated:YES];
         } needCancleButton:NO];
     } failure:^(NSString *error) {
-        [self showAlertControllerToLogoutWithMessage:@"保存失败" sureAction:nil needCancleButton:NO];
+        [MPMProgressHUD showErrorWithStatus:@"保存失败"];
     }];
 }
 
@@ -346,7 +376,7 @@
             }
         }
     }
-    [self orderTask];
+    [self orderTaskWithIndexPath:@[sourceIndexPath,destinationIndexPath]];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -367,6 +397,7 @@
     cell.flagNameLabel.text = [NSString stringWithFormat:@"节点%ld",indexPath.row + 1];
     cell.flagDetailLabel.text = model.name;
     cell.canDelete = self.model.canDelete;
+    cell.updateButton.hidden = cell.deleteButton.hidden = tableView.isEditing;
     NSString *name;
     if (model.config && [model.config.participants isKindOfClass:[NSArray class]] && model.config.participants.count > 0) {
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:model.config.participants.count];
@@ -387,17 +418,17 @@
         }];
     };
     /*
-    cell.moveBlock = ^{
-        // 往上移动
-        __strong typeof(weakself) strongself = weakself;
-        if (indexPath.row == 0) {
-            return;
-        }
-        NSString *tempOrder = strongself.tasksArray[indexPath.row - 1].order;
-        strongself.tasksArray[indexPath.row - 1].order = strongself.tasksArray[indexPath.row].order;
-        strongself.tasksArray[indexPath.row].order = tempOrder;
-        [strongself orderTask];
-    };
+     cell.moveBlock = ^{
+     // 往上移动
+     __strong typeof(weakself) strongself = weakself;
+     if (indexPath.row == 0) {
+     return;
+     }
+     NSString *tempOrder = strongself.tasksArray[indexPath.row - 1].order;
+     strongself.tasksArray[indexPath.row - 1].order = strongself.tasksArray[indexPath.row].order;
+     strongself.tasksArray[indexPath.row].order = tempOrder;
+     [strongself orderTask];
+     };
      */
     cell.deleteBlock = ^{
         // 删除

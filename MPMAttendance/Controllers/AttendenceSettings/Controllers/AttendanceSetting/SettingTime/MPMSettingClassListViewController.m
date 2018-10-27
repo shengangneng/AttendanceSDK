@@ -97,7 +97,7 @@
         }
         [self.tableView reloadData];
     } failure:^(NSString *error) {
-        
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -152,8 +152,7 @@
 + (NSString *)getTimeStringWithModel:(MPMSettingClassListModel *)model {
     NSString *timeString;
     NSArray *signTimeSections = model.schedule.signTimeSections;
-    // TODO 间休还需要考虑进去
-    NSDictionary *freeTimeSection = model.schedule.freeTimeSection;
+    NSDictionary *freeTimeSection = [model.schedule.freeTimeSection isKindOfClass:[NSDictionary class]] ? model.schedule.freeTimeSection : nil;
     NSString *hour = model.schedule.hour;
     if (!signTimeSections || signTimeSections.count == 0) {
         timeString = @"";
@@ -161,7 +160,13 @@
         // 这里可能还要考虑‘间休’
         NSString *signTime = signTimeSections.firstObject[@"signTime"];
         NSString *returnTime = signTimeSections.firstObject[@"returnTime"];
-        timeString = [NSString stringWithFormat:@"A%@-%@ %@小时",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],hour];
+        if (freeTimeSection && ![freeTimeSection[@"start"] isKindOfClass:[NSNull class]] && ![freeTimeSection[@"end"] isKindOfClass:[NSNull class]]) {
+            NSString *start = kNumberSafeString(freeTimeSection[@"start"]);
+            NSString *end = kNumberSafeString(freeTimeSection[@"end"]);
+            timeString = [NSString stringWithFormat:@"A%@-%@间休%@-%@ %@小时",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:start.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:end.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],hour];
+        } else {
+            timeString = [NSString stringWithFormat:@"A%@-%@ %@小时",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],hour];
+        }
     } else if (signTimeSections.count == 2) {
         NSString *signTime0 = signTimeSections.firstObject[@"signTime"];
         NSString *returnTime0 = signTimeSections.firstObject[@"returnTime"];
@@ -292,7 +297,7 @@
             [[MPMSessionManager shareManager] deleteRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在删除" success:^(id response) {
                 [strongself getData];
             } failure:^(NSString *error) {
-                
+                [MPMProgressHUD showErrorWithStatus:error];
             }];
         } needCancleButton:YES];
     }

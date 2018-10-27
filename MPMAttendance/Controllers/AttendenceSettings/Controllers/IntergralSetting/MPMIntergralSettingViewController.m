@@ -112,6 +112,7 @@
         } failure:^(NSString *error) {
             DLog(@"%@",error);
             dispatch_group_leave(group);
+            [MPMProgressHUD showErrorWithStatus:error];
         }];
     });
     
@@ -196,6 +197,7 @@
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 

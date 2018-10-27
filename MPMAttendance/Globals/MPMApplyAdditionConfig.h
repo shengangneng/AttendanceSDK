@@ -18,7 +18,7 @@
 #define kClassName @{@"早班":@"1",@"中班":@"2",@"晚班":@"3"}
 #define kShiftNameRever @{@"0":@"上班",@"1":@"下班"}
 #define kClassNameRever @{@"1":@"早班",@"2":@"中班",@"3":@"晚班"}
-#define kStatisticCellImage @{@"正常上班":@"statistics_signin",@"正常下班":@"statistics_signout",@"缺勤":@"statistics_absenteeism",@"补签":@"statistics_retroactive",@"早到":@"statistics_earlyarrival",@"早退":@"statistics_early",@"漏卡":@"statistics_leakcard",@"迟到":@"statistics_belate",@"加班":@"statistics_overtime",@"出差":@"statistics_evection",@"外出":@"statistics_goout",@"改签":@"statistics_endorse",@"请假":@"statistics_askforleave"}
+#define kStatisticCellImage @{@"正常上班":@"statistics_signin",@"正常下班":@"statistics_signout",@"缺勤":@"statistics_absenteeism",@"补签":@"statistics_retroactive",@"早到":@"statistics_earlyarrival",@"早退":@"statistics_early",@"漏卡未补":@"statistics_leakcard",@"迟到":@"statistics_belate",@"加班":@"statistics_overtime",@"出差":@"statistics_evection",@"外出":@"statistics_goout",@"改签":@"statistics_endorse",@"请假":@"statistics_askforleave"}
 
 
 /** 请假类型 */
