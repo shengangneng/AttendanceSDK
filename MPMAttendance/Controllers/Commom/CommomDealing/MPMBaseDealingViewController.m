@@ -1243,21 +1243,28 @@
         
         if ([actionTitle isEqualToString:kAction_PickerTypeDealingType]) {
             // 请假类型
-            NSInteger index = indexPath.section;
-            MPMCausationDetailModel *detail = self.dealingModel.causationDetail[index];
-            NSInteger defaultRow = 0;
-            if (!kIsNilString(detail.causationType)) {
-                defaultRow = [self.leaveAllTypesArray indexOfObject:kLeaveType_GetTypeNameFromNum[detail.causationType]];
+            if (0 == self.leaveAllTypesArray.count) {
+                __weak typeof(self) weakself = self;
+                [self showAlertControllerToLogoutWithMessage:@"无请假类型可选，请重试" sureAction:^(UIAlertAction * _Nonnull action) {
+                    __strong typeof(weakself) strongself = weakself;
+                    [strongself getLeaveType];
+                } needCancleButton:NO];
+            } else {
+                NSInteger index = indexPath.section;
+                MPMCausationDetailModel *detail = self.dealingModel.causationDetail[index];
+                NSInteger defaultRow = 0;
+                if (!kIsNilString(detail.causationType)) {
+                    defaultRow = [self.leaveAllTypesArray indexOfObject:kLeaveType_GetTypeNameFromNum[detail.causationType]];
+                }
+                [self.pickerView showInView:kAppDelegate.window withPickerData:self.leaveAllTypesArray selectRow:defaultRow];
+                __weak typeof(self) weakself = self;
+                self.pickerView.completeSelectBlock = ^(id data) {
+                    __strong typeof(weakself) strongself = weakself;
+                    NSString *causationNum = (NSString *)kLeaveType_GetTypeNumFromName[data];
+                    strongself.dealingModel.causationDetail[indexPath.section].causationType = causationNum;
+                    [strongself.tableView reloadData];
+                };
             }
-            [self.pickerView showInView:kAppDelegate.window withPickerData:self.leaveAllTypesArray selectRow:defaultRow];
-            __weak typeof(self) weakself = self;
-            self.pickerView.completeSelectBlock = ^(id data) {
-                __strong typeof(weakself) strongself = weakself;
-                NSString *causationNum = (NSString *)kLeaveType_GetTypeNumFromName[data];
-                strongself.dealingModel.causationDetail[indexPath.section].causationType = causationNum;
-                [strongself.tableView reloadData];
-            };
-            
         } else if ([actionTitle isEqualToString:kAction_PickerTypeTimeOfOne]) {
             // 时分秒picker
             NSInteger index = indexPath.section;
@@ -1330,7 +1337,7 @@
                         wstrongself.dealingModel.causationDetail[index].calculatingTime = NO;
                         wstrongself.dealingModel.causationDetail[index].dayAccount = day;
                         wstrongself.dealingModel.causationDetail[index].hourAccount = hour;
-                        [wstrongself.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                        [wstrongself.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
                     }];
                 }
             };

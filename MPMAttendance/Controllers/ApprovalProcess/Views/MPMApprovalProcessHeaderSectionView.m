@@ -397,6 +397,7 @@
         _myMatterUnreadRedView = [[UIView alloc] init];
         _myMatterUnreadRedView.backgroundColor = kRedColor;
         _myMatterUnreadRedView.layer.cornerRadius = 3;
+        _myMatterUnreadRedView.hidden = YES;
     }
     return _myMatterUnreadRedView;
 }

@@ -53,6 +53,8 @@
         [MPMOauthUser shareOauthUser].lastRootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
         [MPMOauthUser shareOauthUser].lastStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
         [MPMOauthUser shareOauthUser].lastCanPopViewController = self;
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+        /*
         if (kIsNilString(token) || kIsNilString(refreshToken) || kIsNilString(expiresIn)) {
             // 传入的参数如果为空，则直接跳回
             if (self.navigationController.navigationBar.hidden == YES) {
@@ -61,7 +63,7 @@
             [self.navigationController popViewControllerAnimated:YES];
             [[MPMOauthUser shareOauthUser] clearData];
         } else {
-            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+         */
             [MPMOauthUser shareOauthUser].access_token = token;
             [MPMOauthUser shareOauthUser].token_type = @"Bearer";
             [MPMOauthUser shareOauthUser].refresh_token = refreshToken;
@@ -69,10 +71,7 @@
             [MPMOauthUser shareOauthUser].company_code = companyCode;
             [MPMOauthUser shareOauthUser].expiresIn = expiresIn;
             [MPMOauthUser shareOauthUser].expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 + expiresIn.doubleValue - 60];
-            [self defaultSetting];
-            [self getPerrimitionV2];
-            [self getCurrentUserMessage];
-        }
+//        }
     }
     return self;
 }
@@ -100,6 +99,17 @@
     self.navigationItem.title = @"考勤登录";
     if (self.navigationController) {
         self.navigationController.navigationBar.hidden = YES;
+    }
+    if (kIsNilString([MPMOauthUser shareOauthUser].access_token) || kIsNilString([MPMOauthUser shareOauthUser].user_id) || kIsNilString([MPMOauthUser shareOauthUser].company_code)) {
+        if (self.navigationController.navigationBar.hidden == YES) {
+            self.navigationController.navigationBar.hidden = NO;
+        }
+        [self.navigationController popViewControllerAnimated:YES];
+        [[MPMOauthUser shareOauthUser] clearData];
+    } else {
+        [self defaultSetting];
+        [self getPerrimitionV2];
+        [self getCurrentUserMessage];
     }
 }
 

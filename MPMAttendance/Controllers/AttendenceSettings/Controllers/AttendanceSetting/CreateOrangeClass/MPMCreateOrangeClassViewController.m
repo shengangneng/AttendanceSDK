@@ -20,6 +20,8 @@
 #import "MPMDepartEmployeeHelper.h"/** 使用一个单例来传递部门和员工 */
 #import "MPMBaseTableViewCell.h"
 
+#define kClassNameLimitLength 10
+
 @interface MPMCreateOrangeClassViewController () <UITableViewDelegate, UITableViewDataSource, MPMSelectDepartmentViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -119,6 +121,9 @@
 - (void)nextOrSave:(UIButton *)sender {
     if (kIsNilString(self.model.name)) {
         [self showAlertControllerToLogoutWithMessage:@"请输入排班名称" sureAction:nil needCancleButton:NO];
+        return;
+    } else if (self.model.name.length > kClassNameLimitLength) {
+        [self showAlertControllerToLogoutWithMessage:@"排班名称最多不能超过10个字，请重新输入" sureAction:nil needCancleButton:NO];
         return;
     } else if (self.model.objList.count == 0) {
         [self showAlertControllerToLogoutWithMessage:@"请选择参与人员" sureAction:nil needCancleButton:NO];

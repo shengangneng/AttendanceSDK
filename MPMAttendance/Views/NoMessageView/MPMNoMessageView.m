@@ -36,6 +36,7 @@
             [self addSubview:self.nomessageLabel];
             [self.nomessageLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
                 make.width.equalTo(self.mpm_width);
+                make.centerX.equalTo(self.mpm_centerX);
                 make.top.equalTo(self.nomessageImageView.mpm_bottom).offset(8);
             }];
         }

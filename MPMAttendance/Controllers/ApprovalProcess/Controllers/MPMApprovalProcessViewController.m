@@ -520,7 +520,7 @@
 
 - (MPMNoMessageView *)noMessageView {
     if (!_noMessageView) {
-        _noMessageView = [[MPMNoMessageView alloc] initWithNoMessageViewImage:@"global_noMessage" noMessageLabelText:nil];
+        _noMessageView = [[MPMNoMessageView alloc] initWithNoMessageViewImage:@"global_noMessage" noMessageLabelText:@"暂无数据"];
         _noMessageView.hidden = YES;
     }
     return _noMessageView;

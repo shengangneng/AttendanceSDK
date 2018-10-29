@@ -389,8 +389,14 @@
 
 - (void)sure:(UIButton *)sender {
     // 拿到需要的数据，跳回最初的页面
-    if ([MPMDepartEmployeeHelper shareInstance].departments.count == 0 && [MPMDepartEmployeeHelper shareInstance].employees.count == 0) {
-        [self showAlertControllerToLogoutWithMessage:@"请选择部门或员工" sureAction:nil needCancleButton:NO];
+    if (kSelectionTypeBoth == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0 && [MPMDepartEmployeeHelper shareInstance].employees.count == 0) {
+        [self showAlertControllerToLogoutWithMessage:@"请选择部门或人员" sureAction:nil needCancleButton:NO];
+        return;
+    } else if (kSelectionTypeOnlyDepartment == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0) {
+        [self showAlertControllerToLogoutWithMessage:@"请选择部门" sureAction:nil needCancleButton:NO];
+        return;
+    } else if (kSelectionTypeOnlyEmployee == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0) {
+        [self showAlertControllerToLogoutWithMessage:@"请选择人员" sureAction:nil needCancleButton:NO];
         return;
     }
     if ([MPMDepartEmployeeHelper shareInstance].employees.count > 0 && [MPMDepartEmployeeHelper shareInstance].limitEmployeeCount > 0 && [MPMDepartEmployeeHelper shareInstance].employees.count > [MPMDepartEmployeeHelper shareInstance].limitEmployeeCount) {

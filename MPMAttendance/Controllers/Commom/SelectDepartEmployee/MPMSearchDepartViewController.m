@@ -65,14 +65,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    self.navigationController.delegate = self;
+    //    self.navigationController.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-//    if (self.navigationController.delegate == self) {
-//        self.navigationController.delegate = nil;
-//    }
+    //    if (self.navigationController.delegate == self) {
+    //        self.navigationController.delegate = nil;
+    //    }
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
@@ -197,7 +197,6 @@
             self.searchArray[indexPath.row].selectedStatus = kSelectedStatusAllSelected;
         }
     }
-    [[MPMDepartEmployeeHelper shareInstance] clearData];
     self.bottomTotalSelectedLabel.text = [NSString stringWithFormat:@"已选（%ld)",[MPMDepartEmployeeHelper shareInstance].employees.count+[MPMDepartEmployeeHelper shareInstance].departments.count];
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
@@ -274,8 +273,14 @@
 
 - (void)sure:(UIButton *)sender {
     // 拿到需要的数据，跳回最初的页面
-    if ([MPMDepartEmployeeHelper shareInstance].departments.count == 0 && [MPMDepartEmployeeHelper shareInstance].employees.count == 0) {
-        [self showAlertControllerToLogoutWithMessage:@"请选择部门或员工" sureAction:nil needCancleButton:NO];
+    if (kSelectionTypeBoth == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0 && [MPMDepartEmployeeHelper shareInstance].employees.count == 0) {
+        [self showAlertControllerToLogoutWithMessage:@"请选择部门或人员" sureAction:nil needCancleButton:NO];
+        return;
+    } else if (kSelectionTypeOnlyDepartment == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0) {
+        [self showAlertControllerToLogoutWithMessage:@"请选择部门" sureAction:nil needCancleButton:NO];
+        return;
+    } else if (kSelectionTypeOnlyEmployee == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0) {
+        [self showAlertControllerToLogoutWithMessage:@"请选择人员" sureAction:nil needCancleButton:NO];
         return;
     }
     if ([MPMDepartEmployeeHelper shareInstance].employees.count > 0 && [MPMDepartEmployeeHelper shareInstance].limitEmployeeCount > 0 && [MPMDepartEmployeeHelper shareInstance].employees.count > [MPMDepartEmployeeHelper shareInstance].limitEmployeeCount) {
@@ -290,6 +295,7 @@
     if (self.sureSelectBlock) {
         self.sureSelectBlock([MPMDepartEmployeeHelper shareInstance].departments, [MPMDepartEmployeeHelper shareInstance].employees);
     }
+    [[MPMDepartEmployeeHelper shareInstance] clearData];
     // 跳回第一个进入选择部门的页面。
     UIViewController *vc = self.navigationController.viewControllers[self.navigationController.viewControllers.count-self.headerButtonTitlesArray.count-2];
     [self.navigationController popToViewController:vc animated:YES];

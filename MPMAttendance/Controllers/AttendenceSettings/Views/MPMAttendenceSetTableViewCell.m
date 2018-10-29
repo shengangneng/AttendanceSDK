@@ -206,6 +206,7 @@
     [self.headerTitleLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.height.equalTo(@20.5);
         make.leading.equalTo(self.headerIconView.mpm_trailing).offset(10);
+        make.trailing.equalTo(self.headerEditButton.mpm_leading).offset(-10);
         make.centerY.equalTo(self.headerImageView.mpm_centerY);
     }];
     [self.headerDeleteButton mpm_makeConstraints:^(MPMConstraintMaker *make) {

@@ -290,16 +290,20 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (UITableViewCellEditingStyleDelete == editingStyle) {
         MPMSettingClassListModel *model = self.classListArray[indexPath.row];
-        __weak typeof(self) weakself = self;
-        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"确认删除‘%@’吗",model.schedule.name] sureAction:^(UIAlertAction * _Nonnull action) {
-            __strong typeof(weakself) strongself = weakself;
-            NSString *url = [NSString stringWithFormat:@"%@%@/%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_TIME_DELETE,model.mpm_id];
-            [[MPMSessionManager shareManager] deleteRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在删除" success:^(id response) {
-                [strongself getData];
-            } failure:^(NSString *error) {
-                [MPMProgressHUD showErrorWithStatus:error];
-            }];
-        } needCancleButton:YES];
+        if (1 == model.isUsed.integerValue) {
+            [self showAlertControllerToLogoutWithMessage:@"当前班次已被使用，无法删除" sureAction:nil needCancleButton:NO];
+        } else {
+            __weak typeof(self) weakself = self;
+            [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"确认删除‘%@’吗",model.schedule.name] sureAction:^(UIAlertAction * _Nonnull action) {
+                __strong typeof(weakself) strongself = weakself;
+                NSString *url = [NSString stringWithFormat:@"%@%@/%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_TIME_DELETE,model.mpm_id];
+                [[MPMSessionManager shareManager] deleteRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在删除" success:^(id response) {
+                    [strongself getData];
+                } failure:^(NSString *error) {
+                    [MPMProgressHUD showErrorWithStatus:error];
+                }];
+            } needCancleButton:YES];
+        }
     }
 }
 

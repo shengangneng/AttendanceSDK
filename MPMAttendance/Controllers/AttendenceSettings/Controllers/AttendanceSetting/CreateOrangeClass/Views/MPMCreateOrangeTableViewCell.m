@@ -23,7 +23,7 @@
         [self.classNameLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.top.bottom.equalTo(self);
             make.trailing.equalTo(self.mpm_trailing).offset(-15);
-            make.leading.equalTo(self.textLabel.mpm_leading).offset(5);
+            make.leading.equalTo(self.textLabel.mpm_trailing).offset(5);
         }];
     }
     return self;

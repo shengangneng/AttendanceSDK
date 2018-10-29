@@ -424,7 +424,7 @@
             make.leading.trailing.equalTo(self.scrollView);
             make.top.equalTo(lastView.mpm_bottom);
             make.height.equalTo(@76);
-            make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-22);
+            make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-30);
         }];
         lastView = self.bottomDeliversView;
     } else {
@@ -556,7 +556,7 @@
             make.leading.trailing.equalTo(self.scrollView);
             make.top.equalTo(lastView.mpm_bottom);
             make.height.equalTo(@76);
-            make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-22);
+            make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-30);
         }];
         lastView = self.bottomDeliversView;
     }

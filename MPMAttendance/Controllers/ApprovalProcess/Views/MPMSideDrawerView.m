@@ -201,18 +201,20 @@
     if (((NSArray *)self.collectionViewSelectedDictionay[kSelectTimesKey]).count > 0) {
         self.startDate = self.endDate = nil;
     }
-    // 1、取消section1中选中的按钮
     self.collectionViewSelectedDictionay[kSelectTimesKey] = @[];
-    // 2、更新按钮title
-    NSDateFormatter *formater = [[NSDateFormatter alloc] init];
-    [self.currentTimeButton setTitle:[formater formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar] forState:UIControlStateNormal];
-    // 3、记录选中的数据
     if (self.currentTimeButton.tag == StartButtonTag) {
+        if (self.endDate && ([NSDateFormatter isDate1:self.endDate equalToDate2:date] || self.endDate.timeIntervalSince1970 < date.timeIntervalSince1970)) {
+            [MPMProgressHUD showErrorWithStatus:@"开始时间必须小于结束时间"];return;
+        }
         self.startDate = date;
     } else {
+        if (self.startDate && ([NSDateFormatter isDate1:self.startDate equalToDate2:date] || date.timeIntervalSince1970 < self.startDate.timeIntervalSince1970)) {
+            [MPMProgressHUD showErrorWithStatus:@"开始时间必须小于结束时间"];return;
+        }
         self.endDate = date;
     }
-    // 4、刷新collectionView的section1界面
+    NSDateFormatter *formater = [[NSDateFormatter alloc] init];
+    [self.currentTimeButton setTitle:[formater formatterDate:date withDefineFormatterType:forDateFormatTypeYearMonthDayBar] forState:UIControlStateNormal];
     [self.contentViewCollectionView reloadData];
 }
 
