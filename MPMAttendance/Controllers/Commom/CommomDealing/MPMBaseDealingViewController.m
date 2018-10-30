@@ -820,7 +820,11 @@
         // 改签、补签、例外申请
         MPMBaseDealingHeader *header = [[MPMBaseDealingHeader alloc] init];
         if (section == 0 && (kCausationTypeChangeSign == self.dealingModel.causationType || kCausationTypeRepairSign == self.dealingModel.causationType || self.dealingFromType == kDealingFromTypeChangeRepair)) {
-            title = [NSString stringWithFormat:@"%@：%@ %@",kAttendenceStatus[self.dealingModel.status],([NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[0].attendanceTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds]),@[@"上班",@"下班"][self.dealingModel.causationDetail.firstObject.type.integerValue]];
+            if (kIsNilString(((NSString *)kAttendenceStatus[self.dealingModel.status]))) {
+                title = [NSString stringWithFormat:@"%@ %@",([NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[0].attendanceTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds]),@[@"上班",@"下班"][self.dealingModel.causationDetail.firstObject.type.integerValue]];
+            } else {
+                title = [NSString stringWithFormat:@"%@：%@ %@",kSafeString(((NSString *)kAttendenceStatus[self.dealingModel.status])),([NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[0].attendanceTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds]),@[@"上班",@"下班"][self.dealingModel.causationDetail.firstObject.type.integerValue]];
+            }
             header.deleteButton.hidden = YES;
         }
         header.deleteButton.hidden = kIsNilString(detailTitle);
