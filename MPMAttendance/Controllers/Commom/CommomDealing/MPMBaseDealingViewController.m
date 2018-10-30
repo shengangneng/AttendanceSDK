@@ -264,6 +264,9 @@
             } else if (object[@"kqBizReviseSignList"] && [object[@"kqBizReviseSignList"] isKindOfClass:[NSArray class]]) {
                 // 改签
                 detailArray = object[@"kqBizReviseSignList"];
+            } else if (kCausationTypeChangeSign == self.dealingModel.causationType) {
+                // 改签
+                self.navigationItem.title = @"改签";
             }
             self.dealingModel.addCount = detailArray.count;
             for (int i = 0; i < detailArray.count; i++) {
