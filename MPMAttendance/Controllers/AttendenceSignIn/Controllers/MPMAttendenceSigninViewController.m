@@ -921,6 +921,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     } else {
         // 常用形态
         cell.waitBrushLabel.hidden = YES;
+        cell.classTypeLabel.hidden = NO;
         cell.accessaryIcon.hidden = NO;
         cell.contentImageView.hidden = NO;
         cell.textLabel.text = @"";
