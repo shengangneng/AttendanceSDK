@@ -64,13 +64,14 @@
             [[MPMOauthUser shareOauthUser] clearData];
         } else {
          */
-            [MPMOauthUser shareOauthUser].access_token = token;
-            [MPMOauthUser shareOauthUser].token_type = @"Bearer";
-            [MPMOauthUser shareOauthUser].refresh_token = refreshToken;
-            [MPMOauthUser shareOauthUser].user_id = userId;
-            [MPMOauthUser shareOauthUser].company_code = companyCode;
-            [MPMOauthUser shareOauthUser].expiresIn = expiresIn;
-            [MPMOauthUser shareOauthUser].expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 + expiresIn.doubleValue - 60];
+        [MPMOauthUser shareOauthUser].access_token = token;
+        [MPMOauthUser shareOauthUser].token_type = @"Bearer";
+        [MPMOauthUser shareOauthUser].refresh_token = refreshToken;
+        [MPMOauthUser shareOauthUser].user_id = userId;
+        [MPMOauthUser shareOauthUser].company_code = companyCode;
+        [MPMOauthUser shareOauthUser].expiresIn = expiresIn;
+        // 每次进考勤都刷新一次
+        [MPMOauthUser shareOauthUser].expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970];
 //        }
     }
     return self;
@@ -109,7 +110,6 @@
     } else {
         [self defaultSetting];
         [self getPerrimitionV2];
-        [self getCurrentUserMessage];
     }
 }
 
@@ -326,7 +326,6 @@
         user.password = self.middlePassTextField.text;
         user.company_code = self.middleCompTextField.text;
         [self getPerrimitionV2];
-        [self getCurrentUserMessage];
     } failure:^(NSString *error) {
         DLog(@"%@",error);
     }];
@@ -372,7 +371,9 @@
 - (void)getPerrimitionV2 {
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_MYRES];
     [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        NSLog(@"%@",response);
         if (response[kResponseDataKey] && [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] && kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
+            [self getCurrentUserMessage];
             [MPMOauthUser shareOauthUser].perimissionArray = response[kResponseObjectKey];
             [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
             kAppDelegate.window.rootViewController = [[MPMMainTabBarViewController alloc] init];
@@ -388,6 +389,7 @@
 - (void)getCurrentUserMessage {
     NSString *url = [NSString stringWithFormat:@"%@%@?userId=%@&companyCode=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_CURRENTUSER,[MPMOauthUser shareOauthUser].user_id,[MPMOauthUser shareOauthUser].company_code];
     [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        NSLog(@"%@",response);
         if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *object = response[kResponseObjectKey];
             [MPMOauthUser shareOauthUser].employee_id = object[@"employeeId"];

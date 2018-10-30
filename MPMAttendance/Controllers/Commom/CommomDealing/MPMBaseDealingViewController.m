@@ -103,6 +103,9 @@
     } else if (kCausationTypeRepairSign == self.dealingModel.causationType) {
         // 补签
         self.navigationItem.title = @"补签";
+    } else if (kCausationTypeChangeSign == self.dealingModel.causationType) {
+        // 改签
+        self.navigationItem.title = @"改签";
     }
     if (kDealingFromTypeApply == self.dealingFromType) {
         [self getApplyerData];
@@ -264,9 +267,6 @@
             } else if (object[@"kqBizReviseSignList"] && [object[@"kqBizReviseSignList"] isKindOfClass:[NSArray class]]) {
                 // 改签
                 detailArray = object[@"kqBizReviseSignList"];
-            } else if (kCausationTypeChangeSign == self.dealingModel.causationType) {
-                // 改签
-                self.navigationItem.title = @"改签";
             }
             self.dealingModel.addCount = detailArray.count;
             for (int i = 0; i < detailArray.count; i++) {
