@@ -395,7 +395,7 @@
     } else if (kSelectionTypeOnlyDepartment == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0) {
         [self showAlertControllerToLogoutWithMessage:@"请选择部门" sureAction:nil needCancleButton:NO];
         return;
-    } else if (kSelectionTypeOnlyEmployee == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0) {
+    } else if (kSelectionTypeOnlyEmployee == self.selectionType && [MPMDepartEmployeeHelper shareInstance].employees.count == 0) {
         [self showAlertControllerToLogoutWithMessage:@"请选择人员" sureAction:nil needCancleButton:NO];
         return;
     }
@@ -508,8 +508,8 @@
     MPMDepartment *depart = [[MPMDepartment alloc] init];
     depart.mpm_id = people.mpm_id;
     depart.name = people.name;
-    depart.isHuman = people.isHuman;
-    if (people.isHuman) {
+    depart.isHuman = [people.isHuman isEqualToString:@"1"];
+    if ([people.isHuman isEqualToString:@"1"]) {
         [[MPMDepartEmployeeHelper shareInstance] employeeArrayRemoveDepartModel:depart];
     } else {
         [[MPMDepartEmployeeHelper shareInstance] departmentArrayRemoveSub:depart];

@@ -279,7 +279,7 @@
     } else if (kSelectionTypeOnlyDepartment == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0) {
         [self showAlertControllerToLogoutWithMessage:@"请选择部门" sureAction:nil needCancleButton:NO];
         return;
-    } else if (kSelectionTypeOnlyEmployee == self.selectionType && [MPMDepartEmployeeHelper shareInstance].departments.count == 0) {
+    } else if (kSelectionTypeOnlyEmployee == self.selectionType && [MPMDepartEmployeeHelper shareInstance].employees.count == 0) {
         [self showAlertControllerToLogoutWithMessage:@"请选择人员" sureAction:nil needCancleButton:NO];
         return;
     }
