@@ -150,27 +150,22 @@
         [self showAlertControllerToLogoutWithMessage:@"请选择允许偏差" sureAction:nil needCancleButton:NO];
         return;
     }
-    if (kDulingTypeCreate == self.dulingType) {
-        // 首次创建，默认是立即生效的
-        [self saveClassWithEffective:@"1" transfer:nil];
-    } else {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"立即生效，今天考勤结果将按新规则重算" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        __weak typeof (UIAlertController *) weakAlert = alertController;
-        __weak typeof(self) weakself = self;
-        UIAlertAction *sure = [UIAlertAction actionWithTitle:@"立即生效" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            __strong typeof(weakself) strongself = weakself;
-            [strongself saveClassWithEffective:@"1" transfer:nil];
-            [weakAlert dismissViewControllerAnimated:YES completion:nil];
-        }];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"明天生效" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            __strong typeof(weakself) strongself = weakself;
-            [strongself saveClassWithEffective:@"0" transfer:nil];
-            [weakAlert dismissViewControllerAnimated:YES completion:nil];
-        }];
-        [weakAlert addAction:cancelAction];
-        [weakAlert addAction:sure];
-        [self presentViewController:weakAlert animated:YES completion:nil];
-    }
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"立即生效，今天考勤结果将按新规则重算" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof (UIAlertController *) weakAlert = alertController;
+    __weak typeof(self) weakself = self;
+    UIAlertAction *sure = [UIAlertAction actionWithTitle:@"立即生效" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        __strong typeof(weakself) strongself = weakself;
+        [strongself saveClassWithEffective:@"1" transfer:nil];
+        [weakAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"明天生效" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        __strong typeof(weakself) strongself = weakself;
+        [strongself saveClassWithEffective:@"0" transfer:nil];
+        [weakAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [weakAlert addAction:cancelAction];
+    [weakAlert addAction:sure];
+    [self presentViewController:weakAlert animated:YES completion:nil];
 }
 
 /** isEffective：是否立即生效，0否 1是 isTransfer:是否排班转移：0否 1是*/
@@ -214,10 +209,10 @@
         fixedTimeWorkSchedule[@"id"] = self.model.fixedTimeWorkSchedule[@"id"];
         fixedTimeWorkSchedule[@"offset"] = self.deviation;
         fixedTimeWorkSchedule[@"signTimeSections"] = self.model.fixedTimeWorkSchedule[@"signTimeSections"];
-        fixedTimeWorkSchedule[@"startSignTime"] = self.model.fixedTimeWorkSchedule[@"startSignTime"];
-        if (self.model.fixedTimeWorkSchedule[@"freeTimeSection"] && [self.model.fixedTimeWorkSchedule[@"freeTimeSection"] isKindOfClass:[NSDictionary class]]) {
+        if (self.model.fixedTimeWorkSchedule[@"freeTimeSection"] && [self.model.fixedTimeWorkSchedule[@"freeTimeSection"] isKindOfClass:[NSDictionary class]] && ![self.model.fixedTimeWorkSchedule[@"freeTimeSection"][@"start"] isKindOfClass:[NSNull class]] && ![self.model.fixedTimeWorkSchedule[@"freeTimeSection"][@"end"] isKindOfClass:[NSNull class]]) {
             fixedTimeWorkSchedule[@"freeTimeSection"] = self.model.fixedTimeWorkSchedule[@"freeTimeSection"];
         }
+        fixedTimeWorkSchedule[@"startSignTime"] = self.model.fixedTimeWorkSchedule[@"startSignTime"];
         params[@"fixedTimeWorkSchedule"] = fixedTimeWorkSchedule;
     } else {
         flexibleTimeWorkSchedule[@"daysOfWeek"] = self.model.flexibleTimeWorkSchedule[@"daysOfWeek"];
@@ -262,19 +257,19 @@
                 }
             } needCancleButton:NO];
         } else if (response && 304 == ((NSString *)response[@"responseData"][kCode]).integerValue) {
+            // 人员迁移
             NSString *message = response[@"responseData"][@"message"];
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:message message:nil preferredStyle:UIAlertControllerStyleAlert];
             __weak typeof(UIAlertController *) weakAlert = alertController;
             __weak typeof(self) weakself = self;
-            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"否" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
-                [strongself saveClassWithEffective:@"1" transfer:@"1"];
-                [weakAlert dismissViewControllerAnimated:YES completion:nil];
+                [strongself dismissViewControllerAnimated:YES completion:nil];
             }];
-            UIAlertAction *change = [UIAlertAction actionWithTitle:@"是" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction *change = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
                 [strongself saveClassWithEffective:@"1" transfer:@"1"];
-                [weakAlert dismissViewControllerAnimated:YES completion:nil];
+                [strongself dismissViewControllerAnimated:YES completion:nil];
             }];
             [weakAlert addAction:cancel];
             [weakAlert addAction:change];
