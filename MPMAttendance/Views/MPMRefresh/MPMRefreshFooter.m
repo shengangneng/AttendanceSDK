@@ -10,7 +10,7 @@
 #import "MPMButton.h"
 #import "MPMAttendanceHeader.h"
 
-#define kLabelWidth 150
+#define kLabelWidth 120
 
 @interface MPMRefreshFooter ()
 
@@ -29,7 +29,7 @@
         [self addSubview:self.refreshLabel];
         [self addSubview:self.indicatorView];
         self.refreshLabel.frame = CGRectMake((kScreenWidth - kLabelWidth)/2, 0, kLabelWidth, kRefreshFooterHeight);
-        self.indicatorView.frame = CGRectMake(CGRectGetMinX(self.refreshLabel.frame) - 38, 0, kRefreshFooterHeight, kRefreshFooterHeight);
+        self.indicatorView.frame = CGRectMake(CGRectGetMinX(self.refreshLabel.frame) - 10, 0, kRefreshFooterHeight, kRefreshFooterHeight);
         self.backgroundColor = kTableViewBGColor;
         self.superScrollView = scrollView;
         self.superContentInsets = self.superScrollView.contentInset;
@@ -39,7 +39,7 @@
 }
 
 - (void)beginRefreshFooter {
-    if (!self.isRefreshing) {
+    if (!self.isRefreshing && !self.hidden) {
         self.refreshing = YES;
         [self.indicatorView startAnimating];
         self.refreshLabel.text = @"正在刷新";
@@ -67,7 +67,7 @@
     if (!_refreshLabel) {
         _refreshLabel = [[UILabel alloc] init];
         _refreshLabel.text = @"上拉加载更多";
-        _refreshLabel.textColor = kBlackColor;
+        _refreshLabel.textColor = kMainLightGray;
         _refreshLabel.textAlignment = NSTextAlignmentCenter;
         _refreshLabel.font = SystemFont(17);
     }
