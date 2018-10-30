@@ -231,6 +231,7 @@
         } else {
             cell.classLabel1.text = [NSString stringWithFormat:@"班次:A %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.startReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
         }
+        cell.classLabel2.text = cell.classLabel3.text = nil;
     } else if (fixed.count == 2) {
         MPMSignTimeSections *slt0 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[0]];
         MPMSignTimeSections *slt1 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[1]];
