@@ -56,42 +56,80 @@ typedef void(^CompleteBlock)(MPMProcessTaskModel *);
 
 #pragma mark - Private Method
 /** 根据是否有审批人来修改视图的约束 */
-- (void)updateViewConstaintsWithHasPeople:(BOOL)hasPeople {
+- (void)updateViewConstaintsWithHasPeople:(BOOL)hasPeople canChangeDecition:(BOOL)canChangeDecition {
     if (hasPeople) {
         [UIView animateWithDuration:0.2 animations:^{
-            [self.taskContentView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-                make.leading.equalTo(self.mpm_leading).offset(20);
-                make.trailing.equalTo(self.mpm_trailing).offset(-20);
-                make.height.equalTo(@375.5);
-                make.centerY.equalTo(self.mpm_centerY);
-            }];
-            [self.taskContentView.applyersView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-                make.leading.trailing.equalTo(self.taskContentView);
-                make.top.equalTo(self.taskContentView.applyerLabel.mpm_bottom).offset(5);
-                make.height.equalTo(@63);
-            }];
-            [self.taskContentView.checkButton1 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-                make.width.height.equalTo(@20);
-                make.leading.equalTo(self.taskContentView.mpm_leading).offset(20);
-                make.top.equalTo(self.taskContentView.line2.mpm_bottom).offset(20);
-            }];
-            [self.taskContentView.checkButton2 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-                make.width.height.equalTo(@20);
-                make.leading.equalTo(self.taskContentView.mpm_leading).offset(20);
-                make.top.equalTo(self.taskContentView.checkButton1.mpm_bottom).offset(20);
-            }];
-            [self.taskContentView.checkReason1 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-                make.leading.equalTo(self.taskContentView.checkButton1.mpm_trailing).offset(10);
-                make.height.equalTo(@30);
-                make.centerY.equalTo(self.taskContentView.checkButton1.mpm_centerY);
-                make.trailing.equalTo(self.taskContentView.mpm_trailing).offset(-10);
-            }];
-            [self.taskContentView.checkReason2 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-                make.leading.equalTo(self.taskContentView.checkButton2.mpm_trailing).offset(10);
-                make.height.equalTo(@30);
-                make.centerY.equalTo(self.taskContentView.checkButton2.mpm_centerY);
-                make.trailing.equalTo(self.taskContentView.mpm_trailing).offset(-10);
-            }];
+            if (canChangeDecition) {
+                [self.taskContentView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.leading.equalTo(self.mpm_leading).offset(20);
+                    make.trailing.equalTo(self.mpm_trailing).offset(-20);
+                    make.height.equalTo(@375.5);
+                    make.centerY.equalTo(self.mpm_centerY);
+                }];
+                [self.taskContentView.applyersView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.leading.trailing.equalTo(self.taskContentView);
+                    make.top.equalTo(self.taskContentView.applyerLabel.mpm_bottom).offset(5);
+                    make.height.equalTo(@63);
+                }];
+                [self.taskContentView.checkButton1 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.width.height.equalTo(@20);
+                    make.leading.equalTo(self.taskContentView.mpm_leading).offset(20);
+                    make.top.equalTo(self.taskContentView.line2.mpm_bottom).offset(20);
+                }];
+                [self.taskContentView.checkButton2 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.width.height.equalTo(@20);
+                    make.leading.equalTo(self.taskContentView.mpm_leading).offset(20);
+                    make.top.equalTo(self.taskContentView.checkButton1.mpm_bottom).offset(20);
+                }];
+                [self.taskContentView.checkReason1 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.leading.equalTo(self.taskContentView.checkButton1.mpm_trailing).offset(10);
+                    make.height.equalTo(@30);
+                    make.centerY.equalTo(self.taskContentView.checkButton1.mpm_centerY);
+                    make.trailing.equalTo(self.taskContentView.mpm_trailing).offset(-10);
+                }];
+                [self.taskContentView.checkReason2 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.leading.equalTo(self.taskContentView.checkButton2.mpm_trailing).offset(10);
+                    make.height.equalTo(@30);
+                    make.centerY.equalTo(self.taskContentView.checkButton2.mpm_centerY);
+                    make.trailing.equalTo(self.taskContentView.mpm_trailing).offset(-10);
+                }];
+            } else {
+                [self.taskContentView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.leading.equalTo(self.mpm_leading).offset(20);
+                    make.trailing.equalTo(self.mpm_trailing).offset(-20);
+                    make.height.equalTo(@295.5);
+                    make.centerY.equalTo(self.mpm_centerY);
+                }];
+                [self.taskContentView.applyersView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.leading.trailing.equalTo(self.taskContentView);
+                    make.top.equalTo(self.taskContentView.applyerLabel.mpm_bottom).offset(5);
+                    make.height.equalTo(@63);
+                }];
+                [self.taskContentView.checkButton1 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.width.equalTo(@20);
+                    make.height.equalTo(@0);
+                    make.leading.equalTo(self.taskContentView.mpm_leading).offset(20);
+                    make.top.equalTo(self.taskContentView.line2.mpm_bottom).offset(0);
+                }];
+                [self.taskContentView.checkButton2 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.width.equalTo(@20);
+                    make.height.equalTo(@0);
+                    make.leading.equalTo(self.taskContentView.mpm_leading).offset(20);
+                    make.top.equalTo(self.taskContentView.checkButton1.mpm_bottom).offset(0);
+                }];
+                [self.taskContentView.checkReason1 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.leading.equalTo(self.taskContentView.checkButton1.mpm_trailing).offset(10);
+                    make.height.equalTo(@0);
+                    make.centerY.equalTo(self.taskContentView.checkButton1.mpm_centerY);
+                    make.trailing.equalTo(self.taskContentView.mpm_trailing).offset(-10);
+                }];
+                [self.taskContentView.checkReason2 mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                    make.leading.equalTo(self.taskContentView.checkButton2.mpm_trailing).offset(10);
+                    make.height.equalTo(@0);
+                    make.centerY.equalTo(self.taskContentView.checkButton2.mpm_centerY);
+                    make.trailing.equalTo(self.taskContentView.mpm_trailing).offset(-10);
+                }];
+            }
             [self layoutIfNeeded];
         }];
     } else {
@@ -145,8 +183,8 @@ typedef void(^CompleteBlock)(MPMProcessTaskModel *);
     }
 }
 
-- (void)taskContentViewDidChangePeople:(BOOL)hasPeople {
-    [self updateViewConstaintsWithHasPeople:hasPeople];
+- (void)taskContentViewDidChangePeople:(BOOL)hasPeople canChangeDecition:(BOOL)canChangeDecition {
+    [self updateViewConstaintsWithHasPeople:hasPeople canChangeDecition:canChangeDecition];
 }
 
 #pragma mark - Public Method
@@ -156,9 +194,14 @@ typedef void(^CompleteBlock)(MPMProcessTaskModel *);
     self.taskContentView.destinyVC = destinyVC;
     self.taskContentView.model = model;
     if (!model || model.config.participants.count == 0) {
-        [self updateViewConstaintsWithHasPeople:NO];
+        [self updateViewConstaintsWithHasPeople:NO canChangeDecition:NO];
     } else {
-        [self updateViewConstaintsWithHasPeople:YES];
+        if (model.limitParticipants.count == 0) {
+            // 如果有限制选择人，则说明之前已经有选了的人和决定的审批方式，则不能更改
+            [self updateViewConstaintsWithHasPeople:YES canChangeDecition:YES];
+        } else {
+            [self updateViewConstaintsWithHasPeople:YES canChangeDecition:YES];
+        }
     }
     
     self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];

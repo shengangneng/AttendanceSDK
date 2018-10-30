@@ -39,6 +39,9 @@
         [temp addObject:self.participants[i]];
     }
     self.participants = temp.copy;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(taskApplyersDidDeleteParticipants:)]) {
+        [self.delegate taskApplyersDidDeleteParticipants:self.participants];
+    }
 }
 
 - (void)layoutWithParticipants:(NSArray *)participants {

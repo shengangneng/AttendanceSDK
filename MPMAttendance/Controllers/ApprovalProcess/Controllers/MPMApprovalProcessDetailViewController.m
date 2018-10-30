@@ -642,6 +642,8 @@
     self.processDef.currentTaskCode = self.processInst.currentTaskCode;
     MPMProcessTaskModel *tm = [[MPMProcessTaskModel alloc] init];
     tm.name = self.taskInstGroups.firstObject.taskName;
+    tm.limitParticipants = self.config.participants;
+    tm.limitAlertMessage = @"你选择的人已在节点中";
     self.taskView.taskContentView.nameTextField.enabled = NO;
     __weak typeof(self) weakself = self;
     [self.taskView showWithModel:tm destinyVC:self completeBlock:^(MPMProcessTaskModel *taskModel) {

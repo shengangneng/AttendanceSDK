@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, ApplyWay) {
     kApplyWayOfAllMustPass      /** 所有人通过方可通过 */
 };
 
-@interface MPMTaskContentView () <UITextFieldDelegate>
+@interface MPMTaskContentView () <UITextFieldDelegate, MPMTaskApplyersDelegate>
 
 @property (nonatomic, copy) NSString *name;         /** 节点名称 */
 @property (nonatomic, copy) NSString *decision;     /** 1一人通过即可继续、2全部通过才能继续 */
@@ -224,6 +224,19 @@ typedef NS_ENUM(NSInteger, ApplyWay) {
         emp.mpm_id = people.userId;
         [[MPMDepartEmployeeHelper shareInstance].employees addObject:emp];
     }
+    if (self.model.limitParticipants && self.model.limitParticipants.count > 0) {
+        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:self.model.limitParticipants.count];
+        for (int i = 0; i < self.model.limitParticipants.count; i++) {
+            MPMProcessPeople *people = self.model.limitParticipants[i];
+            MPMDepartment *emp = [[MPMDepartment alloc] init];
+            emp.isHuman = YES;
+            emp.name = people.userName;
+            emp.mpm_id = people.userId;
+            [temp addObject:emp];
+        }
+        [MPMDepartEmployeeHelper shareInstance].limitEmployees = temp.copy;
+        [MPMDepartEmployeeHelper shareInstance].limitEmployeeMessage = self.model.limitAlertMessage;
+    }
     MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:@"部门"] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
     
     __weak typeof(self) weakself = self;
@@ -239,13 +252,23 @@ typedef NS_ENUM(NSInteger, ApplyWay) {
             [temp addObject:peo];
         }
         strongself.applyersView.participants = strongself.participants = temp.copy;
-        if (strongself.delegate && [strongself.delegate respondsToSelector:@selector(taskContentViewDidChangePeople:)]) {
+        if (strongself.delegate && [strongself.delegate respondsToSelector:@selector(taskContentViewDidChangePeople:canChangeDecition:)]) {
             BOOL hasPeople = (strongself.participants.count != 0);
-            [strongself.delegate taskContentViewDidChangePeople:hasPeople];
+            BOOL canChangeDecition = (strongself.model.limitParticipants.count == 0);
+            [strongself.delegate taskContentViewDidChangePeople:hasPeople canChangeDecition:canChangeDecition];
         }
     };
     self.destinyVC.hidesBottomBarWhenPushed = YES;
     [self.destinyVC.navigationController pushViewController:depart animated:YES];
+}
+
+- (void)taskApplyersDidDeleteParticipants:(NSArray *)participants {
+    self.participants = participants;
+    if (participants.count == 0 && self.delegate && [self.delegate respondsToSelector:@selector(taskContentViewDidChangePeople:canChangeDecition:)]) {
+        BOOL hasPeople = (self.participants.count != 0);
+        BOOL canChangeDecition = (self.model.limitParticipants.count == 0);
+        [self.delegate taskContentViewDidChangePeople:hasPeople canChangeDecition:canChangeDecition];
+    }
 }
 
 - (void)cancel:(UIButton *)sender {
@@ -365,6 +388,7 @@ typedef NS_ENUM(NSInteger, ApplyWay) {
 - (MPMTaskApplyersScrollView *)applyersView {
     if (!_applyersView) {
         _applyersView = [[MPMTaskApplyersScrollView alloc] init];
+        _applyersView.delegate = self;
         _applyersView.backgroundColor = kWhiteColor;
     }
     return _applyersView;

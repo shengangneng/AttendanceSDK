@@ -17,7 +17,7 @@
 
 - (void)taskContentViewDidCancel;
 - (void)taskContentViewDidSaveWithData:(MPMProcessTaskModel *)model;
-- (void)taskContentViewDidChangePeople:(BOOL)hasPeople;         /** 改变了审批人的选择，需要更新view的约束 */
+- (void)taskContentViewDidChangePeople:(BOOL)hasPeople canChangeDecition:(BOOL)canChange;         /** 改变了审批人的选择，需要更新view的约束 */
 
 @end
 

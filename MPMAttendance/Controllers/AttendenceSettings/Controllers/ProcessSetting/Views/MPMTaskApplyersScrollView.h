@@ -8,8 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol MPMTaskApplyersDelegate <NSObject>
+
+- (void)taskApplyersDidDeleteParticipants:(NSArray *)participants;
+
+@end
+
 @interface MPMTaskApplyersScrollView : UIScrollView
 
+@property (nonatomic, weak) id<MPMTaskApplyersDelegate> delegate;
 @property (nonatomic, copy) NSArray *participants;
 
 @end

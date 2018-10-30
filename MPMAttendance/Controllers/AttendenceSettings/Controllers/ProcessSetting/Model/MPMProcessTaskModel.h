@@ -19,6 +19,9 @@
 @property (nonatomic, copy) NSString *processDefCode;   /** 流程第一code */
 @property (nonatomic, strong) MPMProcessTaskConfig *config; /** 任务定义参与者配置 */
 
+@property (nonatomic, copy) NSArray<MPMProcessPeople *> *limitParticipants;     /** 限制不能选的人 */
+@property (nonatomic, copy) NSString *limitAlertMessage;                        /** 限制不能选人的时候弹出的警告文字 */
+
 @end
 
 @interface MPMProcessTaskConfig : MPMBaseModel
