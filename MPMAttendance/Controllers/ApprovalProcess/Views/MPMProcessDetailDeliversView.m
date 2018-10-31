@@ -81,7 +81,6 @@
             lastAttribute = btn.mpm_trailing;
         }
     }
-    [self layoutIfNeeded];
 }
 
 - (UILabel *)deliverLabel {

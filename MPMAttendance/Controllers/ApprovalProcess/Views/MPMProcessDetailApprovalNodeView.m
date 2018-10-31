@@ -70,8 +70,8 @@
                 }
                 [self addSubview:detail];
                 [detail mpm_makeConstraints:^(MPMConstraintMaker *make) {
-                    make.leading.equalTo(self).offset(20);
-                    make.trailing.equalTo(self);
+                    make.leading.equalTo(self.mas_leading).offset(20);
+                    make.trailing.equalTo(self.mas_trailing);
                     make.top.equalTo(lastAttributes).offset(offset);
                     if (group.taskInst.count - 1 == i) {
                         make.bottom.equalTo(self.mpm_bottom);

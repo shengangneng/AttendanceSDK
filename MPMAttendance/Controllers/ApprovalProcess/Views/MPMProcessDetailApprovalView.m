@@ -28,7 +28,6 @@
 - (void)setDetailMessage:(NSString *)detailMessage {
     _detailMessage = detailMessage;
     self.approvalDetailMessage.text = detailMessage;
-    [self layoutIfNeeded];
 }
 
 - (void)setState:(NSString * _Nonnull)state route:(NSString *)route isApply:(BOOL)apply {
