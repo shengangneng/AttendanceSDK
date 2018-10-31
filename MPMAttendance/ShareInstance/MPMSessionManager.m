@@ -47,13 +47,19 @@ static MPMSessionManager *instance;
         return;
     }
     static BOOL canEnter = YES;
-    @synchronized(self){
+    @synchronized(self) {
         if (canEnter) {
             canEnter = NO;
             NSString *url = MPMINTERFACE_OAUTH;
             [MPMSessionManager shareManager].managerV2.requestSerializer = [MPMHTTPRequestSerializer serializer];
             [[MPMSessionManager shareManager].managerV2.requestSerializer setAuthorizationHeaderFieldWithUsername:@"mpm24_ios" password:@"COa8vJuC928rRV6SX3Q9MOBdKY7Nn8tn"];
+            if (kIsNilString([MPMOauthUser shareOauthUser].refresh_token)) {
+                canEnter = YES;
+                strongBlock();
+                return;
+            }
             NSDictionary *params = @{@"grant_type":@"refresh_token",@"refresh_token":[MPMOauthUser shareOauthUser].refresh_token};
+            NSLog(@"刷新token的参数%@",params);
             // 用refresh token去刷新token，并更新过期时间
             [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
                 canEnter = YES;
@@ -67,6 +73,7 @@ static MPMSessionManager *instance;
                 strongBlock();
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 canEnter = YES;
+                NSLog(@"刷新token失败%@",error);
                 strongBlock();
             }];
         } else {

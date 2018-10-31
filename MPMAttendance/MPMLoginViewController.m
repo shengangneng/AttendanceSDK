@@ -71,7 +71,7 @@
         [MPMOauthUser shareOauthUser].company_code = companyCode;
         [MPMOauthUser shareOauthUser].expiresIn = expiresIn;
         // 每次进考勤都刷新一次
-        [MPMOauthUser shareOauthUser].expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970];
+        [MPMOauthUser shareOauthUser].expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 - 100];
 //        }
     }
     return self;
@@ -102,11 +102,8 @@
         self.navigationController.navigationBar.hidden = YES;
     }
     if (kIsNilString([MPMOauthUser shareOauthUser].access_token) || kIsNilString([MPMOauthUser shareOauthUser].user_id) || kIsNilString([MPMOauthUser shareOauthUser].company_code)) {
-        if (self.navigationController.navigationBar.hidden == YES) {
-            self.navigationController.navigationBar.hidden = NO;
-        }
-        [self.navigationController popViewControllerAnimated:YES];
-        [[MPMOauthUser shareOauthUser] clearData];
+        NSLog(@"数据不能为空");
+        [[MPMSessionManager shareManager] back];
     } else {
         [self defaultSetting];
         [self getPerrimitionV2];
@@ -370,8 +367,9 @@
 
 - (void)getPerrimitionV2 {
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_MYRES];
+    NSLog(@"获取菜单中...");
     [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
-        NSLog(@"%@",response);
+        NSLog(@"获取菜单成功%@",response);
         if (response[kResponseDataKey] && [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] && kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
             [self getCurrentUserMessage];
             [MPMOauthUser shareOauthUser].perimissionArray = response[kResponseObjectKey];
