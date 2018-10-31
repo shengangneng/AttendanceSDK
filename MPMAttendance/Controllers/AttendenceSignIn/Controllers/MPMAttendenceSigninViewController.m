@@ -823,7 +823,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     self.noMessageView.hidden = (self.attendenceManageModel.attendenceArray.count > 0 || self.attendenceManageModel.attendenceExceptionArray.count > 0);
-    self.tableViewLine.hidden = (self.attendenceManageModel.attendenceArray.count == 0);
+    self.tableViewLine.hidden = (self.attendenceManageModel.attendenceArray.count == 0 && self.attendenceManageModel.attendenceExceptionArray.count == 0);
     if (0 == section) {
         return self.attendenceManageModel.attendenceExceptionArray.count;
     } else {
