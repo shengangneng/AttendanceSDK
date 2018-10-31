@@ -404,6 +404,11 @@
                 select = YES;
             }
         }
+        for (MPMDepartment *eee in [MPMDepartEmployeeHelper shareInstance].departments) {
+            if ([eee.mpm_id isEqualToString:model.mpm_id]) {
+                select = YES;
+            }
+        }
         if (select) {
             self.searchArray[i].selectedStatus = kSelectedStatusAllSelected;
             [self.allSelectIndexPath addObject:[NSIndexPath indexPathForRow:i inSection:0]];
