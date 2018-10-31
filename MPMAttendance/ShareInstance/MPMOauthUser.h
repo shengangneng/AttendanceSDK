@@ -34,6 +34,8 @@
 // 用于临时保存打卡地址信息，不写进数据库
 @property (nonatomic, strong) CLLocation *location;
 @property (nonatomic, copy) NSString *address;
+@property (nonatomic, copy) NSString *shortName;
+@property (nonatomic, copy) NSString *fullName;
 // 以下是自定义字段
 @property (nonatomic, copy) NSString *expiresIn;                            /** 原始的，不需要加上当前时间 */
 @property (nonatomic, strong) UIViewController *lastRootViewController;     /** 记录从其他系统条转过来时候的rootViewcontroller */

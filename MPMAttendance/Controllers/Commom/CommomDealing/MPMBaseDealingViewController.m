@@ -502,6 +502,8 @@
     
     if (kIsNilString(self.dealingModel.remark)) {
         [self showAlertControllerToLogoutWithMessage:@"请输入理由" sureAction:nil needCancleButton:NO];return canPass = NO;
+    } else if (self.dealingModel.remark.length > 30) {
+        [self showAlertControllerToLogoutWithMessage:@"原因不能超过30个字" sureAction:nil needCancleButton:NO];return canPass = NO;
     }
     if (self.dealingModel.participants.count == 0) {
         [self showAlertControllerToLogoutWithMessage:@"请选择审批人" sureAction:nil needCancleButton:NO];return canPass = NO;
@@ -1020,7 +1022,7 @@
                     [temp addObject:people];
                 }
                 [MPMDepartEmployeeHelper shareInstance].employees = temp;
-                MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:@"部门"] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
+                MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:kIsNilString([MPMOauthUser shareOauthUser].shortName) ? @"部门" : [MPMOauthUser shareOauthUser].shortName] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
                 
                 __weak typeof(strongself) wweakself = strongself;
                 depart.sureSelectBlock = ^(NSArray<MPMDepartment *> *departments, NSArray<MPMDepartment *> *employees) {
@@ -1072,7 +1074,7 @@
                 }
                 [MPMDepartEmployeeHelper shareInstance].employees = temp;
                 // 跳入多选人员页面（只能选择人员）
-                MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:@"部门"] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
+                MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:kIsNilString([MPMOauthUser shareOauthUser].shortName) ? @"部门" : [MPMOauthUser shareOauthUser].shortName] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
                 
                 __weak typeof(strongself) wweakself = strongself;
                 depart.sureSelectBlock = ^(NSArray<MPMDepartment *> *departments, NSArray<MPMDepartment *> *employees) {

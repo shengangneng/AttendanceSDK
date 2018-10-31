@@ -13,6 +13,7 @@
 #import "MPMSelectDepartmentViewController.h"
 #import "MPMDepartment.h"
 #import "MPMDepartEmployeeHelper.h"
+#import "MPMOauthUser.h"
 
 #define kDecisionKeyPath    @"decision"
 
@@ -237,7 +238,7 @@ typedef NS_ENUM(NSInteger, ApplyWay) {
         [MPMDepartEmployeeHelper shareInstance].limitEmployees = temp.copy;
         [MPMDepartEmployeeHelper shareInstance].limitEmployeeMessage = self.model.limitAlertMessage;
     }
-    MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:@"部门"] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
+    MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:kIsNilString([MPMOauthUser shareOauthUser].shortName) ? @"部门" : [MPMOauthUser shareOauthUser].shortName] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
     
     __weak typeof(self) weakself = self;
     depart.sureSelectBlock = ^(NSArray<MPMDepartment *> *departments, NSArray<MPMDepartment *> *employees) {

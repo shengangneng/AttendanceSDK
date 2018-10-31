@@ -37,7 +37,7 @@
                 case 1: {
                     return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
                              @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加请假明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"请假理由,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"请假原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
@@ -45,7 +45,7 @@
                     return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
                              @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
                              @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"+增加请假明细"],kCellDetailTypeKey:@[@"UIButton"],kCellActionTypeKey:@[kAction_AddCell]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"请假理由,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"请假原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
@@ -53,7 +53,7 @@
                     return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
                              @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
                              @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"删除",kCellTitleDetailKey:@[@"请假类型,请选择",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeDealingType,kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
-                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假理由,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"请假原因,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
@@ -71,7 +71,7 @@
             switch(addCount) {
                 case 0: {
                     return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
-                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"处理理由,请输入处理理由"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"处理原因,请输入处理原因"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;
@@ -100,7 +100,7 @@
                 }break;
                 default:{
                     return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"出差地点,请输入",@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长",@"交通工具,",@"预计费用,请输入"],kCellDetailTypeKey:@[kCellDetailTypeUITextField,kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField,kCellDetailTypeSelectTool,kCellDetailTypeUITextField],kCellActionTypeKey:@[@"",kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@"",kAction_TrafficTool,@""]},
-                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"处理理由,请输入处理理由"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"根据排班自动计算",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"处理原因,请输入处理原因"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }
@@ -152,7 +152,7 @@
             switch(addCount) {
                 case 0: {
                     return @[@{kCellHeaderTitleKey:@"",kCellHeaderDetailKey:@"",kCellTitleDetailKey:@[@"开始时间,请选择",@"结束时间,请选择",@"时长,自动计算时长"],kCellDetailTypeKey:@[kCellDetailTypeUILabel,kCellDetailTypeUILabel,kCellDetailTypeUITextField],kCellActionTypeKey:@[kAction_PickerTypeTimeOfOne,kAction_PickerTypeTimeOfOne,@""]},
-                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"处理理由,请输入处理理由"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
+                             @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"处理原因,请输入处理原因"],kCellDetailTypeKey:@[kCellDetailTypeUITextView]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"提交至,请选择"],kCellDetailTypeKey:@[kCellDetailTypePeople]},
                              @{kCellHeaderTitleKey:@"",kCellTitleDetailKey:@[@"抄送人,添加"],kCellDetailTypeKey:@[kCellDetailTypePeople]}];
                 }break;

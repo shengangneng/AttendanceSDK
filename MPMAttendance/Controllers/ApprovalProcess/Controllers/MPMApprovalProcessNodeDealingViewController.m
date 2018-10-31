@@ -425,7 +425,7 @@
     // 跳入人员选择功能
     [[MPMDepartEmployeeHelper shareInstance].employees removeAllObjects];
     [[MPMDepartEmployeeHelper shareInstance].employees addObjectsFromArray:self.selectedPeople];
-    MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:@"部门"] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
+    MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:kIsNilString([MPMOauthUser shareOauthUser].shortName) ? @"部门" : [MPMOauthUser shareOauthUser].shortName] selectionType:kSelectionTypeOnlyEmployee comfirmBlock:nil];
     depart.delegate = self;
     [self.navigationController pushViewController:depart animated:YES];
 }

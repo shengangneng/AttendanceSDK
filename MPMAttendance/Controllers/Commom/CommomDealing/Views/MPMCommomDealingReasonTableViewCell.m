@@ -123,10 +123,7 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     NSString *callbackString = nil;
-    if (textView.text.length > 30) {
-        textView.text = [textView.text substringToIndex:30];
-        callbackString = textView.text;
-    } else if (textView.text.length == 0) {
+    if (textView.text.length == 0) {
         textView.text = @"请输入";
         callbackString = @"";
     } else {

@@ -80,6 +80,9 @@ static MPMOauthUser *oauthUser;
     self.password = nil;
     self.companycode = nil;
     self.perimissionArray = nil;
+    self.address = nil;
+    self.fullName = nil;
+    self.shortName = nil;
 }
 
 @end

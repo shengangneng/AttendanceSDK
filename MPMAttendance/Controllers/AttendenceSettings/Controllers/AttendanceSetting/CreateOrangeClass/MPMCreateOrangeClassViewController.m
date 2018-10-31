@@ -19,6 +19,7 @@
 #import "MPMClassSettingViewController.h"
 #import "MPMDepartEmployeeHelper.h"/** 使用一个单例来传递部门和员工 */
 #import "MPMBaseTableViewCell.h"
+#import "MPMOauthUser.h"
 
 #define kClassNameLimitLength 10
 
@@ -272,7 +273,7 @@
             
             [MPMDepartEmployeeHelper shareInstance].departments = [NSMutableArray arrayWithArray:departCount];
             [MPMDepartEmployeeHelper shareInstance].employees = [NSMutableArray arrayWithArray:peopleCount];
-            MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:@"部门"] selectionType:kSelectionTypeBoth comfirmBlock:nil];
+            MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:kIsNilString([MPMOauthUser shareOauthUser].shortName) ? @"部门" : [MPMOauthUser shareOauthUser].shortName] selectionType:kSelectionTypeBoth comfirmBlock:nil];
             
             depart.delegate = self;
             self.hidesBottomBarWhenPushed = YES;

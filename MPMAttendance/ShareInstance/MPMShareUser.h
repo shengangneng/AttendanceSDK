@@ -24,8 +24,6 @@
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *companyName;
-@property (nonatomic, copy) NSString *shortName;
-@property (nonatomic, copy) NSString *fullName;
 
 @property (nonatomic, copy) NSArray *perimissionArray;
 @property (nonatomic, strong) UIViewController *lastRootViewController;     /** 记录从其他系统条转过来时候的rootViewcontroller */
