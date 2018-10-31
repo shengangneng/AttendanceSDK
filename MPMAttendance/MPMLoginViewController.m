@@ -397,10 +397,28 @@
             [MPMOauthUser shareOauthUser].department_name = object[@"departmentName"];
             [MPMOauthUser shareOauthUser].name_cn = object[@"username"];
             [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
+            [self getCompanyNameWithCompanyCode:object[@"companyCode"]];
         }
     } failure:^(NSString *error) {
         NSLog(@"获取用户信息失败...%@--%@",[MPMOauthUser shareOauthUser].user_id,[MPMOauthUser shareOauthUser].company_code);
         [MPMProgressHUD showErrorWithStatus:error];
+    }];
+}
+
+- (void)getCompanyNameWithCompanyCode:(NSString *)comCode {
+    if (kIsNilString(comCode)) {
+        return;
+    }
+    NSString *url = [NSString stringWithFormat:@"%@%@?companyCode=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_COMPANY,comCode];
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        DLog(@"%@",response);
+        if (response[kResponseDataKey] && [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] && ((NSString *)response[kResponseDataKey][kCode]).integerValue == 200 && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
+            NSDictionary *object = ((NSArray *)response[kResponseObjectKey]).firstObject;
+            [MPMOauthUser shareOauthUser].shortName = object[@"shortName"];
+            [MPMOauthUser shareOauthUser].fullName = object[@"fullName"];
+        }
+    } failure:^(NSString *error) {
+        DLog(@"获取公司失败");
     }];
 }
 

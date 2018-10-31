@@ -88,6 +88,7 @@
 
 /********************人员部门数据********************/
 #define MPMINTERFACE_EMDM_CURRENTUSER           @"api/emdm/employee/currentuser"                    /** 获取用户 */
+#define MPMINTERFACE_EMDM_COMPANY               @"api/emdm/company"                                 /** 获取公司 */
 #define MPMINTERFACE_EMDM_MIX_FINDBYORGID       @"api/emdm/mix/findByOrgId"                         /** 混合查询部门和人员 */
 #define MPMINTERFACE_EMDM_MIX_FINDBYKEYWORD     @"api/emdm/mix/findByKeyword"                       /** 混合查询部门和人员通过关键字 */
 
