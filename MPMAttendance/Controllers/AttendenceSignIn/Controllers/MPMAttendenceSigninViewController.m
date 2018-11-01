@@ -892,6 +892,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     } else if (model.isNeedFirstBrush) {
         // 等待打卡中~~
         cell.accessaryIcon.hidden = YES;
+        cell.classTypeLabel.hidden = NO;
         cell.contentImageView.hidden = YES;
         cell.statusImageView.image = nil;
         cell.messageLabel.text = @"";
@@ -906,6 +907,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     } else if (!model.brushTime || model.brushTime.length == 0) {
         // 只有时间点的打卡节点
         cell.accessaryIcon.hidden = YES;
+        cell.classTypeLabel.hidden = NO;
         cell.contentImageView.hidden = YES;
         cell.statusImageView.image = nil;
         cell.messageLabel.text = @"";
