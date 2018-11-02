@@ -37,14 +37,18 @@
         return;
     }
     NSArray *arr = [detailDate componentsSeparatedByString:@","];
-    for (int i = 0; i < arr.count; i++) {
-        UILabel *lb = self.laberArray[i];
-        if (lb == self.dayLabel) {
-            lb.text = [NSString stringWithFormat:@"%@日",arr[i]];
-        } else {
-            lb.text = arr[i];
-        }
+    if (arr.count > 1) {
+        self.monthLabel.text = [NSString stringWithFormat:@"%@%@",arr[1],arr[0]];
     }
+    /*
+     for (int i = 0; i < arr.count; i++) {
+     UILabel *lb = self.laberArray[i];
+     if (lb == self.dayLabel) {
+     lb.text = [NSString stringWithFormat:@"%@日",arr[i]];
+     } else {
+     lb.text = arr[i];
+     }
+     }*/
 }
 
 - (void)setupAttributes {
@@ -85,7 +89,7 @@
         _monthLabel = [[UILabel alloc] init];
         [_monthLabel sizeToFit];
         _monthLabel.textColor = kWhiteColor;
-        _monthLabel.font = SystemFont(32);
+        _monthLabel.font = SystemFont(30);
     }
     return _monthLabel;
 }
