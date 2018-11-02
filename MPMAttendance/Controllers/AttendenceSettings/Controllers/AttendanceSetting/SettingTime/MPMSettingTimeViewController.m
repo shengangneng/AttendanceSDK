@@ -275,6 +275,7 @@
     NSMutableDictionary *schedule = [NSMutableDictionary dictionary];
     
     schedule[@"name"] = self.headerNameTextField.text;
+    
     if (self.switchOn && self.headerOneButton.isSelected) {
         NSDictionary *freeTimeSection = @{@"start":kSafeString(self.freeTimeSection.signTime),
                                           @"end":kSafeString(self.freeTimeSection.returnTime)};
@@ -319,7 +320,7 @@
         // 无论是设置还是创建，成功后，都跳回上一页
     } failure:^(NSString *error) {
         DLog(@"%@",error);
-        [MPMProgressHUD showErrorWithStatus:@"操作失败"];
+        [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
 
@@ -782,16 +783,16 @@
     
     if (self.preSelectedButton == self.headerOneButton) {
         if (self.signTimeSections.count < 1 || kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[0]).signTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签到时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签到时间" sureAction:nil needCancleButton:NO];return;
         }
         if (kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[0]).returnTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签退时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签退时间" sureAction:nil needCancleButton:NO];return;
         }
         if (self.switchOn && kIsNilString(self.freeTimeSection.signTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入间休开始时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择间休开始时间" sureAction:nil needCancleButton:NO];return;
         }
         if (self.switchOn && kIsNilString(self.freeTimeSection.returnTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入间休结束时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择间休结束时间" sureAction:nil needCancleButton:NO];return;
         }
         if (self.switchOn) {
             // noonBreakEndTime、noonBreakStartTime、returnTime、signTime、schedulingId
@@ -799,6 +800,16 @@
             double noonBreakStartTime = self.freeTimeSection.signTime.hourMinuteToString.timeValue;
             double returnTime = self.signTimeSections[0].returnTime.hourMinuteToString.timeValue;
             double signTime = self.signTimeSections[0].signTime.hourMinuteToString.timeValue;
+            if (noonBreakEndTime == noonBreakStartTime ||
+                noonBreakEndTime == returnTime ||
+                noonBreakEndTime == signTime ||
+                
+                noonBreakStartTime == returnTime ||
+                noonBreakStartTime == signTime ||
+                
+                returnTime == signTime) {
+                [self showAlertControllerToLogoutWithMessage:@"所选时间不能交错" sureAction:nil needCancleButton:NO];return;
+            }
             if (returnTime > signTime) {
                 // 非跨天
                 if (noonBreakStartTime > noonBreakEndTime) {
@@ -833,10 +844,12 @@
             } else {
                 self.signTimeSections[0].corssReturnDay = @"0";
             }
-            //            [params addObject:@{@"noonBreakEndTime":self.freeTimeSection.returnTime,@"noonBreakStartTime":self.freeTimeSection.signTime,@"returnTime":self.signTimeSections[0].returnTime,@"signTime":self.signTimeSections[0].signTime,@"noonBreak":@"1",@"crossDay":crossDay}];
         } else {
             double returnTime =  self.signTimeSections[0].returnTime.hourMinuteToString.timeValue;
             double signTime = self.signTimeSections[0].signTime.hourMinuteToString.timeValue;
+            if (returnTime == signTime) {
+                [self showAlertControllerToLogoutWithMessage:@"开始时间不能等于结束时间" sureAction:nil needCancleButton:NO];return;
+            }
             // 赋值跨天
             self.signTimeSections[0].corssStartDay = @"0";
             if (signTime > returnTime) {
@@ -849,16 +862,16 @@
         }
     } else if (self.preSelectedButton == self.headerTwoButton) {
         if (self.signTimeSections.count < 1 || kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[0]).signTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签到时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签到时间" sureAction:nil needCancleButton:NO];return;
         }
         if (kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[0]).returnTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签退时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签退时间" sureAction:nil needCancleButton:NO];return;
         }
         if (self.signTimeSections.count < 2 || kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[1]).signTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签到时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签到时间" sureAction:nil needCancleButton:NO];return;
         }
         if (kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[1]).returnTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签退时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签退时间" sureAction:nil needCancleButton:NO];return;
         }
         
         if ([self getDuration].doubleValue > 1440) {
@@ -936,22 +949,22 @@
         }
     } else if (self.preSelectedButton == self.headerTreButton) {
         if (self.signTimeSections.count < 1 || kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[0]).signTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签到时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签到时间" sureAction:nil needCancleButton:NO];return;
         }
         if (kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[0]).returnTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签退时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签退时间" sureAction:nil needCancleButton:NO];return;
         }
         if (self.signTimeSections.count < 2 || kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[1]).signTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签到时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签到时间" sureAction:nil needCancleButton:NO];return;
         }
         if (kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[1]).returnTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签退时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签退时间" sureAction:nil needCancleButton:NO];return;
         }
         if (self.signTimeSections.count < 3 || kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[2]).signTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签到时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签到时间" sureAction:nil needCancleButton:NO];return;
         }
         if (kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[2]).returnTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请输入签退时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择签退时间" sureAction:nil needCancleButton:NO];return;
         }
         if ([self getDuration].doubleValue > 1440) {
             [self showAlertControllerToLogoutWithMessage:@"工作时间不能超过一天" sureAction:nil needCancleButton:NO];return;
@@ -1072,6 +1085,10 @@
 }
 
 #pragma mark - UITableViewDelegate && UITableViewDataSource
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.view endEditing:YES];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.titlesArray.count;
 }
@@ -1615,5 +1632,6 @@
     }
     return _seperateLine2;
 }
+
 
 @end
