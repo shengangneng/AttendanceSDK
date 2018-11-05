@@ -122,7 +122,7 @@
     [self.approvalStatusImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.height.equalTo(@13);
         make.leading.equalTo(self.contentImageView.mpm_leading).offset(8);
-        make.top.equalTo(self.contentImageView.mpm_top).offset(11.5);
+        make.top.equalTo(self.contentImageView.mpm_top).offset(10.5);
     }];
     [self.approvalStatusMessage mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.centerY.equalTo(self.approvalStatusImage.mpm_centerY);
