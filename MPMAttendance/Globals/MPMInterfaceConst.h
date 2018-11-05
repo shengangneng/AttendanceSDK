@@ -75,7 +75,7 @@
 #define MPMINTERFACE_SETTING_TIME_SAVE          @"api/schedule/save"                                /** 时间段保存 */
 #define MPMINTERFACE_SETTING_TIME_LIST          @"api/schedule/list"                                /** 班次设置列表 */
 #define MPMINTERFACE_SETTING_TIME_DELETE        @"api/schedule/delete"                              /** 班次设置删除 */
-#define MPMINTERFACE_SETTING_TIME_SEARCH        @"/api/schedule/search"                             /** 班次搜索 */
+#define MPMINTERFACE_SETTING_TIME_SEARCH        @"api/schedule/search"                              /** 班次搜索 */
 /**********积分设置**********/
 #define MPMINTERFACE_SETTING_INTERGRAL_LIST     @"api/scoreConfig/list"                             /** 积分设置 */
 #define MPMINTERFACE_SETTING_INTERGRAL_SAVE     @"api/scoreConfig/save"                             /** 积分设置保存 */
