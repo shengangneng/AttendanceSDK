@@ -22,6 +22,8 @@ typedef void(^CurrentWeekButtonClickBlock)(NSInteger offsetDay);
 - (instancetype)initWithWeekType:(CalendarWeekType)weekType days:(NSArray *)days currentMiddleDate:(NSDate *)middleDate;
 /** "2018年5月,25"使用逗号来分割 */
 @property (nonatomic, copy) NSArray *days;
+/** 班次信息 */
+@property (nonatomic, copy) NSArray *attendanceArray;
 /** 记录当前的年月:2018年5月 */
 @property (nonatomic, copy) NSString *currentSelectedYearMonth;
 @property (nonatomic, copy) CurrentWeekButtonClickBlock clickBlock;

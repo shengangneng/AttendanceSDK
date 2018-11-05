@@ -92,9 +92,9 @@
             }
         }
     }
-    [self.lastWeekView updateButtonsView:lastArray];
-    [self.currentWeekView updateButtonsView:currentArray];
-    [self.nextWeekView updateButtonsView:nextArray];
+    self.lastWeekView.attendanceArray = lastArray ;
+    self.currentWeekView.attendanceArray = currentArray;
+    self.nextWeekView.attendanceArray = nextArray;
 }
 
 /** 一次性查找前后共三个星期信息的接口 */
@@ -122,7 +122,7 @@
             }
         }
     }
-    [self.currentWeekView updateButtonsView:currArray.copy];
+    self.currentWeekView.attendanceArray = currArray.copy;
     
     for (int i = 0; i < data.count; i++) {
         MPMAttendenceOneMonthModel *model = data[i];
@@ -140,7 +140,7 @@
             }
         }
     }
-    [self.lastWeekView updateButtonsView:lastArray.copy];
+    self.lastWeekView.attendanceArray = lastArray.copy;
     
     for (int i = 0; i < data.count; i++) {
         MPMAttendenceOneMonthModel *model = data[i];
@@ -158,7 +158,7 @@
             }
         }
     }
-    [self.nextWeekView updateButtonsView:nextArray.copy];
+    self.nextWeekView.attendanceArray = nextArray.copy;
 }
 
 - (void)changeToCurrentWeekDate {
@@ -178,6 +178,9 @@
     if ([rightEndDate compare:self.rightBoundarsDate] == NSOrderedDescending) return;
     self.rightWeekEndDate = rightEndDate;
     self.currentMiddleDate = [self.currentMiddleDate dateByAddingTimeInterval:kOneWeekInterval];
+    [self.currentWeekView changeDays:self.nextWeekData];
+    self.currentWeekView.attendanceArray = self.nextWeekView.attendanceArray;
+    self.contentOffset = CGPointMake(kScreenWidth, 0);
     [self updateThreeWeekViewData];
 }
 
@@ -191,6 +194,9 @@
     if ([leftWeekBegin compare:self.leftBoundarsDate] == NSOrderedAscending) return;
     self.leftWeekBeginDate = leftWeekBegin;
     self.currentMiddleDate = lastWeek;
+    [self.currentWeekView changeDays:self.lastWeekData];
+    self.currentWeekView.attendanceArray = self.lastWeekView.attendanceArray;
+    self.contentOffset = CGPointMake(kScreenWidth, 0);
     [self updateThreeWeekViewData];
 }
 
@@ -267,11 +273,9 @@
         CGFloat littleValue = 0.2f;
         if (offsetX > kScreenWidth*2 - littleValue) {
             // 往右划到将近结束
-            self.contentOffset = CGPointMake(kScreenWidth, 0);
             [self changeToNextWeek];
         } else if (offsetX < littleValue) {
             // 往左划到将近结束
-            self.contentOffset = CGPointMake(kScreenWidth, 0);
             [self changeToLastWeek];
         }
     }

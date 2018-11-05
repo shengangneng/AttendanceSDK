@@ -79,6 +79,14 @@
     }
 }
 
+- (void)setAttendanceArray:(NSArray *)attendanceArray {
+    if (attendanceArray.count > 7) {
+        return;
+    }
+    _attendanceArray = attendanceArray;
+    [self updateButtonsView:attendanceArray];
+}
+
 - (void)setupConstraints {
     
 }
@@ -106,6 +114,7 @@
     [self selectDate:btn];
 }
 
+/** 更新每一天班休漏卡状态 */
 - (void)updateButtonsView:(NSArray *)arr {
     for (int i = 0; i < arr.count; i++) {
         MPMCalendarButton *btn = self.buttons[i];
