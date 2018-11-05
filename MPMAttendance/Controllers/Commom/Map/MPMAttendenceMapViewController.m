@@ -91,6 +91,12 @@
         make.bottom.equalTo(self.headerView.mpm_bottom);
         make.top.equalTo(self.headerView.mpm_top);
     }];
+    [self.locationImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.centerX.equalTo(self.middleMapView.mpm_centerX);
+        make.centerY.equalTo(self.middleMapView.mpm_centerY).offset(-10);
+        make.width.equalTo(@15);
+        make.height.equalTo(@20);
+    }];
     [self.middleMapView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self.view);
         make.height.equalTo(@200);
@@ -216,7 +222,6 @@
     DLog(@"%.f",distance);
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(model.coordinate, 200, 200);
     [self.middleMapView setRegion:region animated:YES];
-    self.locationImageView.center = CGPointMake(self.middleMapView.center.x, self.middleMapView.center.y - 7.5);
 }
 
 #pragma mark - MKMapViewDelegate
@@ -227,7 +232,6 @@
             self.currentLocationRegion = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 200, 200);
             [self.middleMapView setRegion:self.currentLocationRegion animated:YES];
             [self getAddressByLatitude:userLocation.coordinate.latitude longitude:userLocation.coordinate.longitude];
-            self.locationImageView.center = CGPointMake(self.middleMapView.center.x, self.middleMapView.center.y - 7.5);
         }
     } else {
         [self.locationManager stopUpdatingLocation];
@@ -241,12 +245,10 @@
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
     if (self.locationImageView && (self.isSpan || self.isPinch)) {
-        CGPoint mapCenter = self.middleMapView.center;
-        CLLocationCoordinate2D coordinate = [self.middleMapView convertPoint:CGPointMake(self.middleMapView.center.x, self.middleMapView.center.y - kNavigationHeight) toCoordinateFromView:self.middleMapView];
+        CGPoint point = CGPointMake(self.middleMapView.center.x, self.middleMapView.center.y - 60);
+        CLLocationCoordinate2D coordinate = [self.middleMapView convertPoint:point toCoordinateFromView:self.middleMapView];
         [self getAddressByLatitude:coordinate.latitude longitude:coordinate.longitude];
-        self.locationImageView.center = CGPointMake(mapCenter.x, mapCenter.y - 7.5);
         [UIView animateWithDuration:0.2 animations:^{
-            self.locationImageView.center = CGPointMake(mapCenter.x, mapCenter.y - 7.5);
         } completion:^(BOOL finished) {
             if (finished) {
                 [UIView animateWithDuration:0.05 animations:^{

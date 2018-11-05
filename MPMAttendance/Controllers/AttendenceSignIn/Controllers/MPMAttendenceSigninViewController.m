@@ -1077,7 +1077,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     return _headerWeekView;
 }
 
-- (UIScrollView *)headerScrollView {
+- (MPMCalendarScrollView *)headerScrollView {
     if (!_headerScrollView) {
         _headerScrollView = [[MPMCalendarScrollView alloc] init];
         _headerScrollView.delegate = self;

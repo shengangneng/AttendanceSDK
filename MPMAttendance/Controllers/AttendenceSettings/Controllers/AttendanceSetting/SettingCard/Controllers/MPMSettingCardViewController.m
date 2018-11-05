@@ -87,7 +87,8 @@
             offset = ((NSNumber *)classDic[@"offset"]).stringValue;
         }
     }
-    self.dataArray[0][1][@"accTitle"] = self.deviation = offset;
+    self.deviation = offset;
+    self.dataArray[0][1][@"accTitle"] = [NSString stringWithFormat:@"%@米",self.deviation];
     if (locations.count != 0) {
         for (int i = 0; i < locations.count; i++) {
             NSDictionary *dic = locations[i];
