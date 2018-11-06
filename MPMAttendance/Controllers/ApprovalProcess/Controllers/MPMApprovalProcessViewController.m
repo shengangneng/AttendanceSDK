@@ -230,11 +230,11 @@
     }
     NSString *fromdate = @"";
     if (self.siderDrawerView.startDate) {
-        fromdate = [NSString stringWithFormat:@"&fromdate=%@",[NSDateFormatter formatterDate:self.siderDrawerView.startDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar]];
+        fromdate = [NSString stringWithFormat:@"&fromdate=%@",[NSDateFormatter formatterDate:self.siderDrawerView.startDate withDefineFormatterType:forDateFormatTypeYearMonthDaySlash]];
     }
     NSString *todate = @"";
     if (self.siderDrawerView.endDate) {
-        todate = [NSString stringWithFormat:@"&todate=%@",[NSDateFormatter formatterDate:self.siderDrawerView.endDate withDefineFormatterType:forDateFormatTypeYearMonthDayBar]];
+        todate = [NSString stringWithFormat:@"&todate=%@",[NSDateFormatter formatterDate:self.siderDrawerView.endDate withDefineFormatterType:forDateFormatTypeYearMonthDaySlash]];
     }
     
     switch (SectionType) {
