@@ -179,8 +179,6 @@
     NSString *name = kSafeString(self.model.name);
     NSString *type = kSafeString(self.model.type);
     NSString *companyId = [MPMOauthUser shareOauthUser].company_id;
-    NSString *startTime = kSafeString(self.model.startTime);
-    NSString *endTime = kSafeString(self.model.endTime);
     NSMutableArray *objList = [NSMutableArray array];
     for (int i = 0; i < self.model.objList.count; i++) {
         MPMObjListModel *obj = self.model.objList[i];
@@ -237,8 +235,6 @@
     params[@"type"] = type;
     params[@"companyId"] = companyId;
     params[@"objList"] = objList.copy;
-    params[@"startTime"] = startTime;
-    params[@"endTime"] = endTime;
     params[@"isEffective"] = isEffective;
     if (isTransfer) {
         params[@"isTransfer"] = isTransfer;

@@ -178,8 +178,6 @@
         if (self.model.fixedTimeWorkSchedule[@"offset"]) {
             self.model.flexibleTimeWorkSchedule[@"offset"] = self.model.fixedTimeWorkSchedule[@"offset"];
         }
-        self.model.startTime = kIsNilString(self.model.startTime) ? [NSString stringWithFormat:@"%.f",[NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970] * 1000] : self.model.startTime;
-        self.model.endTime = kIsNilString(self.model.endTime) ? [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 * 1000] : self.model.endTime;
     }
 }
 
@@ -269,10 +267,6 @@
     self.model.fixedTimeWorkSchedule[@"hour"] = model.schedule.hour;
     self.model.fixedTimeWorkSchedule[@"signTimeSections"] = model.schedule.signTimeSections;
     self.model.fixedTimeWorkSchedule[@"freeTimeSection"] = model.schedule.freeTimeSection;
-    NSString *startTime = model.schedule.signTimeSections.firstObject[@"signTime"];
-    NSString *endTime = model.schedule.signTimeSections.lastObject[@"returnTime"];
-    self.model.startTime = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:startTime.doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
-    self.model.endTime = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:endTime.doubleValue/1000+28800] withDefineFormatterType:forDateFormatTypeSpecial];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
