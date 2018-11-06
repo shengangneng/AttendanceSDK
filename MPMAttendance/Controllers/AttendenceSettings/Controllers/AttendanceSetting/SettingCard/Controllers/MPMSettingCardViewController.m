@@ -21,7 +21,7 @@
 /** 地图 */
 #import "MPMAttendenceMapViewController.h"
 
-#define kDeviationValueArray @[@"100米",@"200米",@"300米",@"400米",@"500米",@"600米",@"700米",@"800米",@"900米",@"1000米"]
+#define kDeviationValueArray @[@"300米",@"400米",@"500米",@"600米",@"700米",@"800米",@"900米",@"1000米"]
 
 @interface MPMSettingCardViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -79,7 +79,7 @@
         classDic = self.model.flexibleTimeWorkSchedule;
     }
     NSArray *locations = classDic[@"locatioinSettings"];
-    NSString *offset = @"100";
+    NSString *offset = @"300";
     if (classDic[@"offset"]) {
         if ([classDic[@"offset"] isKindOfClass:[NSString class]]) {
             offset = classDic[@"offset"];
@@ -403,7 +403,7 @@
         self.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:map animated:YES];
     } else if (indexPath.section == 0 && indexPath.row == 1) {
-        NSInteger defaultValue = kIsNilString(self.deviation) ? 0 : [kDeviationValueArray indexOfObject:[NSString stringWithFormat:@"%@米",self.deviation]];
+        NSInteger defaultValue = kIsNilString(self.deviation) ? 0 : ([kDeviationValueArray containsObject:[NSString stringWithFormat:@"%@米",self.deviation]] ? [kDeviationValueArray indexOfObject:[NSString stringWithFormat:@"%@米",self.deviation]] : 0);
         // 允许偏差
         [self.pickerView showInView:kAppDelegate.window withPickerData:kDeviationValueArray selectRow:defaultValue];
         __weak typeof(self) weakself = self;
