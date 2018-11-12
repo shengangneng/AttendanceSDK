@@ -11,6 +11,8 @@
 #import "MPMOauthUser.h"
 #import "MPMAttendanceHeader.h"
 
+const CGFloat SVProgressDismissDuration = 0.15;
+
 static MPMSessionManager *instance;
 @interface MPMSessionManager()
 
@@ -97,7 +99,7 @@ static MPMSessionManager *instance;
             [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
             [strongself.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
                 if (needHUD) {
-                    [MPMProgressHUD dismiss];
+                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
                 }
                 if ([responseObject isKindOfClass:[NSDictionary class]]) {
                     success(responseObject);
@@ -106,7 +108,7 @@ static MPMSessionManager *instance;
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 if (needHUD) {
-                    [MPMProgressHUD dismiss];
+                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
                 }
                 NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
                 if (responses.statusCode == kRequestErrorUnauthorized) {
@@ -119,7 +121,7 @@ static MPMSessionManager *instance;
     } else {
         [self.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismiss];
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -129,7 +131,7 @@ static MPMSessionManager *instance;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD dismiss];
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self back];
@@ -153,7 +155,7 @@ static MPMSessionManager *instance;
             [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
             [strongself.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
                 if (needHUD) {
-                    [MPMProgressHUD dismiss];
+                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
                 }
                 if ([responseObject isKindOfClass:[NSDictionary class]]) {
                     success(responseObject);
@@ -163,7 +165,7 @@ static MPMSessionManager *instance;
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
                 if (needHUD) {
-                    [MPMProgressHUD dismiss];
+                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
                 }
                 if (responses.statusCode == kRequestErrorUnauthorized) {
                     [self back];
@@ -175,7 +177,7 @@ static MPMSessionManager *instance;
     } else {
         [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismiss];
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -185,7 +187,7 @@ static MPMSessionManager *instance;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD dismiss];
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self back];
@@ -209,7 +211,7 @@ static MPMSessionManager *instance;
             [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
             [strongself.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 if (needHUD) {
-                    [MPMProgressHUD dismiss];
+                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
                 }
                 if ([responseObject isKindOfClass:[NSDictionary class]]) {
                     success(responseObject);
@@ -219,7 +221,7 @@ static MPMSessionManager *instance;
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                 NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
                 if (needHUD) {
-                    [MPMProgressHUD dismiss];
+                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
                 }
                 if (responses.statusCode == kRequestErrorUnauthorized) {
                     [self back];
@@ -231,7 +233,7 @@ static MPMSessionManager *instance;
     } else {
         [self.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismiss];
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -241,7 +243,7 @@ static MPMSessionManager *instance;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD dismiss];
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self back];

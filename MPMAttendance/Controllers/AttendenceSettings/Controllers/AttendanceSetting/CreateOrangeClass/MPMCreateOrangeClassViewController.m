@@ -290,6 +290,7 @@
         _tableView = [[UITableView alloc] init];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.tableFooterView = [[UIView alloc] init];
         [_tableView setSeparatorColor:kSeperateColor];
         _tableView.backgroundColor = kTableViewBGColor;
     }
