@@ -243,15 +243,21 @@
     if (defaultCondictionValues.count > 0) {
         [cell.selectionButton setTitle:defaultCondictionValues[model.conditions.integerValue] forState:UIControlStateNormal];
     }
-    if (model.integralValue.integerValue >= 0) {
-        cell.intergralView.textLabel.text = @"+B";
-    } else {
-        cell.intergralView.textLabel.text = @"-B";
-    }
     cell.intergralView.textfield.text = [NSString stringWithFormat:@"%d",abs(model.integralValue.intValue)];
     cell.ticketButton.selected = (model.isTick.integerValue == 1);
-    // 修改B分的图片
-    cell.intergralView.state = model.integralValue.integerValue >= 0 ? 0 : 1;// 0加号，1减号
+    // 修改B分的图片：0加分 1减分
+    NSString *defaultValue = self.segmentControl.selectedSegmentIndex == 0 ? kJiFenType0IntergralValueFromId[model.integralType] : kJiFenType1IntergralValueFromId[model.integralType];
+    if (model.integralValue.integerValue > 0) {
+        cell.intergralView.state = 0;
+    } else if (model.integralValue.integerValue < 0) {
+        cell.intergralView.state = 1;
+    } else {
+        if (defaultValue.integerValue >= 0) {
+            cell.intergralView.state = 0;
+        } else {
+            cell.intergralView.state = 1;
+        }
+    }
     cell.intergralView.type = model.type.integerValue;
     cell.intergralView.imageView.userInteractionEnabled = (model.typeCanChange.integerValue == 1);
     
