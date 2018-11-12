@@ -56,7 +56,7 @@
 
 - (void)showInView:(UIView *)superView withPickerData:(NSArray *)pickerData selectRow:(NSInteger)selectRow {
     // 需要传入superView，需要有相应的数据，否则直接return
-    if (!superView || self.isShowing || pickerData.count <= 1) {
+    if (!superView || self.isShowing || pickerData.count < 1) {
         return;
     }
     self.pickerData = pickerData;
@@ -65,7 +65,7 @@
     self.pickerView.frame = CGRectMake(0, PickerViewRowHeight, kScreenWidth, PickerRowCount * PickerViewRowHeight);
     self.contentView.frame = CGRectMake(0, kScreenHeight, kScreenWidth, (PickerRowCount + 1) * PickerViewRowHeight);
     [self.pickerView reloadAllComponents];
-    [self.pickerView selectRow:selectRow inComponent:0 animated:YES];
+    [self.pickerView selectRow:self.selectedRow inComponent:0 animated:YES];
     [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [superView addSubview:self.mainMaskView];
         [superView addSubview:self.contentView];
