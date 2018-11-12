@@ -32,7 +32,7 @@
 - (UILabel *)label {
     if (!_label) {
         _label = [[UILabel alloc] init];
-        _label.frame = CGRectMake(6, 0, 50, 19);
+        _label.frame = CGRectMake(6, 0, 100, 19);
         _label.font = SystemFont(14);
         _label.textColor = kBlackColor;
     }
