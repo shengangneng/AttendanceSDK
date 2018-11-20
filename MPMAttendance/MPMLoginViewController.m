@@ -392,12 +392,11 @@
             NSDictionary *object = response[kResponseObjectKey];
             [MPMOauthUser shareOauthUser].employee_id = object[@"employeeId"];
             [MPMOauthUser shareOauthUser].company_id = object[@"companyId"];
-            [MPMOauthUser shareOauthUser].company_code = object[@"companyCode"];
             [MPMOauthUser shareOauthUser].department_id = object[@"departmentId"];
             [MPMOauthUser shareOauthUser].department_name = object[@"departmentName"];
             [MPMOauthUser shareOauthUser].name_cn = object[@"username"];
             [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
-            [self getCompanyNameWithCompanyCode:object[@"companyCode"]];
+            [self getCompanyNameWithCompanyCode:[MPMOauthUser shareOauthUser].company_code];
         }
     } failure:^(NSString *error) {
         NSLog(@"获取用户信息失败...%@--%@",[MPMOauthUser shareOauthUser].user_id,[MPMOauthUser shareOauthUser].company_code);
