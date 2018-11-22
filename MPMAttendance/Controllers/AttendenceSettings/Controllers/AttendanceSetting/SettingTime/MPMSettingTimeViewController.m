@@ -301,8 +301,9 @@
     [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在保存" success:^(id response) {
         DLog(@"%@",response);
         if (response && ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 200) {
+            NSString *message = kDulingTypeCreate == self.dulingType ? @"新增成功" : @"修改成功";
             __weak typeof(self) weakself = self;
-            [self showAlertControllerToLogoutWithMessage:@"修改成功" sureAction:^(UIAlertAction * _Nonnull action) {
+            [self showAlertControllerToLogoutWithMessage:message sureAction:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
                 [strongself.navigationController popViewControllerAnimated:YES];
             } needCancleButton:NO];
