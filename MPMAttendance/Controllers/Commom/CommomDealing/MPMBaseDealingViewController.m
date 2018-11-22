@@ -866,7 +866,7 @@
                     strongself.dealingModel.addCount = 1;
                 }
                 
-                strongself.tableViewTitleArray = [MPMCausationTypeData getTableViewDataWithCausationType:strongself.dealingModel.causationDetail[section].causationType.integerValue addCount:strongself.dealingModel.addCount];
+                strongself.tableViewTitleArray = [MPMCausationTypeData getTableViewDataWithCausationType:strongself.dealingModel.causationDetail[index].causationType.integerValue addCount:strongself.dealingModel.addCount];
                 [strongself.tableView reloadData];
             }
         };
