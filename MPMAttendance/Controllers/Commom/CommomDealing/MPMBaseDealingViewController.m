@@ -1106,8 +1106,15 @@
             __weak typeof (self) weakself = self;
             cell.addpBlock = ^(UIButton *sender) {
                 __strong typeof (weakself) strongself = weakself;
-                // 跳入多选人员页面（只能选择人员）
-                MPMRepairSigninViewController *repair = [[MPMRepairSigninViewController alloc] initWithRepairFromType:kRepairFromTypeDealing];
+                // 跳入漏签记录页面
+                NSMutableArray *selected = [NSMutableArray array];
+                for (int i = 0; i < strongself.dealingModel.addCount; i++) {
+                    MPMCausationDetailModel *detail = strongself.dealingModel.causationDetail[i];
+                    MPMLerakageCardModel *model = [[MPMLerakageCardModel alloc] init];
+                    model.schedulingEmployeeId = detail.detailId;
+                    [selected addObject:model];
+                }
+                MPMRepairSigninViewController *repair = [[MPMRepairSigninViewController alloc] initWithRepairFromType:kRepairFromTypeDealing passingLeadArray:selected.copy];
                 __weak typeof(strongself) wweakself = strongself;
                 repair.toDealingBlock = ^(MPMDealingModel *model) {
                     __strong typeof(wweakself) sstrongself = wweakself;

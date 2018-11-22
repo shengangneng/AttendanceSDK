@@ -7,6 +7,7 @@
 //
 
 #import "MPMBaseViewController.h"
+#import "MPMLerakageCardModel.h"
 @class MPMDealingModel;
 
 typedef NS_ENUM(NSInteger, kRepairFromType)  {
@@ -18,7 +19,7 @@ typedef void(^ToDealingWithModelBlock)(MPMDealingModel *model);
 
 @interface MPMRepairSigninViewController : MPMBaseViewController
 
-- (instancetype)initWithRepairFromType:(kRepairFromType)fromType;
+- (instancetype)initWithRepairFromType:(kRepairFromType)fromType passingLeadArray:(NSArray <MPMLerakageCardModel *> *)leadArray;
 
 @property (nonatomic, copy) ToDealingWithModelBlock toDealingBlock;
 

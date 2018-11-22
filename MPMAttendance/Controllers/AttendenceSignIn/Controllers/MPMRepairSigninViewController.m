@@ -13,7 +13,6 @@
 #import "MPMBaseDealingViewController.h"
 #import "MPMHTTPSessionManager.h"
 #import "MPMShareUser.h"
-#import "MPMLerakageCardModel.h"
 #import "NSDateFormatter+MPMExtention.h"
 #import "MPMBaseTableViewCell.h"
 #import "MPMOauthUser.h"
@@ -40,10 +39,12 @@ const NSInteger MPMRepairSignLimitCount = 5;
 
 @implementation MPMRepairSigninViewController
 
-- (instancetype)initWithRepairFromType:(kRepairFromType)fromType {
+- (instancetype)initWithRepairFromType:(kRepairFromType)fromType passingLeadArray:(NSArray <MPMLerakageCardModel *> *)leadArray {
     self = [super init];
     if (self) {
         self.fromType = fromType;
+        self.leadCardModel = [[MPMRepairSignLeadCardModel alloc] initWithThisMonth:YES];
+        self.leadCardModel.thisMonthPassingLeadCards = leadArray;
     }
     return self;
 }
@@ -75,7 +76,6 @@ const NSInteger MPMRepairSignLimitCount = 5;
 - (void)setupAttributes {
     [super setupAttributes];
     self.title = @"补签";
-    self.leadCardModel = [[MPMRepairSignLeadCardModel alloc] initWithThisMonth:YES];
     [self.bottomRepairButton addTarget:self action:@selector(repair:) forControlEvents:UIControlEventTouchUpInside];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(left:)];
 }
@@ -133,6 +133,26 @@ const NSInteger MPMRepairSignLimitCount = 5;
             self.noMessageView.hidden = temp.count > 0;
             if (self.leadCardModel.isThisMonth) {
                 self.leadCardModel.thisMonthLeadCards = temp.copy;
+                // 筛选出选中的项
+                if (self.leadCardModel.thisMonthPassingLeadCards.count > 0) {
+                    NSMutableArray *tempSelected = [NSMutableArray array];
+                    for (int i = 0; i < self.leadCardModel.thisMonthLeadCards.count; i++) {
+                        MPMLerakageCardModel *lead = self.leadCardModel.thisMonthLeadCards[i];
+                        BOOL selected = NO;
+                        for (int j = 0; j < self.leadCardModel.thisMonthPassingLeadCards.count; j++) {
+                            MPMLerakageCardModel *slead = self.leadCardModel.thisMonthPassingLeadCards[j];
+                            if ([lead.schedulingEmployeeId isEqualToString:slead.schedulingEmployeeId]) {
+                                selected = YES;
+                                break;
+                            }
+                        }
+                        if (selected) {
+                            [tempSelected addObject:[NSIndexPath indexPathForRow:i inSection:1]];
+                        }
+                    }
+                    self.leadCardModel.thisMonthSelectIndexPaths = tempSelected.copy;
+                    self.leadCardModel.thisMonthPassingLeadCards = nil;
+                }
             } else {
                 self.leadCardModel.lastMonthLeadCards = temp.copy;
             }
@@ -259,6 +279,20 @@ const NSInteger MPMRepairSignLimitCount = 5;
                 cell.signTypeLabel.text = model.btn;
                 cell.signTimeLabel.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:model.brushTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeHourMinute];
                 cell.signDateLabel.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:model.brushTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeYearMonthDayBar];
+            }
+            if (self.leadCardModel.thisMonthSelectIndexPaths.count > 0 && self.leadCardModel.isThisMonth) {
+                BOOL selected = NO;
+                for (int i = 0; i < self.leadCardModel.thisMonthSelectIndexPaths.count; i++) {
+                    NSIndexPath *ind = self.leadCardModel.thisMonthSelectIndexPaths[i];
+                    if (ind.row == indexPath.row) {
+                        selected = YES;
+                    }
+                }
+                if (selected) {
+                    [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:NO];
+                } else {
+                    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+                }
             }
             cell.checkBox.hidden = !self.leadCardModel.isThisMonth;
             return cell;

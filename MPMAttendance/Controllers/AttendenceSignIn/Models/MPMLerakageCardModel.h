@@ -26,6 +26,7 @@
 
 @property (nonatomic, copy) NSArray<NSIndexPath *> *thisMonthSelectIndexPaths;/** 保存当前月选中的Cell */
 
+@property (nonatomic, copy) NSArray<MPMLerakageCardModel *> *thisMonthPassingLeadCards;
 @property (nonatomic, copy) NSArray<MPMLerakageCardModel *> *thisMonthLeadCards;
 @property (nonatomic, copy) NSArray<MPMLerakageCardModel *> *lastMonthLeadCards;
 

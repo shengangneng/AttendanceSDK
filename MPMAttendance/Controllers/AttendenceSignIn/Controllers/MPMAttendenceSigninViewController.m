@@ -548,7 +548,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 #pragma mark - Target Action
 
 - (void)right:(UIButton *)sender {
-    MPMRepairSigninViewController *rs = [[MPMRepairSigninViewController alloc] initWithRepairFromType:kRepairFromTypeSigning];
+    MPMRepairSigninViewController *rs = [[MPMRepairSigninViewController alloc] initWithRepairFromType:kRepairFromTypeSigning passingLeadArray:nil];
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:rs animated:YES];
     self.hidesBottomBarWhenPushed = NO;
