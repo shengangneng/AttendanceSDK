@@ -839,10 +839,10 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
             cell = [[MPMAttendenceExceptionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         }
         NSArray *array = self.attendenceManageModel.attendenceExceptionArray[indexPath.row];
-        MPMAttendenceExceptionModel *excep = self.attendenceManageModel.attendenceExceptionArray[indexPath.row].firstObject;
         
         NSString *formatter;
         for (int i = 0; i < array.count; i++) {
+            MPMAttendenceExceptionModel *excep = self.attendenceManageModel.attendenceExceptionArray[indexPath.row][i];
             if (0 == i) {
                 formatter = [NSString stringWithFormat:@"%@  %@",[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds],[NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:excep.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds]];
             } else {
@@ -850,7 +850,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
             }
         }
         
-        cell.typeLabel.text = kException_GetNameFromNum[excep.type];
+        cell.typeLabel.text = kException_GetNameFromNum[((MPMAttendenceExceptionModel *)self.attendenceManageModel.attendenceExceptionArray[indexPath.row].firstObject).type];
         cell.detailTimeLabel.text = formatter;
         return cell;
     }

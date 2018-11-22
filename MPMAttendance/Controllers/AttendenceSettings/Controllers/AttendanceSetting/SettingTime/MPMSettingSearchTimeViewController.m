@@ -159,6 +159,11 @@
                 [temp addObject:model];
             }
             self.searchArray = temp.copy;
+        } else {
+            self.searchArray = nil;
+        }
+        if (self.searchArray.count == 0) {
+            [MPMProgressHUD showErrorWithStatus:@"未搜到相关班次！"];
         }
         [self.tableView reloadData];
     } failure:^(NSString *error) {
