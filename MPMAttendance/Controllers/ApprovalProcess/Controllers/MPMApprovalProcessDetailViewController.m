@@ -458,7 +458,7 @@
             make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
             make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
         }];
-        if (1 == self.model.prevActionState.integerValue) {
+        if (![self.taskInstGroups.firstObject.taskCode isEqualToString:@"apply"]) {
             // 我的待办-待处理
             [self.bottomMiddleButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
                 make.leading.equalTo(self.bottomLeftButton.mpm_trailing).offset(12);
@@ -578,7 +578,7 @@
 }
 
 - (void)left:(UIButton *)sender {
-    if (1 == self.model.prevActionState.integerValue) {
+    if (![self.taskInstGroups.firstObject.taskCode isEqualToString:@"apply"]) {
         // 我的待办-待处理-驳回
         MPMApprovalProcessNodeDealingViewController *nodeVC = [[MPMApprovalProcessNodeDealingViewController alloc] initWithDealingNodeType:kDetailNodeDealingTypeReject taskInstId:self.model.mpm_id model:self.model];
         self.hidesBottomBarWhenPushed = YES;
@@ -612,7 +612,7 @@
 }
 
 - (void)middle:(UIButton *)sender {
-    if (1 == self.model.prevActionState.integerValue) {
+    if (![self.taskInstGroups.firstObject.taskCode isEqualToString:@"apply"]) {
         // 我的待办-待处理-转交
         MPMApprovalProcessNodeDealingViewController *nodeVC = [[MPMApprovalProcessNodeDealingViewController alloc] initWithDealingNodeType:kDetailNodeDealingTypeTransToOthers taskInstId:self.model.mpm_id model:self.model];
         nodeVC.config = self.config;
@@ -622,7 +622,7 @@
 }
 
 - (void)right:(UIButton *)sender {
-    if (1 == self.model.prevActionState.integerValue) {
+    if (![self.taskInstGroups.firstObject.taskCode isEqualToString:@"apply"]) {
         // 我的待办-待处理-通过
         MPMApprovalProcessNodeDealingViewController *nodeVC = [[MPMApprovalProcessNodeDealingViewController alloc] initWithDealingNodeType:kDetailNodeDealingTypePass taskInstId:self.model.mpm_id model:self.model];
         self.hidesBottomBarWhenPushed = YES;
