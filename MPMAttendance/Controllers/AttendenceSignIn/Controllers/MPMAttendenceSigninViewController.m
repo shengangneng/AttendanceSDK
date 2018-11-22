@@ -1038,7 +1038,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 dealingModel.causationDetail[0].type = model.type;
                 dealingModel.causationDetail[0].attendanceTime = model.fillCardTime;/** 打卡节点时间 */
                 dealingModel.causationDetail[0].signTime = model.brushTime;         /** 实际打卡时间 */
-                dealingModel.causationDetail[0].reviseSignTime = model.fillCardTime;/** 实际打卡时间 */
+                dealingModel.causationDetail[0].reviseSignTime = model.brushTime;   /** 实际打卡时间 */
                 MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:type dealingModel:dealingModel dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
                 self.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:dealing animated:YES];

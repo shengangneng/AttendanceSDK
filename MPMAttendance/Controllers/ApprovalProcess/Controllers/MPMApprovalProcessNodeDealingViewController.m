@@ -314,6 +314,14 @@
     return YES;
 }
 
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSString* toBeString = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    if (toBeString.length > 30) {
+        return NO;
+    }
+    return YES;
+}
+
 - (void)textViewDidChange:(UITextView *)textView {
     if (textView.text.length == 0) {
         self.textViewClearButton.hidden = YES;

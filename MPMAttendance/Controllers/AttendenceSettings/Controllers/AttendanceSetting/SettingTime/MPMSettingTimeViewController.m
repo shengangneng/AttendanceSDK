@@ -780,6 +780,8 @@
     // 检查输入内容
     if (kIsNilString(self.headerNameTextField.text)) {
         [self showAlertControllerToLogoutWithMessage:@"请输入班次名称" sureAction:nil needCancleButton:NO];return;
+    } else if (self.headerNameTextField.text.length > 10) {
+        [self showAlertControllerToLogoutWithMessage:@"班次名称不能超过10个字" sureAction:nil needCancleButton:NO];return;
     }
     
     if (self.preSelectedButton == self.headerOneButton) {
