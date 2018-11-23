@@ -288,7 +288,7 @@
                     self.dealingModel.causationDetail[i].trafficNeedFold = NO;
                 }
                 // 加班
-                self.dealingModel.redress = dDic[@"redress"];
+                self.dealingModel.redress = kNumberSafeString(dDic[@"redress"]);
                 // 补签、改签
                 self.dealingModel.causationDetail[i].detailId = dDic[@"detailId"];
                 self.dealingModel.causationDetail[i].fillupTime = kNumberSafeString(dDic[@"fillupTime"]);
