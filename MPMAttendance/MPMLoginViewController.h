@@ -10,16 +10,14 @@
 
 @protocol MPMAttendanceDelegate <NSObject>
 
-/** 考勤首页点击返回，会返回token、refreshToken、expiresIn：因为如果token是在考勤里面里面失效的，会做刷新token的操作 */
-- (void)attendanceDidCompleteWithToken:(NSString *)token refreshToken:(NSString *)refreshToken expiresIn:(NSString *)expiresIn;
+/** 考勤首页点击返回，如果在使用考勤的时候Token过期了，会回传tokenExpire = YES，否则正常返回的时候会回传tokenExpire = NO */
+- (void)attendanceBackWithTokenExpire:(BOOL)tokenExpire;
 
 @end
 
 @interface MPMLoginViewController : UIViewController
 
 - (instancetype)initWithToken:(NSString *)token
-                 refreshToken:(NSString *)refreshToken
-                    expiresIn:(NSString *)expiresIn
                        userId:(NSString *)userId
                   companyCode:(NSString *)companyCode;
 

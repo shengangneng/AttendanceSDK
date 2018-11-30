@@ -44,8 +44,6 @@
 
 
 - (instancetype)initWithToken:(NSString *)token
-                 refreshToken:(NSString *)refreshToken
-                    expiresIn:(NSString *)expiresIn
                        userId:(NSString *)userId
                   companyCode:(NSString *)companyCode {
     self = [super init];
@@ -66,12 +64,8 @@
          */
         [MPMOauthUser shareOauthUser].access_token = token;
         [MPMOauthUser shareOauthUser].token_type = @"Bearer";
-        [MPMOauthUser shareOauthUser].refresh_token = refreshToken;
         [MPMOauthUser shareOauthUser].user_id = userId;
         [MPMOauthUser shareOauthUser].company_code = companyCode;
-        [MPMOauthUser shareOauthUser].expiresIn = expiresIn;
-        // 每次进考勤都刷新一次
-        [MPMOauthUser shareOauthUser].expires_in = [NSString stringWithFormat:@"%.f",[NSDate date].timeIntervalSince1970 - 100];
 //        }
     }
     return self;
@@ -103,7 +97,7 @@
     }
     if (kIsNilString([MPMOauthUser shareOauthUser].access_token) || kIsNilString([MPMOauthUser shareOauthUser].user_id) || kIsNilString([MPMOauthUser shareOauthUser].company_code)) {
         NSLog(@"数据不能为空");
-        [[MPMSessionManager shareManager] back];
+        [[MPMSessionManager shareManager] backWithExpire:NO];
     } else {
         [self defaultSetting];
         [self getPerrimitionV2];

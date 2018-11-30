@@ -61,6 +61,6 @@ typedef NS_ENUM(NSInteger, MPMRequestStatusCode) {
  */
 - (void)deleteRequestWithURL:(NSString *)url setAuth:(BOOL)setAuth params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id response))success failure:(void(^)(NSString *error))failure;
 
-- (void)back;
+- (void)backWithExpire:(BOOL)expire;
 
 @end

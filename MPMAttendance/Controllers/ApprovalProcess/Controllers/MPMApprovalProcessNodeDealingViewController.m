@@ -584,7 +584,7 @@
     }
     pickerData = temp.copy;
     // 默认驳回到最靠近的一级
-    NSInteger defaultRow = kIsNilString(self.targetTaskDefCode) ? pickerData.count - 1 : [pickerData indexOfObject:self.rejectLabel.text];
+    NSInteger defaultRow = kIsNilString(self.targetTaskDefCode) ? 0 : [pickerData indexOfObject:self.rejectLabel.text];
     [self.pickerView showInView:kAppDelegate.window withPickerData:pickerData selectRow:defaultRow];
     __weak typeof(self) weakself = self;
     self.pickerView.completeSelectBlock = ^(NSString *data) {

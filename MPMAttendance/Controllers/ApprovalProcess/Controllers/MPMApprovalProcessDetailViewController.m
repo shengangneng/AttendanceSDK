@@ -278,6 +278,7 @@
 - (void)setupAttributes {
     [super setupAttributes];
     [self.reasonDetailLabel setAttributedString:kIsNilString(self.processDetailList.reason) ? @"无" : self.processDetailList.reason font:SystemFont(15) lineSpace:2];
+    self.reasonLabel.text = [NSString stringWithFormat:@"%@原因",kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.causationType]] ? : @"申请"];
     self.headerImage.nameLabel.text = self.processDetailList.userName.length > 2 ? [self.processDetailList.userName substringWithRange:NSMakeRange(self.processDetailList.userName.length - 2, 2)] : self.processDetailList.userName;
     self.headerNameDepartment.text = [NSString stringWithFormat:@"%@（%@）",self.processDetailList.userName,self.processDetailList.departmentName];
     self.headerStatusLabel.text = [NSString stringWithFormat:@"状态 : %@",(self.processInst.state.integerValue > kStateArray.count - 1) ? @"待处理" : kStateArray[self.processInst.state.integerValue]];

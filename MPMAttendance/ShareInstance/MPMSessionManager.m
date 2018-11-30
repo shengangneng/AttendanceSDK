@@ -93,30 +93,26 @@ static MPMSessionManager *instance;
         [MPMProgressHUD showWithStatus:loadingMessage];
     }
     if (setAuth) {
-        __weak typeof(self) weakself = self;
-        [self checkOrRefreshTokenWithCompleteBlock:^{
-            __strong typeof(weakself) strongself = weakself;
-            [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
-            [strongself.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
-                if (needHUD) {
-                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
-                }
-                if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                    success(responseObject);
-                } else {
-                    failure([instance getAlertMessageFromError:nil]);
-                }
-            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                if (needHUD) {
-                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
-                }
-                NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
-                if (responses.statusCode == kRequestErrorUnauthorized) {
-                    [self back];
-                } else {
-                    failure([instance getAlertMessageFromError:error]);
-                }
-            }];
+        [self.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
+        [self.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+            if (needHUD) {
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+            }
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                success(responseObject);
+            } else {
+                failure([instance getAlertMessageFromError:nil]);
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            if (needHUD) {
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+            }
+            NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+            if (responses.statusCode == kRequestErrorUnauthorized) {
+                [self backWithExpire:YES];
+            } else {
+                failure([instance getAlertMessageFromError:error]);
+            }
         }];
     } else {
         [self.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
@@ -134,7 +130,7 @@ static MPMSessionManager *instance;
                 [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self back];
+                [self backWithExpire:YES];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -149,30 +145,26 @@ static MPMSessionManager *instance;
         [MPMProgressHUD showWithStatus:loadingMessage];
     }
     if (setAuth) {
-        __weak typeof(self) weakself = self;
-        [self checkOrRefreshTokenWithCompleteBlock:^{
-            __strong typeof(weakself) strongself = weakself;
-            [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
-            [strongself.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
-                if (needHUD) {
-                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
-                }
-                if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                    success(responseObject);
-                } else {
-                    failure([instance getAlertMessageFromError:nil]);
-                }
-            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
-                if (needHUD) {
-                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
-                }
-                if (responses.statusCode == kRequestErrorUnauthorized) {
-                    [self back];
-                } else {
-                    failure([instance getAlertMessageFromError:error]);
-                }
-            }];
+        [self.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
+        [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
+            if (needHUD) {
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+            }
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                success(responseObject);
+            } else {
+                failure([instance getAlertMessageFromError:nil]);
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+            if (needHUD) {
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+            }
+            if (responses.statusCode == kRequestErrorUnauthorized) {
+                [self backWithExpire:YES];
+            } else {
+                failure([instance getAlertMessageFromError:error]);
+            }
         }];
     } else {
         [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
@@ -190,7 +182,7 @@ static MPMSessionManager *instance;
                 [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self back];
+                [self backWithExpire:YES];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -205,30 +197,26 @@ static MPMSessionManager *instance;
         [MPMProgressHUD showWithStatus:loadingMessage];
     }
     if (setAuth) {
-        __weak typeof(self) weakself = self;
-        [self checkOrRefreshTokenWithCompleteBlock:^{
-            __strong typeof(weakself) strongself = weakself;
-            [strongself.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
-            [strongself.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                if (needHUD) {
-                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
-                }
-                if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                    success(responseObject);
-                } else {
-                    failure([instance getAlertMessageFromError:nil]);
-                }
-            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
-                if (needHUD) {
-                    [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
-                }
-                if (responses.statusCode == kRequestErrorUnauthorized) {
-                    [self back];
-                } else {
-                    failure([instance getAlertMessageFromError:error]);
-                }
-            }];
+        [self.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
+        [self.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            if (needHUD) {
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+            }
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                success(responseObject);
+            } else {
+                failure([instance getAlertMessageFromError:nil]);
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
+            if (needHUD) {
+                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+            }
+            if (responses.statusCode == kRequestErrorUnauthorized) {
+                [self backWithExpire:YES];
+            } else {
+                failure([instance getAlertMessageFromError:error]);
+            }
         }];
     } else {
         [self.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -246,7 +234,7 @@ static MPMSessionManager *instance;
                 [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self back];
+                [self backWithExpire:YES];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -272,18 +260,19 @@ static MPMSessionManager *instance;
     }
 }
 
-- (void)back {
+- (void)backWithExpire:(BOOL)expire {
     UIViewController *lastRoot = [MPMOauthUser shareOauthUser].lastRootViewController;
     UIViewController *lastPop = [MPMOauthUser shareOauthUser].lastCanPopViewController;
+    [MPMProgressHUD dismiss];
     kAppDelegate.window.rootViewController = lastRoot;
     // 推进来的时候隐藏了，现在需要取消隐藏
     if (lastPop.navigationController.navigationBar.hidden == YES) {
         lastPop.navigationController.navigationBar.hidden = NO;
     }
     [UIApplication sharedApplication].statusBarStyle = [MPMOauthUser shareOauthUser].lastStatusBarStyle;
-    if ([lastPop isKindOfClass:[MPMLoginViewController class]] && ((MPMLoginViewController *)lastPop).delegate && [((MPMLoginViewController *)lastPop).delegate respondsToSelector:@selector(attendanceDidCompleteWithToken:refreshToken:expiresIn:)]) {
+    if ([lastPop isKindOfClass:[MPMLoginViewController class]] && ((MPMLoginViewController *)lastPop).delegate && [((MPMLoginViewController *)lastPop).delegate respondsToSelector:@selector(attendanceBackWithTokenExpire:)]) {
         if (!kIsNilString([MPMOauthUser shareOauthUser].access_token) && !kIsNilString([MPMOauthUser shareOauthUser].refresh_token) && !kIsNilString([MPMOauthUser shareOauthUser].expiresIn)) {
-            [((MPMLoginViewController *)lastPop).delegate attendanceDidCompleteWithToken:[MPMOauthUser shareOauthUser].access_token refreshToken:[MPMOauthUser shareOauthUser].refresh_token expiresIn:[MPMOauthUser shareOauthUser].expiresIn];
+            [((MPMLoginViewController *)lastPop).delegate attendanceBackWithTokenExpire:expire];
         }
     }
     [lastPop.navigationController popViewControllerAnimated:YES];

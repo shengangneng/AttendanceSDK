@@ -194,7 +194,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     // header
     [self.headerView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.top.equalTo(self.view);
-        make.height.equalTo(@(PX_H(278)));
+        make.height.equalTo(@(PX_H(260)));
     }];
     [self.headerDateView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.equalTo(self.headerView);
@@ -722,7 +722,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 
 - (void)back:(UIButton *)sender {
-    [[MPMSessionManager shareManager] back];
+    [[MPMSessionManager shareManager] backWithExpire:NO];
 }
 
 #pragma mark - Notification
