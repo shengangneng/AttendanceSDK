@@ -272,6 +272,8 @@
 		CD4718A6211053DE00401169 /* MPMProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47189E211053DD00401169 /* MPMProgressHUD.m */; };
 		CD4718A7211053DE00401169 /* MPMProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47189F211053DD00401169 /* MPMProgressHUD.h */; };
 		CD4718AB2110545900401169 /* MPMAttendanceHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718AA2110545900401169 /* MPMAttendanceHeader.h */; };
+		CDBFAFC821B23ABB0020C493 /* MPMSigninTimerTask.h in Headers */ = {isa = PBXBuildFile; fileRef = CDBFAFC621B23ABB0020C493 /* MPMSigninTimerTask.h */; };
+		CDBFAFC921B23ABB0020C493 /* MPMSigninTimerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */; };
 		CDE1CFA6217C18F20047CF85 /* MPMOauthUser.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */; };
 		CDE1CFA7217C18F20047CF85 /* MPMOauthUser.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */; };
 		CDE1CFA9217C1A620047CF85 /* MPMInterfaceConst.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */; };
@@ -665,6 +667,8 @@
 		CD47189E211053DD00401169 /* MPMProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProgressHUD.m; sourceTree = "<group>"; };
 		CD47189F211053DD00401169 /* MPMProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProgressHUD.h; sourceTree = "<group>"; };
 		CD4718AA2110545900401169 /* MPMAttendanceHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPMAttendanceHeader.h; sourceTree = "<group>"; };
+		CDBFAFC621B23ABB0020C493 /* MPMSigninTimerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSigninTimerTask.h; sourceTree = "<group>"; };
+		CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSigninTimerTask.m; sourceTree = "<group>"; };
 		CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMOauthUser.h; sourceTree = "<group>"; };
 		CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMOauthUser.m; sourceTree = "<group>"; };
 		CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMInterfaceConst.h; sourceTree = "<group>"; };
@@ -1154,6 +1158,8 @@
 				CD4716642110536300401169 /* MPMLerakageCardModel.m */,
 				CDE1CFD2217C23E70047CF85 /* MPMAttendenceExceptionModel.h */,
 				CDE1CFD1217C23E70047CF85 /* MPMAttendenceExceptionModel.m */,
+				CDBFAFC621B23ABB0020C493 /* MPMSigninTimerTask.h */,
+				CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1791,6 +1797,7 @@
 				CD4717D92110536400401169 /* MPMSettingCardAddressWifiModel.h in Headers */,
 				CD47179A2110536400401169 /* MPMApprovalProcessDetailViewController.h in Headers */,
 				CD47181B2110536400401169 /* MPMButton.h in Headers */,
+				CDBFAFC821B23ABB0020C493 /* MPMSigninTimerTask.h in Headers */,
 				CD4717D32110536400401169 /* MPMClassSettingImageTableViewCell.h in Headers */,
 				CD47177E2110536400401169 /* MPMAttendenceOneMonthModel.h in Headers */,
 				CDE1CFF7217C272E0047CF85 /* MPMProcessDetailApprovalNodeView.h in Headers */,
@@ -2029,6 +2036,7 @@
 				CD4717A42110536400401169 /* MPMSiderDrawerCollectionReusableView.m in Sources */,
 				CDE1CFD0217C23E00047CF85 /* MPMAttendenceManageModel.m in Sources */,
 				CDE1D08A217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.m in Sources */,
+				CDBFAFC921B23ABB0020C493 /* MPMSigninTimerTask.m in Sources */,
 				CDE1D019217C29F80047CF85 /* MPMProcessTaskModel.m in Sources */,
 				CD4717F12110536400401169 /* MPMIntergralScoreView.m in Sources */,
 				CD4718072110536400401169 /* MPMBaseViewController.m in Sources */,

@@ -37,6 +37,7 @@
 #import "MPMApprovalProcessDetailViewController.h"
 #import "MPMProcessMyMetterModel.h"
 #import <AVFoundation/AVFoundation.h>
+#import "MPMSigninTimerTask.h"
 
 #define kAddressKeyPath         @"address"
 const double NeedRefreshLocationInterval = 600; /** 在打卡页面停留10分钟未操作，需要刷新地址 */
@@ -67,8 +68,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 // location
 @property (nonatomic, strong) CLLocationManager *locationManager;
 // timer
-@property (nonatomic, strong) CADisplayLink *timer; /** 定时器：用于获取当前系统时间 */
-@property (nonatomic, strong) CAKeyframeAnimation *alpha;
+@property (nonatomic, strong) MPMSigninTimerTask *timerTask;/** 定时器代理：用于获取当前系统时间，避免循环引用 */
 // data
 @property (nonatomic, strong) MPMAttendenceManageModel *attendenceManageModel;  /** 打卡信息model */
 @property (nonatomic, strong) NSDate *lastSigninDate;                           /** 记录上一次打卡时间（15秒钟不允许操作） */
@@ -114,6 +114,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 - (void)dealloc {
     [[MPMOauthUser shareOauthUser] removeObserver:self forKeyPath:kAddressKeyPath];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.timerTask shutdownTimer];
 }
 
 - (void)setupSubViews {
@@ -130,9 +132,10 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [[MPMOauthUser shareOauthUser] addObserver:self forKeyPath:kAddressKeyPath options:NSKeyValueObservingOptionNew context:nil];
     self.attendenceManageModel = [[MPMAttendenceManageModel alloc] init];
     [self.headerDateView setDetailDate:[NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeMonthYearDayWeek]];
-    self.timer = [CADisplayLink displayLinkWithTarget:self selector:@selector(timeChange:)];
-    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
+    self.timerTask = [[MPMSigninTimerTask alloc] initWithTarget:self selector:@selector(timeChange:)];
+    [self.timerTask resumeTimer];
+    
     // 刷新
     UIButton *rightButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton1 sizeToFit];// 这句不能少，少了按钮就会消失了
@@ -412,7 +415,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
             [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateNormal];
             [self.bottomRoundButton setBackgroundImage:ImageName(@"attendence_roundbtn") forState:UIControlStateHighlighted];
             [self.bottomAnimateLayer removeAllAnimations];
-            [self.bottomAnimateLayer addAnimation:self.alpha forKey:@"animate"];
+            [self.bottomAnimateLayer addAnimation:[self alpha] forKey:@"animate"];
         } else {
             [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateNormal];
             [self.bottomRoundButton setBackgroundImage:[UIImage getImageFromColor:kRGBA(184, 184, 184, 1)] forState:UIControlStateHighlighted];
@@ -535,7 +538,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 /** 打卡成功 */
 - (void)signinSuccess {
-    self.lastSigninDate = [NSDate date];// 签到成功，记录下此次打卡时间，再次打卡校验不能在15秒内立即打卡
+    self.lastSigninDate = [NSDate date];// 打卡成功，记录下此次打卡时间，再次打卡校验不能在15秒内立即打卡
     [MPMProgressHUD showSuccessWithStatus:@"打卡成功"];
     /*
      AVSpeechSynthesizer *speech = [[AVSpeechSynthesizer alloc] init];
@@ -690,8 +693,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 [MPMProgressHUD showErrorWithStatus:response[@"打卡异常，请稍后重试！"]];
             }
         } else if (response[kResponseDataKey] &&
-                  [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
-                  ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 202) {
+                   [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
+                   ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 202) {
             // 早退
             __weak typeof (self) weakself = self;
             [self showAlertControllerToLogoutWithMessage:(NSString *)response[@"responseData"][@"message"] sureAction:^(UIAlertAction * _Nonnull action) {
@@ -727,12 +730,12 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 #pragma mark - Notification
 - (void)appResignActive:(NSNotification *)noti {
-    [self.timer removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self.timerTask pauseTimer];
 }
 
 - (void)appBecomeActive:(NSNotification *)noti {
     [self setupSigninButton];
-    [self.timer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [self.timerTask resumeTimer];
     /*
      // 如果最后一个打卡数据不为空，或者当前时间不是今天，置灰打卡按钮
      if (self.attendenceManageModel.attendenceArray.count > 0) {
@@ -1097,7 +1100,6 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         _middleTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _middleTableView.delegate = self;
         _middleTableView.dataSource = self;
-        _middleTableView.rowHeight = 60;
         _middleTableView.backgroundColor = kClearColor;
     }
     return _middleTableView;
@@ -1185,21 +1187,19 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         _bottomAnimateLayer.fillColor = kMainBlueColor.CGColor;
         _bottomAnimateLayer.opacity = 0;
         _bottomAnimateLayer.position = CGPointMake(kScreenWidth / 2, 76);
-        [_bottomAnimateLayer addAnimation:self.alpha forKey:@"animate"];
+        [_bottomAnimateLayer addAnimation:[self alpha] forKey:@"animate"];
     }
     return _bottomAnimateLayer;
 }
 
 - (CAKeyframeAnimation *)alpha {
-    if (!_alpha) {
-        _alpha = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
-        _alpha.delegate = self;
-        _alpha.values = @[@0.0000001,@0.5,@0.0000001];
-        _alpha.duration = 1.5;
-        _alpha.repeatCount = HUGE;
-        _alpha.autoreverses = NO;
-    }
-    return _alpha;
+    CAKeyframeAnimation *alpha = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+    alpha.delegate = self;
+    alpha.values = @[@0.0000001,@0.5,@0.0000001];
+    alpha.duration = 1.5;
+    alpha.repeatCount = HUGE;
+    alpha.autoreverses = NO;
+    return alpha;
 }
 
 - (CLLocationManager *)locationManager {
