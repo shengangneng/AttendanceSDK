@@ -7,6 +7,7 @@
 //
 
 #import "MPMSigninTimerTask.h"
+#import "MPMAttendanceHeader.h"
 
 @interface MPMSigninTimerTask ()
 
