@@ -1,7 +1,7 @@
 //
 //  MPMRepairSigninAddTimeTableViewCell.m
 //  MPMAtendence
-//  +增加自由补签时间
+//  +增加自由补卡时间
 //  Created by gangneng shen on 2018/5/6.
 //  Copyright © 2018年 gangneng shen. All rights reserved.
 //
@@ -41,7 +41,7 @@
     if (!_addTimeButton) {
         _addTimeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _addTimeButton.userInteractionEnabled = NO;
-        [_addTimeButton setTitle:@"+ 增加自由补签时间" forState:UIControlStateNormal];
+        [_addTimeButton setTitle:@"+ 增加自由补卡时间" forState:UIControlStateNormal];
         [_addTimeButton setTitleColor:kMainBlueColor forState:UIControlStateNormal];
     }
     return _addTimeButton;

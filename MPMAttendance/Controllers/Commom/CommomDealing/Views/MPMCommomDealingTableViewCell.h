@@ -11,15 +11,19 @@
 
 typedef void(^TextFieldChangeBlock)(NSString *currentText);
 typedef void(^SectionDeleteBlock)(UIButton *sender);
+typedef void(^ExplainBlock)(void);
 
 @interface MPMCommomDealingTableViewCell : MPMBaseTableViewCell
 
 @property (nonatomic, strong) UIImageView *startIcon;
 @property (nonatomic, strong) UILabel *txLabel;
+@property (nonatomic, strong) UIButton *explainButton;      /** 小时后面的问号 */
 @property (nonatomic, strong) UIButton *deleteCellButton;
 @property (nonatomic, strong) UIView *detailView;
+@property (nonatomic, strong) UIView *accessoryMaskView;    /** 用于挡住accessView */
 @property (nonatomic, copy) TextFieldChangeBlock textFieldChangeBlock;
 @property (nonatomic, copy) SectionDeleteBlock sectionDeleteBlock;
+@property (nonatomic, copy) ExplainBlock explainBlock;
 
 @property (nonatomic, strong) UITextField *detailTextField;
 

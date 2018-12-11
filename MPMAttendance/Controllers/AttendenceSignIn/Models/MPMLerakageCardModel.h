@@ -12,8 +12,8 @@
 
 @property (nonatomic, copy) NSString *schedulingEmployeeId; /** 处理id */
 @property (nonatomic, copy) NSString *brushTime;            /** 打卡时间 */
-@property (nonatomic, copy) NSString *signType;             /** 签到0、签退1 */
-@property (nonatomic, copy) NSString *btn;                  /** 签到、签退 */
+@property (nonatomic, copy) NSString *signType;             /** 打卡0、下班1 */
+@property (nonatomic, copy) NSString *btn;                  /** 打卡、下班 */
 
 @end
 

@@ -1,7 +1,7 @@
 //
 //  MPMAtendenceSigninViewController.m
 //  MPMAtendence
-//  考勤打卡签到
+//  考勤打卡
 //  Created by gangneng shen on 2018/4/13.
 //  Copyright © 2018年 gangneng shen. All rights reserved.
 //
@@ -94,7 +94,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    // 签到按钮的layer动画
+    // 打卡按钮的layer动画
     [self canSignIn:YES];
     [self setupLocation];
     __weak typeof(self) weakself = self;
@@ -107,7 +107,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    // 签到按钮的layer动画
+    // 打卡按钮的layer动画
     [self canSignIn:NO];
     [self.locationManager stopUpdatingLocation];
 }
@@ -127,7 +127,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 - (void)setupAttributes {
     [super setupAttributes];
-    self.navigationItem.title = @"考勤签到";
+    self.navigationItem.title = @"考勤打卡";
     self.view.backgroundColor = kWhiteColor;
     [[MPMOauthUser shareOauthUser] addObserver:self forKeyPath:kAddressKeyPath options:NSKeyValueObservingOptionNew context:nil];
     self.attendenceManageModel = [[MPMAttendenceManageModel alloc] init];
@@ -312,7 +312,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [self getThreeWeekDataWithDate:date];
 }
 
-/** 获取当前日期的签到信息 */
+/** 获取当前日期的打卡信息 */
 - (void)getAttendanceSigninDataWithDate:(NSDate *)date {
     NSString *dateString = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970 * 1000];
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_CLOCKTIME];
@@ -619,7 +619,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                     double distance = [loc distanceFromLocation:myLoc];
                     DLog(@"===当前位置与考勤地点的距离是：%.f===",distance);
                     if (distance <= fabs(model.deviation.doubleValue) || model.deviation.doubleValue == 0) {
-                        // 如果发现我的地址在考勤地址库中的其中一个并且在考勤范围内，那么就允许签到
+                        // 如果发现我的地址在考勤地址库中的其中一个并且在考勤范围内，那么就允许打卡
                         canSign = YES;
                     }
                 }
@@ -638,7 +638,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 
 - (void)signin:(UIButton *)sender {
-    DLog(@"签到");
+    DLog(@"打卡");
     if ([self validateSignin]) {
         [self signForEarly:NO];
     }
@@ -1001,7 +1001,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         self.hidesBottomBarWhenPushed = NO;
         return;
     }
-    // 补签、改签。如果已经处理过，则跳到详情页面。
+    // 补卡、改卡。如果已经处理过，则跳到详情页面。
     MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[indexPath.row];
     if (!model.brushTime || model.brushTime.length == 0) {
     } else {
@@ -1022,33 +1022,33 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 NSInteger addCount;
                 NSString *typeStatus;
                 if (model.status.integerValue == 3) {
-                    // 漏卡-补签
+                    // 漏卡-补卡
                     type = kCausationTypeRepairSign;
                     addCount = 1;
                     typeStatus = @"1";
                 } else {
-                    // 其他状态-改签
+                    // 其他状态-改卡
                     type = kCausationTypeChangeSign;
                     addCount = 0;
                     typeStatus = @"0";
                 }
                 MPMDealingModel *dealingModel = [[MPMDealingModel alloc] initWithCausationType:type addCount:1];
-                // 补签
+                // 补卡
                 dealingModel.causationDetail[0].detailId = model.schedulingEmployeeId;
                 dealingModel.causationDetail[0].fillupTime = model.brushTime;
-                // 改签
+                // 改卡
                 dealingModel.status = model.status;
                 dealingModel.causationDetail[0].type = model.type;
                 dealingModel.causationDetail[0].attendanceTime = model.fillCardTime;/** 打卡节点时间 */
                 dealingModel.causationDetail[0].signTime = model.brushTime;         /** 实际打卡时间 */
                 dealingModel.causationDetail[0].reviseSignTime = model.brushTime;   /** 实际打卡时间 */
-                MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:type dealingModel:dealingModel dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
+                MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:type dealingModel:dealingModel dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil fastCalculate:kFastCalculateTypeNone];
                 self.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:dealing animated:YES];
                 self.hidesBottomBarWhenPushed = NO;
             }
         } failure:^(NSString *error) {
-            DLog(@"获取节点补签改签失败");
+            DLog(@"获取节点补卡改卡失败");
             [MPMProgressHUD showErrorWithStatus:error];
         }];
     }

@@ -48,6 +48,7 @@
 // type
 @property (nonatomic, strong) MPMDealingModel *dealingModel;
 @property (nonatomic, assign) DealingFromType dealingFromType;  /** 跳入的情况：从例外申请跳入、从打卡页面跳入、从编辑页面跳入 */
+@property (nonatomic, assign) FastCalculateType fastType;       /** 例外申请快捷方式 */
 // data
 @property (nonatomic, copy) NSArray *tableViewTitleArray;
 @property (nonatomic, copy) NSArray *leaveAllTypesArray;        /** 所有请假类型 */
@@ -59,7 +60,8 @@
 
 @implementation MPMBaseDealingViewController
 
-- (instancetype)initWithDealType:(CausationType)type dealingModel:(MPMDealingModel *)dealingModel dealingFromType:(DealingFromType)fromType bizorderId:(NSString *)bizorderId taskInstId:(NSString *)taskInstId {
+
+- (instancetype)initWithDealType:(CausationType)type dealingModel:(MPMDealingModel *)dealingModel dealingFromType:(DealingFromType)fromType bizorderId:(NSString *)bizorderId taskInstId:(NSString *)taskInstId fastCalculate:(FastCalculateType)fastCalculateType {
     self = [super init];
     if (self) {
         // 初始化Model
@@ -68,7 +70,7 @@
         } else {
             NSInteger addCount;
             if (kCausationTypeRepairSign == type) {
-                // 补签，初始化为0
+                // 补卡，初始化为0
                 addCount = 0;
             } else {
                 addCount = 1;
@@ -78,6 +80,7 @@
         self.bizorderId = bizorderId;
         self.taskInstId = taskInstId;
         self.dealingFromType = fromType;
+        self.fastType = fastCalculateType;
         [self setupAttributes];
         [self setupSubViews];
         [self setupConstraints];
@@ -90,28 +93,35 @@
     self.view.backgroundColor = kTableViewBGColor;
     if (kCausationTypeAskLeave == self.dealingModel.causationType) {
         // 请假
-        self.navigationItem.title = @"请假";
+        self.navigationItem.title = @"请假申请";
     } else if (kCausationTypeevecation == self.dealingModel.causationType) {
         // 出差
-        self.navigationItem.title = @"出差";
+        self.navigationItem.title = @"出差申请";
     } else if (kCausationTypeOverTime == self.dealingModel.causationType) {
         // 加班
-        self.navigationItem.title = @"加班";
+        self.navigationItem.title = @"加班申请";
     } else if (kCausationTypeOut == self.dealingModel.causationType) {
         // 外出
-        self.navigationItem.title = @"外出";
+        self.navigationItem.title = @"外出申请";
     } else if (kCausationTypeRepairSign == self.dealingModel.causationType) {
-        // 补签
-        self.navigationItem.title = @"补签";
+        // 补卡
+        self.navigationItem.title = @"补卡申请";
     } else if (kCausationTypeChangeSign == self.dealingModel.causationType) {
-        // 改签
-        self.navigationItem.title = @"改签";
+        // 改卡
+        self.navigationItem.title = @"改卡申请";
     }
     if (kDealingFromTypeApply == self.dealingFromType) {
         [self getApplyerData];
+        if (self.fastType != kFastCalculateTypeNone) {
+            // 如果是例外申请、并且有快捷方式，则需要获取快捷方式的计算时间
+            [self getFastCalculateInfo];
+        }
         if (kCausationTypeAskLeave == self.dealingModel.causationType) {
             // 如果是请假，需要获取所有请假类型
             [self getLeaveType];return;
+        } else if (kCausationTypeOverTime == self.dealingModel.causationType) {
+            // 如果是加班，默认加班补偿为“无”
+            self.dealingModel.redress = @"1";
         }
         self.tableViewTitleArray = [MPMCausationTypeData getTableViewDataWithCausationType:self.dealingModel.causationType addCount:self.dealingModel.addCount];
         [self.tableView reloadData];
@@ -122,7 +132,7 @@
     } else {
         // kDealingFromTypePreview：预览模板
         self.tableViewTitleArray = [MPMCausationTypeData getTableViewDataWithCausationType:self.dealingModel.causationType addCount:self.dealingModel.addCount];
-        self.dealingModel.status = @"1";// 预览模板改签给个默认‘迟到’
+        self.dealingModel.status = @"1";// 预览模板改卡给个默认‘迟到’
         [self.tableView reloadData];
     }
 }
@@ -152,7 +162,14 @@
                     [temp addObject:po];
                 }
                 self.dealingModel.participants = temp.copy;
+                if (self.dealingModel.decision && self.dealingModel.participants.count > 0) {
+                    // 如果有决策，并且审批人不为空，不能修改人员
+                    self.dealingModel.participantsCanAdd = NO;
+                } else {
+                    self.dealingModel.participantsCanAdd = YES;
+                }
             }
+            self.dealingModel.name = object.firstObject[@"name"];
         }
         [self.tableView reloadData];
     } failure:^(NSString *error) {
@@ -185,6 +202,27 @@
     }];
 }
 
+/** 获取快捷方式信息 */
+- (void)getFastCalculateInfo {
+    NSString *type = kException_GetNumFromName[kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.dealingModel.causationType]]];
+    NSString *label = [NSString stringWithFormat:@"%ld",self.fastType];
+    NSString *url = [NSString stringWithFormat:@"%@%@?type=%@&label=%@",MPMINTERFACE_HOST,MPMINTERFACE_APPLY_FASTCALCULATE,type,label];
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
+            DLog(@"%@",response);
+            NSDictionary *object = response[kResponseObjectKey];
+            self.dealingModel.causationDetail.firstObject.startTime = kNumberSafeString(object[@"startTime"]);
+            self.dealingModel.causationDetail.firstObject.endTime = kNumberSafeString(object[@"endTime"]);
+            self.dealingModel.causationDetail.firstObject.hourAccount = kNumberSafeString(object[@"hour"]);
+            self.dealingModel.causationDetail.firstObject.info = kNumberSafeString(object[@"info"]);
+            [self.tableView reloadData];
+        }
+    } failure:^(NSString *error) {
+        DLog(@"%@",error);
+        [MPMProgressHUD showErrorWithStatus:error];
+    }];
+}
+
 /** “编辑”根据单据id获取详细信息 */
 - (void)getDetailDealingMessage {
     NSString *url;
@@ -201,7 +239,7 @@
         // 外出
         url = [NSString stringWithFormat:@"%@%@/%@",MPMINTERFACE_HOST,MPMINTERFACE_APPLY_QUERY_GOOUT,self.bizorderId];
     } else if (kCausationTypeRepairSign == self.dealingModel.causationType || kCausationTypeChangeSign == self.dealingModel.causationType) {
-        // 补签、改签
+        // 补卡、改卡
         url = [NSString stringWithFormat:@"%@%@/%@",MPMINTERFACE_HOST,MPMINTERFACE_APPLY_QUERY_SIGN,self.bizorderId];
     }
     [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
@@ -228,7 +266,14 @@
                         [temp addObject:po];
                     }
                     self.dealingModel.participants = temp.copy;
+                    if (self.dealingModel.decision && self.dealingModel.participants.count > 0) {
+                        self.dealingModel.participantsCanAdd = NO;
+                    } else {
+                        self.dealingModel.participantsCanAdd = YES;
+                    }
                 }
+                // 节点名称
+                self.dealingModel.name = object[@"workFlow"][@"name"];
                 // 抄送人
                 if (object[@"workFlow"][@"delivers"] && [object[@"workFlow"][@"delivers"] isKindOfClass:[NSArray class]]) {
                     NSArray *delivers = object[@"workFlow"][@"delivers"];
@@ -262,10 +307,10 @@
                 // 外出
                 detailArray = object[@"gooutDetails"];
             } else if (object[@"kqBizFillupSignList"] && [object[@"kqBizFillupSignList"] isKindOfClass:[NSArray class]]) {
-                // 补签
+                // 补卡
                 detailArray = object[@"kqBizFillupSignList"];
             } else if (object[@"kqBizReviseSignList"] && [object[@"kqBizReviseSignList"] isKindOfClass:[NSArray class]]) {
-                // 改签
+                // 改卡
                 detailArray = object[@"kqBizReviseSignList"];
             }
             self.dealingModel.addCount = detailArray.count;
@@ -274,7 +319,7 @@
                 // 通用属性
                 self.dealingModel.causationDetail[i].startTime = kNumberSafeString(dDic[@"startTime"]);
                 self.dealingModel.causationDetail[i].endTime = kNumberSafeString(dDic[@"endTime"]);
-                self.dealingModel.causationDetail[i].dayAccount = kNumberSafeString(dDic[@"dayAccount"]);
+                self.dealingModel.causationDetail[i].info = kNumberSafeString(dDic[@"info"]);
                 self.dealingModel.causationDetail[i].hourAccount = kNumberSafeString(dDic[@"hourAccount"]);
                 // 请假类型
                 self.dealingModel.causationDetail[i].causationType = kNumberSafeString(dDic[@"type"]);
@@ -289,12 +334,12 @@
                 }
                 // 加班
                 self.dealingModel.redress = kNumberSafeString(dDic[@"redress"]);
-                // 补签、改签
+                // 补卡、改卡
                 self.dealingModel.causationDetail[i].detailId = dDic[@"detailId"];
                 self.dealingModel.causationDetail[i].fillupTime = kNumberSafeString(dDic[@"fillupTime"]);
                 self.dealingModel.causationDetail[i].signTime = kNumberSafeString(dDic[@"signTime"]);
                 self.dealingModel.causationDetail[i].mpm_id = dDic[@"id"];
-                // 改签
+                // 改卡
                 self.dealingModel.causationDetail[i].attendanceTime = kNumberSafeString(dDic[@"attendanceTime"]);
                 self.dealingModel.causationDetail[i].reviseSignTime = kNumberSafeString(dDic[@"reviseSignTime"]);
                 self.dealingModel.causationDetail[i].status = kNumberSafeString(dDic[@"status"]);
@@ -313,7 +358,7 @@
 }
 
 /** 调用接口计算时长 */
-- (void)calculateDayAndHourWithStart:(NSString *)start end:(NSString *)end complete:(void(^)(NSString *day, NSString *hour))com {
+- (void)calculateDayAndHourWithStart:(NSString *)start end:(NSString *)end complete:(void(^)(NSString *hour, NSString *info))com {
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_APPLY_CALCULATETIME];
     NSString *type = self.dealingModel.causationType == kCausationTypeOverTime ? @"1" : @"0";
     NSDictionary *params = @{@"startTime":kSafeString(start),@"endTime":kSafeString(end),@"type":type};
@@ -322,20 +367,10 @@
         DLog(@"计算时长 === %@",response);
         if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *object = response[kResponseObjectKey];
-            id day;
-            id hour;
-            if ([object[@"day"] isKindOfClass:[NSNumber class]]) {
-                day = ((NSNumber *)object[@"day"]).stringValue;
-            } else if ([object[@"day"] isKindOfClass:[NSString class]]) {
-                day = object[@"day"];
-            }
-            if ([object[@"hour"] isKindOfClass:[NSNumber class]]) {
-                hour = ((NSNumber *)object[@"hour"]).stringValue;
-            } else if ([object[@"hour"] isKindOfClass:[NSString class]]) {
-                hour = object[@"hour"];
-            }
+            NSString *info = kNumberSafeString(object[@"info"]);
+            NSString *hour = kNumberSafeString(object[@"hour"]);
             if (com) {
-                com(day,hour);
+                com(hour,info);
             }
         } else {
             [MPMProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
@@ -438,24 +473,24 @@
     NSInteger count = (0 == self.dealingModel.addCount) ? 1 : self.dealingModel.addCount;/** 明细数量 */
     
     if (kCausationTypeRepairSign == self.dealingModel.causationType) {
-        // 补签
+        // 补卡
         if (self.dealingModel.addCount == 0) {
-            [self showAlertControllerToLogoutWithMessage:@"请先增加漏签明细" sureAction:nil needCancleButton:NO];return canPass = NO;
+            [self showAlertControllerToLogoutWithMessage:@"请先增加漏卡明细" sureAction:nil needCancleButton:NO];return canPass = NO;
         }
         for (int i = 0; i < count; i++) {
             MPMCausationDetailModel *detail = self.dealingModel.causationDetail[i];
             if (kIsNilString(detail.fillupTime)) {
-                [self showAlertControllerToLogoutWithMessage:@"请选择漏签时间" sureAction:nil needCancleButton:NO];return canPass = NO;
+                [self showAlertControllerToLogoutWithMessage:@"请选择漏卡时间" sureAction:nil needCancleButton:NO];return canPass = NO;
             } else if (kIsNilString(detail.signTime)) {
-                [self showAlertControllerToLogoutWithMessage:@"请选择补签时间" sureAction:nil needCancleButton:NO];return canPass = NO;
+                [self showAlertControllerToLogoutWithMessage:@"请选择补卡时间" sureAction:nil needCancleButton:NO];return canPass = NO;
             }
         }
     } else if (kCausationTypeChangeSign == self.dealingModel.causationType) {
-        // 改签
+        // 改卡
         for (int i = 0; i < count; i++) {
             MPMCausationDetailModel *detail = self.dealingModel.causationDetail[i];
             if (kIsNilString(detail.reviseSignTime)) {
-                [self showAlertControllerToLogoutWithMessage:@"请选择改签时间" sureAction:nil needCancleButton:NO];return canPass = NO;
+                [self showAlertControllerToLogoutWithMessage:@"请选择改卡时间" sureAction:nil needCancleButton:NO];return canPass = NO;
             }
         }
     } else {
@@ -466,7 +501,7 @@
                 [self showAlertControllerToLogoutWithMessage:@"请选择开始时间" sureAction:nil needCancleButton:NO];return canPass = NO;
             } else if (kIsNilString(detail.endTime)) {
                 [self showAlertControllerToLogoutWithMessage:@"请选择结束时间" sureAction:nil needCancleButton:NO];return canPass = NO;
-            } else if (kIsNilString(detail.hourAccount) || kIsNilString(detail.dayAccount)) {
+            } else if (kIsNilString(detail.hourAccount) || kIsNilString(detail.info)) {
                 [self showAlertControllerToLogoutWithMessage:@"时长计算有误，请重新选择" sureAction:nil needCancleButton:NO];return canPass = NO;
             } else if (detail.endTime.doubleValue <= detail.startTime.doubleValue) {
                 [self showAlertControllerToLogoutWithMessage:@"开始时间必须小于结束时间" sureAction:nil needCancleButton:NO];return canPass = NO;
@@ -501,7 +536,7 @@
     }
     
     if (kIsNilString(self.dealingModel.remark)) {
-        [self showAlertControllerToLogoutWithMessage:@"请输入理由" sureAction:nil needCancleButton:NO];return canPass = NO;
+        [self showAlertControllerToLogoutWithMessage:@"请输入原因" sureAction:nil needCancleButton:NO];return canPass = NO;
     } else if (self.dealingModel.remark.length > 30) {
         [self showAlertControllerToLogoutWithMessage:@"原因不能超过30个字" sureAction:nil needCancleButton:NO];return canPass = NO;
     }
@@ -534,13 +569,13 @@
             MPMCausationDetailModel *model = self.dealingModel.causationDetail[i];
             NSString *startTime = model.startTime;
             NSString *endTime = model.endTime;
-            NSString *dayAccount = model.dayAccount;
+            NSString *info = model.info;
             NSString *hourAccount = model.hourAccount;
             NSString *type = model.causationType;
             if (!kIsNilString(endTime) && !kIsNilString(startTime)) {
                 temp[@"startTime"] = kSafeString(startTime);
                 temp[@"endTime"] = kSafeString(endTime);
-                temp[@"dayAccount"] = kSafeString(dayAccount);
+                temp[@"info"] = kSafeString(info);
                 temp[@"hourAccount"] = kSafeString(hourAccount);
                 temp[@"type"] = kSafeString(type);
                 [kqBizLeaveDtoList addObject:temp];
@@ -561,7 +596,7 @@
             NSString *address = model.address;
             NSString *startTime = model.startTime;
             NSString *endTime = model.endTime;
-            NSString *dayAccount = model.dayAccount;
+            NSString *info = model.info;
             NSString *hourAccount = model.hourAccount;
             NSString *expectCost = model.expectCost;
             NSNumber *isShareRoom = @1;
@@ -570,7 +605,7 @@
                 temp[@"address"] = kSafeString(address);
                 temp[@"startTime"] = kSafeString(startTime);
                 temp[@"endTime"] = kSafeString(endTime);
-                temp[@"dayAccount"] = kSafeString(dayAccount);
+                temp[@"info"] = kSafeString(info);
                 temp[@"hourAccount"] = kSafeString(hourAccount);
                 temp[@"expectCost"] = kSafeString(expectCost);
                 temp[@"isShareRoom"] = isShareRoom;
@@ -593,13 +628,13 @@
             NSString *redress = self.dealingModel.redress;
             NSString *startTime = model.startTime;
             NSString *endTime = model.endTime;
-            NSString *dayAccount = model.dayAccount;
+            NSString *info = model.info;
             NSString *hourAccount = model.hourAccount;
             if (!kIsNilString(endTime) && !kIsNilString(startTime)) {
                 temp[@"redress"] = kSafeString(redress);
                 temp[@"startTime"] = kSafeString(startTime);
                 temp[@"endTime"] = kSafeString(endTime);
-                temp[@"dayAccount"] = kSafeString(dayAccount);
+                temp[@"info"] = kSafeString(info);
                 temp[@"hourAccount"] = kSafeString(hourAccount);
                 [details addObject:temp];
             }
@@ -618,19 +653,19 @@
             MPMCausationDetailModel *model = self.dealingModel.causationDetail[i];
             NSString *startTime = model.startTime;
             NSString *endTime = model.endTime;
-            NSString *dayAccount = model.dayAccount;
+            NSString *info = model.info;
             NSString *hourAccount = model.hourAccount;
             if (!kIsNilString(endTime) && !kIsNilString(startTime)) {
                 temp[@"startTime"] = kSafeString(startTime);
                 temp[@"endTime"] = kSafeString(endTime);
-                temp[@"dayAccount"] = kSafeString(dayAccount);
+                temp[@"info"] = kSafeString(info);
                 temp[@"hourAccount"] = kSafeString(hourAccount);
                 [gooutParamList addObject:temp];
             }
         }
         params[@"gooutParamList"] = gooutParamList;
     } else if (kCausationTypeRepairSign == self.dealingModel.causationType) {
-        // 补签
+        // 补卡
         if (self.dealingFromType == kDealingFromTypeEditing) {
             url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_APPLY_UPDATE_FSIGN];
         } else {
@@ -654,7 +689,7 @@
         }
         params[@"kqBizFillupSignList"] = kqBizFillupSignList;
     } else if (kCausationTypeChangeSign == self.dealingModel.causationType) {
-        // 改签
+        // 改卡
         if (self.dealingFromType == kDealingFromTypeEditing) {
             url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_APPLY_UPDATE_CSIGN];
         } else {
@@ -755,34 +790,51 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == self.tableViewTitleArray.count - 3) {
         if (indexPath.row == 0) {
-            return kTableViewHeight + 45;
+            // 原因
+            return kTableViewHeight * 2.5;
         } else {
             return kTableViewHeight;
         }
     } else if (indexPath.section == self.tableViewTitleArray.count - 2) {
-        if (self.dealingModel.participants.count > 0) {
-            if (!self.dealingModel.mpm_applyNameNeedFold) {
-                return kTabbarHeight + 70 + (((self.dealingModel.participants.count-1)/5) * 56.5);
-            } else {
-                if (self.dealingModel.participants.count > 5) {
-                    return kTabbarHeight + 70;
-                } else {
-                    return kTabbarHeight + 56.5;
-                }
-            }
+        // 提交至
+        //        if (self.dealingModel.participants.count > 5) {
+        //            if (!self.dealingModel.mpm_applyNameNeedFold) {
+        //                return kTabbarHeight + 70 + (((self.dealingModel.participants.count-1)/5) * 56.5);
+        //            } else {
+        //                if (self.dealingModel.participants.count > 5) {
+        //                    return kTabbarHeight + 70;
+        //                } else {
+        //                    return kTabbarHeight + 56.5;
+        //                }
+        //            }
+        //        }
+        NSInteger count;
+        if (self.dealingModel.participantsCanAdd) {
+            count = (self.dealingModel.participants.count/5 + 1);
+        } else {
+            count = (self.dealingModel.participants.count/4 + 1);
         }
+        return kTabbarHeight +  count * 56.5;
     } else if (indexPath.section == self.tableViewTitleArray.count - 1) {
-        if (self.dealingModel.delivers.count > 0) {
-            if (!self.dealingModel.mpm_copyNameNeedFold) {
-                return kTabbarHeight + 70 + (((self.dealingModel.delivers.count-1)/5) * 56.5);
-            } else {
-                if (self.dealingModel.delivers.count > 5) {
-                    return kTabbarHeight + 70;
-                } else {
-                    return kTabbarHeight + 56.5;
-                }
-            }
+        // 抄送人
+        //        if (self.dealingModel.delivers.count > 0) {
+        //            if (!self.dealingModel.mpm_copyNameNeedFold) {
+        //                return kTabbarHeight + 70 + (((self.dealingModel.delivers.count-1)/5) * 56.5);
+        //            } else {
+        //                if (self.dealingModel.delivers.count > 5) {
+        //                    return kTabbarHeight + 70;
+        //                } else {
+        //                    return kTabbarHeight + 56.5;
+        //                }
+        //            }
+        //        }
+        NSInteger count;
+        if (self.dealingModel.deliversCanAdd) {
+            count = (self.dealingModel.delivers.count/5 + 1);
+        } else {
+            count = (self.dealingModel.delivers.count/4 + 1);
         }
+        return kTabbarHeight +  count * 56.5;
     }
     NSDictionary *dic = self.tableViewTitleArray[indexPath.section];
     NSArray *cellType = dic[kCellDetailTypeKey];
@@ -810,7 +862,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if (section == self.tableViewTitleArray.count - 1) {
-        return 30;
+        return 10;
     } else {
         return 0;
     }
@@ -822,7 +874,7 @@
     if (kIsNilString(title) && kIsNilString(detailTitle)) {
         return nil;
     } else {
-        // 改签、补签、例外申请
+        // 改卡、补卡、例外申请
         MPMBaseDealingHeader *header = [[MPMBaseDealingHeader alloc] init];
         if (section == 0 && (kCausationTypeChangeSign == self.dealingModel.causationType || kCausationTypeRepairSign == self.dealingModel.causationType || self.dealingFromType == kDealingFromTypeChangeRepair)) {
             if (kIsNilString(((NSString *)kAttendenceStatus[self.dealingModel.status]))) {
@@ -850,7 +902,7 @@
         header.deleteBlock = ^{
             // 删除
             __strong typeof(weakself) strongself = weakself;
-            // 如果是补签，则index是section-1
+            // 如果是补卡，则index是section-1
             NSInteger index = (kCausationTypeRepairSign == strongself.dealingModel.causationType) ? section - 1 : section;
             BOOL canDelete = YES;
             for (int i = 0; i < strongself.dealingModel.causationDetail.count; i++) {
@@ -875,14 +927,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == self.tableViewTitleArray.count - 1) {
-        MPMTableHeaderView *footer = [[MPMTableHeaderView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 30)];
-        footer.headerTextLabel.text = @"审批通过后，通知抄送人";
-        [footer resetTextLabelLeadingOffser:20];
-        return footer;
-    } else {
-        return nil;
-    }
+    return nil;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1003,12 +1048,13 @@
         if (!cell) {
             cell = [[MPMCommomDealingGetPeopleTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
         }
+        cell.addLeadButton.hidden = YES;// 默认隐藏添加漏卡按钮
+        cell.explainButton.hidden = YES;// 默认隐藏问号解释按钮
         if (indexPath.section == self.tableViewTitleArray.count - 1) {
             // 抄送人：可以删除
             cell.startIcon.hidden = YES;
-            cell.accessoryButton.hidden = NO;
             cell.peopleCanDelete = YES;
-            [cell setPeopleViewArray:self.dealingModel.delivers fold:self.dealingModel.mpm_copyNameNeedFold];
+            [cell setPeopleViewArray:self.dealingModel.delivers canAdd:self.dealingModel.deliversCanAdd];
             __weak typeof(self) weakself = self;
             cell.addpBlock = ^(UIButton *sender) {
                 __strong typeof (weakself) strongself = weakself;
@@ -1035,13 +1081,6 @@
                 [strongself.navigationController pushViewController:depart animated:YES];
                 
             };
-            cell.foldBlock = ^(UIButton *sender) {
-                // 展开收缩
-                sender.selected = !sender.selected;
-                __strong typeof (weakself) strongself = weakself;
-                strongself.dealingModel.mpm_copyNameNeedFold = !sender.selected;
-                [strongself.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            };
             cell.deleteBlock = ^(UIButton *sender) {
                 __strong typeof (weakself) strongself = weakself;
                 NSMutableArray *temp = [NSMutableArray arrayWithArray:strongself.dealingModel.delivers];
@@ -1050,17 +1089,20 @@
                 [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             };
         } else if (self.tableViewTitleArray.count - 2 == indexPath.section) {
+            if (!kIsNilString(self.dealingModel.name)) {
+                cell.detailTxLabel.text = [NSString stringWithFormat:@"%@(%@)",self.dealingModel.name,[self.dealingModel.decision isEqualToString:@"2"] ? @"会签" : @"或签"];
+            } else {
+                cell.detailTxLabel.text = nil;
+            }
             // 提交至：如果流程有节点，则不可以删除，如果流程没有节点，是自己增加的，则可以删除
             cell.startIcon.hidden = NO;
             if (!kIsNilString(self.dealingModel.decision) && self.dealingModel.participants.count != 0) {
                 // 如果已经有决策数据，说明管理员设置过审批人，则隐藏按钮，不给更改
-                cell.accessoryButton.hidden = YES;
                 cell.peopleCanDelete = NO;
             } else {
-                cell.accessoryButton.hidden = NO;
                 cell.peopleCanDelete = YES;
             }
-            [cell setPeopleViewArray:self.dealingModel.participants fold:self.dealingModel.mpm_applyNameNeedFold];
+            [cell setPeopleViewArray:self.dealingModel.participants canAdd:self.dealingModel.participantsCanAdd];
             __weak typeof (self) weakself = self;
             cell.addpBlock = ^(UIButton *sender) {
                 __strong typeof (weakself) strongself = weakself;
@@ -1086,13 +1128,6 @@
                 strongself.hidesBottomBarWhenPushed = YES;
                 [strongself.navigationController pushViewController:depart animated:YES];
             };
-            cell.foldBlock = ^(UIButton *sender) {
-                // 展开收缩
-                sender.selected = !sender.selected;
-                __strong typeof (weakself) strongself = weakself;
-                strongself.dealingModel.mpm_applyNameNeedFold = !sender.selected;
-                [strongself.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            };
             cell.deleteBlock = ^(UIButton *sender) {
                 __strong typeof (weakself) strongself = weakself;
                 NSMutableArray *temp = [NSMutableArray arrayWithArray:strongself.dealingModel.participants];
@@ -1101,12 +1136,15 @@
                 [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             };
         } else {
+            // 漏卡记录
             cell.startIcon.hidden = NO;
-            cell.accessoryButton.hidden = NO;
+            cell.addLeadButton.hidden = NO;// 添加漏卡按钮不隐藏
+            cell.detailTxLabel.text = nil;
+            cell.explainButton.hidden = NO;
             __weak typeof (self) weakself = self;
-            cell.addpBlock = ^(UIButton *sender) {
+            cell.addLeadBlock = ^{
                 __strong typeof (weakself) strongself = weakself;
-                // 跳入漏签记录页面
+                // 跳入漏卡记录页面
                 NSMutableArray *selected = [NSMutableArray array];
                 for (int i = 0; i < strongself.dealingModel.addCount; i++) {
                     MPMCausationDetailModel *detail = strongself.dealingModel.causationDetail[i];
@@ -1128,6 +1166,9 @@
                 strongself.hidesBottomBarWhenPushed = YES;
                 [strongself.navigationController pushViewController:repair animated:YES];
             };
+            cell.explainBlock = ^{
+                [MPMProgressHUD showInfoWithStatus:@"此处可添加漏卡时间，可多选"];
+            };
         }
         NSArray *cellArr = self.tableViewTitleArray[indexPath.section][kCellTitleDetailKey];
         cell.txLabel.text = [cellArr[indexPath.row] componentsSeparatedByString:@","].firstObject;
@@ -1148,7 +1189,9 @@
             cell = [[MPMCommomDealingTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
         }
         NSArray *cellArr = self.tableViewTitleArray[indexPath.section][kCellTitleDetailKey];
+        cell.accessoryMaskView.hidden = YES;// 遮盖accessoryView的视图
         cell.startIcon.hidden = NO;
+        cell.explainButton.hidden = YES;
         cell.txLabel.text = [cellArr[indexPath.row] componentsSeparatedByString:@","].firstObject;
         __weak typeof(self) weakself = self;
         if ([detailType isEqualToString:kCellDetailTypeUITextField]) {
@@ -1167,25 +1210,19 @@
                 NSString *currentString = ((MPMCausationDetailModel *)self.dealingModel.causationDetail[indexPath.section]).expectCost;
                 ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
             } else if ([cellTitle containsString:@"时长"]) {
+                cell.detailView.userInteractionEnabled = NO;
+                cell.explainButton.hidden = NO;
+                cell.explainBlock = ^{
+                    __strong typeof(weakself) strongself = weakself;
+                    if (kCausationTypeOverTime == strongself.dealingModel.causationType) {
+                        [MPMProgressHUD showInfoWithStatus:@"根据开始与结束时间自动计算时长"];
+                    } else {
+                        [MPMProgressHUD showInfoWithStatus:@"根据排班自动计算时长"];
+                    }
+                };
                 [cell needCheckNumber:YES limitLength:4];
-                cell.detailView.userInteractionEnabled = YES;
-                if (kCausationTypeYearLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
-                    kCausationTypeMonthLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
-                    kCausationTypeSeeRelativeLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
-                    kCausationTypeMarryLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
-                    kCausationTypeBabyLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
-                    kCausationTypeCompanyBabyLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
-                    kCausationTypeFuneralLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
-                    kCausationTypeInjuryLeave == self.dealingModel.causationDetail[indexPath.section].causationType.integerValue ||
-                    kCausationTypeevecation == self.dealingModel.causationType) {
-                    cell.txLabel.text = [[cellArr[indexPath.row] componentsSeparatedByString:@","].firstObject stringByAppendingString:@"(天)"];
-                    NSString *currentString = ((MPMCausationDetailModel *)self.dealingModel.causationDetail[indexPath.section]).dayAccount;
-                    ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
-                } else {
-                    cell.txLabel.text = [[cellArr[indexPath.row] componentsSeparatedByString:@","].firstObject stringByAppendingString:@"(小时)"];
-                    NSString *currentString = ((MPMCausationDetailModel *)self.dealingModel.causationDetail[indexPath.section]).hourAccount;
-                    ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
-                }
+                NSString *currentString = ((MPMCausationDetailModel *)self.dealingModel.causationDetail[indexPath.section]).info;
+                ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
             } else {
                 [cell needCheckNumber:NO limitLength:0];
                 NSString *currentString = ((MPMCausationDetailModel *)self.dealingModel.causationDetail[indexPath.section]).hourAccount;
@@ -1199,7 +1236,7 @@
                 } else if ([cellTitle isEqualToString:@"预计费用"]) {
                     ((MPMCausationDetailModel *)strongself.dealingModel.causationDetail[index]).expectCost = currentText;
                 } else {
-                    // 时长(小时、天）
+                    // TODO 目前已经不能手动输入
                     if (kCausationTypeevecation == strongself.dealingModel.causationType ||
                         kCausationTypeYearLeave == strongself.dealingModel.causationDetail[index].causationType.integerValue ||
                         kCausationTypeMonthLeave == strongself.dealingModel.causationDetail[index].causationType.integerValue ||
@@ -1209,7 +1246,7 @@
                         kCausationTypeCompanyBabyLeave == strongself.dealingModel.causationDetail[index].causationType.integerValue ||
                         kCausationTypeFuneralLeave == strongself.dealingModel.causationDetail[index].causationType.integerValue ||
                         kCausationTypeInjuryLeave == strongself.dealingModel.causationDetail[index].causationType.integerValue) {
-                        ((MPMCausationDetailModel *)strongself.dealingModel.causationDetail[index]).dayAccount = currentText;
+                        ((MPMCausationDetailModel *)strongself.dealingModel.causationDetail[index]).hourAccount = currentText;
                     } else {
                         ((MPMCausationDetailModel *)strongself.dealingModel.causationDetail[index]).hourAccount = currentText;
                     }
@@ -1228,12 +1265,13 @@
                 cell.detailTextLabel.text = self.dealingModel.causationDetail[indexPath.section].startTime ? [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[indexPath.section].startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds] : originalText;
             } else if ([title isEqualToString:@"结束时间"]) {
                 cell.detailTextLabel.text = self.dealingModel.causationDetail[indexPath.section].endTime ? [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[indexPath.section].endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds] : originalText;
-            } else if ([title isEqualToString:@"改签时间"]) {
+            } else if ([title isEqualToString:@"改卡时间"]) {
                 cell.detailTextLabel.text = self.dealingModel.causationDetail[indexPath.section].reviseSignTime ? [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[indexPath.section].reviseSignTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds] : originalText;
-            } else if ([title isEqualToString:@"漏签时间"]) {
+            } else if ([title isEqualToString:@"漏卡时间"]) {
                 NSInteger index = indexPath.section - 1;
+                cell.accessoryMaskView.hidden = NO;// 遮盖accessoryView的视图
                 cell.detailTextLabel.text = !kIsNilString(self.dealingModel.causationDetail[index].fillupTime) ? [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].fillupTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds] : originalText;
-            } else if ([title isEqualToString:@"补签时间"]) {
+            } else if ([title isEqualToString:@"补卡时间"]) {
                 NSInteger index = indexPath.section - 1;
                 cell.detailTextLabel.text = !kIsNilString(self.dealingModel.causationDetail[index].signTime) ? [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].signTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds] : originalText;
             } else {
@@ -1303,16 +1341,16 @@
                 } else {
                     defaultDate = [NSDate date];
                 }
-            } else if ([cell.txLabel.text isEqualToString:@"漏签时间"] &&
-                       !kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index - 1]).fillupTime)) {
-                defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index - 1].fillupTime.doubleValue/1000];
-            } else if ([cell.txLabel.text isEqualToString:@"补签时间"]) {
+            } else if ([cell.txLabel.text isEqualToString:@"漏卡时间"]) {
+                // 漏卡时间不能修改时间
+                return;
+            } else if ([cell.txLabel.text isEqualToString:@"补卡时间"]) {
                 if (!kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index - 1]).signTime)) {
                     defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index - 1].signTime.doubleValue/1000];
                 } else if (!kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index - 1]).fillupTime)) {
                     defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index - 1].fillupTime.doubleValue/1000];
                 }
-            } else if ([cell.txLabel.text isEqualToString:@"改签时间"]) {
+            } else if ([cell.txLabel.text isEqualToString:@"改卡时间"]) {
                 pickerType = kCustomPickerViewTypeHourMinute;
                 if (!kIsNilString(((MPMCausationDetailModel *)self.dealingModel.causationDetail[index]).reviseSignTime)) {
                     defaultDate = [NSDate dateWithTimeIntervalSince1970:self.dealingModel.causationDetail[index].reviseSignTime.doubleValue/1000];
@@ -1336,11 +1374,11 @@
                         [strongself showAlertControllerToLogoutWithMessage:@"结束时间必须大于开始时间" sureAction:nil needCancleButton:NO];return;
                     }
                     strongself.dealingModel.causationDetail[index].endTime = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000];
-                } else if ([cell.txLabel.text isEqualToString:@"漏签时间"]) {
+                } else if ([cell.txLabel.text isEqualToString:@"漏卡时间"]) {
                     strongself.dealingModel.causationDetail[index-1].fillupTime = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000];
-                } else if ([cell.txLabel.text isEqualToString:@"补签时间"]) {
+                } else if ([cell.txLabel.text isEqualToString:@"补卡时间"]) {
                     strongself.dealingModel.causationDetail[index-1].signTime = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000];
-                } else if ([cell.txLabel.text isEqualToString:@"改签时间"]) {
+                } else if ([cell.txLabel.text isEqualToString:@"改卡时间"]) {
                     strongself.dealingModel.causationDetail[index].reviseSignTime = [NSString stringWithFormat:@"%.f",date.timeIntervalSince1970*1000];
                 }
                 cell.detailTextLabel.text = [NSDateFormatter formatterDate:date withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
@@ -1348,10 +1386,10 @@
                 if (!kIsNilString(strongself.dealingModel.causationDetail[index].startTime) && !kIsNilString(strongself.dealingModel.causationDetail[index].endTime)) {
                     strongself.dealingModel.causationDetail[index].calculatingTime = YES;
                     __weak typeof(strongself) wweakself = strongself;
-                    [strongself calculateDayAndHourWithStart:strongself.dealingModel.causationDetail[index].startTime end:strongself.dealingModel.causationDetail[index].endTime complete:^(NSString *day, NSString *hour) {
+                    [strongself calculateDayAndHourWithStart:strongself.dealingModel.causationDetail[index].startTime end:strongself.dealingModel.causationDetail[index].endTime complete:^(NSString *hour, NSString *info) {
                         __strong typeof(wweakself) wstrongself = wweakself;
                         wstrongself.dealingModel.causationDetail[index].calculatingTime = NO;
-                        wstrongself.dealingModel.causationDetail[index].dayAccount = day;
+                        wstrongself.dealingModel.causationDetail[index].info = info;
                         wstrongself.dealingModel.causationDetail[index].hourAccount = hour;
                         [wstrongself.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
                     }];

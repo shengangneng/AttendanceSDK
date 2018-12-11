@@ -16,7 +16,7 @@
 @property (nonatomic, copy) NSString *createDate;
 @property (nonatomic, copy) NSString *cycle;
 @property (nonatomic, copy) NSString *endTime;
-@property (nonatomic, copy) NSString *resetTime;        /** 每天开始签到时间 */
+@property (nonatomic, copy) NSString *resetTime;        /** 每天开始打卡时间 */
 @property (nonatomic, copy) NSString *schedulingId;
 @property (nonatomic, copy) NSString *startTime;
 @property (nonatomic, copy) NSString *valid;

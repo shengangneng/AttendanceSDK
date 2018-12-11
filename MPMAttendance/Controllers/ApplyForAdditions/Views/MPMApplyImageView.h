@@ -7,9 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
+@class MPMApplyImageView;
+typedef void(^FoldBlock)(BOOL fold);
+
+@protocol MPMApplyImageDelegate <NSObject>
+
+@optional
+/** 选中了快捷方式的时候会回调 */
+- (void)applyImageView:(MPMApplyImageView *)applyView didSelectFastIndex:(NSInteger)index;
+
+@end
 
 @interface MPMApplyImageView : UIImageView
 
-- (instancetype)initWithTitle:(NSString *)title detailMessage:(NSString *)detailMessage;
+/**
+ * @param title  标题
+ * @param image  图片
+ * @param labels 快捷按钮
+ */
+- (instancetype)initWithTitle:(NSString *)title image:(UIImage *)image labels:(NSArray *)labels;
+
+@property (nonatomic, weak) id<MPMApplyImageDelegate> delegate;
+@property (nonatomic, copy) FoldBlock foldBlock;
 
 @end

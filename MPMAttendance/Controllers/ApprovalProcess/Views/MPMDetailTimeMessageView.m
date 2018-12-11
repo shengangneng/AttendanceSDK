@@ -19,7 +19,7 @@
 @implementation MPMDetailTimeMessageView
 
 /**
- * @param type 申请类型：请假、出差、外出、加班、补签、改签
+ * @param type 申请类型：请假、出差、外出、加班、补卡、改卡
  * @param withTypeLabel 是否需要显示申请类型Label
  * @param detailDto 详情信息
  */
@@ -41,17 +41,17 @@
     self.backgroundColor = kWhiteColor;
     self.contentAddressMessage.text = self.detailDto.address;
     if (kCausationTypeRepairSign == self.type) {
-        // 补签
+        // 补卡
         self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
-        self.contentTimeBeginTimeLabel.text = @"补签时间";
-        self.contentTimeendTimeLabel.text = @"漏签时间";
+        self.contentTimeBeginTimeLabel.text = @"补卡时间";
+        self.contentTimeendTimeLabel.text = @"漏卡时间";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.signTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.fillupTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
     } else if (kCausationTypeChangeSign == self.type) {
-        // 改签
+        // 改卡
         self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
-        self.contentTimeBeginTimeLabel.text = @"签到时间";
-        self.contentTimeendTimeLabel.text = @"改签时间";
+        self.contentTimeBeginTimeLabel.text = @"打卡时间";
+        self.contentTimeendTimeLabel.text = @"改卡时间";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.signTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.reviseSignTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
     } else if (kCausationTypeAskLeave == self.type) {
@@ -62,18 +62,7 @@
         self.contentTimeIntervalLabel.text = @"时长";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        if (kCausationTypeYearLeave == self.detailDto.type.integerValue ||
-            kCausationTypeMonthLeave == self.detailDto.type.integerValue ||
-            kCausationTypeSeeRelativeLeave == self.detailDto.type.integerValue ||
-            kCausationTypeMarryLeave == self.detailDto.type.integerValue ||
-            kCausationTypeBabyLeave == self.detailDto.type.integerValue ||
-            kCausationTypeCompanyBabyLeave == self.detailDto.type.integerValue ||
-            kCausationTypeFuneralLeave == self.detailDto.type.integerValue ||
-            kCausationTypeInjuryLeave == self.detailDto.type.integerValue) {
-            self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（天）",self.detailDto.dayAccount];
-        } else {
-            self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（小时）",self.detailDto.hourAccount];
-        }
+        self.contentTimeIntervalMessage.text = self.detailDto.info;
         
     } else if (kCausationTypeOut == self.type) {
         // 外出
@@ -83,7 +72,7 @@
         self.contentTimeIntervalLabel.text = @"时长";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（小时）",self.detailDto.hourAccount];
+        self.contentTimeIntervalMessage.text = self.detailDto.info;
     } else if (kCausationTypeevecation == self.type) {
         // 出差
         self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
@@ -92,7 +81,7 @@
         self.contentTimeIntervalLabel.text = @"时长";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（天）",self.detailDto.dayAccount];
+        self.contentTimeIntervalMessage.text = self.detailDto.info;
     } else if (kCausationTypeOverTime == self.type) {
         // 加班
         self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
@@ -101,7 +90,7 @@
         self.contentTimeIntervalLabel.text = @"时长";
         self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.startTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
         self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.endTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        self.contentTimeIntervalMessage.text = [NSString stringWithFormat:@"%@（小时）",self.detailDto.hourAccount];
+        self.contentTimeIntervalMessage.text = self.detailDto.info;
     }
     // 交通工具
     self.contentTrafficMessage.text = kIsNilString(self.detailDto.traffic) ? @"无" : self.detailDto.traffic;
@@ -235,7 +224,7 @@
         make.height.equalTo(@22);
         make.trailing.equalTo(self.mpm_trailing).offset(-5);
     }];
-    // 补签的时候需要隐藏
+    // 补卡的时候需要隐藏
     lastAttribute = self.contentTimeendTimeLabel.mpm_bottom;
     if (kCausationTypeRepairSign == self.type || kCausationTypeChangeSign == self.type) {
         [self.contentTimeIntervalLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {

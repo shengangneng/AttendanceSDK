@@ -1,7 +1,7 @@
 //
 //  MPMRepairSigninViewController.m
 //  MPMAtendence
-//  补签
+//  补卡
 //  Created by gangneng shen on 2018/5/6.
 //  Copyright © 2018年 gangneng shen. All rights reserved.
 //
@@ -75,7 +75,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
 
 - (void)setupAttributes {
     [super setupAttributes];
-    self.title = @"补签";
+    self.title = @"补卡";
     [self.bottomRepairButton addTarget:self action:@selector(repair:) forControlEvents:UIControlEventTouchUpInside];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(left:)];
 }
@@ -129,7 +129,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
                 MPMLerakageCardModel *model = [[MPMLerakageCardModel alloc] initWithDictionary:dic];
                 [temp addObject:model];
             }
-            // 如果有漏签记录，则隐藏无数据视图，如果没有漏签记录，则显示无数据视图
+            // 如果有漏卡记录，则隐藏无数据视图，如果没有漏卡记录，则显示无数据视图
             self.noMessageView.hidden = temp.count > 0;
             if (self.leadCardModel.isThisMonth) {
                 self.leadCardModel.thisMonthLeadCards = temp.copy;
@@ -171,9 +171,9 @@ const NSInteger MPMRepairSignLimitCount = 5;
 }
 
 - (void)repair:(UIButton *)sender {
-    DLog(@"跳入例外申请补签页面");
+    DLog(@"跳入例外申请补卡页面");
     if (!self.leadCardModel.isThisMonth || 0 == self.leadCardModel.thisMonthSelectIndexPaths.count) {
-        [self showAlertControllerToLogoutWithMessage:@"请选择补签记录" sureAction:nil needCancleButton:NO];
+        [self showAlertControllerToLogoutWithMessage:@"请选择补卡记录" sureAction:nil needCancleButton:NO];
     } else {
         MPMDealingModel *model = [[MPMDealingModel alloc] initWithCausationType:kCausationTypeRepairSign addCount:self.leadCardModel.thisMonthSelectIndexPaths.count];
         for (int i = 0; i < self.leadCardModel.thisMonthSelectIndexPaths.count; i++) {
@@ -184,7 +184,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
             model.causationDetail[i].signTime = card.brushTime;
         }
         if (kRepairFromTypeSigning == self.fromType) {
-            MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:kCausationTypeRepairSign dealingModel:model dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil];
+            MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:kCausationTypeRepairSign dealingModel:model dealingFromType:kDealingFromTypeApply bizorderId:nil taskInstId:nil fastCalculate:kFastCalculateTypeNone];
             self.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:dealing animated:YES];
         } else if (kRepairFromTypeDealing == self.fromType) {
@@ -247,7 +247,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
                 cell = [[MPMRepairSigninMonthTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdTitle];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            cell.textLabel.text = @"漏签记录";
+            cell.textLabel.text = @"漏卡记录";
             cell.thisMonth = self.leadCardModel.isThisMonth;
             __weak typeof(self) weakself = self;
             // 切换月份
@@ -307,7 +307,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView.indexPathsForSelectedRows.count > MPMRepairSignLimitCount) {
-        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"最多只能选择%ld条漏签记录进行补签",MPMRepairSignLimitCount] sureAction:nil needCancleButton:NO];
+        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"最多只能选择%ld条漏卡记录进行补卡",MPMRepairSignLimitCount] sureAction:nil needCancleButton:NO];
         [tableView deselectRowAtIndexPath:indexPath animated:NO];
     }
     self.leadCardModel.thisMonthSelectIndexPaths = tableView.indexPathsForSelectedRows;
@@ -353,14 +353,14 @@ const NSInteger MPMRepairSignLimitCount = 5;
 
 - (UIButton *)bottomRepairButton {
     if (!_bottomRepairButton) {
-        _bottomRepairButton = [MPMButton titleButtonWithTitle:@"补签" nTitleColor:kWhiteColor hTitleColor:kMainLightGray nBGImage:ImageName(@"approval_but_complete") hImage:ImageName(@"approval_but_complete")];
+        _bottomRepairButton = [MPMButton titleButtonWithTitle:@"补卡" nTitleColor:kWhiteColor hTitleColor:kMainLightGray nBGImage:ImageName(@"approval_but_complete") hImage:ImageName(@"approval_but_complete")];
     }
     return _bottomRepairButton;
 }
 
 - (MPMNoMessageView *)noMessageView {
     if (!_noMessageView) {
-        _noMessageView = [[MPMNoMessageView alloc] initWithNoMessageViewImage:@"global_noMessage" noMessageLabelText:@"无漏签记录"];
+        _noMessageView = [[MPMNoMessageView alloc] initWithNoMessageViewImage:@"global_noMessage" noMessageLabelText:@"无漏卡记录"];
         _noMessageView.hidden = YES;
     }
     return _noMessageView;

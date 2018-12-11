@@ -8,38 +8,38 @@
 
 #import <Foundation/Foundation.h>
 /*
-typedef NS_ENUM(NSInteger, CausationType) {
-    forCausationTypeAskLeave = -1,     // 请假申请
-    forCausationTypeChangeSign = 0,    // 改签
-    forCausationTypeRepairSign,        // 补签
-    forCausationTypeLeave,             // 请假
-    forCausationTypeevecation,         // 出差
-    forCausationTypeeveYearLeave,      // 年假
-    forCausationTypeeveSickLeave,      // 病假
-    forCausationTypeeveBabyLeave,      // 产假
-    forCausationTypeeveChirdBirthLeave,// 陪产假
-    forCausationTypeeveMaryLeave,      // 婚假
-    forCausationTypeeveDeadLeave,      // 丧假
-    forCausationTypeeveThingLeave,     // 事假
-    forCausationTypeOut,               // 外出
-    forCausationTypeChangeRest,        // 调休
-    forCausationTypeChangeClass,       // 调班
-    forCausationTypeOverTime,          // 加班
-    forCausationTypeDealing,           // 处理
-    forCausationTypeExcetionApply,     // 例外申请
-    forCausationTypeAddFreeSign,       // 增加自由补签
-};
-*/
- 
+ typedef NS_ENUM(NSInteger, CausationType) {
+ forCausationTypeAskLeave = -1,     // 请假申请
+ forCausationTypeChangeSign = 0,    // 改卡
+ forCausationTypeRepairSign,        // 补卡
+ forCausationTypeLeave,             // 请假
+ forCausationTypeevecation,         // 出差
+ forCausationTypeeveYearLeave,      // 年假
+ forCausationTypeeveSickLeave,      // 病假
+ forCausationTypeeveBabyLeave,      // 产假
+ forCausationTypeeveChirdBirthLeave,// 陪产假
+ forCausationTypeeveMaryLeave,      // 婚假
+ forCausationTypeeveDeadLeave,      // 丧假
+ forCausationTypeeveThingLeave,     // 事假
+ forCausationTypeOut,               // 外出
+ forCausationTypeChangeRest,        // 调休
+ forCausationTypeChangeClass,       // 调班
+ forCausationTypeOverTime,          // 加班
+ forCausationTypeDealing,           // 处理
+ forCausationTypeExcetionApply,     // 例外申请
+ forCausationTypeAddFreeSign,       // 增加自由补卡
+ };
+ */
+
 
 typedef NS_ENUM(NSInteger, CausationType) {
-    // 请假、出差、加班、外出、补签、改签
+    // 请假、出差、加班、外出、补卡、改卡
     kCausationTypeAskLeave = 100,       /** 请假 */
     kCausationTypeevecation = 101,      /** 出差 */
     kCausationTypeOverTime = 102,       /** 加班 */
     kCausationTypeOut = 103,            /** 外出 */
-    kCausationTypeRepairSign = 104,     /** 补签 */
-    kCausationTypeChangeSign = 105,     /** 改签 */
+    kCausationTypeRepairSign = 104,     /** 补卡 */
+    kCausationTypeChangeSign = 105,     /** 改卡 */
     kCausationTypeExtraApply = 106,     /** 例外申请 */
     // 请假具体类型
     kCausationTypeThingLeave = 0,       /** 事假 */
@@ -65,7 +65,7 @@ typedef NS_ENUM(NSInteger, CausationType) {
 #define kCellDetailTypeKey               @"CellDetailType"   /** Detail的控件类型 */
 #define kCellActionTypeKey               @"CellActionType"   /** Detail的操作类型 */
 // 选择器控件类型
-#define kAction_PickerTypeDealingType    @"DealingType"      /** 选择器：请假、出差、补签等处理类型 */
+#define kAction_PickerTypeDealingType    @"DealingType"      /** 选择器：请假、出差、补卡等处理类型 */
 #define kAction_PickerTypeTimeOfOne      @"TimeOfOne"        /** 选择器：年月日时分秒 */
 #define kAction_PickerTypeTimeOfTwo      @"TimeOfTwo"        /** 选择器：年月日 */
 #define kAction_PickerTypeTwoClass       @"TwoClass"         /** 选择器：上班、下班 */

@@ -1,7 +1,7 @@
 //
 //  MPMCalendarWeekView.m
 //  MPMAtendence
-//  考勤签到日历控件
+//  考勤打卡日历控件
 //  Created by gangneng shen on 2018/5/6.
 //  Copyright © 2018年 gangneng shen. All rights reserved.
 //

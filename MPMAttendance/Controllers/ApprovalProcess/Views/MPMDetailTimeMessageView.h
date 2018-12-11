@@ -13,7 +13,7 @@
 @interface MPMDetailTimeMessageView : UIView
 
 /**
- * @param type 申请类型：请假、出差、外出、加班、补签、改签
+ * @param type 申请类型：请假、出差、外出、加班、补卡、改卡
  * @param withTypeLabel 是否需要显示申请类型Label
  * @param detailDto 详情信息
  */
@@ -30,12 +30,12 @@
 @property (nonatomic, strong) UILabel *contentAddressLabel;
 @property (nonatomic, strong) UILabel *contentAddressMessage;
 // 时间
-@property (nonatomic, strong) UILabel *contentTimeBeginTimeLabel;   /** 开始时间、漏签时间、考勤时间 */
-@property (nonatomic, strong) UILabel *contentTimeBeginTimeMessage; /** 开始时间、漏签时间、考勤时间 */
-@property (nonatomic, strong) UILabel *contentTimeendTimeLabel;     /** 补签时间、签到时间、结束时间 */
-@property (nonatomic, strong) UILabel *contentTimeendTimeMessage;   /** 补签时间、签到时间、结束时间 */
-@property (nonatomic, strong) UILabel *contentTimeIntervalLabel;    /** 改签时间、时长 */
-@property (nonatomic, strong) UILabel *contentTimeIntervalMessage;  /** 改签时间、时长 */
+@property (nonatomic, strong) UILabel *contentTimeBeginTimeLabel;   /** 开始时间、漏卡时间、考勤时间 */
+@property (nonatomic, strong) UILabel *contentTimeBeginTimeMessage; /** 开始时间、漏卡时间、考勤时间 */
+@property (nonatomic, strong) UILabel *contentTimeendTimeLabel;     /** 补卡时间、打卡时间、结束时间 */
+@property (nonatomic, strong) UILabel *contentTimeendTimeMessage;   /** 补卡时间、打卡时间、结束时间 */
+@property (nonatomic, strong) UILabel *contentTimeIntervalLabel;    /** 改卡时间、时长 */
+@property (nonatomic, strong) UILabel *contentTimeIntervalMessage;  /** 改卡时间、时长 */
 // 交通工具
 @property (nonatomic, strong) UILabel *contentTrafficLabel;
 @property (nonatomic, strong) UILabel *contentTrafficMessage;

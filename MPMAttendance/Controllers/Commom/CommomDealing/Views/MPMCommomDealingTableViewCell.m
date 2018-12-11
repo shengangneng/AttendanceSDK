@@ -37,12 +37,14 @@
     self.detailTextLabel.textColor = kMainLightGray;
     self.needCheckNumber = NO;
     self.limitLength = 4;
+    [self.explainButton addTarget:self action:@selector(explain:) forControlEvents:UIControlEventTouchUpInside];
     [self.deleteCellButton addTarget:self action:@selector(deleteCell:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupSubViews {
     [self addSubview:self.startIcon];
     [self addSubview:self.txLabel];
+    [self addSubview:self.explainButton];
     [self addSubview:self.detailTextField];
     [self addSubview:self.deleteCellButton];
 }
@@ -58,6 +60,11 @@
         make.leading.equalTo(self.mpm_leading).offset(20);
         make.centerY.equalTo(self.mpm_centerY);
     }];
+    [self.explainButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.width.height.equalTo(@17);
+        make.centerY.equalTo(self.txLabel.mpm_centerY);
+        make.leading.equalTo(self.txLabel.mpm_leading).offset(38);
+    }];
     [self.detailTextField mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.bottom.equalTo(self);
         make.trailing.equalTo(self.mpm_trailing).offset(-10);
@@ -70,7 +77,23 @@
     }];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self addSubview:self.accessoryMaskView];
+    [self.accessoryMaskView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.trailing.equalTo(self);
+        make.height.equalTo(@(kTableViewHeight));
+        make.width.equalTo(@30);
+    }];
+}
+
 #pragma mark - Target Action
+- (void)explain:(UIButton *)sender {
+    if (self.explainBlock) {
+        self.explainBlock();
+    }
+}
+
 - (void)deleteCell:(UIButton *)sender {
     if (self.sectionDeleteBlock) {
         self.sectionDeleteBlock(sender);
@@ -158,12 +181,29 @@
     return _txLabel;
 }
 
+- (UIButton *)explainButton {
+    if (!_explainButton) {
+        _explainButton = [MPMButton imageButtonWithImage:ImageName(@"apply_explain") hImage:ImageName(@"apply_explain")];
+        _explainButton.hidden = YES;
+    }
+    return _explainButton;
+}
+
 - (UIButton *)deleteCellButton {
     if (!_deleteCellButton) {
         _deleteCellButton = [MPMButton imageButtonWithImage:ImageName(@"apply_deleteitems") hImage:ImageName(@"apply_deleteitems")];
         _deleteCellButton.hidden = YES;
     }
     return _deleteCellButton;
+}
+
+- (UIView *)accessoryMaskView {
+    if (!_accessoryMaskView) {
+        _accessoryMaskView = [[UIView alloc] init];
+        _accessoryMaskView.backgroundColor = kWhiteColor;
+        _accessoryMaskView.hidden = YES;
+    }
+    return _accessoryMaskView;
 }
 
 - (UITextField *)detailTextField {

@@ -274,6 +274,8 @@
 		CD4718AB2110545900401169 /* MPMAttendanceHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718AA2110545900401169 /* MPMAttendanceHeader.h */; };
 		CDBFAFC821B23ABB0020C493 /* MPMSigninTimerTask.h in Headers */ = {isa = PBXBuildFile; fileRef = CDBFAFC621B23ABB0020C493 /* MPMSigninTimerTask.h */; };
 		CDBFAFC921B23ABB0020C493 /* MPMSigninTimerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */; };
+		CDCA796921BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDCA796721BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m */; };
+		CDCA796A21BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDCA796821BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h */; };
 		CDE1CFA6217C18F20047CF85 /* MPMOauthUser.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */; };
 		CDE1CFA7217C18F20047CF85 /* MPMOauthUser.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */; };
 		CDE1CFA9217C1A620047CF85 /* MPMInterfaceConst.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */; };
@@ -669,6 +671,8 @@
 		CD4718AA2110545900401169 /* MPMAttendanceHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPMAttendanceHeader.h; sourceTree = "<group>"; };
 		CDBFAFC621B23ABB0020C493 /* MPMSigninTimerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSigninTimerTask.h; sourceTree = "<group>"; };
 		CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSigninTimerTask.m; sourceTree = "<group>"; };
+		CDCA796721BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApplyCollectionViewCell.m; sourceTree = "<group>"; };
+		CDCA796821BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApplyCollectionViewCell.h; sourceTree = "<group>"; };
 		CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMOauthUser.h; sourceTree = "<group>"; };
 		CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMOauthUser.m; sourceTree = "<group>"; };
 		CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMInterfaceConst.h; sourceTree = "<group>"; };
@@ -1129,6 +1133,8 @@
 			children = (
 				CD47165B2110536300401169 /* MPMApplyImageView.h */,
 				CD47165C2110536300401169 /* MPMApplyImageView.m */,
+				CDCA796821BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h */,
+				CDCA796721BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1918,6 +1924,7 @@
 				CD4718042110536400401169 /* MPMBaseNavigationBar.h in Headers */,
 				CDE1D018217C29F80047CF85 /* MPMProcessDef.h in Headers */,
 				CD471893211053CF00401169 /* NSLayoutConstraint+MPMDebugAdditions.h in Headers */,
+				CDCA796A21BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h in Headers */,
 				CD4717F32110536400401169 /* MPMIntergralSettingTableViewCell.h in Headers */,
 				CD47183D211053A600401169 /* MPMURLResponseSerialization.h in Headers */,
 				CD4718022110536400401169 /* MPMBaseModel.h in Headers */,
@@ -2020,6 +2027,7 @@
 				CD47174C2110536400401169 /* MPMMapSelectTableViewCell.m in Sources */,
 				CD4717802110536400401169 /* MPMAttendenceSigninViewController.m in Sources */,
 				CD47182C2110539100401169 /* MPMURLSessionManager.m in Sources */,
+				CDCA796921BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m in Sources */,
 				CDE1D052217C2CBD0047CF85 /* MPMAuthorityRoleModel.m in Sources */,
 				CD47188C211053CF00401169 /* MPMCompositeConstraint.m in Sources */,
 				CD47177C2110536400401169 /* MPMLerakageCardModel.m in Sources */,

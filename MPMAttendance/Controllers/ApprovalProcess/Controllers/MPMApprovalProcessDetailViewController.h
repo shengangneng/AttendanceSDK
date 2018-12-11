@@ -14,7 +14,7 @@
 
 
 /**
- @param selectIndexPath section0我的事项（row0待办 row1已办）section1我的申请 section2抄送给我 section3考勤签到节点跳入
+ @param selectIndexPath section0我的事项（row0待办 row1已办）section1我的申请 section2抄送给我 section3考勤打卡节点跳入
  */
 - (instancetype)initWithModel:(MPMProcessMyMetterModel *)model selectedIndexPath:(NSIndexPath *)selectIndexPath;
 

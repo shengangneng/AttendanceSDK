@@ -44,7 +44,7 @@
 @property (nonatomic, strong) UILabel *headerNameDepartment;    /** 姓名和部门 */
 @property (nonatomic, strong) UILabel *headerStatusLabel;       /** 审核状态 */
 // 流程明细
-@property (nonatomic, strong) UIView *detailView;               /** 明细视图：考勤时间、签到时间、改签时间等信息 */
+@property (nonatomic, strong) UIView *detailView;               /** 明细视图：考勤时间、打卡时间、改卡时间等信息 */
 // 申请原因
 @property (nonatomic, strong) UIView *reasonView;               /** 申请原因视图 */
 @property (nonatomic, strong) UILabel *reasonLabel;             /** 申请原因 */
@@ -113,10 +113,10 @@
         // 待办、已办
         url = [NSString stringWithFormat:@"%@%@?taskInstId=%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_DETAIL,self.model.mpm_id];
     } else if (3 == self.selectIndexPath.section) {
-        // 打卡页面的改签补签进入详情
+        // 打卡页面的改卡改签补卡进入详情
         url = [NSString stringWithFormat:@"%@%@?detailId=%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_ISEXISTDETAIL,self.model.mpm_id];
     } else if (4 == self.selectIndexPath.section) {
-        // 打卡页面的改签补签进入详情
+        // 打卡页面的改卡补卡进入详情
         url = [NSString stringWithFormat:@"%@%@?bizOrderId=%@",MPMINTERFACE_WORKFLOW,MPMINTERFACE_APPROVAL_DETAIL_BIZ,self.model.mpm_id];
     } else {
         // 我的申请、抄送给我
@@ -225,10 +225,10 @@
                 // 外出
                 detailDtoListArray = object[@"gooutDetails"];
             } else if (object[@"kqBizReviseSignList"] && [object[@"kqBizReviseSignList"] isKindOfClass:[NSArray class]] && ((NSArray *)object[@"kqBizReviseSignList"]).count > 0) {
-                // 改签
+                // 改卡
                 detailDtoListArray = object[@"kqBizReviseSignList"];
             } else if (object[@"kqBizFillupSignList"] && [object[@"kqBizFillupSignList"] isKindOfClass:[NSArray class]] && ((NSArray *)object[@"kqBizFillupSignList"]).count > 0) {
-                // 补签
+                // 补卡
                 detailDtoListArray = object[@"kqBizFillupSignList"];
             }
             
@@ -632,7 +632,7 @@
         // 我的待办-驳回-编辑
         if (kProcessDefCode_GetTypeFromCode[self.model.processDefCode]) {
             CausationType dealingType = ((NSString *)kProcessDefCode_GetTypeFromCode[self.model.processDefCode]).integerValue;
-            MPMBaseDealingViewController *dealingVC = [[MPMBaseDealingViewController alloc] initWithDealType:dealingType dealingModel:nil dealingFromType:kDealingFromTypeEditing bizorderId:self.processInst.bizOrderId taskInstId:self.model.mpm_id];
+            MPMBaseDealingViewController *dealingVC = [[MPMBaseDealingViewController alloc] initWithDealType:dealingType dealingModel:nil dealingFromType:kDealingFromTypeEditing bizorderId:self.processInst.bizOrderId taskInstId:self.model.mpm_id fastCalculate:kFastCalculateTypeNone];
             self.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:dealingVC animated:YES];
         }

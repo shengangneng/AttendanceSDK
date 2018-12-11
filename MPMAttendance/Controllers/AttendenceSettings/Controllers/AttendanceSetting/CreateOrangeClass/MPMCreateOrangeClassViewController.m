@@ -21,7 +21,7 @@
 #import "MPMBaseTableViewCell.h"
 #import "MPMOauthUser.h"
 
-#define kClassNameLimitLength 10
+#define kClassNameLimitLength 15
 
 @interface MPMCreateOrangeClassViewController () <UITableViewDelegate, UITableViewDataSource, MPMSelectDepartmentViewControllerDelegate>
 
@@ -124,7 +124,7 @@
         [self showAlertControllerToLogoutWithMessage:@"请输入排班名称" sureAction:nil needCancleButton:NO];
         return;
     } else if (self.model.name.length > kClassNameLimitLength) {
-        [self showAlertControllerToLogoutWithMessage:@"排班名称最多不能超过10个字，请重新输入" sureAction:nil needCancleButton:NO];
+        [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"排班名称最多不能超过%ld个字，请重新输入",kClassNameLimitLength] sureAction:nil needCancleButton:NO];
         return;
     } else if (self.model.objList.count == 0) {
         [self showAlertControllerToLogoutWithMessage:@"请选择参与人员" sureAction:nil needCancleButton:NO];

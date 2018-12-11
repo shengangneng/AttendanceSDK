@@ -30,7 +30,7 @@
 @property (nonatomic, copy) NSDictionary *freeTimeSection;  /** end、start */
 @property (nonatomic, copy) NSString *hour;                 /** 时长 */
 @property (nonatomic, copy) NSString *name;                 /** 班次名称 */
-@property (nonatomic, copy) NSArray *signTimeSections;      /** 班次签到时间 */
+@property (nonatomic, copy) NSArray *signTimeSections;      /** 班次打卡时间 */
 
 
 @end

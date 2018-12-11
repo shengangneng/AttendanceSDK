@@ -73,7 +73,7 @@
         }
     } else {
         MPMAttendenceSigninViewController *signin = [[MPMAttendenceSigninViewController alloc] init];
-        [self setChildVC:signin title:@"考勤签到" image:@"tab_punchingtimecard_nomal" selectedImage:@"tab_punchingtimecard_select" nav:YES];
+        [self setChildVC:signin title:@"考勤打卡" image:@"tab_punchingtimecard_nomal" selectedImage:@"tab_punchingtimecard_select" nav:YES];
         MPMApplyAdditionViewController *apply = [[MPMApplyAdditionViewController alloc] init];
         [self setChildVC:apply title:@"例外申请" image:@"tab_exceptionsapply_nomal" selectedImage:@"tab_exceptionsapply_select" nav:YES];
         MPMApprovalProcessViewController *statis = [[MPMApprovalProcessViewController alloc] init];

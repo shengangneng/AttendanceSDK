@@ -58,7 +58,7 @@
 
 - (void)setupAttributes {
     self.collectionViewSelectedDictionay = [NSMutableDictionary dictionaryWithObjectsAndKeys:@[], kSelectStatsKey, @[], kSelectTypesKey, @[], kSelectTimesKey, nil];
-    self.collectionViewTypesArray = @[@"全部",@"补签",@"改签",@"请假",@"出差",@"加班",@"外出"];
+    self.collectionViewTypesArray = @[@"全部",@"补卡",@"改卡",@"请假",@"出差",@"加班",@"外出"];
     self.collectionViewTimesArray = @[@"",@"最近三天",@"最近一周",@"最近一月"];
     [self reset:nil];
     [self.contentView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panDrawerView:)]];

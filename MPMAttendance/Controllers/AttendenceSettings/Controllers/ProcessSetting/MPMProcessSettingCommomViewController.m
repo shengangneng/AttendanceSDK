@@ -284,7 +284,7 @@
 - (void)headerSeeTemplate {
     DLog(@"预览申请模板");
     NSString *type = kProcessDefCode_GetTypeFromCode[kSafeString(self.model.code)];
-    MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:type.integerValue dealingModel:nil dealingFromType:kDealingFromTypePreview bizorderId:nil taskInstId:nil];
+    MPMBaseDealingViewController *dealing = [[MPMBaseDealingViewController alloc] initWithDealType:type.integerValue dealingModel:nil dealingFromType:kDealingFromTypePreview bizorderId:nil taskInstId:nil fastCalculate:kFastCalculateTypeNone];
     self.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:dealing animated:YES];
 }

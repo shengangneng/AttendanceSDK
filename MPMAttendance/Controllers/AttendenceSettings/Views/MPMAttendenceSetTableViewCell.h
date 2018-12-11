@@ -20,14 +20,15 @@
 /** 右上角编辑按钮 */
 typedef void(^EditBlock)(void);
 typedef void(^SwipeShowBlock)(void);
+typedef void(^FoldBlock)(void);
 
 @interface MPMAttendenceSetTableViewCell : MPMBaseTableViewCell
 
 @property (nonatomic, copy) EditBlock editBlock;
 @property (nonatomic, copy) SwipeShowBlock swipeShowBlock;
+@property (nonatomic, copy) FoldBlock foldBlock;
 @property (nonatomic, weak) id<MPMAttendenceSetTableViewCellDelegate> delegate;
 @property (nonatomic, strong) MPMAttendanceSettingModel *model;
-
 
 // 头部视图
 @property (nonatomic, strong) UIImageView *headerImageView;
@@ -38,24 +39,25 @@ typedef void(^SwipeShowBlock)(void);
 @property (nonatomic, strong) UIView *headerSeperateLine;
 // 底部视图
 @property (nonatomic, strong) UIImageView *bottomImageView;
-// 范围
+// 参与人员
 @property (nonatomic, strong) UILabel *workScopeLabel;
+@property (nonatomic, strong) UILabel *workScopeMessage;
 // 班次
-@property (nonatomic, strong) UILabel *classLabel1;
-@property (nonatomic, strong) UILabel *classLabel2;
-@property (nonatomic, strong) UILabel *classLabel3;
+@property (nonatomic, strong) UILabel *classLabel;
+@property (nonatomic, strong) UILabel *classMessage;
 // 考勤日期
 @property (nonatomic, strong) UILabel *workDateLabel;
+@property (nonatomic, strong) UILabel *workDateMessage;
 // 地点
 @property (nonatomic, strong) UILabel *workLocationLabel;
-// wifi名称
-@property (nonatomic, strong) UILabel *workWifiLabel;
+@property (nonatomic, strong) UILabel *workLocationMessage;
+
+@property (nonatomic, strong) UIButton *foldLocationsButton;
 
 // 自定义右滑视图
 @property (nonatomic, strong) UIView *swipeView;
 @property (nonatomic, strong) UILabel *swipeTitleLabel;
 
-- (void)resetCellWithModel:(MPMAttendanceSettingModel *)model cellHeight:(CGFloat)height;
 /** 隐藏SwipeView */
 - (void)dismissSwipeView;
 

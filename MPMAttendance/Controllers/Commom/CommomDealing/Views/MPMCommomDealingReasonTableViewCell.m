@@ -58,13 +58,13 @@
     }];
     
     [self.detailTextView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.txLabel.mpm_trailing).offset(5);
-        make.top.equalTo(self.mpm_top).offset(7);
+        make.leading.equalTo(self.mpm_leading).offset(17);
+        make.top.equalTo(self.mpm_top).offset(38);
         make.bottom.equalTo(self.mpm_bottom).offset(-7);
         make.trailing.equalTo(self.mpm_trailing);
     }];
     [self.textViewTotalLength mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.bottom.equalTo(self.mpm_bottom).offset(-7);
+        make.bottom.equalTo(self.mpm_bottom).offset(-8);
         make.trailing.equalTo(self.mpm_trailing).offset(-15);
         make.height.equalTo(@39);
     }];

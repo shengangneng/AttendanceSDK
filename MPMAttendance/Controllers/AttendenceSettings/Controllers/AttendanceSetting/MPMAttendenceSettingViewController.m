@@ -178,9 +178,9 @@
     return self.settingsArray.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return ((NSNumber *)self.cellHeightArray[indexPath.row]).floatValue;
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return ((NSNumber *)self.cellHeightArray[indexPath.row]).floatValue;
+//}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 6;
@@ -194,71 +194,7 @@
     static NSString *cellIdentifier = @"SettingCell";
     MPMAttendanceSettingModel *model = self.settingsArray[indexPath.row];
     MPMAttendenceSetTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
-    // 排班名称
-    [cell resetCellWithModel:model cellHeight:((NSNumber *)self.cellHeightArray[indexPath.row]).floatValue];
     cell.model = model;
-    cell.headerTitleLabel.text = model.name;
-    // 范围：部门数量、员工数量
-    NSMutableArray *departCount = [NSMutableArray array];
-    NSMutableArray *peopleCount = [NSMutableArray array];
-    for (MPMObjListModel *obj in model.objList) {
-        if (obj.type.integerValue == 1) {
-            [departCount addObject:obj];
-        } else {
-            [peopleCount addObject:obj];
-        }
-    }
-    if (departCount.count > 0 && peopleCount.count > 0) {
-        cell.workScopeLabel.text = [NSString stringWithFormat:@"参与人员:%ld人  参与部门:%ld个",peopleCount.count,departCount.count];
-    } else if (peopleCount.count > 0) {
-        cell.workScopeLabel.text = [NSString stringWithFormat:@"参与人员:%ld人",peopleCount.count];
-    } else if (departCount.count > 0) {
-        cell.workScopeLabel.text = [NSString stringWithFormat:@"参与部门:%ld个",departCount.count];
-    } else {
-        cell.workScopeLabel.text = nil;
-    }
-    
-    // 班次
-    NSArray *fixed = model.fixedTimeWorkSchedule[@"signTimeSections"];
-    
-    if (fixed.count == 1) {
-        MPMSignTimeSections *slt = [[MPMSignTimeSections alloc] initWithDictionary:fixed[0]];
-        id free = model.fixedTimeWorkSchedule[@"freeTimeSection"];
-        if (free && [free isKindOfClass:[NSDictionary class]] && free[@"start"] && ![free[@"start"] isKindOfClass:[NSNull class]] && free[@"end"] && ![free[@"end"] isKindOfClass:[NSNull class]]) {
-            NSString *start = kNumberSafeString(free[@"start"]);
-            NSString *end = kNumberSafeString(free[@"end"]);
-            cell.classLabel1.text = [NSString stringWithFormat:@"班次:A %@ - %@ 间休:%@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.startReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:start.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:end.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
-        } else {
-            cell.classLabel1.text = [NSString stringWithFormat:@"班次:A %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.startReturnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
-        }
-        cell.classLabel2.text = cell.classLabel3.text = nil;
-    } else if (fixed.count == 2) {
-        MPMSignTimeSections *slt0 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[0]];
-        MPMSignTimeSections *slt1 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[1]];
-        cell.classLabel1.text = [NSString stringWithFormat:@"班次:A %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt0.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt0.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
-        cell.classLabel2.text = [NSString stringWithFormat:@"        B %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt1.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt1.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
-        cell.classLabel3.text = nil;
-    } else if (fixed.count == 3) {
-        MPMSignTimeSections *slt0 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[0]];
-        MPMSignTimeSections *slt1 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[1]];
-        MPMSignTimeSections *slt2 = [[MPMSignTimeSections alloc] initWithDictionary:fixed[2]];
-        
-        cell.classLabel1.text = [NSString stringWithFormat:@"班次:A %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt0.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt0.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
-        cell.classLabel2.text = [NSString stringWithFormat:@"        B %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt1.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt1.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
-        cell.classLabel3.text = [NSString stringWithFormat:@"        C %@ - %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt2.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute],[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:slt2.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
-    } else {
-        cell.classLabel1.text = cell.classLabel2.text = cell.classLabel3.text = nil;
-    }
-    
-    // 考勤日期
-    cell.workDateLabel.text = kIsNilString(model.cycle) ? @"" : [NSString stringWithFormat:@"考勤日期:周%@",model.cycle];
-    
-    NSArray *locations = model.type.integerValue == 0 ? model.fixedTimeWorkSchedule[@"locatioinSettings"] : model.flexibleTimeWorkSchedule[@"locatioinSettings"];
-    NSString *locationName = locations.firstObject[@"locationName"];
-    // 考勤地址
-    cell.workLocationLabel.text = kIsNilString(locationName) ? nil : [NSString stringWithFormat:@"考勤地址:%@",locationName];
-    // 考勤wifi：目前还没有这个功能
-    cell.workWifiLabel.text = nil;
     cell.delegate = self;
     
     __weak typeof(self) weakself = self;
@@ -275,6 +211,11 @@
         __weak typeof(MPMAttendenceSetTableViewCell *) strongCell = weakCell;
         [strongself.lastCell dismissSwipeView];
         strongself.lastCell = strongCell;
+    };
+    cell.foldBlock = ^{
+        __strong typeof(weakself) strongself = weakself;
+        model.unfold = !model.unfold;
+        [strongself.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     };
     return cell;
 }
@@ -307,6 +248,7 @@
         [_tableView registerClass:[MPMAttendenceSetTableViewCell class] forCellReuseIdentifier:@"SettingCell"];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.rowHeight = UITableViewAutomaticDimension;
+        _tableView.estimatedRowHeight = 100;
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.backgroundColor = kTableViewBGColor;

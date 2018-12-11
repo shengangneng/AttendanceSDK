@@ -21,7 +21,7 @@
 #define MPMINTERFACE_SIGNIN_CLOCKTIME           @"api/scheduleDetailController/punchTheClockTime"   /** 获取打卡信息 */
 #define MPMINTERFACE_SIGNIN_GETSTATUS           @"api/attendanceStatus/monthly"                     /** 获取一周打卡状态 */
 #define MPMINTERFACE_SIGNIN_PUNCHCARD           @"api/scheduleDetailController/punchCard"           /** 打卡 */
-#define MPMINTERFACE_SIGNIN_ISEXISTDETAIL       @"api/rf/isExistResiveOrFillupSign"                 /** 打卡节点是否能改签或补签 */
+#define MPMINTERFACE_SIGNIN_ISEXISTDETAIL       @"api/rf/isExistResiveOrFillupSign"                 /** 打卡节点是否能改卡或补卡 */
 
 /********************例外申请********************/
 #define MPMINTERFACE_APPLY_GETLEAVETYPE         @"api/leaveController/getLeaveType"                 /** 获取所有请假类型 */
@@ -30,7 +30,7 @@
 #define MPMINTERFACE_APPLY_QUERY_TRAVEL         @"api/businessTravelController/query"               /** 根据id获取出差详情 */
 #define MPMINTERFACE_APPLY_QUERY_OVERTIME       @"api/ot/detail"                                    /** 根据id获取加班详情 */
 #define MPMINTERFACE_APPLY_QUERY_GOOUT          @"api/goout/detail"                                 /** 根据id获取外出详情 */
-#define MPMINTERFACE_APPLY_QUERY_SIGN           @"api/rf/query"                                     /** 根据id获取改签补签详情 */
+#define MPMINTERFACE_APPLY_QUERY_SIGN           @"api/rf/query"                                     /** 根据id获取改卡补卡详情 */
 #define MPMINTERFACE_APPLY_SUBMIT_LEAVE         @"api/leaveController/leave"                        /** 提交请假申请 */
 #define MPMINTERFACE_APPLY_UPDATE_LEAVE         @"api/leaveController/updateLeave"                  /** 更新请假申请 */
 #define MPMINTERFACE_APPLY_SUBMIT_TRAVEL        @"api/businessTravelController/businessTravel"      /** 提交出差申请 */
@@ -39,10 +39,11 @@
 #define MPMINTERFACE_APPLY_UPDATE_OT            @"api/ot/update"                                    /** 更新加班申请 */
 #define MPMINTERFACE_APPLY_SUBMIT_GOOUT         @"api/goout/save"                                   /** 提交外出申请 */
 #define MPMINTERFACE_APPLY_UPDATE_GOOUT         @"api/goout/update"                                 /** 更新外出申请 */
-#define MPMINTERFACE_APPLY_SUBMIT_FSIGN         @"api/rf/saveFillupSign"                            /** 提交补签申请 */
-#define MPMINTERFACE_APPLY_UPDATE_FSIGN         @"api/rf/updateFillupSign"                          /** 更新补签申请 */
-#define MPMINTERFACE_APPLY_SUBMIT_CSIGN         @"api/rf/saveReviseSign"                            /** 提交改签申请 */
-#define MPMINTERFACE_APPLY_UPDATE_CSIGN         @"api/rf/updateReviseSign"                          /** 更新改签申请 */
+#define MPMINTERFACE_APPLY_SUBMIT_FSIGN         @"api/rf/saveFillupSign"                            /** 提交补卡申请 */
+#define MPMINTERFACE_APPLY_UPDATE_FSIGN         @"api/rf/updateFillupSign"                          /** 更新补卡申请 */
+#define MPMINTERFACE_APPLY_SUBMIT_CSIGN         @"api/rf/saveReviseSign"                            /** 提交改卡申请 */
+#define MPMINTERFACE_APPLY_UPDATE_CSIGN         @"api/rf/updateReviseSign"                          /** 更新改卡申请 */
+#define MPMINTERFACE_APPLY_FASTCALCULATE        @"api/quickTemplate/fastCalculateDayOrHour"         /** 快速计算时间模板 */
 
 /********************流程审批********************/
 #define MPMINTERFACE_APPROVAL_MYNEWS            @"api/wfinst/mynews"                                /** 我的待办未读消息数 */

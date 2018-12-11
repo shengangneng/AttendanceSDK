@@ -15,11 +15,11 @@
 //@property (nonatomic, copy) NSString *noonBreakEndTime;
 //@property (nonatomic, copy) NSString *noonBreakStartTime;
 
-@property (nonatomic, copy) NSString *corssReturnDay;   /** 签退是否跨天：0否 1是 */
-@property (nonatomic, copy) NSString *corssStartDay;    /** 签到是否跨天：0否 1是 */
+@property (nonatomic, copy) NSString *corssReturnDay;   /** 下班是否跨天：0否 1是 */
+@property (nonatomic, copy) NSString *corssStartDay;    /** 上班是否跨天：0否 1是 */
 
-@property (nonatomic, copy) NSString *signTime;         /** 签到时间 */
-@property (nonatomic, copy) NSString *returnTime;       /** 签退时间 */
+@property (nonatomic, copy) NSString *signTime;         /** 上班时间 */
+@property (nonatomic, copy) NSString *returnTime;       /** 下班时间 */
 @property (nonatomic, copy) NSString *schedulingId;
 @property (nonatomic, copy) NSString *signTimeAfter;
 @property (nonatomic, copy) NSString *signTimeBefore;

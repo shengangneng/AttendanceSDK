@@ -71,7 +71,7 @@
         _signTypeLabel.textAlignment = NSTextAlignmentCenter;
         _signTypeLabel.textColor = kMainBlueColor;
         _signTypeLabel.font = SystemFont(17);
-        _signTypeLabel.text = @"签到";
+        _signTypeLabel.text = @"打卡";
     }
     return _signTypeLabel;
 }

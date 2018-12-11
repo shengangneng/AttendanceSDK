@@ -61,20 +61,8 @@
         DLog(@"计算时长 === %@",response);
         if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *object = response[kResponseObjectKey];
-            id day;
-            id hour;
-            if ([object[@"day"] isKindOfClass:[NSNumber class]]) {
-                day = ((NSNumber *)object[@"day"]).stringValue;
-            } else if ([object[@"day"] isKindOfClass:[NSString class]]) {
-                day = object[@"day"];
-            }
-            if ([object[@"hour"] isKindOfClass:[NSNumber class]]) {
-                hour = ((NSNumber *)object[@"hour"]).stringValue;
-            } else if ([object[@"hour"] isKindOfClass:[NSString class]]) {
-                hour = object[@"hour"];
-            }
-            self.model.hourAccount = hour;
-            self.model.dayAccount = day;
+            self.model.hourAccount = kNumberSafeString(object[@"hour"]);
+            self.model.info = kNumberSafeString(object[@"info"]);;
         }
         [self.tableView reloadData];
     } failure:^(NSString *error) {

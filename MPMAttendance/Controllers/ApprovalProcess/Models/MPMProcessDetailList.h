@@ -21,7 +21,7 @@
 @property (nonatomic, copy) NSString *totalHour;
 @property (nonatomic, copy) NSString *totalScore;
 @property (nonatomic, copy) NSString *totalExpectCost;
-@property (nonatomic, copy) NSString *type;             /** 补签、改签、请假、出差、加班、外出 */
+@property (nonatomic, copy) NSString *type;             /** 补卡、改卡、请假、出差、加班、外出 */
 @property (nonatomic, copy) NSString *userId;
 @property (nonatomic, copy) NSString *userName;
 
@@ -34,7 +34,7 @@
 @property (nonatomic, copy) NSString *bScore;
 @property (nonatomic, copy) NSString *startTime;
 @property (nonatomic, copy) NSString *endTime;
-@property (nonatomic, copy) NSString *dayAccount;
+@property (nonatomic, copy) NSString *info;
 @property (nonatomic, copy) NSString *hourAccount;
 @property (nonatomic, copy) NSString *type;         /** 请假类型 */
 @property (nonatomic, copy) NSString *address;      /** 地址 */
@@ -47,9 +47,9 @@
 @property (nonatomic, copy) NSString *fillupTime;   /** 漏卡时间 */
 @property (nonatomic, copy) NSString *mpm_id;
 @property (nonatomic, copy) NSString *orderId;
-@property (nonatomic, copy) NSString *signTime;     /** 打卡时间、漏签 */
-// 改签
+@property (nonatomic, copy) NSString *signTime;     /** 打卡时间、漏卡 */
+// 改卡
 @property (nonatomic, copy) NSString *attendanceTime;   /** 考勤时间 */
-@property (nonatomic, copy) NSString *reviseSignTime;   /** 改签 */
+@property (nonatomic, copy) NSString *reviseSignTime;   /** 改卡 */
 
 @end

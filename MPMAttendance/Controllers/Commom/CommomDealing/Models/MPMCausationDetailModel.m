@@ -17,12 +17,12 @@
         kCausationTypeRepairSign == self.causationType.integerValue ||
         kCausationTypeChangeSign == self.causationType.integerValue
         ) {
-        // 出差、加班、外出、补签、改签:self.causationType是固定的
+        // 出差、加班、外出、补卡、改卡:self.causationType是固定的
     } else {
         self.causationType = nil;// 请假：可以清空self.causationType
     }
     // 通用属性
-    self.dayAccount = nil;
+    self.info = nil;
     self.startTime = nil;
     self.endTime = nil;
     self.hourAccount = nil;
@@ -33,12 +33,12 @@
     self.traffic = nil;
     // 请假
     self.type = nil;
-    // 补签
+    // 补卡
     self.detailId = nil;
     self.fillupTime = nil;
     self.signTime = nil;
     self.mpm_id = nil;
-    // 改签
+    // 改卡
     self.attendanceTime = nil;
     self.reviseSignTime = nil;
     // 交通工具是否需要折叠
@@ -48,7 +48,7 @@
 - (void)copyWithOtherModel:(MPMCausationDetailModel *)model {
     self.causationType = model.causationType;
     // 通用属性
-    self.dayAccount = model.dayAccount;
+    self.info = model.info;
     self.startTime = model.startTime;
     self.endTime = model.endTime;
     self.hourAccount = model.hourAccount;
@@ -59,12 +59,12 @@
     self.traffic = model.traffic;
     // 请假
     self.type = model.type;
-    // 补签
+    // 补卡
     self.detailId = model.detailId;
     self.fillupTime = model.fillupTime;
     self.signTime = model.signTime;
     self.mpm_id = model.mpm_id;
-    // 改签
+    // 改卡
     self.attendanceTime = model.attendanceTime;
     self.reviseSignTime = model.reviseSignTime;
     // 交通工具是否需要折叠

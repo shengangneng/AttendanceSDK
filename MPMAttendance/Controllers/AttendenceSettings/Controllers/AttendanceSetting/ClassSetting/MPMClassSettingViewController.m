@@ -146,7 +146,7 @@
     // 需要交换固定排班和自由排班的数据
     if (classType == kClassTypeFixation) {
         // 固定排班
-        self.titlesArray = @[@[@"排班方式",@"每天开始签到时间",@"考勤日期",@"考勤班次"],
+        self.titlesArray = @[@[@"排班方式",@"每天开始打卡时间",@"考勤日期",@"考勤班次"],
                              //                             @[@"启动下班无需打卡"]
                              ];
         if (!kIsNilString(((NSString *)self.model.flexibleTimeWorkSchedule[@"startSignTime"]))) {
@@ -163,7 +163,7 @@
         }
     } else if (classType == kClassTypeFree) {
         // 自由排班
-        self.titlesArray = @[@[@"排班方式",@"每天开始签到时间",@"考勤日期"],
+        self.titlesArray = @[@[@"排班方式",@"每天开始打卡时间",@"考勤日期"],
                              //                             @[@"启动下班无需打卡"]
                              ];
         if (!kIsNilString(((NSString *)self.model.fixedTimeWorkSchedule[@"startSignTime"]))) {
@@ -233,10 +233,10 @@
             [self showAlertControllerToLogoutWithMessage:@"请选择考勤日期" sureAction:nil needCancleButton:NO];
             return;
         }
-        // 开始签到时间
+        // 开始打卡时间
         NSString *resetTime = self.model.fixedTimeWorkSchedule[@"startSignTime"];
         if (kIsNilString(resetTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请选择开始签到时间" sureAction:nil needCancleButton:NO];
+            [self showAlertControllerToLogoutWithMessage:@"请选择开始打卡时间" sureAction:nil needCancleButton:NO];
             return;
         }
         NSArray *signTimeSection = self.model.fixedTimeWorkSchedule[@"signTimeSections"];
@@ -384,7 +384,7 @@
         if (indexPath.row == 0) {
             
         } else if (indexPath.row == 1) {
-            // 每天开始签到时间
+            // 每天开始打卡时间
             NSDate *defaultDate = [NSDate dateWithTimeIntervalSince1970:[NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970]];
             [self.customDatePickerView showPicerViewWithType:kCustomPickerViewTypeHourMinute defaultDate:defaultDate];
             __weak typeof(self) weakself = self;
