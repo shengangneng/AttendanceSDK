@@ -115,8 +115,18 @@
     }
     if (kIsNilString(classMessage)) {
         self.classLabel.text = self.classMessage.text = nil;
+        [self.classLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.bottomImageView.mpm_leading);
+            make.top.equalTo(self.workScopeLabel.mpm_bottom).offset(8);
+            make.width.equalTo(@55);
+        }];
     } else {
         self.classMessage.attributedText = [self setAttributeText:classMessage withSpacing:5];
+        [self.classLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+            make.leading.equalTo(self.bottomImageView.mpm_leading).offset(10);
+            make.top.equalTo(self.workScopeLabel.mpm_bottom).offset(8);
+            make.width.equalTo(@55);
+        }];
     }
     
     // 考勤日期
