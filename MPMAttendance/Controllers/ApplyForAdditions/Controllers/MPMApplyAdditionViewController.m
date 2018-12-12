@@ -52,9 +52,9 @@
             make.centerX.equalTo(strongself.scrollView.mpm_centerX);
             make.top.equalTo(strongself.overtimeImageView.mpm_bottom).offset(10);
             if (fold) {
-                make.height.equalTo(@121);
+                make.height.equalTo(@126);
             } else {
-                make.height.equalTo(@166);
+                make.height.equalTo(@171);
             }
             [strongself.view layoutIfNeeded];
         }];
@@ -104,7 +104,7 @@
         make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
         make.centerX.equalTo(self.scrollView.mpm_centerX);
         make.top.equalTo(self.overtimeImageView.mpm_bottom).offset(10);
-        make.height.equalTo(@121);
+        make.height.equalTo(@126);
     }];
     [self.resignImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.equalTo(self.scrollView.mpm_leading).offset(10);

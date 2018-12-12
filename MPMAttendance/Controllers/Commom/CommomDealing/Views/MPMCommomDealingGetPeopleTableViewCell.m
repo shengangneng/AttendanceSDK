@@ -81,7 +81,7 @@
     }];
     [self.peopleView mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.leading.trailing.equalTo(self);
-        make.top.equalTo(self.txLabel.mpm_bottom).offset(-5);
+        make.top.equalTo(self.txLabel.mpm_bottom).offset(1);
         make.bottom.equalTo(self.mpm_bottom);
     }];
 }

@@ -248,7 +248,7 @@
                     }
                 }
             }
-            [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
         } failure:^(NSString *error) {
             DLog(@"%@",error);
         }];

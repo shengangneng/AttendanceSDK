@@ -86,9 +86,9 @@ static NSString *const kCollectionViewIdentifier = @"CollectionView";
             }];
             if (self.labels.count > 4) {
                 [self.foldButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-                    make.width.height.equalTo(@15);
-                    make.centerX.equalTo(self.mpm_centerX);
-                    make.bottom.equalTo(self.mpm_bottom).offset(-3);
+                    make.leading.trailing.equalTo(self);
+                    make.height.equalTo(@20);
+                    make.bottom.equalTo(self.mpm_bottom);
                 }];
             }
         }
@@ -208,8 +208,11 @@ static NSString *const kCollectionViewIdentifier = @"CollectionView";
 
 - (UIButton *)foldButton {
     if (!_foldButton) {
-        _foldButton = [MPMButton imageButtonWithImage:ImageName(@"apply_whiterup") hImage:ImageName(@"apply_whiterup")];
-        [_foldButton setBackgroundImage:ImageName(@"apply_whiterdown") forState:UIControlStateSelected];
+        _foldButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_foldButton setImage:ImageName(@"apply_whiterup")  forState:UIControlStateNormal];
+        [_foldButton setImage:ImageName(@"apply_whiterup")  forState:UIControlStateHighlighted];
+        [_foldButton setImage:ImageName(@"apply_whiterdown")  forState:UIControlStateSelected];
+        _foldButton.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _foldButton;
 }

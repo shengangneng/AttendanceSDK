@@ -797,44 +797,22 @@
         }
     } else if (indexPath.section == self.tableViewTitleArray.count - 2) {
         // 提交至
-        //        if (self.dealingModel.participants.count > 5) {
-        //            if (!self.dealingModel.mpm_applyNameNeedFold) {
-        //                return kTabbarHeight + 70 + (((self.dealingModel.participants.count-1)/5) * 56.5);
-        //            } else {
-        //                if (self.dealingModel.participants.count > 5) {
-        //                    return kTabbarHeight + 70;
-        //                } else {
-        //                    return kTabbarHeight + 56.5;
-        //                }
-        //            }
-        //        }
         NSInteger count;
         if (self.dealingModel.participantsCanAdd) {
             count = (self.dealingModel.participants.count/5 + 1);
         } else {
             count = (self.dealingModel.participants.count/4 + 1);
         }
-        return kTabbarHeight +  count * 56.5;
+        return kTableViewHeight +  count * 56.5 + 12;
     } else if (indexPath.section == self.tableViewTitleArray.count - 1) {
         // 抄送人
-        //        if (self.dealingModel.delivers.count > 0) {
-        //            if (!self.dealingModel.mpm_copyNameNeedFold) {
-        //                return kTabbarHeight + 70 + (((self.dealingModel.delivers.count-1)/5) * 56.5);
-        //            } else {
-        //                if (self.dealingModel.delivers.count > 5) {
-        //                    return kTabbarHeight + 70;
-        //                } else {
-        //                    return kTabbarHeight + 56.5;
-        //                }
-        //            }
-        //        }
         NSInteger count;
         if (self.dealingModel.deliversCanAdd) {
             count = (self.dealingModel.delivers.count/5 + 1);
         } else {
             count = (self.dealingModel.delivers.count/4 + 1);
         }
-        return kTabbarHeight +  count * 56.5;
+        return kTableViewHeight +  count * 56.5 + 12;
     }
     NSDictionary *dic = self.tableViewTitleArray[indexPath.section];
     NSArray *cellType = dic[kCellDetailTypeKey];
@@ -1054,6 +1032,7 @@
             // 抄送人：可以删除
             cell.startIcon.hidden = YES;
             cell.peopleCanDelete = YES;
+            cell.detailTxLabel.text = nil;
             [cell setPeopleViewArray:self.dealingModel.delivers canAdd:self.dealingModel.deliversCanAdd];
             __weak typeof(self) weakself = self;
             cell.addpBlock = ^(UIButton *sender) {
