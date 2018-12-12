@@ -87,7 +87,7 @@ static NSString *const kCollectionViewIdentifier = @"CollectionView";
             if (self.labels.count > 4) {
                 [self.foldButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
                     make.leading.trailing.equalTo(self);
-                    make.height.equalTo(@20);
+                    make.height.equalTo(@27);
                     make.bottom.equalTo(self.mpm_bottom);
                 }];
             }
