@@ -718,7 +718,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 
 - (void)back:(UIButton *)sender {
-    [[MPMSessionManager shareManager] backWithExpire:NO];
+    [[MPMSessionManager shareManager] backWithExpire:NO alertMessage:nil];
 }
 
 #pragma mark - Notification

@@ -109,7 +109,7 @@ static MPMSessionManager *instance;
             }
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self backWithExpire:YES];
+                [self backWithExpire:YES alertMessage:nil];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -130,7 +130,7 @@ static MPMSessionManager *instance;
                 [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self backWithExpire:YES];
+                [self backWithExpire:YES alertMessage:nil];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -161,7 +161,7 @@ static MPMSessionManager *instance;
                 [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self backWithExpire:YES];
+                [self backWithExpire:YES alertMessage:nil];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -182,7 +182,7 @@ static MPMSessionManager *instance;
                 [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self backWithExpire:YES];
+                [self backWithExpire:YES alertMessage:nil];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -213,7 +213,7 @@ static MPMSessionManager *instance;
                 [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self backWithExpire:YES];
+                [self backWithExpire:YES alertMessage:nil];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -234,7 +234,7 @@ static MPMSessionManager *instance;
                 [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
-                [self backWithExpire:YES];
+                [self backWithExpire:YES alertMessage:nil];
             } else {
                 failure([instance getAlertMessageFromError:error]);
             }
@@ -260,7 +260,7 @@ static MPMSessionManager *instance;
     }
 }
 
-- (void)backWithExpire:(BOOL)expire {
+- (void)backWithExpire:(BOOL)expire alertMessage:(NSString *)message {
     UIViewController *lastRoot = [MPMOauthUser shareOauthUser].lastRootViewController;
     UIViewController *lastPop = [MPMOauthUser shareOauthUser].lastCanPopViewController;
     [MPMProgressHUD dismiss];
@@ -270,10 +270,8 @@ static MPMSessionManager *instance;
         lastPop.navigationController.navigationBar.hidden = NO;
     }
     [UIApplication sharedApplication].statusBarStyle = [MPMOauthUser shareOauthUser].lastStatusBarStyle;
-    if ([lastPop isKindOfClass:[MPMLoginViewController class]] && ((MPMLoginViewController *)lastPop).delegate && [((MPMLoginViewController *)lastPop).delegate respondsToSelector:@selector(attendanceBackWithTokenExpire:)]) {
-        if (!kIsNilString([MPMOauthUser shareOauthUser].access_token) && !kIsNilString([MPMOauthUser shareOauthUser].refresh_token) && !kIsNilString([MPMOauthUser shareOauthUser].expiresIn)) {
-            [((MPMLoginViewController *)lastPop).delegate attendanceBackWithTokenExpire:expire];
-        }
+    if ([lastPop isKindOfClass:[MPMLoginViewController class]] && ((MPMLoginViewController *)lastPop).delegate && [((MPMLoginViewController *)lastPop).delegate respondsToSelector:@selector(attendanceBackWithTokenExpire:alertMessage:)]) {
+        [((MPMLoginViewController *)lastPop).delegate attendanceBackWithTokenExpire:expire alertMessage:message];
     }
     [lastPop.navigationController popViewControllerAnimated:YES];
     [[MPMOauthUser shareOauthUser] clearData];

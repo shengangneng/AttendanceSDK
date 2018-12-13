@@ -8,10 +8,14 @@
 
 
 /********************HOST********************/
-#define MPMINTERFACE_HOST                       @"https://api.test.jifenzhi.com/attendance/"        /** HOST */
-#define MPMINTERFACE_OAUTH                      @"https://auth.test.jifenzhi.com/oauth/token"       /** 单点授权获取token及刷新token */
-#define MPMINTERFACE_EMDM                       @"https://api.test.jifenzhi.com/emdm/"              /** 人员部门选择 */
-#define MPMINTERFACE_WORKFLOW                   @"https://api.test.jifenzhi.com/workflow/"          /** 工作流：路程设置、流程审批等 */
+//#define MPMINTERFACE_HOST                       @"https://api.test.jifenzhi.com/attendance/"        /** HOST */
+//#define MPMINTERFACE_OAUTH                      @"https://auth.test.jifenzhi.com/oauth/token"       /** 单点授权获取token及刷新token */
+//#define MPMINTERFACE_EMDM                       @"https://api.test.jifenzhi.com/emdm/"              /** 人员部门选择 */
+//#define MPMINTERFACE_WORKFLOW                   @"https://api.test.jifenzhi.com/workflow/"          /** 工作流：路程设置、流程审批等 */
+#define MPMINTERFACE_HOST                       @"https://apibeta.jifenzhi.com/attendance/"
+#define MPMINTERFACE_OAUTH                      @"https://authbeta.jifenzhi.com/oauth/token"
+#define MPMINTERFACE_EMDM                       @"https://apibeta.jifenzhi.com/emdm/"
+#define MPMINTERFACE_WORKFLOW                   @"https://apibeta.jifenzhi.com/workflow/"
 
 /********************登录、菜单********************/
 #define MPMINTERFACE_MYRES                      @"api/resource/myres"                               /** 获取当前用户菜单 */
