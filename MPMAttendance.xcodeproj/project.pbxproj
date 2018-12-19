@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD15240921CA44DD00B4836E /* MPMBaseAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD15240721CA44DD00B4836E /* MPMBaseAlertController.m */; };
+		CD15240A21CA44DD00B4836E /* MPMBaseAlertController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD15240821CA44DD00B4836E /* MPMBaseAlertController.h */; };
 		CD47172D2110536400401169 /* MPMCheckRegexTool.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4716062110536200401169 /* MPMCheckRegexTool.m */; };
 		CD47172E2110536400401169 /* MPMCheckRegexTool.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716072110536200401169 /* MPMCheckRegexTool.h */; };
 		CD47172F2110536400401169 /* MPMSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4716092110536200401169 /* MPMSessionManager.h */; };
@@ -402,6 +404,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CD15240721CA44DD00B4836E /* MPMBaseAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMBaseAlertController.m; sourceTree = "<group>"; };
+		CD15240821CA44DD00B4836E /* MPMBaseAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMBaseAlertController.h; sourceTree = "<group>"; };
 		CD4715F621104EF200401169 /* MPMAttendance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPMAttendance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD4715FA21104EF200401169 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD4716062110536200401169 /* MPMCheckRegexTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCheckRegexTool.m; sourceTree = "<group>"; };
@@ -1559,6 +1563,8 @@
 		CD47170A2110536300401169 /* BaseClass */ = {
 			isa = PBXGroup;
 			children = (
+				CD15240821CA44DD00B4836E /* MPMBaseAlertController.h */,
+				CD15240721CA44DD00B4836E /* MPMBaseAlertController.m */,
 				CD47170F2110536300401169 /* MPMMainTabBarViewController.h */,
 				CD4717162110536300401169 /* MPMMainTabBarViewController.m */,
 				CD4717112110536300401169 /* MPMBaseNavigationController.h */,
@@ -1785,6 +1791,7 @@
 				CDE1D080217C2F330047CF85 /* MPMBaseDealingHeader.h in Headers */,
 				CD4717402110536400401169 /* NSMutableArray+MPMExtention.h in Headers */,
 				CD47178D2110536400401169 /* MPMCalendarScrollView.h in Headers */,
+				CD15240A21CA44DD00B4836E /* MPMBaseAlertController.h in Headers */,
 				CD4718162110536400401169 /* MPMAttendencePickerView.h in Headers */,
 				CD47174B2110536400401169 /* MPMSigninDateView.h in Headers */,
 				CD4717C22110536400401169 /* MPMCreateOrangeClassViewController.h in Headers */,
@@ -2195,6 +2202,7 @@
 				CDE1CFF8217C272E0047CF85 /* MPMProcessDetailApprovalNodeView.m in Sources */,
 				CD4717AA2110536400401169 /* MPMSiderDrawerCollectionViewTimeCell.m in Sources */,
 				CDE1CFAE217C1C1A0047CF85 /* OauthUser+CoreDataProperties.m in Sources */,
+				CD15240921CA44DD00B4836E /* MPMBaseAlertController.m in Sources */,
 				CD4718172110536400401169 /* MPMCustomDatePickerView.m in Sources */,
 				CD471888211053CF00401169 /* ViewController+MPMAdditions.m in Sources */,
 				CDE1D01F217C29F80047CF85 /* MPMProcessSettingTableViewCell.m in Sources */,

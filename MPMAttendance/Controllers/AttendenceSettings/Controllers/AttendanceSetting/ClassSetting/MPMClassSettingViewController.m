@@ -57,25 +57,11 @@
         }
         ClassType type = self.model.type.integerValue;
         if (type == kClassTypeFixation) {
-            if (self.model.fixedTimeWorkSchedule[@"startSignTime"]) {
-                if ([self.model.fixedTimeWorkSchedule[@"startSignTime"] isKindOfClass:[NSNumber class]]) {
-                    self.model.fixedTimeWorkSchedule[@"startSignTime"] = ((NSNumber *)self.model.fixedTimeWorkSchedule[@"startSignTime"]).stringValue;
-                }
-            } else {
-                [self.model.fixedTimeWorkSchedule setValue:[NSString stringWithFormat:@"%.0f",([NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970]) * 1000] forKey:@"startSignTime"];
-            }
             if (!self.model.fixedTimeWorkSchedule[@"daysOfWeek"]) {
                 self.model.fixedTimeWorkSchedule[@"daysOfWeek"] = @[@"2",@"3",@"4",@"5",@"6"];
                 [self.model translateCycle];
             }
         } else if (type == kClassTypeFree) {
-            if (self.model.flexibleTimeWorkSchedule[@"startSignTime"]) {
-                if ([self.model.flexibleTimeWorkSchedule[@"startSignTime"] isKindOfClass:[NSNumber class]]) {
-                    self.model.flexibleTimeWorkSchedule[@"startSignTime"] = ((NSNumber *)self.model.flexibleTimeWorkSchedule[@"startSignTime"]).stringValue;
-                }
-            } else {
-                [self.model.flexibleTimeWorkSchedule setValue:[NSString stringWithFormat:@"%.0f",([NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970]) * 1000] forKey:@"startSignTime"];
-            }
             if (!self.model.flexibleTimeWorkSchedule[@"daysOfWeek"]) {
                 self.model.flexibleTimeWorkSchedule[@"daysOfWeek"] = @[@"2",@"3",@"4",@"5",@"6"];
                 [self.model translateCycle];
@@ -146,12 +132,9 @@
     // 需要交换固定排班和自由排班的数据
     if (classType == kClassTypeFixation) {
         // 固定排班
-        self.titlesArray = @[@[@"排班方式",@"每天开始打卡时间",@"考勤日期",@"考勤班次"],
+        self.titlesArray = @[@[@"排班方式",@"考勤日期",@"考勤班次"],
                              //                             @[@"启动下班无需打卡"]
                              ];
-        if (!kIsNilString(((NSString *)self.model.flexibleTimeWorkSchedule[@"startSignTime"]))) {
-            self.model.fixedTimeWorkSchedule[@"startSignTime"] = self.model.flexibleTimeWorkSchedule[@"startSignTime"];
-        }
         if (((NSArray *)self.model.flexibleTimeWorkSchedule[@"daysOfWeek"]).count > 0) {
             self.model.fixedTimeWorkSchedule[@"daysOfWeek"] = self.model.flexibleTimeWorkSchedule[@"daysOfWeek"];
         }
@@ -163,12 +146,9 @@
         }
     } else if (classType == kClassTypeFree) {
         // 自由排班
-        self.titlesArray = @[@[@"排班方式",@"每天开始打卡时间",@"考勤日期"],
+        self.titlesArray = @[@[@"排班方式",@"考勤日期"],
                              //                             @[@"启动下班无需打卡"]
                              ];
-        if (!kIsNilString(((NSString *)self.model.fixedTimeWorkSchedule[@"startSignTime"]))) {
-            self.model.flexibleTimeWorkSchedule[@"startSignTime"] = self.model.fixedTimeWorkSchedule[@"startSignTime"];
-        }
         if (((NSArray *)self.model.fixedTimeWorkSchedule[@"daysOfWeek"]).count > 0) {
             self.model.flexibleTimeWorkSchedule[@"daysOfWeek"] = self.model.fixedTimeWorkSchedule[@"daysOfWeek"];
         }
@@ -233,12 +213,6 @@
             [self showAlertControllerToLogoutWithMessage:@"请选择考勤日期" sureAction:nil needCancleButton:NO];
             return;
         }
-        // 开始打卡时间
-        NSString *resetTime = self.model.fixedTimeWorkSchedule[@"startSignTime"];
-        if (kIsNilString(resetTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请选择开始打卡时间" sureAction:nil needCancleButton:NO];
-            return;
-        }
         NSArray *signTimeSection = self.model.fixedTimeWorkSchedule[@"signTimeSections"];
         if (!signTimeSection || signTimeSection.count == 0) {
             [self showAlertControllerToLogoutWithMessage:@"请选择考勤班次" sureAction:nil needCancleButton:NO];
@@ -267,7 +241,7 @@
     self.model.fixedTimeWorkSchedule[@"hour"] = model.schedule.hour;
     self.model.fixedTimeWorkSchedule[@"signTimeSections"] = model.schedule.signTimeSections;
     self.model.fixedTimeWorkSchedule[@"freeTimeSection"] = model.schedule.freeTimeSection;
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark - SwitchChangeDelegate
@@ -325,7 +299,7 @@
             [strongself.tableView reloadData];
         };
         return cell;
-    } else if (indexPath.section == 0 && indexPath.row == 2) {
+    } else if (indexPath.section == 0 && indexPath.row == 1) {
         // 考勤日期/考勤周期
         static NSString *identifier = @"cell2";
         MPMClassSettingImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
@@ -359,19 +333,12 @@
         }
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.textLabel.text = self.titlesArray[indexPath.section][indexPath.row];
-        if (indexPath.row == 3) {
+        if (indexPath.row == 2) {
             NSArray *arr = self.model.fixedTimeWorkSchedule[@"signTimeSections"];
             if (arr.count > 0) {
                 cell.detailTextLabel.text = [self getTimeStringWithTimeSchedule:self.model.fixedTimeWorkSchedule];
             } else {
                 cell.detailTextLabel.text = @"";
-            }
-        } else if (indexPath.row == 1) {
-            NSString *startSignTime = self.model.type.integerValue == 0 ? self.model.fixedTimeWorkSchedule[@"startSignTime"] : self.model.flexibleTimeWorkSchedule[@"startSignTime"];
-            if (kIsNilString(startSignTime)) {
-                cell.detailTextLabel.text = @"";
-            } else {
-                cell.detailTextLabel.text = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:startSignTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
             }
         }
         return cell;
@@ -384,21 +351,6 @@
         if (indexPath.row == 0) {
             
         } else if (indexPath.row == 1) {
-            // 每天开始打卡时间
-            NSDate *defaultDate = [NSDate dateWithTimeIntervalSince1970:[NSDateFormatter getZeroWithTimeInterverl:[NSDate date].timeIntervalSince1970]];
-            [self.customDatePickerView showPicerViewWithType:kCustomPickerViewTypeHourMinute defaultDate:defaultDate];
-            __weak typeof(self) weakself = self;
-            self.customDatePickerView.completeBlock = ^(NSDate *date) {
-                __strong typeof(weakself) strongself = weakself;
-                NSString *timerString = [NSString stringWithFormat:@"%.0f",(date.timeIntervalSince1970 - [NSDateFormatter getZeroWithTimeInterverl:date.timeIntervalSince1970] - 28800) * 1000];
-                if (strongself.model.type.integerValue == 0) {
-                    [strongself.model.fixedTimeWorkSchedule setValue:timerString forKey:@"startSignTime"];
-                } else {
-                    [strongself.model.flexibleTimeWorkSchedule setValue:timerString forKey:@"startSignTime"];
-                }
-                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            };
-        } else if (indexPath.row == 2) {
             // 选择考勤日期
             NSArray *cycleArray = self.model.type.integerValue == 0 ? self.model.fixedTimeWorkSchedule[@"daysOfWeek"] : self.model.flexibleTimeWorkSchedule[@"daysOfWeek"];
             __weak typeof(self) weakself = self;

@@ -19,6 +19,9 @@
 @property (nonatomic, copy) NSArray<MPMDepartment *> *limitEmployees;       /** 限制不能选的人 */
 @property (nonatomic, copy) NSString *limitEmployeeMessage;                 /** 限制不能选择人时候的提示 */
 
+@property (nonatomic, assign) BOOL classNeedCheckTransfer;                  /** 需要检查排班是否做人员迁移 */
+@property (nonatomic, copy) NSString *classId;                              /** 排班id：选择人员的时候，如果有排班id，需要调用接口看是否转移 */
+
 + (instancetype)shareInstance;
 
 /** 部门的增加操作 */

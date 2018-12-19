@@ -156,12 +156,12 @@
     __weak typeof(self) weakself = self;
     UIAlertAction *sure = [UIAlertAction actionWithTitle:@"立即生效" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         __strong typeof(weakself) strongself = weakself;
-        [strongself saveClassWithEffective:@"1" transfer:nil];
+        [strongself saveClassWithEffective:@"1" transfer:@"1"];
         [weakAlert dismissViewControllerAnimated:YES completion:nil];
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"明天生效" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         __strong typeof(weakself) strongself = weakself;
-        [strongself saveClassWithEffective:@"0" transfer:nil];
+        [strongself saveClassWithEffective:@"0" transfer:@"1"];
         [weakAlert dismissViewControllerAnimated:YES completion:nil];
     }];
     [weakAlert addAction:cancelAction];
@@ -211,7 +211,7 @@
         if (self.model.fixedTimeWorkSchedule[@"freeTimeSection"] && [self.model.fixedTimeWorkSchedule[@"freeTimeSection"] isKindOfClass:[NSDictionary class]] && ![self.model.fixedTimeWorkSchedule[@"freeTimeSection"][@"start"] isKindOfClass:[NSNull class]] && ![self.model.fixedTimeWorkSchedule[@"freeTimeSection"][@"end"] isKindOfClass:[NSNull class]]) {
             fixedTimeWorkSchedule[@"freeTimeSection"] = self.model.fixedTimeWorkSchedule[@"freeTimeSection"];
         }
-        fixedTimeWorkSchedule[@"startSignTime"] = self.model.fixedTimeWorkSchedule[@"startSignTime"];
+        fixedTimeWorkSchedule[@"startSignTime"] = @"123";
         params[@"fixedTimeWorkSchedule"] = fixedTimeWorkSchedule;
     } else {
         flexibleTimeWorkSchedule[@"daysOfWeek"] = self.model.flexibleTimeWorkSchedule[@"daysOfWeek"];
@@ -226,7 +226,7 @@
         flexibleTimeWorkSchedule[@"locatioinSettings"] = locations.copy;
         flexibleTimeWorkSchedule[@"offset"] = self.deviation;
         flexibleTimeWorkSchedule[@"signTimeSections"] = self.model.flexibleTimeWorkSchedule[@"signTimeSections"];
-        flexibleTimeWorkSchedule[@"startSignTime"] = self.model.flexibleTimeWorkSchedule[@"startSignTime"];
+        flexibleTimeWorkSchedule[@"startSignTime"] = @"123";
         params[@"flexibleTimeWorkSchedule"] = flexibleTimeWorkSchedule;
     }
     

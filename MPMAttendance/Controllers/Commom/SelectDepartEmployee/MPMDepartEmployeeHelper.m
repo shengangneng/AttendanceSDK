@@ -17,6 +17,7 @@ static MPMDepartEmployeeHelper *shareHelper;
         shareHelper = [[MPMDepartEmployeeHelper alloc] init];
         shareHelper.departments = [NSMutableArray array];
         shareHelper.employees = [NSMutableArray array];
+        shareHelper.classNeedCheckTransfer = NO;
     });
     return shareHelper;
 }
@@ -92,6 +93,8 @@ static MPMDepartEmployeeHelper *shareHelper;
     shareHelper.limitEmployeeCount = 0;
     shareHelper.limitEmployees = nil;
     shareHelper.limitEmployeeMessage = nil;
+    shareHelper.classNeedCheckTransfer = NO;
+    shareHelper.classId = nil;
 }
 
 @end

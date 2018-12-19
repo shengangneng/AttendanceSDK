@@ -11,6 +11,7 @@
 #import "MPMSettingClassListTableViewCell.h"
 #import "MPMSettingClassListModel.h"
 #import "MPMSessionManager.h"
+#import "MPMNoMessageView.h"
 
 @interface MPMSettingSearchTimeViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -19,6 +20,7 @@
 
 // tableview
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) MPMNoMessageView *noMessageView;
 
 // bottom
 @property (nonatomic, strong) UIView *bottomView;
@@ -63,6 +65,7 @@
     [self.view addSubview:self.headerView];
     [self.headerView addSubview:self.headerSearchBar];
     [self.view addSubview:self.tableView];
+    [self.view addSubview:self.noMessageView];
     // bottom
     [self.view addSubview:self.bottomView];
     [self.bottomView addSubview:self.bottomLine];
@@ -85,6 +88,11 @@
         make.leading.trailing.equalTo(self.view);
         make.top.equalTo(self.headerView.mpm_bottom);
         make.bottom.equalTo(self.bottomView.mpm_top);
+    }];
+    [self.noMessageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.height.width.equalTo(@(kPreferNoMessaegViewWidthHeight));
+        make.centerY.equalTo(self.view.mpm_centerY).offset(-10);
+        make.centerX.equalTo(self.view.mpm_centerX);
     }];
     // bottom
     [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -179,6 +187,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (self.searchArray.count == 0) {
+        self.noMessageView.hidden = NO;
+    } else {
+        self.noMessageView.hidden = YES;
+    }
     return self.searchArray.count;
 }
 
@@ -302,5 +315,12 @@
     return _bottomSaveButton;
 }
 
+- (MPMNoMessageView *)noMessageView {
+    if (!_noMessageView) {
+        _noMessageView = [[MPMNoMessageView alloc] initWithNoMessageViewImage:@"global_noMessage" noMessageLabelText:@"没有找到相关结果"];
+        _noMessageView.hidden = YES;
+    }
+    return _noMessageView;
+}
 
 @end

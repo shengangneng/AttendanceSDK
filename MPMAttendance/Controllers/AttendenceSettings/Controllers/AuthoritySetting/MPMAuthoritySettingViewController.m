@@ -28,9 +28,6 @@
 @interface MPMAuthoritySettingViewController () <UITableViewDelegate, UITableViewDataSource>
 // Views
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) UIView *bottomView;
-@property (nonatomic, strong) UIView *bottomLine;
-@property (nonatomic, strong) UIButton *bottomNextOrSaveButton;
 // Data
 @property (nonatomic, copy) NSArray *titleArray;
 @property (nonatomic, assign) BOOL respondorNeedFold;   /** 负责人是否需要折叠：默认为YES */
@@ -152,64 +149,27 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)save:(UIButton *)sender {
+/** 添加人员、点击人员删除 */
+- (void)saveWithRolesArray:(NSArray *)rolesArray roleId:(NSString *)roleId {
     
-    __block BOOL twoSaveAllSucceed = YES;
-    // 负责人和统计员的保存需要分别调用不同的接口
-    dispatch_group_t group = dispatch_group_create();
-    
-    dispatch_group_enter(group);
-    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        // 保存负责人
-        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_ROLE_AUTHORIZE];
-        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        params[@"companyId"] = [MPMOauthUser shareOauthUser].company_id;
-        params[@"roleId"] = kRoleIdResponder;
-        NSMutableArray *users = [NSMutableArray arrayWithCapacity:self.responderArray.count];
-        for (MPMAuthorityModel *model in self.responderArray) {
-            [users addObject:@{@"id":kSafeString(model.mpm_id),@"name":kSafeString(model.name)}];
-        }
-        params[@"users"] = users;
-        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
-            dispatch_group_leave(group);
-        } failure:^(NSString *error) {
-            dispatch_group_leave(group);
-            twoSaveAllSucceed = NO;
-        }];
-    });
-    
-    
-    dispatch_group_enter(group);
-    dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-        // 保存统计员
-        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_ROLE_AUTHORIZE];
-        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        params[@"companyId"] = [MPMOauthUser shareOauthUser].company_id;
-        params[@"roleId"] = kRoleIdStatictor;
-        NSMutableArray *users = [NSMutableArray arrayWithCapacity:self.statictorArray.count];
-        for (MPMAuthorityModel *model in self.statictorArray) {
-            [users addObject:@{@"id":kSafeString(model.mpm_id),@"name":kSafeString(model.name)}];
-        }
-        params[@"users"] = users;
-        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
-            dispatch_group_leave(group);
-        } failure:^(NSString *error) {
-            dispatch_group_leave(group);
-            twoSaveAllSucceed = NO;
-        }];
-    });
-    
-    dispatch_group_notify(group, kMainQueue, ^{
-        if (twoSaveAllSucceed) {
-            __weak typeof(self) weakself = self;
-            [self showAlertControllerToLogoutWithMessage:@"保存成功" sureAction:^(UIAlertAction * _Nonnull action) {
-                __strong typeof(weakself) strongself = weakself;
-                [strongself.navigationController popViewControllerAnimated:YES];
-            } needCancleButton:NO];
+    NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_ROLE_AUTHORIZE];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"companyId"] = [MPMOauthUser shareOauthUser].company_id;
+    params[@"roleId"] = roleId;
+    NSMutableArray *users = [NSMutableArray arrayWithCapacity:self.statictorArray.count];
+    for (MPMAuthorityModel *model in rolesArray) {
+        [users addObject:@{@"id":kSafeString(model.mpm_id),@"name":kSafeString(model.name)}];
+    }
+    params[@"users"] = users;
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在操作" success:^(id response) {
+        if (((NSString *)response[kResponseDataKey][kCode]).integerValue == 200) {
+            [self getData];
         } else {
-            [self showAlertControllerToLogoutWithMessage:@"保存失败" sureAction:nil needCancleButton:NO];
+            [self showAlertControllerToLogoutWithMessage:@"操作失败" sureAction:nil needCancleButton:NO];
         }
-    });
+    } failure:^(NSString *error) {
+        [self showAlertControllerToLogoutWithMessage:error sureAction:nil needCancleButton:NO];
+    }];
 }
 
 #pragma mark - UITableViewDelegate && UITableViewDelegate
@@ -305,11 +265,12 @@
                 [temp addObject:model];
             }
             if (indexPath.row == 0) {
-                sstrongself.responderArray = temp.copy;
+                // 保存到负责人
+                [sstrongself saveWithRolesArray:temp.copy roleId:kRoleIdResponder];
             } else {
-                sstrongself.statictorArray = temp.copy;
+                // 保存到统计员
+                [sstrongself saveWithRolesArray:temp.copy roleId:kRoleIdStatictor];
             }
-            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         };
         strongself.hidesBottomBarWhenPushed = YES;
         [strongself.navigationController pushViewController:depart animated:YES];
@@ -326,17 +287,28 @@
     };
     cell.deleteBlock = ^(NSInteger index) {
         __strong typeof(weakself) strongself = weakself;
+        NSArray *saveArray;
+        MPMAuthorityModel *model;
+        NSString *roleId;
         // 相应的管理人或统计员需要删除数据并刷新页面
         if (indexPath.row == 0) {
+            model = strongself.responderArray[index - Tag];
+            roleId = kRoleIdResponder;
             NSMutableArray *temp = [NSMutableArray arrayWithArray:strongself.responderArray];
             [temp removeObjectAtIndex:index - Tag];
-            strongself.responderArray = temp.copy;
+            saveArray = temp.copy;
         } else {
+            model = strongself.statictorArray[index - Tag];
+            roleId = kRoleIdStatictor;
             NSMutableArray *temp = [NSMutableArray arrayWithArray:strongself.statictorArray];
             [temp removeObjectAtIndex:index - Tag];
-            strongself.statictorArray = temp.copy;
+            saveArray = temp.copy;
         }
-        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        __strong typeof(strongself) wweakself = strongself;
+        [strongself showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"确定要移除(%@)对应的权限吗？",model.name] sureAction:^(UIAlertAction * _Nonnull action) {
+            __strong typeof(wweakself) sstrongself = wweakself;
+            [sstrongself saveWithRolesArray:saveArray roleId:roleId];
+        } needCancleButton:YES];
     };
     
     return cell;
@@ -352,37 +324,18 @@
     self.respondorNeedFold = YES;
     self.statistorNeedFold = YES;
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
-    [self.bottomNextOrSaveButton addTarget:self action:@selector(save:) forControlEvents:UIControlEventTouchUpInside];
     self.titleArray = @[@{@"title":@"考勤负责人",@"detail":@"负责用户授权、考勤参数配置及人员排班设置"},@{@"title":@"考勤统计员",@"detail":@"查看公司全体员工每日考勤，监督考勤审批"}];
 }
 
 - (void)setupSubViews {
     [super setupSubViews];
     [self.view addSubview:self.tableView];
-    [self.view addSubview:self.bottomView];
-    [self.bottomView addSubview:self.bottomLine];
-    [self.bottomView addSubview:self.bottomNextOrSaveButton];
 }
 
 - (void)setupConstraints {
     [super setupConstraints];
     [self.tableView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.top.equalTo(self.view);
-        make.bottom.equalTo(self.bottomView.mpm_top);
-    }];
-    [self.bottomView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.bottom.equalTo(self.view);
-        make.height.equalTo(@(BottomViewHeight));
-    }];
-    [self.bottomLine mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.top.trailing.equalTo(self.bottomView);
-        make.height.equalTo(@1);
-    }];
-    [self.bottomNextOrSaveButton mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.bottomView.mpm_leading).offset(12);
-        make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-12);
-        make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
-        make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
+        make.edges.equalTo(self.view);
     }];
 }
 
@@ -397,29 +350,6 @@
         _tableView.dataSource = self;
     }
     return _tableView;
-}
-
-- (UIView *)bottomView {
-    if (!_bottomView) {
-        _bottomView = [[UIView alloc] init];
-        _bottomView.backgroundColor = kWhiteColor;
-    }
-    return _bottomView;
-}
-
-- (UIView *)bottomLine {
-    if (!_bottomLine) {
-        _bottomLine = [[UIView alloc] init];
-        _bottomLine.backgroundColor = kSeperateColor;
-    }
-    return _bottomLine;
-}
-
-- (UIButton *)bottomNextOrSaveButton {
-    if (!_bottomNextOrSaveButton) {
-        _bottomNextOrSaveButton = [MPMButton titleButtonWithTitle:@"保存" nTitleColor:kWhiteColor hTitleColor:kMainLightGray nBGImage:ImageName(@"approval_but_complete") hImage:ImageName(@"approval_but_complete")];
-    }
-    return _bottomNextOrSaveButton;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -80,11 +80,11 @@
         }
     }
     if (departCount.count > 0 && peopleCount.count > 0) {
-        self.workScopeMessage.text = [NSString stringWithFormat:@"参与人员:%ld人  参与部门:%ld个",peopleCount.count,departCount.count];
+        self.workScopeMessage.text = [NSString stringWithFormat:@"%ld人、部门%ld个",peopleCount.count,departCount.count];
     } else if (peopleCount.count > 0) {
-        self.workScopeMessage.text = [NSString stringWithFormat:@"参与人员:%ld人",peopleCount.count];
+        self.workScopeMessage.text = [NSString stringWithFormat:@"%ld人",peopleCount.count];
     } else if (departCount.count > 0) {
-        self.workScopeMessage.text = [NSString stringWithFormat:@"参与部门:%ld个",departCount.count];
+        self.workScopeMessage.text = [NSString stringWithFormat:@"部门%ld个",departCount.count];
     } else {
         self.workScopeMessage.text = nil;
     }
@@ -92,7 +92,9 @@
     // 班次
     NSArray *fixed = model.fixedTimeWorkSchedule[@"signTimeSections"];
     NSString *classMessage;
-    if (fixed.count == 1) {
+    if (fixed.count == 0) {
+        classMessage = nil;
+    } else if (fixed.count == 1) {
         MPMSignTimeSections *slt = [[MPMSignTimeSections alloc] initWithDictionary:fixed[0]];
         id free = model.fixedTimeWorkSchedule[@"freeTimeSection"];
         if (free && [free isKindOfClass:[NSDictionary class]] && free[@"start"] && ![free[@"start"] isKindOfClass:[NSNull class]] && free[@"end"] && ![free[@"end"] isKindOfClass:[NSNull class]]) {
@@ -119,6 +121,7 @@
             make.top.equalTo(self.workScopeLabel.mpm_bottom);
         }];
     } else {
+        self.classLabel.text = @"班次";
         self.classMessage.attributedText = [self setAttributeText:classMessage withSpacing:5];
         [self.classLabel mpm_updateConstraints:^(MPMConstraintMaker *make) {
             make.top.equalTo(self.workScopeLabel.mpm_bottom).offset(8);

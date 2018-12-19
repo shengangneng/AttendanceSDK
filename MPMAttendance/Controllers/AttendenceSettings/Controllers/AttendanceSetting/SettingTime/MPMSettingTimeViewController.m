@@ -20,6 +20,7 @@
 #import "MPMSettingClassListModel.h"
 #import "MPMOauthUser.h"
 #import "MPMSessionManager.h"
+#import "MPMBaseAlertController.h"
 
 @interface MPMSettingTimeViewController () <UITableViewDataSource, UITableViewDelegate, MPMSettingSwitchTableViewCellSwitchDelegate, UITextFieldDelegate>
 // header
@@ -263,15 +264,29 @@
     }
 }
 
-/** isUsed为空、isUsed为“0”则isUpdate为@"0"，isUsed不为空，且选择了“修改”，则isUpdate为@"1" isEffective：0生效 1生效*/
+/** 自定义提示方法：带上取消按钮 */
+- (void)customAlertControllerToLogoutWithTitle:(NSString *)title
+                                       message:(NSString *)message
+                                   rightAction:(void(^)(UIAlertAction *_Nonnull action))rightAction
+                              rightActionTitle:(NSString *)rightActionTitle
+                                    leftAction:(void(^)(UIAlertAction *_Nonnull action))leftAction
+                               leftActionTitle:(NSString *)leftActionTitle {
+    MPMBaseAlertController *alertController = [MPMBaseAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof (UIAlertController *) weakAlert = alertController;
+    UIAlertAction *right = [UIAlertAction actionWithTitle:rightActionTitle style:UIAlertActionStyleDefault handler:rightAction];
+    UIAlertAction *left = [UIAlertAction actionWithTitle:leftActionTitle style:UIAlertActionStyleDefault handler:leftAction];
+    [weakAlert addAction:left];
+    [weakAlert addAction:right];
+    [self presentViewController:weakAlert animated:YES completion:nil];
+}
+
+/** isUsed为空、isUsed为“0”则isUpdate为@"0"，isUsed不为空，且选择了“修改”，则isUpdate为@"1" isEffective：0明天生效 1立即生效*/
 - (void)saveTimeSectionsWithisUpdate:(NSString *)isUpdate isElective:(NSString *)isElective {
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"id"] = kSafeString(self.model.mpm_id);
     params[@"isUpdate"] = isUpdate;
-    if ([isElective isEqualToString:@"1"]) {
-        params[@"isElective"] = isElective;
-    }
+    params[@"isElective"] = isElective;
     NSMutableDictionary *schedule = [NSMutableDictionary dictionary];
     
     schedule[@"name"] = self.headerNameTextField.text;
@@ -827,10 +842,10 @@
             } else {
                 // 跨天:
                 if (noonBreakStartTime < signTime && noonBreakStartTime > returnTime) {
-                    [self showAlertControllerToLogoutWithMessage:@"间休开始时间在上下班之间" sureAction:nil needCancleButton:NO];return;
+                    [self showAlertControllerToLogoutWithMessage:@"间休开始时间在上下班时间之间" sureAction:nil needCancleButton:NO];return;
                 }
                 if (noonBreakEndTime < signTime && noonBreakEndTime > returnTime) {
-                    [self showAlertControllerToLogoutWithMessage:@"间休结束时间在上下班之间" sureAction:nil needCancleButton:NO];return;
+                    [self showAlertControllerToLogoutWithMessage:@"间休结束时间在上下班时间之间" sureAction:nil needCancleButton:NO];return;
                 }
                 if (noonBreakStartTime > signTime && noonBreakEndTime > signTime && noonBreakStartTime > noonBreakEndTime) {
                     [self showAlertControllerToLogoutWithMessage:@"间休开始时间在不能大于间休结束时间" sureAction:nil needCancleButton:NO];return;
@@ -967,7 +982,7 @@
             [self showAlertControllerToLogoutWithMessage:@"请选择上班时间" sureAction:nil needCancleButton:NO];return;
         }
         if (kIsNilString(((MPMSettingTimeModel *)self.signTimeSections[2]).returnTime)) {
-            [self showAlertControllerToLogoutWithMessage:@"请选择下班时间" sureAction:nil needCancleButton:NO];return;
+            [self showAlertControllerToLogoutWithMessage:@"请选择上班时间" sureAction:nil needCancleButton:NO];return;
         }
         if ([self getDuration].doubleValue > 1440) {
             [self showAlertControllerToLogoutWithMessage:@"工作时间不能超过一天" sureAction:nil needCancleButton:NO];return;
@@ -1070,7 +1085,15 @@
         }
     }
     
-    [self saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
+    //    [self saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
+    __weak typeof(self) weakself = self;
+    [self customAlertControllerToLogoutWithTitle:@"选择规则生效时间" message:@"立即生效新班次：会影响当天考勤打卡状态，即按新排班规定重新计算" rightAction:^(UIAlertAction * _Nonnull action) {
+        __strong typeof(weakself) strongself = weakself;
+        [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
+    } rightActionTitle:@"立即生效" leftAction:^(UIAlertAction * _Nonnull action) {
+        __strong typeof(weakself) strongself = weakself;
+        [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"1"];
+    } leftActionTitle:@"明天生效"];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -1167,7 +1190,7 @@
                                 if (kIsNilString(model.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (model.signTime.hourMinuteToString.timeValue > model.returnTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1189,7 +1212,7 @@
                                 if (kIsNilString(model.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:self.freeTimeSection.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (model.signTime.hourMinuteToString.timeValue > self.freeTimeSection.signTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:self.freeTimeSection.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1205,7 +1228,7 @@
                                 if (kIsNilString(model.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:self.freeTimeSection.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (model.signTime.hourMinuteToString.timeValue > self.freeTimeSection.returnTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:self.freeTimeSection.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1237,7 +1260,7 @@
                                 if (kIsNilString(model.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (model.signTime.hourMinuteToString.timeValue > model.returnTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1260,7 +1283,7 @@
                                 if (kIsNilString(self.signTimeSections.firstObject.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (self.signTimeSections.firstObject.signTime.hourMinuteToString.timeValue > model.signTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1276,7 +1299,7 @@
                                 if (kIsNilString(self.signTimeSections.firstObject.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (self.signTimeSections.firstObject.signTime.hourMinuteToString.timeValue > model.returnTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1307,7 +1330,7 @@
                                 if (kIsNilString(model.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (model.signTime.hourMinuteToString.timeValue > model.returnTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1330,7 +1353,7 @@
                                 if (kIsNilString(self.signTimeSections.firstObject.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (self.signTimeSections.firstObject.signTime.hourMinuteToString.timeValue > model.signTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1346,7 +1369,7 @@
                                 if (kIsNilString(self.signTimeSections.firstObject.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (self.signTimeSections.firstObject.signTime.hourMinuteToString.timeValue > model.returnTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1368,7 +1391,7 @@
                                 if (kIsNilString(self.signTimeSections.firstObject.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (self.signTimeSections.firstObject.signTime.hourMinuteToString.timeValue > model.signTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.signTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {
@@ -1384,7 +1407,7 @@
                                 if (kIsNilString(self.signTimeSections.firstObject.signTime)) {
                                     detail = [NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute];
                                 } else {
-                                    // 如果打卡不为空：需要判断次日
+                                    // 如果上班时间不为空：需要判断次日
                                     if (self.signTimeSections.firstObject.signTime.hourMinuteToString.timeValue > model.returnTime.hourMinuteToString.timeValue) {
                                         detail = [NSString stringWithFormat:@"次日 %@",[NSDateFormatter formatterDate:[NSDateFormatter getDateFromJaveTime:model.returnTime.doubleValue] withDefineFormatterType:forDateFormatTypeHourMinute]];
                                     } else {

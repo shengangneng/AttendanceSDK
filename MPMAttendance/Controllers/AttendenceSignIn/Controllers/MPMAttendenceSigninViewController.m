@@ -63,6 +63,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 @property (nonatomic, strong) UIImageView *bottomLocationIcon;      /** 地理位置图标 */
 @property (nonatomic, strong) UILabel *bottomLocationLabel;         /** 显示地理位置 */
 @property (nonatomic, strong) UIButton *bottomRefreshLocationButton;/** 刷新地址 */
+@property (nonatomic, strong) UIButton *refreshTodayButton;         /** 刷新到今天 */
 // pickerView
 @property (nonatomic, strong) MPMAttendencePickerView *pickView;
 // location
@@ -136,19 +137,13 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     self.timerTask = [[MPMSigninTimerTask alloc] initWithTarget:self selector:@selector(timeChange:)];
     [self.timerTask resumeTimer];
     
-    // 刷新
-    UIButton *rightButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightButton1 sizeToFit];// 这句不能少，少了按钮就会消失了
-    [rightButton1 setImage:ImageName(@"attendence_backtotoday") forState:UIControlStateNormal];
-    [rightButton1 setImage:ImageName(@"attendence_backtotoday") forState:UIControlStateHighlighted];
-    [rightButton1 addTarget:self action:@selector(backToToday:) forControlEvents:UIControlEventTouchUpInside];
     // 进去漏卡页面
     UIButton *rightButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton2 sizeToFit];
     [rightButton2 setImage:ImageName(@"attendence_retroactive") forState:UIControlStateNormal];
     [rightButton2 setImage:ImageName(@"attendence_retroactive") forState:UIControlStateHighlighted];
     [rightButton2 addTarget:self action:@selector(right:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:rightButton1],[[UIBarButtonItem alloc] initWithCustomView:rightButton2]];
+    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:rightButton2],[[UIBarButtonItem alloc] initWithCustomView:self.refreshTodayButton]];
     
     [self.bottomRoundButton addTarget:self action:@selector(signin:) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomRefreshLocationButton addTarget:self action:@selector(refreshLocation:) forControlEvents:UIControlEventTouchUpInside];
@@ -250,8 +245,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         make.width.height.equalTo(@94);
     }];
     [self.bottomLocationIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.width.equalTo(@9);
-        make.height.equalTo(@11);
+        make.width.equalTo(@15);
+        make.height.equalTo(@15);
         make.centerY.equalTo(self.bottomLocationLabel.mpm_centerY);
         make.trailing.equalTo(self.bottomLocationLabel.mpm_leading).offset(-1);
     }];
@@ -264,7 +259,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [self.bottomRefreshLocationButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.height.equalTo(@16);
         make.centerY.equalTo(self.bottomLocationLabel.mpm_centerY);
-        make.leading.equalTo(self.bottomLocationLabel.mpm_trailing).offset(8);
+        make.leading.equalTo(self.bottomLocationLabel.mpm_trailing).offset(5);
     }];
 }
 
@@ -562,7 +557,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 
 - (void)refreshLocation:(UIButton *)sender {
-    self.bottomLocationLabel.text = @"地理位置:重新定位中...";
+    self.bottomLocationLabel.text = @"重新定位中...";
     [self setupLocation];
 }
 
@@ -748,8 +743,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 #pragma mark - KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"address"]) {
-        self.bottomLocationLabel.text = [NSString stringWithFormat:@"地理位置:%@",kSafeString([MPMOauthUser shareOauthUser].address)];
+    if ([keyPath isEqualToString:kAddressKeyPath]) {
+        self.bottomLocationLabel.text = [NSString stringWithFormat:@"%@",kSafeString([MPMOauthUser shareOauthUser].address)];
     }
 }
 
@@ -775,7 +770,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         if (placemarks.count > 0) {
             CLPlacemark * placeMark = placemarks[0];
-            [MPMOauthUser shareOauthUser].address = [NSString stringWithFormat:@"%@%@%@",kSafeString(placeMark.locality),kSafeString(placeMark.subLocality),kSafeString(placeMark.thoroughfare)];
+            [MPMOauthUser shareOauthUser].address = [NSString stringWithFormat:@"%@(%@)",kSafeString(placeMark.thoroughfare),kSafeString(placeMark.name)];
             CLLocationCoordinate2D convert = [JZLocationConverter wgs84ToGcj02:newLocation.coordinate];
             [MPMOauthUser shareOauthUser].location = [[CLLocation alloc] initWithLatitude:convert.latitude longitude:convert.longitude];
         } else if (error == nil && placemarks.count == 0) {
@@ -798,6 +793,11 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 
 #pragma mark - MPMScrollViewDelegate
 - (void)mpmCalendarScrollViewDidChangeYearMonth:(NSString *)yearMonth currentMiddleDate:(NSDate *)date {
+    if ([NSDateFormatter isDate1:date equalToDate2:[NSDate date]]) {
+        self.refreshTodayButton.hidden = YES;
+    } else {
+        self.refreshTodayButton.hidden = NO;
+    }
     [self.headerDateView setDetailDate:yearMonth];
     self.attendenceManageModel.currentMiddleDate = date;
     [self getDataWithDate:date];
@@ -1150,7 +1150,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         _bottomLocationLabel.font = SystemFont(13);
         _bottomLocationLabel.textColor = kMainLightGray;
         _bottomLocationLabel.textAlignment = NSTextAlignmentCenter;
-        _bottomLocationLabel.text = @"地理位置:";
+        _bottomLocationLabel.text = @"地理位置";
         [_bottomLocationLabel sizeToFit];
     }
     return _bottomLocationLabel;
@@ -1203,6 +1203,17 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         _locationManager.distanceFilter = 5.0f;
     }
     return _locationManager;
+}
+
+- (UIButton *)refreshTodayButton {
+    if (!_refreshTodayButton) {
+        _refreshTodayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_refreshTodayButton sizeToFit];// 这句不能少，少了按钮就会消失了
+        [_refreshTodayButton setImage:ImageName(@"attendence_backtotoday") forState:UIControlStateNormal];
+        [_refreshTodayButton setImage:ImageName(@"attendence_backtotoday") forState:UIControlStateHighlighted];
+        [_refreshTodayButton addTarget:self action:@selector(backToToday:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _refreshTodayButton;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -403,6 +403,64 @@
         [self showAlertControllerToLogoutWithMessage:[NSString stringWithFormat:@"最多只能选择%ld人",[MPMDepartEmployeeHelper shareInstance].limitEmployeeCount] sureAction:nil needCancleButton:NO];
         return;
     }
+    if ([MPMDepartEmployeeHelper shareInstance].classNeedCheckTransfer) {
+        // 如果是排班创建或修改选择人员，需要确认是否包含人员转移。如果包含人员转移，需要提示，用户如果选择不转移，无法进行下一步操作
+        NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_CLASS_TRANSFER];
+        NSMutableArray *objectIds = [NSMutableArray array];
+        for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].employees.count; i++) {
+            MPMDepartment *emp = [MPMDepartEmployeeHelper shareInstance].employees[i];
+            [objectIds addObject:kSafeString(emp.mpm_id)];
+        }
+        for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].departments.count; i++) {
+            MPMDepartment *emp = [MPMDepartEmployeeHelper shareInstance].departments[i];
+            [objectIds addObject:kSafeString(emp.mpm_id)];
+        }
+        NSDictionary *params;
+        if (kIsNilString([MPMDepartEmployeeHelper shareInstance].classId)) {
+            params = @{@"objectIds":objectIds.copy};
+        } else {
+            params = @{@"id":[MPMDepartEmployeeHelper shareInstance].classId,@"objectIds":objectIds.copy};
+        }
+        
+        [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在操作" success:^(id response) {
+            if (response && kRequestSuccess == ((NSString *)response[@"responseData"][kCode]).integerValue) {
+                __weak typeof(self) weakself = self;
+                [self showAlertControllerToLogoutWithMessage:@"当前选择部门或人员已在其他排班里，是否将这些部门或人员迁移到此排班！" sureAction:^(UIAlertAction * _Nonnull action) {
+                    __strong typeof(weakself) strongself = weakself;
+                    // 使用Delegate的方式回传数据
+                    if (strongself.delegate && [strongself.delegate respondsToSelector:@selector(departCompleteSelectWithDepartments:employees:)]) {
+                        [strongself.delegate departCompleteSelectWithDepartments:[MPMDepartEmployeeHelper shareInstance].departments.copy employees:[MPMDepartEmployeeHelper shareInstance].employees.copy];
+                    }
+                    // 使用Block的方式回传数据
+                    if (strongself.sureSelectBlock) {
+                        strongself.sureSelectBlock([MPMDepartEmployeeHelper shareInstance].departments.copy, [MPMDepartEmployeeHelper shareInstance].employees.copy);
+                    }
+                    [[MPMDepartEmployeeHelper shareInstance] clearData];
+                    // 跳回第一个进入选择部门的页面。
+                    UIViewController *vc = self.navigationController.viewControllers[self.navigationController.viewControllers.count-1-strongself.headerButtonTitlesArray.count];
+                    [strongself.navigationController popToViewController:vc animated:YES];
+                } needCancleButton:YES];
+            } else if(response && (201 == ((NSString *)response[@"responseData"][kCode]).integerValue || 204 == ((NSString *)response[@"responseData"][kCode]).integerValue)){
+                // 使用Delegate的方式回传数据
+                if (self.delegate && [self.delegate respondsToSelector:@selector(departCompleteSelectWithDepartments:employees:)]) {
+                    [self.delegate departCompleteSelectWithDepartments:[MPMDepartEmployeeHelper shareInstance].departments.copy employees:[MPMDepartEmployeeHelper shareInstance].employees.copy];
+                }
+                // 使用Block的方式回传数据
+                if (self.sureSelectBlock) {
+                    self.sureSelectBlock([MPMDepartEmployeeHelper shareInstance].departments.copy, [MPMDepartEmployeeHelper shareInstance].employees.copy);
+                }
+                [[MPMDepartEmployeeHelper shareInstance] clearData];
+                // 跳回第一个进入选择部门的页面。
+                UIViewController *vc = self.navigationController.viewControllers[self.navigationController.viewControllers.count-1-self.headerButtonTitlesArray.count];
+                [self.navigationController popToViewController:vc animated:YES];
+            } else {
+                [MPMProgressHUD showErrorWithStatus:@"请求失败，请稍后重试"];
+            }
+        } failure:^(NSString *error) {
+            [MPMProgressHUD showErrorWithStatus:error];
+        }];
+        return;
+    }
     // 使用Delegate的方式回传数据
     if (self.delegate && [self.delegate respondsToSelector:@selector(departCompleteSelectWithDepartments:employees:)]) {
         [self.delegate departCompleteSelectWithDepartments:[MPMDepartEmployeeHelper shareInstance].departments.copy employees:[MPMDepartEmployeeHelper shareInstance].employees.copy];

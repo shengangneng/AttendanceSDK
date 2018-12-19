@@ -273,6 +273,8 @@
             
             [MPMDepartEmployeeHelper shareInstance].departments = [NSMutableArray arrayWithArray:departCount];
             [MPMDepartEmployeeHelper shareInstance].employees = [NSMutableArray arrayWithArray:peopleCount];
+            [MPMDepartEmployeeHelper shareInstance].classId = self.model.mpm_id;
+            [MPMDepartEmployeeHelper shareInstance].classNeedCheckTransfer = YES;
             MPMSelectDepartmentViewController *depart = [[MPMSelectDepartmentViewController alloc] initWithModel:nil headerButtonTitles:[NSMutableArray arrayWithObject:kIsNilString([MPMOauthUser shareOauthUser].shortName) ? @"部门" : [MPMOauthUser shareOauthUser].shortName] selectionType:kSelectionTypeBoth comfirmBlock:nil];
             
             depart.delegate = self;
