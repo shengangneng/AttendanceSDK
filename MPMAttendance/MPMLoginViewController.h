@@ -10,8 +10,9 @@
 
 @protocol MPMAttendanceDelegate <NSObject>
 
-/** 考勤首页点击返回，如果在使用考勤的时候Token过期了，会回传tokenExpire = YES，否则正常返回的时候会回传tokenExpire = NO */
-- (void)attendanceBackWithTokenExpire:(BOOL)tokenExpire;
+/** 考勤首页点击返回，如果在使用考勤的时候Token过期了，会回传tokenExpire = YES，否则正常返回的时候会回传tokenExpire = NO，如果tokenExpire = NO附带山message，MPM需要提示 */
+- (void)attendanceBackWithTokenExpire:(BOOL)tokenExpire alertMessage:(NSString *)message;
+
 
 @end
 

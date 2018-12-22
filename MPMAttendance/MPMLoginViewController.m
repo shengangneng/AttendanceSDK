@@ -97,7 +97,7 @@
     }
     if (kIsNilString([MPMOauthUser shareOauthUser].access_token) || kIsNilString([MPMOauthUser shareOauthUser].user_id) || kIsNilString([MPMOauthUser shareOauthUser].company_code)) {
         NSLog(@"数据不能为空");
-        [[MPMSessionManager shareManager] backWithExpire:NO];
+        [[MPMSessionManager shareManager] backWithExpire:NO alertMessage:@"数据不能为空"];
     } else {
         [self defaultSetting];
         [self getPerrimitionV2];
@@ -362,7 +362,7 @@
 - (void)getPerrimitionV2 {
     NSString *url = [NSString stringWithFormat:@"%@%@",MPMINTERFACE_HOST,MPMINTERFACE_MYRES];
     NSLog(@"获取菜单中...");
-    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在加载" success:^(id response) {
         NSLog(@"获取菜单成功%@",response);
         if (response[kResponseDataKey] && [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] && kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
             [self getCurrentUserMessage];
@@ -370,11 +370,12 @@
             [[MPMOauthUser shareOauthUser] saveOrUpdateUserToCoreData];
             kAppDelegate.window.rootViewController = [[MPMMainTabBarViewController alloc] init];
         } else {
-            [MPMProgressHUD showErrorWithStatus:@"获取菜单失败"];
+            NSLog(@"获取菜单失败...");
+            [[MPMSessionManager shareManager] backWithExpire:NO alertMessage:@"获取考勤菜单失败"];
         }
     } failure:^(NSString *error) {
         NSLog(@"获取菜单失败...");
-        [MPMProgressHUD showErrorWithStatus:error];
+        [[MPMSessionManager shareManager] backWithExpire:NO alertMessage:@"获取考勤菜单失败"];
     }];
 }
 
