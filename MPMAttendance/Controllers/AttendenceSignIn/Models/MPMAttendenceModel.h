@@ -21,7 +21,6 @@
 @property (nonatomic, copy) NSString *fillCardTime;          /** 打卡节点时间 */
 @property (nonatomic, copy) NSString *signType;              /** 打卡类型：0上班 1下班 2加班 */
 @property (nonatomic, copy) NSString *status;                /** 节点状态：0准时 1迟到 2早退 3漏卡 4早到 5下班 6加班 7审核中 */
-@property (nonatomic, copy) NSString *type;                  /** 0上班 1下班 */
 @property (nonatomic, copy) NSString *integral;              /** 加减分 */
 @property (nonatomic, assign) BOOL isNeedFirstBrush;         /** 自定义字段，是否是下一段需要打卡 */
 @property (nonatomic, copy) NSString *fillCardDate;

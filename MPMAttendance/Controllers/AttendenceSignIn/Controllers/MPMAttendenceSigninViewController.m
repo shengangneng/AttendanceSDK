@@ -663,7 +663,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
             }
         }
         address = kSafeString([MPMOauthUser shareOauthUser].address);
-        signType = kSafeString(signModel.type);// 0代表上班 1代表下班 使用接口传给我们的就好了（感觉传空也可以）
+        signType = kSafeString(signModel.signType);// 0代表上班 1代表下班 使用接口传给我们的就好了（感觉传空也可以）
     }
     
     NSDate *bursh = self.attendenceManageModel.currentMiddleDate ? [NSDate changeToFitJavaDate:self.attendenceManageModel.currentMiddleDate] : [NSDate changeToFitJavaDate:[NSDate date]];
@@ -684,17 +684,9 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:nil success:^(id response) {
         [MPMProgressHUD dismiss];
         DLog(@"%@",response);
-        id dataObj = response[kResponseObjectKey];
-        if ([dataObj isKindOfClass:[NSNull class]] || ([dataObj isKindOfClass:[NSArray class]] && ((NSArray *)dataObj).count == 0)) {
-            if (response[kResponseDataKey] &&
-                [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] && !kIsNilString(((NSString *)response[kResponseDataKey][@"message"]))) {
-                [MPMProgressHUD showErrorWithStatus:(NSString *)response[kResponseDataKey][@"message"]];
-            } else {
-                [MPMProgressHUD showErrorWithStatus:response[@"打卡异常，请稍后重试！"]];
-            }
-        } else if (response[kResponseDataKey] &&
-                   [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
-                   ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 202) {
+        if (response[kResponseDataKey] &&
+            [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
+            ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 202) {
             // 早退
             __weak typeof (self) weakself = self;
             [self showAlertControllerToLogoutWithMessage:(NSString *)response[@"responseData"][@"message"] sureAction:^(UIAlertAction * _Nonnull action) {
@@ -879,7 +871,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         cell.timeLabel.text = time;
         cell.timeLabel.hidden = NO;
     }
-    cell.classTypeLabel.text = model.type.integerValue == 0 ? @"上班" : @"下班";
+    cell.classTypeLabel.text = model.signType.integerValue == 0 ? @"上班" : @"下班";
     
     if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
         // 自由打卡
@@ -1038,7 +1030,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 dealingModel.causationDetail[0].fillupTime = model.brushTime;
                 // 改签
                 dealingModel.status = model.status;
-                dealingModel.causationDetail[0].type = model.type;
+                dealingModel.causationDetail[0].type = model.signType;
                 dealingModel.causationDetail[0].attendanceTime = model.fillCardTime;/** 打卡节点时间 */
                 dealingModel.causationDetail[0].signTime = model.brushTime;         /** 实际打卡时间 */
                 dealingModel.causationDetail[0].reviseSignTime = model.brushTime;   /** 实际打卡时间 */
