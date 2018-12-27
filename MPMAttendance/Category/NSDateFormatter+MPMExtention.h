@@ -12,6 +12,7 @@ typedef NS_ENUM(NSInteger, MPMDateFormatType) {
     forDateFormatTypeAll,                       /** 2018-05-10 21:33:03(yyyy-MM-dd HH:mm:ss) */
     forDateFormatTypeAllWithoutSeconds,         /** 2018-05-10 21:33(yyyy-MM-dd HH:mm) */
     forDateFormatTypeYearMonthDaySlash,         /** 2018/05/04(yyyy/MM/dd) */
+    forDateFormatTypeYearMonthDayDom,           /** 2018.05.04(yyyy.MM.dd) */
     forDateFormatTypeYearMonthDayHourMinite,    /** 05月04日21:38(MM月dd日HH:mm) */
     forDateFormatTypeShortYearMonthDaySlash,    /** 18/05/04(yy/MM/dd) */
     forDateFormatTypeYearMonthDayBar,           /** 2018-05-04(yyyy-MM-dd) */

@@ -24,6 +24,9 @@
 
 @interface MPMSettingTimeViewController () <UITableViewDataSource, UITableViewDelegate, MPMSettingSwitchTableViewCellSwitchDelegate, UITextFieldDelegate>
 // header
+@property (nonatomic, strong) UIView *headerClassAlertView;
+@property (nonatomic, strong) UIImageView *headerClassAlertImage;
+@property (nonatomic, strong) UILabel *headerClassAlertLabel;
 @property (nonatomic, strong) UIView *headerNameView;
 @property (nonatomic, strong) UILabel *headerNameLabel;
 @property (nonatomic, strong) UITextField *headerNameTextField;
@@ -50,15 +53,16 @@
 @property (nonatomic, assign) DulingType dulingType;
 @property (nonatomic, assign) BOOL switchOn;
 @property (nonatomic, strong) UIButton *preSelectedButton;/** 记录上一个点击的按钮 */
-@property (nonatomic, copy) NSString *resetTime;
+@property (nonatomic, copy) NSString *classTimeId;        /** 班次时间id */
 @property (nonatomic, strong) NSDate *preSelectDate;      /** 记录上一次选中的时间，作为再次弹出pickerView的默认时间 */
 @property (nonatomic, strong) MPMSettingClassListModel *model;
+@property (nonatomic, copy) NSArray *classList;/** 班次关联排班 */
 
 @end
 
 @implementation MPMSettingTimeViewController
 
-- (instancetype)initWithModel:(MPMSettingClassListModel *)model dulingType:(DulingType)dulingType resetTime:(NSString *)resetTime {
+- (instancetype)initWithModel:(MPMSettingClassListModel *)model dulingType:(DulingType)dulingType classTimeId:(NSString *)classTimeId {
     self = [super init];
     if (self) {
         self.model = model;
@@ -126,7 +130,7 @@
             self.freeTimeSection = [[MPMSettingTimeModel alloc] init];
         }
         self.dulingType = dulingType;
-        self.resetTime = resetTime;
+        self.classTimeId = classTimeId;
         [self setupAttributes];
         [self setupSubViews];
         [self setupConstraints];
@@ -136,6 +140,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if (!kIsNilString(self.classTimeId)) {
+        [self getData];
+    }
 }
 
 - (void)setupAttributes {
@@ -151,6 +158,9 @@
 - (void)setupSubViews {
     [super setupSubViews];
     // header
+    [self.view addSubview:self.headerClassAlertView];
+    [self.headerClassAlertView addSubview:self.headerClassAlertImage];
+    [self.headerClassAlertView addSubview:self.headerClassAlertLabel];
     [self.view addSubview:self.headerNameView];
     [self.headerNameView addSubview:self.headerNameLabel];
     [self.headerNameView addSubview:self.headerNameTextField];
@@ -170,8 +180,24 @@
 - (void)setupConstraints {
     [super setupConstraints];
     // header
+    [self.headerClassAlertView mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.leading.trailing.equalTo(self.view);
+        make.bottom.equalTo(self.view.mpm_top);
+    }];
+    [self.headerClassAlertImage mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.width.height.equalTo(@(19));
+        make.leading.equalTo(self.headerClassAlertView.mpm_leading).offset(15);
+        make.top.equalTo(self.headerClassAlertView.mpm_top).offset(11);
+    }];
+    [self.headerClassAlertLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.top.equalTo(self.headerClassAlertView.mpm_top).offset(11);
+        make.leading.equalTo(self.headerClassAlertImage.mpm_trailing).offset(6);
+        make.trailing.equalTo(self.headerClassAlertView.mpm_trailing).offset(-15);
+        make.bottom.equalTo(self.headerClassAlertView.mpm_bottom).offset(-11);
+    }];
     [self.headerNameView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.trailing.top.equalTo(self.view);
+        make.leading.trailing.equalTo(self.view);
+        make.top.equalTo(self.headerClassAlertView.mpm_bottom);
         make.height.equalTo(@(kTableViewHeight));
     }];
     [self.headerNameLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -238,6 +264,36 @@
         make.trailing.equalTo(self.bottomView.mpm_trailing).offset(-12);
         make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
         make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
+    }];
+}
+
+- (void)getData {
+    NSString *url = [NSString stringWithFormat:@"%@%@/%@",MPMINTERFACE_HOST,MPMINTERFACE_SETTING_TIME_CONFIGINFO,self.classTimeId];
+    [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:nil success:^(id response) {
+        DLog(@"%@",response);
+        if (response && kRequestSuccess == ((NSString *)response[kResponseDataKey][kCode]).integerValue) {
+            NSArray *configNameList = response[kResponseObjectKey][@"configNameList"];
+            self.classList = configNameList;
+            NSString *className;
+            for (int i = 0; i < configNameList.count; i++) {
+                if (i == 0) {
+                    className = configNameList[i];
+                } else if (i > 2) {
+                    className = [className stringByAppendingString:@"等"];
+                    break;
+                } else {
+                    className = [[className stringByAppendingString:@","]stringByAppendingString:configNameList[i]];
+                }
+            }
+            NSString *classCount = kNumberSafeString(response[kResponseObjectKey][@"num"]);
+            self.headerClassAlertLabel.text = [NSString stringWithFormat:@"该班次正在被%@个排班使用,修改将会影响到其他排班:%@",classCount,className];
+            [self.headerClassAlertView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
+                make.leading.top.trailing.equalTo(self.view);
+            }];
+            [self.view layoutIfNeeded];
+        }
+    } failure:^(NSString *error) {
+        DLog(@"%@",error);
     }];
 }
 
@@ -316,7 +372,7 @@
     [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在保存" success:^(id response) {
         DLog(@"%@",response);
         if (response && ((NSString *)response[kResponseDataKey][@"code"]).integerValue == 200) {
-            NSString *message = kDulingTypeCreate == self.dulingType ? @"新增成功" : @"修改成功";
+            NSString *message = @"操作成功";
             __weak typeof(self) weakself = self;
             [self showAlertControllerToLogoutWithMessage:message sureAction:^(UIAlertAction * _Nonnull action) {
                 __strong typeof(weakself) strongself = weakself;
@@ -1085,15 +1141,19 @@
         }
     }
     
-    //    [self saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
-    __weak typeof(self) weakself = self;
-    [self customAlertControllerToLogoutWithTitle:@"选择规则生效时间" message:@"立即生效新班次：会影响当天考勤打卡状态，即按新排班规定重新计算" rightAction:^(UIAlertAction * _Nonnull action) {
-        __strong typeof(weakself) strongself = weakself;
-        [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
-    } rightActionTitle:@"立即生效" leftAction:^(UIAlertAction * _Nonnull action) {
-        __strong typeof(weakself) strongself = weakself;
-        [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"1"];
-    } leftActionTitle:@"明天生效"];
+    if (self.classList.count > 0) {
+        __weak typeof(self) weakself = self;
+        [self customAlertControllerToLogoutWithTitle:@"选择规则生效时间" message:@"立即生效新班次：会影响当天考勤打卡状态，即按新排班规定重新计算" rightAction:^(UIAlertAction * _Nonnull action) {
+            __strong typeof(weakself) strongself = weakself;
+            [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
+        } rightActionTitle:@"立即生效" leftAction:^(UIAlertAction * _Nonnull action) {
+            __strong typeof(weakself) strongself = weakself;
+            [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"1"];
+        } leftActionTitle:@"明天生效"];
+    } else {
+        // 如果该班次没有关联的b排班，那么可以立即生效
+        [self saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
+    }
 }
 
 #pragma mark - UITextFieldDelegate
@@ -1522,7 +1582,33 @@
 #pragma mark - Lazy Init
 
 // header
+- (UIView *)headerClassAlertView {
+    if (!_headerClassAlertView) {
+        _headerClassAlertView = [[UIView alloc] init];
+        _headerClassAlertView.backgroundColor = kRGBA(234, 245, 253, 1);
+    }
+    return _headerClassAlertView;
+}
+- (UIImageView *)headerClassAlertImage {
+    if (!_headerClassAlertImage) {
+        _headerClassAlertImage = [[UIImageView alloc] init];
+        _headerClassAlertImage.image = ImageName(@"setting_time_warming");
+    }
+    return _headerClassAlertImage;
+}
 
+- (UILabel *)headerClassAlertLabel {
+    if (!_headerClassAlertLabel) {
+        _headerClassAlertLabel = [[UILabel alloc] init];
+        _headerClassAlertLabel.numberOfLines = 0;
+        _headerClassAlertLabel.text = @"你的班次正在被多个";
+        [_headerClassAlertLabel sizeToFit];
+        _headerClassAlertLabel.font = SystemFont(13);
+        _headerClassAlertLabel.textColor = kRGBA(102, 102, 102, 1);
+        _headerClassAlertLabel.textAlignment = NSTextAlignmentLeft;
+    }
+    return _headerClassAlertLabel;
+}
 - (UIView *)headerNameView {
     if (!_headerNameView) {
         _headerNameView = [[UIView alloc] init];

@@ -63,9 +63,6 @@
         [self setupAttributes];
         [self setupSubViews];
         [self setupConstraints];
-        if (1 == headerTitles.count) {
-            [self firstInToCalculateParentIds];
-        }
     }
     return self;
 }
@@ -274,70 +271,6 @@
         DLog(@"%@",error);
         [MPMProgressHUD showErrorWithStatus:error];
     }];
-}
-
-/** 第一次进入人员选择器，如果带入了相应的人员或部门，则通过调用接口计算parentIds */
-- (void)firstInToCalculateParentIds {
-    if (0 == [MPMDepartEmployeeHelper shareInstance].departments.count && 0 == [MPMDepartEmployeeHelper shareInstance].employees.count) {
-        return;
-    } else {
-        dispatch_group_t group = dispatch_group_create();
-        // 查询人员的parentIds
-        for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].employees.count; i++) {
-            MPMDepartment *emp = [MPMDepartEmployeeHelper shareInstance].employees[i];
-            dispatch_group_enter(group);
-            dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-                NSString *url = [NSString stringWithFormat:@"%@%@?keyWord=%@&companyCode=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_MIX_FINDBYKEYWORD,emp.name,[MPMOauthUser shareOauthUser].company_code];
-                NSString *encodingUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
-                [[MPMSessionManager shareManager] postRequestWithURL:encodingUrl setAuth:YES params:nil loadingMessage:@"正在搜索" success:^(id response) {
-                    if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
-                        NSArray *object = response[kResponseObjectKey];
-                        for (int i = 0; i < object.count; i++) {
-                            NSDictionary *dic = object[i];
-                            MPMDepartment *depart = [[MPMDepartment alloc] initWithDictionary:dic];
-                            depart.isHuman = [depart.type isEqualToString:kUserType];
-                            if ([depart.mpm_id isEqualToString:emp.mpm_id]) {
-                                emp.parentIds = depart.parentIds;
-                            }
-                        }
-                    }
-                    dispatch_group_leave(group);
-                } failure:^(NSString *error) {
-                    DLog(@"%@",error);
-                    dispatch_group_leave(group);
-                }];
-            });
-        }
-        // 查询部门的parentIds
-        for (int i = 0; i < [MPMDepartEmployeeHelper shareInstance].departments.count; i++) {
-            MPMDepartment *dep = [MPMDepartEmployeeHelper shareInstance].departments[i];
-            dispatch_group_enter(group);
-            dispatch_group_async(group, kGlobalQueueDEFAULT, ^{
-                NSString *url = [NSString stringWithFormat:@"%@%@?keyWord=%@&companyCode=%@",MPMINTERFACE_EMDM,MPMINTERFACE_EMDM_MIX_FINDBYKEYWORD,dep.name,[MPMOauthUser shareOauthUser].company_code];
-                NSString *encodingUrl = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
-                [[MPMSessionManager shareManager] postRequestWithURL:encodingUrl setAuth:YES params:nil loadingMessage:@"正在搜索" success:^(id response) {
-                    if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
-                        NSArray *object = response[kResponseObjectKey];
-                        for (int i = 0; i < object.count; i++) {
-                            NSDictionary *dic = object[i];
-                            MPMDepartment *depart = [[MPMDepartment alloc] initWithDictionary:dic];
-                            depart.isHuman = [depart.type isEqualToString:kUserType];
-                            if ([depart.mpm_id isEqualToString:dep.mpm_id]) {
-                                dep.parentIds = depart.parentIds;
-                            }
-                        }
-                    }
-                    dispatch_group_leave(group);
-                } failure:^(NSString *error) {
-                    DLog(@"%@",error);
-                    dispatch_group_leave(group);
-                }];
-            });
-        }
-        dispatch_group_notify(group, kMainQueue, ^{
-            [self calculateSelect];
-        });
-    }
 }
 
 // 通过[MPMDepartEmployeeHelper shareInstance].allArrayData数组来决定哪些已选中和哪些未选中

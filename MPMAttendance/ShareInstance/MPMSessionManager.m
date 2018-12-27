@@ -10,6 +10,7 @@
 #import "MPMLoginViewController.h"
 #import "MPMOauthUser.h"
 #import "MPMAttendanceHeader.h"
+#import "MPMCustomProgressHUD.h"
 
 const CGFloat SVProgressDismissDuration = 0.15;
 
@@ -90,13 +91,13 @@ static MPMSessionManager *instance;
 - (void)getRequestWithURL:(NSString *)url setAuth:(BOOL)setAuth params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
     BOOL needHUD = !kIsNilString(loadingMessage);
     if (needHUD) {
-        [MPMProgressHUD showWithStatus:loadingMessage];
+        [MPMCustomProgressHUD showProgressHUD];
     }
     if (setAuth) {
         [self.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
         [self.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -105,7 +106,7 @@ static MPMSessionManager *instance;
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (responses.statusCode == kRequestErrorUnauthorized) {
@@ -117,7 +118,7 @@ static MPMSessionManager *instance;
     } else {
         [self.managerV2 GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -127,7 +128,7 @@ static MPMSessionManager *instance;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self backWithExpire:YES alertMessage:nil];
@@ -142,13 +143,13 @@ static MPMSessionManager *instance;
 - (void)postRequestWithURL:(NSString *)url setAuth:(BOOL)setAuth params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
     BOOL needHUD = !kIsNilString(loadingMessage);
     if (needHUD) {
-        [MPMProgressHUD showWithStatus:loadingMessage];
+        [MPMCustomProgressHUD showProgressHUD];
     }
     if (setAuth) {
         [self.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
         [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -158,7 +159,7 @@ static MPMSessionManager *instance;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self backWithExpire:YES alertMessage:nil];
@@ -169,7 +170,7 @@ static MPMSessionManager *instance;
     } else {
         [self.managerV2 POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -179,7 +180,7 @@ static MPMSessionManager *instance;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self backWithExpire:YES alertMessage:nil];
@@ -194,13 +195,13 @@ static MPMSessionManager *instance;
 - (void)deleteRequestWithURL:(NSString *)url setAuth:(BOOL)setAuth params:(id)params loadingMessage:(NSString *)loadingMessage success:(void(^)(id response))success failure:(void(^)(NSString *error))failure {
     BOOL needHUD = !kIsNilString(loadingMessage);
     if (needHUD) {
-        [MPMProgressHUD showWithStatus:loadingMessage];
+        [MPMCustomProgressHUD showProgressHUD];
     }
     if (setAuth) {
         [self.managerV2.requestSerializer setValue:[NSString stringWithFormat:@"%@ %@",[MPMOauthUser shareOauthUser].token_type,[MPMOauthUser shareOauthUser].access_token] forHTTPHeaderField:kAuthKey];
         [self.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -210,7 +211,7 @@ static MPMSessionManager *instance;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self backWithExpire:YES alertMessage:nil];
@@ -221,7 +222,7 @@ static MPMSessionManager *instance;
     } else {
         [self.managerV2 DELETE:url parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
                 success(responseObject);
@@ -231,7 +232,7 @@ static MPMSessionManager *instance;
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSHTTPURLResponse * responses = (NSHTTPURLResponse *)task.response;
             if (needHUD) {
-                [MPMProgressHUD dismissWithDelay:SVProgressDismissDuration];
+                [MPMCustomProgressHUD dismiss];
             }
             if (responses.statusCode == kRequestErrorUnauthorized) {
                 [self backWithExpire:YES alertMessage:nil];
@@ -263,7 +264,7 @@ static MPMSessionManager *instance;
 - (void)backWithExpire:(BOOL)expire alertMessage:(NSString *)message {
     UIViewController *lastRoot = [MPMOauthUser shareOauthUser].lastRootViewController;
     UIViewController *lastPop = [MPMOauthUser shareOauthUser].lastCanPopViewController;
-    [MPMProgressHUD dismiss];
+    [MPMCustomProgressHUD dismiss];
     kAppDelegate.window.rootViewController = lastRoot;
     // 推进来的时候隐藏了，现在需要取消隐藏
     if (lastPop.navigationController.navigationBar.hidden == YES) {

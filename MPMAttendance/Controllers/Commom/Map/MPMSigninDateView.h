@@ -10,6 +10,6 @@
 
 @interface MPMSigninDateView : UIView
 
-@property (nonatomic, copy) NSString *detailDate;
+@property (nonatomic, strong) NSDate *detailDate;
 
 @end

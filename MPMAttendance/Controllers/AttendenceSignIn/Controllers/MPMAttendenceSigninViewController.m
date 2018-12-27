@@ -132,7 +132,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     self.view.backgroundColor = kWhiteColor;
     [[MPMOauthUser shareOauthUser] addObserver:self forKeyPath:kAddressKeyPath options:NSKeyValueObservingOptionNew context:nil];
     self.attendenceManageModel = [[MPMAttendenceManageModel alloc] init];
-    [self.headerDateView setDetailDate:[NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeMonthYearDayWeek]];
+    [self.headerDateView setDetailDate:[NSDate date]];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(back:)];
     self.timerTask = [[MPMSigninTimerTask alloc] initWithTarget:self selector:@selector(timeChange:)];
     [self.timerTask resumeTimer];
@@ -798,7 +798,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     } else {
         self.refreshTodayButton.hidden = NO;
     }
-    [self.headerDateView setDetailDate:yearMonth];
+    [self.headerDateView setDetailDate:date];
     self.attendenceManageModel.currentMiddleDate = date;
     [self getDataWithDate:date];
 }

@@ -12,6 +12,7 @@
 
 @interface MPMSettingTimeViewController : MPMBaseViewController
 
-- (instancetype)initWithModel:(MPMSettingClassListModel *)model dulingType:(DulingType)dulingType resetTime:(NSString *)resetTime;
+/** classTimeId：如果班次有被使用，需要传入classTimeId，如果是新创建的或者是班次没被使用的，就不需要传入 */
+- (instancetype)initWithModel:(MPMSettingClassListModel *)model dulingType:(DulingType)dulingType classTimeId:(NSString *)classTimeId;
 
 @end

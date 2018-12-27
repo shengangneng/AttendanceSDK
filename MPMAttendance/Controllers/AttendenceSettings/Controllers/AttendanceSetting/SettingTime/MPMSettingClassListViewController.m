@@ -314,7 +314,7 @@
         } break;
         case 1:{
             // 增加班次时间
-            MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:nil dulingType:self.dulingType resetTime:nil];
+            MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:nil dulingType:self.dulingType classTimeId:nil];
             self.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:st animated:YES];
         } break;
@@ -326,12 +326,12 @@
                 __weak typeof(self) weakself = self;
                 [self showAlertControllerToLogoutWithMessage:kAlertMessage sureAction:^(UIAlertAction * _Nonnull action) {
                     __strong typeof(weakself) strongself = weakself;
-                    MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:model dulingType:strongself.dulingType resetTime:nil];
+                    MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:model dulingType:strongself.dulingType classTimeId:model.mpm_id];
                     strongself.hidesBottomBarWhenPushed = YES;
                     [strongself.navigationController pushViewController:st animated:YES];
                 } sureActionTitle:@"修改" needCancleButton:YES];
             } else {
-                MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:model dulingType:self.dulingType resetTime:nil];
+                MPMSettingTimeViewController *st = [[MPMSettingTimeViewController alloc] initWithModel:model dulingType:self.dulingType classTimeId:nil];
                 self.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:st animated:YES];
             }

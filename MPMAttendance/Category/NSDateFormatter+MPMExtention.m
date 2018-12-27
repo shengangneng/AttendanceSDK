@@ -20,6 +20,7 @@
         case forDateFormatTypeAll:                   { formatterType = @"yyyy-MM-dd HH:mm:ss"; }break;
         case forDateFormatTypeAllWithoutSeconds:     { formatterType = @"yyyy-MM-dd HH:mm"; }break;
         case forDateFormatTypeYearMonthDaySlash:     { formatterType = @"yyyy/MM/dd"; }break;
+        case forDateFormatTypeYearMonthDayDom:       { formatterType = @"yyyy.MM.dd"; }break;
         case forDateFormatTypeYearMonthDayHourMinite:{ formatterType = @"MM月dd日HH:mm"; }break;
         case forDateFormatTypeShortYearMonthDaySlash:{ formatterType = @"yy/MM/dd"; }break;
         case forDateFormatTypeYearMonthDayBar:       { formatterType = @"yyyy-MM-dd"; }break;
@@ -45,6 +46,7 @@
         case forDateFormatTypeAll:                   { formatterType = @"yyyy-MM-dd HH:mm:ss"; }break;
         case forDateFormatTypeAllWithoutSeconds:     { formatterType = @"yyyy-MM-dd HH:mm"; }break;
         case forDateFormatTypeYearMonthDaySlash:     { formatterType = @"yyyy/MM/dd"; }break;
+        case forDateFormatTypeYearMonthDayDom:       { formatterType = @"yyyy.MM.dd"; }break;
         case forDateFormatTypeShortYearMonthDaySlash:{ formatterType = @"yy/MM/dd"; }break;
         case forDateFormatTypeYearMonthDayHourMinite:{ formatterType = @"MM月dd日HH:mm"; }break;
         case forDateFormatTypeYearMonthDayBar:       { formatterType = @"yyyy-MM-dd"; }break;

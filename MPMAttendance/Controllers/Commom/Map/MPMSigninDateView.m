@@ -8,6 +8,7 @@
 
 #import "MPMSigninDateView.h"
 #import "MPMAttendanceHeader.h"
+#import "NSDateFormatter+MPMExtention.h"
 
 @interface MPMSigninDateView ()
 
@@ -32,23 +33,42 @@
     return self;
 }
 
-- (void)setDetailDate:(NSString *)detailDate {
-    if (kIsNilString(detailDate)) {
-        return;
+- (void)setDetailDate:(NSDate *)detailDate {
+    _detailDate = detailDate;
+    
+    NSString *weekString;
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *comp = [cal components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:detailDate];
+    NSInteger weekday = comp.weekday;
+    switch (weekday) {
+        case 1:
+            weekString = @"星期日";
+            break;
+        case 2:
+            weekString = @"星期一";
+            break;
+        case 3:
+            weekString = @"星期二";
+            break;
+        case 4:
+            weekString = @"星期三";
+            break;
+        case 5:
+            weekString = @"星期四";
+            break;
+        case 6:
+            weekString = @"星期五";
+            break;
+        case 7:
+            weekString = @"星期六";
+            break;
+        default:
+            weekString = @"";
+            break;
     }
-    NSArray *arr = [detailDate componentsSeparatedByString:@","];
-    if (arr.count > 1) {
-        self.monthLabel.text = [NSString stringWithFormat:@"%@%@",arr[1],arr[0]];
-    }
-    /*
-     for (int i = 0; i < arr.count; i++) {
-     UILabel *lb = self.laberArray[i];
-     if (lb == self.dayLabel) {
-     lb.text = [NSString stringWithFormat:@"%@日",arr[i]];
-     } else {
-     lb.text = arr[i];
-     }
-     }*/
+    
+    NSString *dateString = [NSDateFormatter formatterDate:detailDate withDefineFormatterType:forDateFormatTypeYearMonthDayDom];
+    self.monthLabel.text = [NSString stringWithFormat:@"%@ %@",dateString,weekString];
 }
 
 - (void)setupAttributes {
@@ -89,7 +109,7 @@
         _monthLabel = [[UILabel alloc] init];
         [_monthLabel sizeToFit];
         _monthLabel.textColor = kWhiteColor;
-        _monthLabel.font = SystemFont(30);
+        _monthLabel.font = SystemFont(20);
     }
     return _monthLabel;
 }

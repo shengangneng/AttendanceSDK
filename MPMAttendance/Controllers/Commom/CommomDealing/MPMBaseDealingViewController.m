@@ -31,6 +31,7 @@
 #import "MPMRepairSigninViewController.h"
 #import "MPMDealingBorderButton.h"
 #import "MPMDepartEmployeeHelper.h"
+#import "MPMCustomProgressHUD.h"
 
 @interface MPMBaseDealingViewController () <UITableViewDelegate, UITableViewDataSource, MPMAttendencePickerViewDelegate, UIScrollViewDelegate>
 
@@ -373,14 +374,14 @@
                 com(hour,info);
             }
         } else {
-            [MPMProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
+            [MPMCustomProgressHUD showWithMessage:@"计算时长失败，请重新选择"];
             if (com) {
                 com(nil,nil);
             }
         }
     } failure:^(NSString *error) {
         DLog(@"计算时长失败 === %@",error);
-        [MPMProgressHUD showErrorWithStatus:@"计算时长失败，请重新选择"];
+        [MPMCustomProgressHUD showWithMessage:@"计算时长失败，请重新选择"];
         if (com) {
             com(nil,nil);
         }
@@ -1146,7 +1147,7 @@
                 [strongself.navigationController pushViewController:repair animated:YES];
             };
             cell.explainBlock = ^{
-                [MPMProgressHUD showInfoWithStatus:@"此处可添加漏卡时间，可多选"];
+                [MPMCustomProgressHUD showWithMessage:@"此处可添加漏卡时间，可多选"];
             };
         }
         NSArray *cellArr = self.tableViewTitleArray[indexPath.section][kCellTitleDetailKey];
@@ -1194,9 +1195,9 @@
                 cell.explainBlock = ^{
                     __strong typeof(weakself) strongself = weakself;
                     if (kCausationTypeOverTime == strongself.dealingModel.causationType) {
-                        [MPMProgressHUD showInfoWithStatus:@"根据开始与结束时间自动计算时长"];
+                        [MPMCustomProgressHUD showWithMessage:@"根据开始与结束时间自动计算时长"];
                     } else {
-                        [MPMProgressHUD showInfoWithStatus:@"根据排班自动计算时长"];
+                        [MPMCustomProgressHUD showWithMessage:@"根据排班自动计算时长"];
                     }
                 };
                 [cell needCheckNumber:YES limitLength:4];

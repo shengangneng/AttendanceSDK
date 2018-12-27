@@ -401,6 +401,8 @@
 		CDE1D0B6217C58FD0047CF85 /* MPMRoundPeopleButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D0B2217C58FC0047CF85 /* MPMRoundPeopleButton.h */; };
 		CDE1D0B7217C58FD0047CF85 /* MPMRoundPeopleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D0B3217C58FC0047CF85 /* MPMRoundPeopleButton.m */; };
 		CDE1D0B8217C58FD0047CF85 /* MPMRoundPeopleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D0B4217C58FD0047CF85 /* MPMRoundPeopleView.m */; };
+		CDF2AA5A21D4CE0400A2BCD3 /* MPMCustomProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = CDF2AA5821D4CE0400A2BCD3 /* MPMCustomProgressHUD.h */; };
+		CDF2AA5B21D4CE0400A2BCD3 /* MPMCustomProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CDF2AA5921D4CE0400A2BCD3 /* MPMCustomProgressHUD.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -800,6 +802,8 @@
 		CDE1D0B2217C58FC0047CF85 /* MPMRoundPeopleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMRoundPeopleButton.h; sourceTree = "<group>"; };
 		CDE1D0B3217C58FC0047CF85 /* MPMRoundPeopleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMRoundPeopleButton.m; sourceTree = "<group>"; };
 		CDE1D0B4217C58FD0047CF85 /* MPMRoundPeopleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMRoundPeopleView.m; sourceTree = "<group>"; };
+		CDF2AA5821D4CE0400A2BCD3 /* MPMCustomProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCustomProgressHUD.h; sourceTree = "<group>"; };
+		CDF2AA5921D4CE0400A2BCD3 /* MPMCustomProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCustomProgressHUD.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1596,6 +1600,7 @@
 		CD47171C2110536400401169 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CDF2AA5721D4CDCD00A2BCD3 /* MPMCustomProgessHUD */,
 				CDE1D0B0217C58ED0047CF85 /* MPMRoundPeople */,
 				CDE1D0A3217C53FB0047CF85 /* MPMRefresh */,
 				CD4717282110536400401169 /* MPMButton.h */,
@@ -1744,6 +1749,15 @@
 			path = MPMRoundPeople;
 			sourceTree = "<group>";
 		};
+		CDF2AA5721D4CDCD00A2BCD3 /* MPMCustomProgessHUD */ = {
+			isa = PBXGroup;
+			children = (
+				CDF2AA5821D4CE0400A2BCD3 /* MPMCustomProgressHUD.h */,
+				CDF2AA5921D4CE0400A2BCD3 /* MPMCustomProgressHUD.m */,
+			);
+			path = MPMCustomProgessHUD;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1865,6 +1879,7 @@
 				CD4718062110536400401169 /* MPMMainTabBarViewController.h in Headers */,
 				CD4718A4211053DE00401169 /* MPMIndefiniteAnimatedView.h in Headers */,
 				CD4717E42110536400401169 /* MPMAuthorityTableViewCell.h in Headers */,
+				CDF2AA5A21D4CE0400A2BCD3 /* MPMCustomProgressHUD.h in Headers */,
 				CDE1D024217C29F80047CF85 /* MPMProcessSettingTableViewCell.h in Headers */,
 				CD471852211053C100401169 /* MPMImageDownloader.h in Headers */,
 				CD4717E92110536400401169 /* MPMAuthoritySettingViewController.h in Headers */,
@@ -2163,6 +2178,7 @@
 				CD4717312110536400401169 /* MPMSessionManager.m in Sources */,
 				CD4717C72110536400401169 /* MPMSettingTimeModel.m in Sources */,
 				CDE1CFB1217C1C1A0047CF85 /* OauthUser+CoreDataClass.m in Sources */,
+				CDF2AA5B21D4CE0400A2BCD3 /* MPMCustomProgressHUD.m in Sources */,
 				CDE1D021217C29F80047CF85 /* MPMTaskContentView.m in Sources */,
 				CDE1CFFB217C272E0047CF85 /* MPMProcessDetailDeliversView.m in Sources */,
 				CD4717812110536400401169 /* MPMRepairSigninViewController.m in Sources */,
