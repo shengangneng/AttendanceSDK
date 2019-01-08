@@ -68,14 +68,14 @@ const NSInteger MPMRepairSignLimitCount = 5;
     __weak typeof(self) weakself = self;
     self.goodNetworkToLoadBlock = ^{
         __strong typeof(weakself) strongself = weakself;
-        [strongself getData];
+        [strongself getDataWithThisMonth:strongself.leadCardModel.isThisMonth];
     };
-    [self getData];
+    [self getDataWithThisMonth:self.leadCardModel.isThisMonth];
 }
 
 - (void)setupAttributes {
     [super setupAttributes];
-    self.title = @"补卡";
+    self.navigationItem.title = @"补卡";
     [self.bottomRepairButton addTarget:self action:@selector(repair:) forControlEvents:UIControlEventTouchUpInside];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(left:)];
 }
@@ -116,10 +116,11 @@ const NSInteger MPMRepairSignLimitCount = 5;
     }];
 }
 
-- (void)getData {
-    NSString *state = self.leadCardModel.isThisMonth ? @"1" : @"0";/** 0上月 1本月 */
+- (void)getDataWithThisMonth:(BOOL)thisMonth {
+    NSString *state = thisMonth ? @"1" : @"0";/** 0上月 1本月 */
     NSString *url = [NSString stringWithFormat:@"%@%@?state=%@",MPMINTERFACE_HOST,MPMINTERFACE_SIGNIN_LEAKCARD,state];
     [[MPMSessionManager shareManager] getRequestWithURL:url setAuth:YES params:nil loadingMessage:@"正在加载" success:^(id response) {
+        self.leadCardModel.thisMonth = thisMonth;
         DLog(@"%@",response);
         if (response[kResponseObjectKey] && [response[kResponseObjectKey] isKindOfClass:[NSArray class]]) {
             NSArray *object = response[kResponseObjectKey];
@@ -160,6 +161,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
         }
     } failure:^(NSString *error) {
         DLog(@"%@",error);
+        self.leadCardModel.thisMonth = thisMonth;
         [MPMProgressHUD showErrorWithStatus:error];
     }];
 }
@@ -253,7 +255,6 @@ const NSInteger MPMRepairSignLimitCount = 5;
             // 切换月份
             cell.changeMonthBlock = ^(BOOL thisMonth) {
                 __strong typeof(weakself) strongself = weakself;
-                strongself.leadCardModel.thisMonth = thisMonth;
                 double bottomOffset = thisMonth ? 0 : BottomViewHeight;
                 [UIView animateWithDuration:0.3 animations:^{
                     [strongself.bottomView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
@@ -263,7 +264,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
                     }];
                     [strongself.view layoutIfNeeded];
                 } completion:nil];
-                [strongself getData];
+                [strongself getDataWithThisMonth:thisMonth];
             };
             return cell;
         }break;

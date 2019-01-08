@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MPMBaseTableViewCell.h"
+#import "MPMPlaceHoderTextView.h"
 #define UITextViewPlaceHolder1 @"请输入"
 #define UITextViewPlaceHolder2 @"请输入处理理由"
 
@@ -17,7 +18,7 @@ typedef void(^TextViewChangeTextBlock)(NSString *currentText);
 
 @property (nonatomic, strong) UIImageView *startIcon;
 @property (nonatomic, strong) UILabel *txLabel;
-@property (nonatomic, strong) UITextView *detailTextView;
+@property (nonatomic, strong) MPMPlaceHoderTextView *detailTextView;
 @property (nonatomic, strong) UILabel *textViewTotalLength;
 
 @property (nonatomic, copy) TextViewChangeTextBlock changeTextBlock;

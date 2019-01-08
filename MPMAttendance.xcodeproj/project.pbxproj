@@ -278,6 +278,8 @@
 		CDBFAFC921B23ABB0020C493 /* MPMSigninTimerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */; };
 		CDCA796921BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDCA796721BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m */; };
 		CDCA796A21BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDCA796821BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h */; };
+		CDDB44C821E4BA6D00BD2B5B /* MPMPlaceHoderTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDDB44C621E4BA6C00BD2B5B /* MPMPlaceHoderTextView.h */; };
+		CDDB44C921E4BA6D00BD2B5B /* MPMPlaceHoderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDDB44C721E4BA6D00BD2B5B /* MPMPlaceHoderTextView.m */; };
 		CDE1CFA6217C18F20047CF85 /* MPMOauthUser.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */; };
 		CDE1CFA7217C18F20047CF85 /* MPMOauthUser.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */; };
 		CDE1CFA9217C1A620047CF85 /* MPMInterfaceConst.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */; };
@@ -679,6 +681,8 @@
 		CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSigninTimerTask.m; sourceTree = "<group>"; };
 		CDCA796721BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApplyCollectionViewCell.m; sourceTree = "<group>"; };
 		CDCA796821BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApplyCollectionViewCell.h; sourceTree = "<group>"; };
+		CDDB44C621E4BA6C00BD2B5B /* MPMPlaceHoderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMPlaceHoderTextView.h; sourceTree = "<group>"; };
+		CDDB44C721E4BA6D00BD2B5B /* MPMPlaceHoderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMPlaceHoderTextView.m; sourceTree = "<group>"; };
 		CDE1CFA4217C18F20047CF85 /* MPMOauthUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMOauthUser.h; sourceTree = "<group>"; };
 		CDE1CFA5217C18F20047CF85 /* MPMOauthUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMOauthUser.m; sourceTree = "<group>"; };
 		CDE1CFA8217C1A620047CF85 /* MPMInterfaceConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMInterfaceConst.h; sourceTree = "<group>"; };
@@ -1611,6 +1615,8 @@
 				CD47171F2110536400401169 /* MPMImageView.m */,
 				CD47171D2110536400401169 /* MPMImageTouchView.h */,
 				CD4717292110536400401169 /* MPMImageTouchView.m */,
+				CDDB44C621E4BA6C00BD2B5B /* MPMPlaceHoderTextView.h */,
+				CDDB44C721E4BA6D00BD2B5B /* MPMPlaceHoderTextView.m */,
 				CD4717202110536400401169 /* MPMTableHeaderView.h */,
 				CD47172B2110536400401169 /* MPMTableHeaderView.m */,
 				CDE1CFB2217C1F9F0047CF85 /* NoMessageView */,
@@ -1819,6 +1825,7 @@
 				CD471863211053C100401169 /* UIRefreshControl+MPMNetworking.h in Headers */,
 				CD4717CA2110536400401169 /* MPMSettingTimeViewController.h in Headers */,
 				CDE1D027217C29F80047CF85 /* MPMTaskEditView.h in Headers */,
+				CDDB44C821E4BA6D00BD2B5B /* MPMPlaceHoderTextView.h in Headers */,
 				CD4717AE2110536400401169 /* MPMAttendenceStatisticViewController.h in Headers */,
 				CDE1CFDF217C26B30047CF85 /* MPMProcessMyMetterModel.h in Headers */,
 				CD4717D92110536400401169 /* MPMSettingCardAddressWifiModel.h in Headers */,
@@ -2088,6 +2095,7 @@
 				CD47183B211053A600401169 /* MPMURLResponseSerialization.m in Sources */,
 				CDE1D025217C29F80047CF85 /* MPMTaskApplyersScrollView.m in Sources */,
 				CD4717AF2110536400401169 /* MPMStatisticDepartmentTableViewCell.m in Sources */,
+				CDDB44C921E4BA6D00BD2B5B /* MPMPlaceHoderTextView.m in Sources */,
 				CDE1D09D217C2F690047CF85 /* MPMSearchDepartViewController.m in Sources */,
 				CD4717E52110536400401169 /* MPMAuthorityModel.m in Sources */,
 				CDE1D046217C2AFF0047CF85 /* MPMSearchTableViewCell.m in Sources */,

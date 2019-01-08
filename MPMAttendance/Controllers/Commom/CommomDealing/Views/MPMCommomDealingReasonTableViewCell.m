@@ -86,38 +86,25 @@
 #pragma mark - Target Action
 - (void)clear:(UIButton *)sender {
     self.detailTextView.text = @"";
-    self.textViewTotalLength.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%d/30",0]];
+    self.detailTextView.placeHolder.hidden = NO;
+    self.textViewTotalLength.text = @"30";
     if (self.changeTextBlock) {
         self.changeTextBlock(@"");
     }
     sender.hidden = YES;
 }
 
-#pragma mark - Private Method
-- (NSAttributedString *)getAttributeString:(NSString *)str {
-    NSMutableAttributedString *AttributedStr = [[NSMutableAttributedString alloc]initWithString:str];
-    NSInteger loca = str.length - 2;
-    [AttributedStr addAttribute:NSForegroundColorAttributeName
-                          value:kMainLightGray
-                          range:NSMakeRange(loca, 2)];
-    return AttributedStr;
-}
-
 #pragma mark - UITextViewDelegate
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    if ([textView.text isEqualToString:UITextViewPlaceHolder1] || [textView.text isEqualToString:UITextViewPlaceHolder2]) {
-        textView.text = @"";
-    }
-    return YES;
-}
 
 - (void)textViewDidChange:(UITextView *)textView {
-    if (textView.text.length == 0 || [textView.text isEqualToString:UITextViewPlaceHolder1] || [textView.text isEqualToString:UITextViewPlaceHolder2]) {
+    if (textView.text.length == 0) {
+        self.detailTextView.placeHolder.hidden = NO;
         self.textViewClearButton.hidden = YES;
-        self.textViewTotalLength.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%d/30",0]];
+        self.textViewTotalLength.text = @"30";
     } else {
+        self.detailTextView.placeHolder.hidden = YES;
         self.textViewClearButton.hidden = NO;
-        self.textViewTotalLength.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%ld/30",textView.text.length]];
+        self.textViewTotalLength.text = [NSString stringWithFormat:@"%ld",(30-textView.text.length)];
     }
 }
 
@@ -132,12 +119,13 @@
 - (void)textViewDidEndEditing:(UITextView *)textView {
     NSString *callbackString = nil;
     if (textView.text.length == 0) {
-        textView.text = @"请输入";
+        self.detailTextView.placeHolder.hidden = NO;
         callbackString = @"";
     } else {
+        self.detailTextView.placeHolder.hidden = YES;
         callbackString = textView.text;
     }
-    self.textViewTotalLength.attributedText = [self getAttributeString:[NSString stringWithFormat:@"%ld/30",callbackString.length]];
+    self.textViewTotalLength.text = [NSString stringWithFormat:@"%ld",(30-callbackString.length)];
     if (self.changeTextBlock) {
         self.changeTextBlock(callbackString);
     }
@@ -162,9 +150,9 @@
     return _txLabel;
 }
 
-- (UITextView *)detailTextView {
+- (MPMPlaceHoderTextView *)detailTextView {
     if (!_detailTextView) {
-        _detailTextView = [[UITextView alloc] init];
+        _detailTextView = [[MPMPlaceHoderTextView alloc] initWithPlaceHolder:@"请输入"];
         _detailTextView.clearsOnInsertion = YES;
         _detailTextView.delegate = self;
         _detailTextView.font = SystemFont(17);
@@ -176,8 +164,8 @@
 - (UILabel *)textViewTotalLength {
     if (!_textViewTotalLength) {
         _textViewTotalLength = [[UILabel alloc] init];
-        _textViewTotalLength.textColor = kBlackColor;
-        _textViewTotalLength.attributedText = [self getAttributeString:@"0/30"];
+        _textViewTotalLength.textColor = kMainLightGray;
+        _textViewTotalLength.text = @"30";
         _textViewTotalLength.textAlignment = NSTextAlignmentRight;
         [_textViewTotalLength sizeToFit];
     }

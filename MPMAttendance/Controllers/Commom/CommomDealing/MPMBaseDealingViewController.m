@@ -1003,15 +1003,10 @@
         NSArray *cellArr = self.tableViewTitleArray[indexPath.section][kCellTitleDetailKey];
         cell.txLabel.text = [cellArr[indexPath.row] componentsSeparatedByString:@","].firstObject;
         NSString *detailString = kIsNilString(self.dealingModel.remark)?[cellArr[indexPath.row] componentsSeparatedByString:@","].lastObject:self.dealingModel.remark;
-        cell.detailTextView.text = detailString;
         if (![detailString isEqualToString:UITextViewPlaceHolder1] && ![detailString isEqualToString:UITextViewPlaceHolder2]) {
-            NSString *attrStr = [NSString stringWithFormat:@"%ld/30",cell.detailTextView.text.length];
-            NSMutableAttributedString *AttributedStr = [[NSMutableAttributedString alloc]initWithString:attrStr];
-            NSInteger loca = attrStr.length - 2;
-            [AttributedStr addAttribute:NSForegroundColorAttributeName
-                                  value:kMainLightGray
-                                  range:NSMakeRange(loca, 2)];
-            cell.textViewTotalLength.attributedText = AttributedStr;
+            cell.detailTextView.text = self.dealingModel.remark;
+        } else {
+            cell.detailTextView.placeHolder.text = [cellArr[indexPath.row] componentsSeparatedByString:@","].lastObject;
         }
         [cell.detailTextView resignFirstResponder];
         __weak typeof(self) weakself = self;
