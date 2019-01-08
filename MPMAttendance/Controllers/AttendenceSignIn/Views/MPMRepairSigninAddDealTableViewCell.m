@@ -34,16 +34,16 @@
 
 - (void)setupConstraints {
     [self.signTypeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.top.bottom.equalTo(self);
-        make.width.equalTo(@(60));
+        make.leading.equalTo(self.mpm_leading).offset(10);
+        make.top.bottom.equalTo(self);
     }];
     [self.signTimeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.bottom.equalTo(self);
-        make.leading.equalTo(self.signTypeLabel.mpm_trailing);
+        make.leading.equalTo(self.signTypeLabel.mpm_trailing).offset(10);
     }];
     [self.signDateLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.centerX.top.bottom.equalTo(self);
-        make.width.equalTo(@(130));
+        make.top.bottom.equalTo(self);
+        make.leading.equalTo(self.signTimeLabel.mpm_trailing).offset(10);
     }];
     [self.checkBox mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.trailing.equalTo(self.mpm_trailing).offset(-10);
@@ -71,6 +71,7 @@
         _signTypeLabel.textAlignment = NSTextAlignmentCenter;
         _signTypeLabel.textColor = kMainBlueColor;
         _signTypeLabel.font = SystemFont(17);
+        [_signTypeLabel sizeToFit];
         _signTypeLabel.text = @"打卡";
     }
     return _signTypeLabel;
@@ -91,6 +92,7 @@
         _signDateLabel = [[UILabel alloc] init];
         _signDateLabel.textAlignment = NSTextAlignmentCenter;
         _signDateLabel.font = SystemFont(17);
+        [_signDateLabel sizeToFit];
         _signDateLabel.text = @"2018.05.06";
     }
     return _signDateLabel;
