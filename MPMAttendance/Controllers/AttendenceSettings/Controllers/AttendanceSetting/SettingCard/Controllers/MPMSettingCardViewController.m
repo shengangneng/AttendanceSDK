@@ -392,9 +392,20 @@
             mo.deviation = self.settingCardArray.count > 0?((MPMSettingCardAddressWifiModel *)self.settingCardArray[0]).deviation:@"";
             mo.latitude = [NSString stringWithFormat:@"%f",model.coordinate.latitude];
             mo.longitude = [NSString stringWithFormat:@"%f",model.coordinate.longitude];
-            [self.settingCardArray addObject:mo];
-            [self.dataArray[0] addObject:@{@"icon":@"setting_screencut",@"title":@"考勤地点",@"detail":mo.address}.mutableCopy];
-            [self.tableView reloadData];
+            BOOL canAdd = YES;
+            for (int i = 0; i < self.settingCardArray.count; i++) {
+                MPMSettingCardAddressWifiModel *item = self.settingCardArray[i];
+                if ([item.address isEqualToString:mo.address]) {
+                    canAdd = NO;break;
+                }
+            }
+            if (canAdd) {
+                [self.settingCardArray addObject:mo];
+                [self.dataArray[0] addObject:@{@"icon":@"setting_screencut",@"title":@"考勤地点",@"detail":mo.address}.mutableCopy];
+                [self.tableView reloadData];
+            } else {
+                [self showAlertControllerToLogoutWithMessage:@"该地址名称已在列表中，请添加不同地址名称" sureAction:nil needCancleButton:NO];
+            }
         };
         self.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:map animated:YES];
