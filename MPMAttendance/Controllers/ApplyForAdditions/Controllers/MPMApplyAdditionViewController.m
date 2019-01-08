@@ -47,10 +47,10 @@
     self.goOutImageView.foldBlock = ^(BOOL fold) {
         __strong typeof(weakself) strongself = weakself;
         [strongself.goOutImageView mpm_remakeConstraints:^(MPMConstraintMaker *make) {
-            make.leading.equalTo(strongself.scrollView.mpm_leading).offset(10);
-            make.trailing.equalTo(strongself.scrollView.mpm_trailing).offset(-10);
+            make.leading.equalTo(strongself.scrollView.mpm_leading).offset(20);
+            make.trailing.equalTo(strongself.scrollView.mpm_trailing).offset(-20);
             make.centerX.equalTo(strongself.scrollView.mpm_centerX);
-            make.top.equalTo(strongself.overtimeImageView.mpm_bottom).offset(10);
+            make.top.equalTo(strongself.overtimeImageView.mpm_bottom).offset(20);
             if (fold) {
                 make.height.equalTo(@133);
             } else {
@@ -79,39 +79,39 @@
         make.edges.equalTo(self.view);
     }];
     [self.leaveImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(20);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-20);
         make.centerX.equalTo(self.scrollView.mpm_centerX);
         make.height.equalTo(@118);
-        make.top.equalTo(self.scrollView.mpm_top).offset(10);
+        make.top.equalTo(self.scrollView.mpm_top).offset(20);
     }];
     [self.evecationImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(20);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-20);
         make.centerX.equalTo(self.scrollView.mpm_centerX);
         make.height.equalTo(@118);
-        make.top.equalTo(self.leaveImageView.mpm_bottom).offset(10);
+        make.top.equalTo(self.leaveImageView.mpm_bottom).offset(20);
     }];
     [self.overtimeImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(20);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-20);
         make.centerX.equalTo(self.scrollView.mpm_centerX);
-        make.top.equalTo(self.evecationImageView.mpm_bottom).offset(10);
+        make.top.equalTo(self.evecationImageView.mpm_bottom).offset(20);
         make.height.equalTo(@118);
     }];
     [self.goOutImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(20);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-20);
         make.centerX.equalTo(self.scrollView.mpm_centerX);
-        make.top.equalTo(self.overtimeImageView.mpm_bottom).offset(10);
+        make.top.equalTo(self.overtimeImageView.mpm_bottom).offset(20);
         make.height.equalTo(@133);
     }];
     [self.resignImageView mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.leading.equalTo(self.scrollView.mpm_leading).offset(10);
-        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-10);
+        make.leading.equalTo(self.scrollView.mpm_leading).offset(20);
+        make.trailing.equalTo(self.scrollView.mpm_trailing).offset(-20);
         make.centerX.equalTo(self.scrollView.mpm_centerX);
-        make.top.equalTo(self.goOutImageView.mpm_bottom).offset(10);
-        make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-10);
+        make.top.equalTo(self.goOutImageView.mpm_bottom).offset(20);
+        make.bottom.equalTo(self.scrollView.mpm_bottom).offset(-20);
         make.height.equalTo(@61);
     }];
 }

@@ -170,10 +170,15 @@
         } else {
             self.searchArray = nil;
         }
-        if (self.searchArray.count == 0) {
-            [MPMProgressHUD showErrorWithStatus:@"未搜到相关班次！"];
-        }
         [self.tableView reloadData];
+        dispatch_async(kMainQueue, ^{
+            // 如果搜索结束并刷新tableView之后再决定是否显示无数据视图
+            if (self.searchArray.count == 0) {
+                self.noMessageView.hidden = NO;
+            } else {
+                self.noMessageView.hidden = YES;
+            }
+        });
     } failure:^(NSString *error) {
         DLog(@"%@",error);
         [MPMProgressHUD showErrorWithStatus:error];
@@ -187,11 +192,6 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.searchArray.count == 0) {
-        self.noMessageView.hidden = NO;
-    } else {
-        self.noMessageView.hidden = YES;
-    }
     return self.searchArray.count;
 }
 

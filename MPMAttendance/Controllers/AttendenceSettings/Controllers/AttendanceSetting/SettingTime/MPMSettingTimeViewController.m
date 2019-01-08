@@ -192,7 +192,7 @@
     [self.headerClassAlertLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.equalTo(self.headerClassAlertView.mpm_top).offset(11);
         make.leading.equalTo(self.headerClassAlertImage.mpm_trailing).offset(6);
-        make.trailing.equalTo(self.headerClassAlertView.mpm_trailing).offset(-15);
+        make.trailing.equalTo(self.headerClassAlertView.mpm_trailing).offset(-10);
         make.bottom.equalTo(self.headerClassAlertView.mpm_bottom).offset(-11);
     }];
     [self.headerNameView mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -1603,7 +1603,7 @@
         _headerClassAlertLabel.numberOfLines = 0;
         _headerClassAlertLabel.text = @"你的班次正在被多个";
         [_headerClassAlertLabel sizeToFit];
-        _headerClassAlertLabel.font = SystemFont(13);
+        _headerClassAlertLabel.font = SystemFont(14);
         _headerClassAlertLabel.textColor = kRGBA(102, 102, 102, 1);
         _headerClassAlertLabel.textAlignment = NSTextAlignmentLeft;
     }

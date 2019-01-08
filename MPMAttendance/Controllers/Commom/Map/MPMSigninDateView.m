@@ -42,25 +42,25 @@
     NSInteger weekday = comp.weekday;
     switch (weekday) {
         case 1:
-            weekString = @"星期日";
+            weekString = @"周日";
             break;
         case 2:
-            weekString = @"星期一";
+            weekString = @"周一";
             break;
         case 3:
-            weekString = @"星期二";
+            weekString = @"周二";
             break;
         case 4:
-            weekString = @"星期三";
+            weekString = @"周三";
             break;
         case 5:
-            weekString = @"星期四";
+            weekString = @"周四";
             break;
         case 6:
-            weekString = @"星期五";
+            weekString = @"周五";
             break;
         case 7:
-            weekString = @"星期六";
+            weekString = @"周六";
             break;
         default:
             weekString = @"";

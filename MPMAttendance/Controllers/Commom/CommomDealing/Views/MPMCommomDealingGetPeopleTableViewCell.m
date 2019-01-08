@@ -72,6 +72,7 @@
     [self.detailTxLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.top.equalTo(self);
         make.trailing.equalTo(self.mpm_trailing).offset(-15);
+        make.leading.equalTo(self.mpm_leading).offset(75);
         make.height.equalTo(@49);
     }];
     [self.addLeadButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
@@ -195,6 +196,7 @@
         [_detailTxLabel sizeToFit];
         _detailTxLabel.textColor = kBlackColor;
         _detailTxLabel.textAlignment = NSTextAlignmentRight;
+        _detailTxLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
     }
     return _detailTxLabel;
 }

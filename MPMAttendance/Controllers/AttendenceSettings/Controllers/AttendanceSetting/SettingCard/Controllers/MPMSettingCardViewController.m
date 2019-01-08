@@ -241,7 +241,7 @@
     }
     
     NSString *message = (kDulingTypeCreate == self.dulingType) ? @"创建" : @"修改";
-    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:NO params:params loadingMessage:@"正在加载" success:^(id response) {
+    [[MPMSessionManager shareManager] postRequestWithURL:url setAuth:YES params:params loadingMessage:@"正在加载" success:^(id response) {
         DLog(@"%@",response);
         if (response && kRequestSuccess == ((NSString *)response[@"responseData"][kCode]).integerValue) {
             __weak typeof(self) weakself = self;

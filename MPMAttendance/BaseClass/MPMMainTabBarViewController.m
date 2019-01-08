@@ -62,15 +62,40 @@
 - (void)setupChildVC {
     NSArray *arr = [MPMOauthUser shareOauthUser].perimissionArray;
     if (arr && arr.count > 0) {
+        /*
+         for (int i = 0; i < arr.count; i++) {
+         NSString *perimissionId = arr[i][@"id"];
+         NSString *perimissionName = arr[i][@"name"];
+         NSString *vcName_imageName = [kTarBarControllerDicV2 objectForKey:perimissionId];
+         if (kIsNilString(vcName_imageName)) continue;
+         NSString *vcName = [vcName_imageName componentsSeparatedByString:@","].firstObject;
+         NSString *imageName = [vcName_imageName componentsSeparatedByString:@","].lastObject;
+         [self setChildVC:[[NSClassFromString(vcName) alloc] init] title:perimissionName image:[NSString stringWithFormat:@"%@nomal",imageName] selectedImage:[NSString stringWithFormat:@"%@select",imageName] nav:YES];
+         }
+         */
+        MPMAttendenceSigninViewController *signin = [[MPMAttendenceSigninViewController alloc] init];
+        [self setChildVC:signin title:@"考勤打卡" image:@"tab_punchingtimecard_nomal" selectedImage:@"tab_punchingtimecard_select" nav:YES];
+        MPMApplyAdditionViewController *apply = [[MPMApplyAdditionViewController alloc] init];
+        [self setChildVC:apply title:@"例外申请" image:@"tab_exceptionsapply_nomal" selectedImage:@"tab_exceptionsapply_select" nav:YES];
+        MPMApprovalProcessViewController *statis = [[MPMApprovalProcessViewController alloc] init];
+        [self setChildVC:statis title:@"流程审批" image:@"tab_approval_nomal" selectedImage:@"tab_approval_select" nav:YES];
+        MPMAttendenceStatisticViewController *couting = [[MPMAttendenceStatisticViewController alloc] init];
+        [self setChildVC:couting title:@"考勤统计" image:@"tab_attendancestatistics_nomal" selectedImage:@"tab_attendancestatistics_select" nav:YES];
+        // 前四个控制器是固定的，如果有考勤设置的权限，则显示考勤设置，否则不显示
         for (int i = 0; i < arr.count; i++) {
             NSString *perimissionId = arr[i][@"id"];
             NSString *perimissionName = arr[i][@"name"];
-            NSString *vcName_imageName = [kTarBarControllerDicV2 objectForKey:perimissionId];
-            if (kIsNilString(vcName_imageName)) continue;
-            NSString *vcName = [vcName_imageName componentsSeparatedByString:@","].firstObject;
-            NSString *imageName = [vcName_imageName componentsSeparatedByString:@","].lastObject;
-            [self setChildVC:[[NSClassFromString(vcName) alloc] init] title:perimissionName image:[NSString stringWithFormat:@"%@nomal",imageName] selectedImage:[NSString stringWithFormat:@"%@select",imageName] nav:YES];
+            if (![perimissionId isEqualToString:@"mobile_config"]) {
+                continue;
+            } else {
+                NSString *vcName_imageName = [kTarBarControllerDicV2 objectForKey:perimissionId];
+                NSString *vcName = [vcName_imageName componentsSeparatedByString:@","].firstObject;
+                NSString *imageName = [vcName_imageName componentsSeparatedByString:@","].lastObject;
+                [self setChildVC:[[NSClassFromString(vcName) alloc] init] title:perimissionName image:[NSString stringWithFormat:@"%@nomal",imageName] selectedImage:[NSString stringWithFormat:@"%@select",imageName] nav:YES];
+                break;
+            }
         }
+        
     } else {
         MPMAttendenceSigninViewController *signin = [[MPMAttendenceSigninViewController alloc] init];
         [self setChildVC:signin title:@"考勤打卡" image:@"tab_punchingtimecard_nomal" selectedImage:@"tab_punchingtimecard_select" nav:YES];

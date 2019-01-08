@@ -802,7 +802,7 @@
         if (self.dealingModel.participantsCanAdd) {
             count = (self.dealingModel.participants.count/5 + 1);
         } else {
-            count = (self.dealingModel.participants.count/4 + 1);
+            count = ((self.dealingModel.participants.count - 1)/5 + 1);
         }
         return kTableViewHeight +  count * 56.5 + 12;
     } else if (indexPath.section == self.tableViewTitleArray.count - 1) {
@@ -811,7 +811,7 @@
         if (self.dealingModel.deliversCanAdd) {
             count = (self.dealingModel.delivers.count/5 + 1);
         } else {
-            count = (self.dealingModel.delivers.count/4 + 1);
+            count = ((self.dealingModel.participants.count - 1)/5 + 1);
         }
         return kTableViewHeight +  count * 56.5 + 12;
     }
