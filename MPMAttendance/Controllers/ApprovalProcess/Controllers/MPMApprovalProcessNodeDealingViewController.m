@@ -547,14 +547,14 @@
             [self showAlertControllerToLogoutWithMessage:@"驳回意见不能超过30个字，请重新编辑" sureAction:nil needCancleButton:NO];return NO;
         }
     } else if (kDetailNodeDealingTypeTransToOthers == self.dealingNodeType) {
+        if (self.selectedPeople.count == 0) {
+            [self showAlertControllerToLogoutWithMessage:@"请选择转交人" sureAction:nil needCancleButton:NO];return NO;
+        }
         if (kIsNilString(self.reasonTextView.text)) {
             [self showAlertControllerToLogoutWithMessage:@"请输入转交意见" sureAction:nil needCancleButton:NO];return NO;
         }
         if (self.reasonTextView.text.length > 30) {
             [self showAlertControllerToLogoutWithMessage:@"转交意见不能超过30个字，请重新编辑" sureAction:nil needCancleButton:NO];return NO;
-        }
-        if (self.selectedPeople.count == 0) {
-            [self showAlertControllerToLogoutWithMessage:@"请选择转交人" sureAction:nil needCancleButton:NO];return NO;
         }
     } else if (kDetailNodeDealingTypePass == self.dealingNodeType) {
         // 通过意见可以为空
