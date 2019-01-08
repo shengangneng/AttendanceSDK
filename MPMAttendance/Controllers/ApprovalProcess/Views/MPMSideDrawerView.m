@@ -57,7 +57,7 @@
 }
 
 - (void)setupAttributes {
-    self.collectionViewSelectedDictionay = [NSMutableDictionary dictionaryWithObjectsAndKeys:@[], kSelectStatsKey, @[], kSelectTypesKey, @[], kSelectTimesKey, nil];
+    self.collectionViewSelectedDictionay = [NSMutableDictionary dictionaryWithObjectsAndKeys:@[[NSIndexPath indexPathForRow:0 inSection:0]], kSelectStatsKey, @[[NSIndexPath indexPathForRow:0 inSection:1]], kSelectTypesKey, @[], kSelectTimesKey, nil];
     self.collectionViewTypesArray = @[@"全部",@"补卡",@"改卡",@"请假",@"出差",@"加班",@"外出"];
     self.collectionViewTimesArray = @[@"",@"最近三天",@"最近一周",@"最近一月"];
     [self reset:nil];
@@ -131,8 +131,8 @@
 
 - (void)reset:(UIButton *)sender {
     DLog(@"重置");
-    self.collectionViewSelectedDictionay[kSelectStatsKey] = @[];
-    self.collectionViewSelectedDictionay[kSelectTypesKey] = @[];
+    self.collectionViewSelectedDictionay[kSelectStatsKey] = @[[NSIndexPath indexPathForRow:0 inSection:0]];
+    self.collectionViewSelectedDictionay[kSelectTypesKey] = @[[NSIndexPath indexPathForRow:0 inSection:1]];
     self.collectionViewSelectedDictionay[kSelectTimesKey] = @[];
     self.state = nil;
     self.type = nil;
@@ -203,13 +203,13 @@
     }
     self.collectionViewSelectedDictionay[kSelectTimesKey] = @[];
     if (self.currentTimeButton.tag == StartButtonTag) {
-        if (self.endDate && ([NSDateFormatter isDate1:self.endDate equalToDate2:date] || self.endDate.timeIntervalSince1970 < date.timeIntervalSince1970)) {
-            [MPMProgressHUD showErrorWithStatus:@"开始时间必须小于结束时间"];return;
+        if (self.endDate && self.endDate.timeIntervalSince1970 < date.timeIntervalSince1970) {
+            [MPMProgressHUD showErrorWithStatus:@"开始时间不能大于结束时间"];return;
         }
         self.startDate = date;
     } else {
-        if (self.startDate && ([NSDateFormatter isDate1:self.startDate equalToDate2:date] || date.timeIntervalSince1970 < self.startDate.timeIntervalSince1970)) {
-            [MPMProgressHUD showErrorWithStatus:@"开始时间必须小于结束时间"];return;
+        if (self.startDate && date.timeIntervalSince1970 < self.startDate.timeIntervalSince1970) {
+            [MPMProgressHUD showErrorWithStatus:@"开始时间不能大于结束时间"];return;
         }
         self.endDate = date;
     }
@@ -239,9 +239,6 @@
         frame.origin.x = mFrame.size.width - dFrame.size.width;
         self.contentView.frame = frame;
     }];
-}
-- (void)showInView:(UIView *)superView maskViewFrame:(CGRect)mFrame drawerViewFrame:(CGRect)dFrame {
-    
 }
 
 - (void)dismiss {
@@ -326,10 +323,19 @@
             NSArray *arr = self.collectionViewSelectedDictionay[kSelectTypesKey];
             BOOL hasCell = NO;
             if (arr.count > 0) {
-                for (NSIndexPath *index in arr) {
-                    if ([index compare:indexPath] == NSOrderedSame) {
-                        hasCell = YES;
-                        break;
+                if (self.collectionViewStatsArray.count > 0) {
+                    for (NSIndexPath *index in arr) {
+                        if ([index compare:indexPath] == NSOrderedSame) {
+                            hasCell = YES;
+                            break;
+                        }
+                    }
+                } else {
+                    for (NSIndexPath *index in arr) {
+                        if (index.row == indexPath.row) {
+                            hasCell = YES;
+                            break;
+                        }
                     }
                 }
             }
@@ -372,14 +378,14 @@
         case 0:{
             NSArray *arr = self.collectionViewSelectedDictionay[kSelectStatsKey];
             if (arr && [arr containsObject:indexPath]) {
-                // 包含，则移出去
-                NSMutableArray *marr = [NSMutableArray array];
-                for (id object in arr) {
-                    if (object != indexPath) {
-                        [marr addObject:object];
-                    }
-                }
-                arr = marr.copy;
+                //                // 包含，则移出去
+                //                NSMutableArray *marr = [NSMutableArray array];
+                //                for (id object in arr) {
+                //                    if (object != indexPath) {
+                //                        [marr addObject:object];
+                //                    }
+                //                }
+                //                arr = marr.copy;
             } else {
                 // 不包含，则清空再移入
                 arr = @[indexPath];
@@ -392,14 +398,14 @@
         case 1:{
             NSArray *arr = self.collectionViewSelectedDictionay[kSelectTypesKey];
             if (arr && [arr containsObject:indexPath]) {
-                // 包含，则移出去
-                NSMutableArray *marr = [NSMutableArray array];
-                for (id object in arr) {
-                    if (object != indexPath) {
-                        [marr addObject:object];
-                    }
-                }
-                arr = marr.copy;
+                //                // 包含，则移出去
+                //                NSMutableArray *marr = [NSMutableArray array];
+                //                for (id object in arr) {
+                //                    if (object != indexPath) {
+                //                        [marr addObject:object];
+                //                    }
+                //                }
+                //                arr = marr.copy;
             } else {
                 // 不包含，则清空再移入
                 arr = @[indexPath];
