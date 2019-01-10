@@ -770,7 +770,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         if (placemarks.count > 0) {
             CLPlacemark * placeMark = placemarks[0];
-            [MPMOauthUser shareOauthUser].address = [NSString stringWithFormat:@"%@(%@)",kSafeString(placeMark.thoroughfare),kSafeString(placeMark.name)];
+            [MPMOauthUser shareOauthUser].address = [NSString stringWithFormat:@"%@%@(%@)",kSafeString(placeMark.subLocality),kSafeString(placeMark.thoroughfare),kSafeString(placeMark.name)];
             CLLocationCoordinate2D convert = [JZLocationConverter wgs84ToGcj02:newLocation.coordinate];
             [MPMOauthUser shareOauthUser].location = [[CLLocation alloc] initWithLatitude:convert.latitude longitude:convert.longitude];
         } else if (error == nil && placemarks.count == 0) {
