@@ -1004,8 +1004,10 @@
         cell.txLabel.text = [cellArr[indexPath.row] componentsSeparatedByString:@","].firstObject;
         NSString *detailString = kIsNilString(self.dealingModel.remark)?[cellArr[indexPath.row] componentsSeparatedByString:@","].lastObject:self.dealingModel.remark;
         if (![detailString isEqualToString:UITextViewPlaceHolder1] && ![detailString isEqualToString:UITextViewPlaceHolder2]) {
+            cell.detailTextView.placeHolder.hidden = YES;
             cell.detailTextView.text = self.dealingModel.remark;
         } else {
+            cell.detailTextView.placeHolder.hidden = NO;
             cell.detailTextView.placeHolder.text = [cellArr[indexPath.row] componentsSeparatedByString:@","].lastObject;
         }
         [cell.detailTextView resignFirstResponder];
