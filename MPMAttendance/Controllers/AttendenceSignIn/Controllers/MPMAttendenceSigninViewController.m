@@ -570,7 +570,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 - (BOOL)validateSignin {
     // 如果不是当天，不允许打卡
     if (![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
-        [self showAlertControllerToLogoutWithMessage:@"当前日期不允许打卡" sureAction:nil needCancleButton:NO];return NO;
+        return NO;
     }
     // 判断是否已打满卡
     BOOL hasSignAll = NO;
@@ -1130,7 +1130,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 - (UIButton *)bottomRoundButton {
     if (!_bottomRoundButton) {
-        _bottomRoundButton = [MPMButton titleButtonWithTitle:@"15:46" nTitleColor:kWhiteColor hTitleColor:kMainLightGray nBGImage:ImageName(@"attendence_roundbtn") hImage:ImageName(@"attendence_roundbtn")];
+        _bottomRoundButton = [MPMButton titleButtonWithTitle:@"15:46" nTitleColor:kWhiteColor hTitleColor:kWhiteColor nBGImage:ImageName(@"attendence_roundbtn") hImage:ImageName(@"attendence_roundbtn")];
         _bottomRoundButton.layer.cornerRadius = 47;
         _bottomRoundButton.layer.masksToBounds = YES;
         _bottomRoundButton.titleLabel.font = SystemFont(28);
