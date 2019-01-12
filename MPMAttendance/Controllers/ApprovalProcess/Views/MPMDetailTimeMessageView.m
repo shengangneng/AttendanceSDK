@@ -50,10 +50,12 @@
     } else if (kCausationTypeChangeSign == self.type) {
         // 改卡
         self.contentTimeLeaveTypeMessage.text = kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]];
-        self.contentTimeBeginTimeLabel.text = @"打卡时间";
-        self.contentTimeendTimeLabel.text = @"改卡时间";
-        self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.signTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
-        self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.reviseSignTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
+        self.contentTimeBeginTimeLabel.text = @"考勤时间";
+        self.contentTimeendTimeLabel.text = @"打卡时间";
+        self.contentTimeIntervalLabel.text = @"改卡时间";
+        self.contentTimeBeginTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.attendanceTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
+        self.contentTimeendTimeMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.signTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
+        self.contentTimeIntervalMessage.text = [NSDateFormatter formatterDate:[NSDate dateWithTimeIntervalSince1970:self.detailDto.reviseSignTime.doubleValue/1000] withDefineFormatterType:forDateFormatTypeAllWithoutSeconds];
     } else if (kCausationTypeAskLeave == self.type) {
         // 请假
         self.contentTimeLeaveTypeMessage.text = [NSString stringWithFormat:@"%@（%@）",kGetCausationNameFromNum[[NSString stringWithFormat:@"%ld",self.type]],kLeaveType_GetTypeNameFromNum[self.detailDto.type]];
@@ -226,7 +228,7 @@
     }];
     // 补卡的时候需要隐藏
     lastAttribute = self.contentTimeendTimeLabel.mpm_bottom;
-    if (kCausationTypeRepairSign == self.type || kCausationTypeChangeSign == self.type) {
+    if (kCausationTypeRepairSign == self.type) {
         [self.contentTimeIntervalLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
             make.leading.equalTo(self.mpm_leading);
             make.top.equalTo(lastAttribute);
