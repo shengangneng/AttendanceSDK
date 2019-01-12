@@ -1143,7 +1143,7 @@
     
     if (self.classList.count > 0) {
         __weak typeof(self) weakself = self;
-        [self customAlertControllerToLogoutWithTitle:@"选择规则生效时间" message:@"立即生效新班次：会影响当天考勤打卡状态，即按新排班规定重新计算" rightAction:^(UIAlertAction * _Nonnull action) {
+        [self customAlertControllerToLogoutWithTitle:@"选择规则生效时间" message:@"立即生效新班次：会影响当天考勤打卡状态，即按新排班规则重新计算" rightAction:^(UIAlertAction * _Nonnull action) {
             __strong typeof(weakself) strongself = weakself;
             [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
         } rightActionTitle:@"立即生效" leftAction:^(UIAlertAction * _Nonnull action) {
