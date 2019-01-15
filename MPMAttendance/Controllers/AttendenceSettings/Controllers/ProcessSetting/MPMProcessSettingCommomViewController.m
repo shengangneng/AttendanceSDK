@@ -185,7 +185,6 @@
         {
             config[@"decision"] = kSafeString(model.config.decision);
             config[@"groupId"] = kSafeString(model.config.groupId);
-            config[@"mulitType"] = kSafeString(model.config.mulitType);
             NSMutableArray *participants = [NSMutableArray arrayWithCapacity:model.config.participants.count];
             for (int i = 0; i < model.config.participants.count; i++) {
                 MPMProcessPeople *people = model.config.participants[i];

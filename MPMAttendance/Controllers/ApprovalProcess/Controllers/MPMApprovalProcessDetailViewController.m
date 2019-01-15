@@ -664,7 +664,6 @@
         participantConfig[@"addsign"] = kSafeString(strongself.config.addsign);
         participantConfig[@"decision"] = kSafeString(strongself.config.decision);
         participantConfig[@"groupId"] = kSafeString(strongself.config.groupId);
-        participantConfig[@"mulitType"] = @"2";
         NSMutableArray *participants = [NSMutableArray arrayWithCapacity:taskModel.config.participants.count];
         for (int i = 0 ; i < taskModel.config.participants.count; i++) {
             MPMProcessPeople *people = taskModel.config.participants[i];

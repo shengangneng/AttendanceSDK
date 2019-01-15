@@ -198,7 +198,6 @@ typedef NS_ENUM(NSInteger, ApplyWay) {
     }
     if (!model.config) {
         model.config = [[MPMProcessTaskConfig alloc] init];
-        model.config.mulitType = @"2";// 1串行 2并行 当前版本只支持并行
     }
     self.applyersView.participants = self.participants = model.config.participants;
     self.decision = model.config.decision ? model.config.decision : @"1";

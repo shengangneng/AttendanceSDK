@@ -622,7 +622,6 @@
         NSMutableDictionary *config = [NSMutableDictionary dictionary];
         config[@"decision"] = self.config.decision;
         config[@"groupId"] = self.config.groupId;
-        config[@"mulitType"] = self.config.mulitType;
         NSMutableArray *participants = [NSMutableArray arrayWithCapacity:self.selectedPeople.count];
         for (int i = 0; i < self.selectedPeople.count; i++) {
             MPMDepartment *peopel = self.selectedPeople[i];
@@ -639,7 +638,6 @@
         if (self.needNextApplyer) {
             NSMutableDictionary *config = [NSMutableDictionary dictionary];
             config[@"decision"] = self.checkButton1.selected ? @"1" : @"2";
-            config[@"mulitType"] = @"2";
             NSMutableArray *participants = [NSMutableArray arrayWithCapacity:self.selectedPeople.count];
             for (int i = 0; i < self.selectedPeople.count; i++) {
                 MPMDepartment *peopel = self.selectedPeople[i];
