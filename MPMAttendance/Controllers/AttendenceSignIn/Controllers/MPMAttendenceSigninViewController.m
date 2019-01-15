@@ -619,7 +619,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                     }
                 }
                 if (!canSign) {
-                    [self showAlertControllerToLogoutWithMessage:@"当前位置不在考勤范围内，不允许考勤" sureAction:nil needCancleButton:NO];return NO;
+                    [self showAlertControllerToLogoutWithMessage:@"打卡位置不在考勤范围内" sureAction:nil needCancleButton:NO];return NO;
                 }
             }
         }
