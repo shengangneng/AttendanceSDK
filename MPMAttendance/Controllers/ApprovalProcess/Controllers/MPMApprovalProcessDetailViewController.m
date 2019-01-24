@@ -26,6 +26,7 @@
 #import "MPMProcessSettingCommomViewController.h"
 #import "MPMTaskEditView.h"
 #import "MPMRoundPeopleView.h"
+#import "MPMCommomTool.h"
 // model
 #import "MPMProcessDef.h"
 #import "MPMTaskInstGroups.h"
@@ -691,6 +692,9 @@
 
 // 限制驳回理由输入框字数50个以内
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([MPMCommomTool textViewOrTextFieldHasEmoji:textField]) {
+        return NO;
+    }
     NSString *toBeString = [textField.text stringByAppendingString:string];
     if (toBeString.length > 50) {
         return NO;

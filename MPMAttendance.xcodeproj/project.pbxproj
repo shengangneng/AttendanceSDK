@@ -274,6 +274,8 @@
 		CD4718A6211053DE00401169 /* MPMProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CD47189E211053DD00401169 /* MPMProgressHUD.m */; };
 		CD4718A7211053DE00401169 /* MPMProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = CD47189F211053DD00401169 /* MPMProgressHUD.h */; };
 		CD4718AB2110545900401169 /* MPMAttendanceHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4718AA2110545900401169 /* MPMAttendanceHeader.h */; };
+		CD4CBA3E21F9C13300FAB235 /* MPMCommomTool.m in Sources */ = {isa = PBXBuildFile; fileRef = CD4CBA3C21F9C13200FAB235 /* MPMCommomTool.m */; };
+		CD4CBA3F21F9C13300FAB235 /* MPMCommomTool.h in Headers */ = {isa = PBXBuildFile; fileRef = CD4CBA3D21F9C13200FAB235 /* MPMCommomTool.h */; };
 		CDBFAFC821B23ABB0020C493 /* MPMSigninTimerTask.h in Headers */ = {isa = PBXBuildFile; fileRef = CDBFAFC621B23ABB0020C493 /* MPMSigninTimerTask.h */; };
 		CDBFAFC921B23ABB0020C493 /* MPMSigninTimerTask.m in Sources */ = {isa = PBXBuildFile; fileRef = CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */; };
 		CDCA796921BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDCA796721BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m */; };
@@ -677,6 +679,8 @@
 		CD47189E211053DD00401169 /* MPMProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMProgressHUD.m; sourceTree = "<group>"; };
 		CD47189F211053DD00401169 /* MPMProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMProgressHUD.h; sourceTree = "<group>"; };
 		CD4718AA2110545900401169 /* MPMAttendanceHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPMAttendanceHeader.h; sourceTree = "<group>"; };
+		CD4CBA3C21F9C13200FAB235 /* MPMCommomTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCommomTool.m; sourceTree = "<group>"; };
+		CD4CBA3D21F9C13200FAB235 /* MPMCommomTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCommomTool.h; sourceTree = "<group>"; };
 		CDBFAFC621B23ABB0020C493 /* MPMSigninTimerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMSigninTimerTask.h; sourceTree = "<group>"; };
 		CDBFAFC721B23ABB0020C493 /* MPMSigninTimerTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMSigninTimerTask.m; sourceTree = "<group>"; };
 		CDCA796721BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApplyCollectionViewCell.m; sourceTree = "<group>"; };
@@ -958,6 +962,8 @@
 			children = (
 				CD4716072110536200401169 /* MPMCheckRegexTool.h */,
 				CD4716062110536200401169 /* MPMCheckRegexTool.m */,
+				CD4CBA3D21F9C13200FAB235 /* MPMCommomTool.h */,
+				CD4CBA3C21F9C13200FAB235 /* MPMCommomTool.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -1970,6 +1976,7 @@
 				CD4717422110536400401169 /* NSObject+MPMExtention.h in Headers */,
 				CD4717FF2110536400401169 /* MPMCoreDataManager.h in Headers */,
 				CD47173B2110536400401169 /* NSDate+MPMExtention.h in Headers */,
+				CD4CBA3F21F9C13300FAB235 /* MPMCommomTool.h in Headers */,
 				CDE1CFE7217C26D30047CF85 /* MPMProcessInst.h in Headers */,
 				CD4717CC2110536400401169 /* MPMAttendenceBaseSettingViewController.h in Headers */,
 				CD4717B22110536400401169 /* MPMStatisticDepartmentTableViewCell.h in Headers */,
@@ -2142,6 +2149,7 @@
 				CD4717D62110536400401169 /* MPMClassSettingSelectWeekView.m in Sources */,
 				CD47173E2110536400401169 /* UIImage+MPMExtention.m in Sources */,
 				CDE1D03D217C2AD50047CF85 /* MPMSettingClassListViewController.m in Sources */,
+				CD4CBA3E21F9C13300FAB235 /* MPMCommomTool.m in Sources */,
 				CD471865211053C100401169 /* MPMImageDownloader.m in Sources */,
 				CD4718A2211053DE00401169 /* MPMIndefiniteAnimatedView.m in Sources */,
 				CD47180D2110536400401169 /* MPMMainTabBarViewController.m in Sources */,

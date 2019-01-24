@@ -8,6 +8,7 @@
 
 #import "MPMCommomDealingMultiSelectTableViewCell.h"
 #import "MPMDealingBorderButton.h"
+#import "MPMCommomTool.h"
 
 #define kItemWidth 45
 
@@ -91,6 +92,13 @@
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     if (self.cellTextFieldChangeBlock) {
         self.cellTextFieldChangeBlock(@"");
+    }
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([MPMCommomTool textViewOrTextFieldHasEmoji:textField]) {
+        return NO;
     }
     return YES;
 }

@@ -14,6 +14,7 @@
 #import "MPMDepartment.h"
 #import "MPMDepartEmployeeHelper.h"
 #import "MPMOauthUser.h"
+#import "MPMCommomTool.h"
 
 #define kDecisionKeyPath    @"decision"
 
@@ -208,6 +209,13 @@ typedef NS_ENUM(NSInteger, ApplyWay) {
 #pragma mark - UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([MPMCommomTool textViewOrTextFieldHasEmoji:textField]) {
+        return NO;
+    }
     return YES;
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "MPMCreateOrangeTableViewCell.h"
+#import "MPMCommomTool.h"
 
 @interface MPMCreateOrangeTableViewCell() <UITextFieldDelegate>
 
@@ -39,6 +40,9 @@
 
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([MPMCommomTool textViewOrTextFieldHasEmoji:textField]) {
+        return NO;
+    }
     NSString *toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     if (self.textFieldChangeBlock) {
         self.textFieldChangeBlock(toBeString);

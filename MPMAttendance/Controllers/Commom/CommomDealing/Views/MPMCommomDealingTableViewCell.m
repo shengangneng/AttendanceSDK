@@ -9,6 +9,7 @@
 #import "MPMCommomDealingTableViewCell.h"
 #import "MPMCheckRegexTool.h"
 #import "MPMButton.h"
+#import "MPMCommomTool.h"
 
 @interface MPMCommomDealingTableViewCell() <UITextFieldDelegate>
 
@@ -132,6 +133,9 @@
 
 #pragma mark - UITextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([MPMCommomTool textViewOrTextFieldHasEmoji:textField]) {
+        return NO;
+    }
     NSString *toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     // 限制数字，默认长度为4，预计费用为10位
     BOOL pass = self.needCheckNumber ? [MPMCheckRegexTool checkString:toBeString onlyHasDigitAndLength:self.limitLength decimalLength:1] : YES;

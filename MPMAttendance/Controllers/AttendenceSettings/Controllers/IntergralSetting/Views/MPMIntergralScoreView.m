@@ -9,6 +9,7 @@
 #import "MPMIntergralScoreView.h"
 #import "MPMCheckRegexTool.h"
 #import "MPMAttendanceHeader.h"
+#import "MPMCommomTool.h"
 
 @interface MPMIntergralScoreView () <UITextFieldDelegate>
 
@@ -77,6 +78,9 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([MPMCommomTool textViewOrTextFieldHasEmoji:textField]) {
+        return NO;
+    }
     NSString *toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     // 限制数字，长度为10
     BOOL shoulChange = [MPMCheckRegexTool checkString:toBeString onlyHasDigitAndLength:10 decimalLength:0];

@@ -21,6 +21,7 @@
 #import "MPMOauthUser.h"
 #import "MPMSessionManager.h"
 #import "MPMBaseAlertController.h"
+#import "MPMCommomTool.h"
 
 @interface MPMSettingTimeViewController () <UITableViewDataSource, UITableViewDelegate, MPMSettingSwitchTableViewCellSwitchDelegate, UITextFieldDelegate>
 // header
@@ -1159,6 +1160,17 @@
 #pragma mark - UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self.headerNameTextField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([MPMCommomTool textViewOrTextFieldHasEmoji:textField]) {
+        return NO;
+    }
+    NSString *toBeString = [textField.text stringByAppendingString:string];
+    if (toBeString.length > 10) {
+        return NO;
+    }
     return YES;
 }
 

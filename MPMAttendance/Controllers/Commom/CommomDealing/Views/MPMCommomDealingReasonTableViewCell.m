@@ -8,6 +8,7 @@
 
 #import "MPMCommomDealingReasonTableViewCell.h"
 #import "MPMButton.h"
+#import "MPMCommomTool.h"
 
 @interface MPMCommomDealingReasonTableViewCell() <UITextViewDelegate>
 
@@ -109,6 +110,9 @@
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([MPMCommomTool textViewOrTextFieldHasEmoji:textView]) {
+        return NO;
+    }
     NSString* toBeString = [textView.text stringByReplacingCharactersInRange:range withString:text];
     if (toBeString.length > 30) {
         return NO;
