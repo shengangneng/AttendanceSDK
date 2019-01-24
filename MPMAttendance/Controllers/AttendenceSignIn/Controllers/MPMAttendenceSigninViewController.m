@@ -59,6 +59,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 @property (nonatomic, strong) UIView *bottomView;
 @property (nonatomic, strong) UIView *bottomLine;
 @property (nonatomic, strong) UIButton *bottomRoundButton;
+@property (nonatomic, strong) UILabel *bottomRoundButtonAttendanceTypeLabel;/** 上下班或者不显示 */
 @property (nonatomic, strong) CAShapeLayer *bottomAnimateLayer;
 @property (nonatomic, strong) UIImageView *bottomLocationIcon;      /** 地理位置图标 */
 @property (nonatomic, strong) UILabel *bottomLocationLabel;         /** 显示地理位置 */
@@ -181,6 +182,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     [self.view addSubview:self.bottomView];
     [self.bottomView addSubview:self.bottomLine];
     [self.bottomView addSubview:self.bottomRoundButton];
+    [self.bottomRoundButton addSubview:self.bottomRoundButtonAttendanceTypeLabel];
     [self.bottomView addSubview:self.bottomLocationIcon];
     [self.bottomView addSubview:self.bottomLocationLabel];
     [self.bottomView addSubview:self.bottomRefreshLocationButton];
@@ -240,9 +242,14 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         make.height.equalTo(@6);
     }];
     [self.bottomRoundButton mpm_makeConstraints:^(MPMConstraintMaker *make) {
-        make.top.equalTo(self.bottomView.mpm_top).offset(29);
+        make.top.equalTo(self.bottomView.mpm_top).offset(31);
         make.centerX.equalTo(self.view.mpm_centerX);
-        make.width.height.equalTo(@94);
+        make.width.height.equalTo(@90);
+    }];
+    [self.bottomRoundButtonAttendanceTypeLabel mpm_makeConstraints:^(MPMConstraintMaker *make) {
+        make.width.equalTo(@60);
+        make.bottom.equalTo(self.bottomRoundButton.mpm_bottom).offset(-16);
+        make.centerX.equalTo(self.bottomRoundButton.mpm_centerX);
     }];
     [self.bottomLocationIcon mpm_makeConstraints:^(MPMConstraintMaker *make) {
         make.width.equalTo(@15);
@@ -264,9 +271,13 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 
 - (void)setupSigninButton {
+    
     // 设置打卡按钮
     if (![NSDateFormatter isDate1:[NSDate date] equalToDate2:self.attendenceManageModel.currentMiddleDate]) {
         [self canSignIn:NO];
+        // 非当天，则不需要显示上下班
+        self.bottomRoundButtonAttendanceTypeLabel.text = @"";
+        [self.bottomRoundButton setImageEdgeInsets:UIEdgeInsetsZero];
     } else {
         if (self.attendenceManageModel.attendenceArray.count == 0) {
             if (3 != self.attendenceManageModel.schedulingEmployeeType.integerValue) {
@@ -276,10 +287,19 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 // 如果是自由打卡，可以继续打
                 [self canSignIn:YES];
             }
+            // 没有打卡数据，则不需要显示上下班
+            self.bottomRoundButtonAttendanceTypeLabel.text = @"";
+            [self.bottomRoundButton setImageEdgeInsets:UIEdgeInsetsZero];
         } else {
             if (3 != self.attendenceManageModel.schedulingEmployeeType.integerValue) {
+                
+                NSString *signString = nil;
                 for (int i = 0; i < self.attendenceManageModel.attendenceArray.count; i++) {
                     MPMAttendenceModel *model = self.attendenceManageModel.attendenceArray[i];
+                    if (kIsNilString(model.brushTime) && model.isNeedFirstBrush && !kIsNilString(model.signType)) {
+                        // 如果是等待打卡状态，则需要显示上下班文字
+                        signString = (model.signType.integerValue == 0 ? @"上班打卡" : @"下班打卡");
+                    }
                     if (i == self.attendenceManageModel.attendenceArray.count - 1) {
                         // 判断最后一个数据是否已有数据，如果已有数据，说明已经打完，不再允许打卡，按钮置灰(有数据，但是不是当前日期，也置灰）
                         if (!kIsNilString(model.brushTime)) {
@@ -290,6 +310,13 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                         }
                     }
                 }
+                if (signString) {
+                    self.bottomRoundButtonAttendanceTypeLabel.text = signString;
+                    [self.bottomRoundButton setImageEdgeInsets:UIEdgeInsetsMake(-20, 0, 0, 0)];
+                } else {
+                    self.bottomRoundButtonAttendanceTypeLabel.text = @"";
+                    [self.bottomRoundButton setImageEdgeInsets:UIEdgeInsetsZero];
+                }
             } else {
                 // 如果是自由打卡，可以继续打
                 if (kFreeSignMaxCount == self.attendenceManageModel.attendenceArray.count) {
@@ -297,6 +324,9 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
                 } else {
                     [self canSignIn:YES];
                 }
+                // 自由排班不需要显示上下班
+                self.bottomRoundButtonAttendanceTypeLabel.text = @"";
+                [self.bottomRoundButton setImageEdgeInsets:UIEdgeInsetsZero];
             }
         }
     }
@@ -589,7 +619,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         }
     }
     if (hasSignAll) {
-        [self showAlertControllerToLogoutWithMessage:@"考勤已打满，无需打卡" sureAction:nil needCancleButton:NO];return NO;
+        return NO;
     }
     
     if (3 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
@@ -708,8 +738,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 /** 定时器 */
 - (void)timeChange:(id)sender {
     NSString *str = [NSDateFormatter formatterDate:[NSDate date] withDefineFormatterType:forDateFormatTypeHourMinute];
-    [self.bottomRoundButton setTitle:str forState:UIControlStateNormal];
-    [self.bottomRoundButton setTitle:str forState:UIControlStateHighlighted];
+//    [self.bottomRoundButton setTitle:str forState:UIControlStateNormal];
+//    [self.bottomRoundButton setTitle:str forState:UIControlStateHighlighted];
 }
 
 - (void)back:(UIButton *)sender {
@@ -857,7 +887,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     if (!cell) {
         cell = [[MPMAttendenceTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
-    NSDate *tt = [NSDate dateWithTimeIntervalSince1970:model.fillCardTime.integerValue/1000];
+    NSDate *tt = [NSDate dateWithTimeIntervalSince1970:model.fillCardTime.doubleValue/1000];
     NSString *time = [NSDateFormatter formatterDate:tt withDefineFormatterType:forDateFormatTypeHourMinute];
     if (1 == self.attendenceManageModel.schedulingEmployeeType.integerValue) {
         cell.timeLabel.text = nil;
@@ -974,7 +1004,7 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
     }
     
     if (!kIsNilString(model.brushTime)) {
-        NSDate *brushTime = [NSDate dateWithTimeIntervalSince1970:model.brushTime.integerValue/1000];
+        NSDate *brushTime = [NSDate dateWithTimeIntervalSince1970:model.brushTime.doubleValue/1000];
         cell.messageTimeLabel.text = [NSDateFormatter formatterDate:brushTime withDefineFormatterType:forDateFormatTypeHourMinute];
     } else {
         cell.messageTimeLabel.text = @"";
@@ -1130,12 +1160,25 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 }
 - (UIButton *)bottomRoundButton {
     if (!_bottomRoundButton) {
-        _bottomRoundButton = [MPMButton titleButtonWithTitle:@"15:46" nTitleColor:kWhiteColor hTitleColor:kWhiteColor nBGImage:ImageName(@"attendence_roundbtn") hImage:ImageName(@"attendence_roundbtn")];
-        _bottomRoundButton.layer.cornerRadius = 47;
+        _bottomRoundButton = [MPMButton titleButtonWithTitle:nil nTitleColor:kWhiteColor hTitleColor:kWhiteColor nBGImage:ImageName(@"attendence_roundbtn") hImage:ImageName(@"attendence_roundbtn")];
+        [_bottomRoundButton setImage:ImageName(@"attendance_btntouch") forState:UIControlStateNormal];
+        [_bottomRoundButton setImage:ImageName(@"attendance_btntouch") forState:UIControlStateHighlighted];
+        _bottomRoundButton.layer.cornerRadius = 45;
         _bottomRoundButton.layer.masksToBounds = YES;
         _bottomRoundButton.titleLabel.font = SystemFont(28);
     }
     return _bottomRoundButton;
+}
+
+- (UILabel *)bottomRoundButtonAttendanceTypeLabel {
+    if (!_bottomRoundButtonAttendanceTypeLabel) {
+        _bottomRoundButtonAttendanceTypeLabel = [[UILabel alloc] init];
+        _bottomRoundButtonAttendanceTypeLabel.font = BoldSystemFont(14);
+        _bottomRoundButtonAttendanceTypeLabel.textColor = kWhiteColor;
+        _bottomRoundButtonAttendanceTypeLabel.textAlignment = NSTextAlignmentCenter;
+        [_bottomRoundButtonAttendanceTypeLabel sizeToFit];
+    }
+    return _bottomRoundButtonAttendanceTypeLabel;
 }
 
 - (UIImageView *)bottomLocationIcon {
@@ -1175,8 +1218,8 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
 - (CALayer *)bottomAnimateLayer {
     if (!_bottomAnimateLayer) {
         _bottomAnimateLayer = [CAShapeLayer layer];
-        _bottomAnimateLayer.frame = CGRectMake(0, 0, 108, 108);
-        _bottomAnimateLayer.path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 108, 108)].CGPath;
+        _bottomAnimateLayer.frame = CGRectMake(0, 0, 104, 104);
+        _bottomAnimateLayer.path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 104, 104)].CGPath;
         _bottomAnimateLayer.fillColor = kMainBlueColor.CGColor;
         _bottomAnimateLayer.opacity = 0;
         _bottomAnimateLayer.position = CGPointMake(kScreenWidth / 2, 76);

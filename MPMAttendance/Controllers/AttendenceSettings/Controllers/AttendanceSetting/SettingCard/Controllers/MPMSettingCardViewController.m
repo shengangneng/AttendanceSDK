@@ -18,6 +18,7 @@
 #import "MPMSettingCardAddressWifiModel.h"
 #import "MPMAttendanceSettingModel.h"
 #import "MPMOauthUser.h"
+#import "MPMBaseAlertController.h"
 /** 地图 */
 #import "MPMAttendenceMapViewController.h"
 
@@ -151,7 +152,7 @@
         [self showAlertControllerToLogoutWithMessage:@"请选择允许偏差" sureAction:nil needCancleButton:NO];
         return;
     }
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"立即生效，今天考勤结果将按新规则重算" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    MPMBaseAlertController *alertController = [MPMBaseAlertController alertControllerWithTitle:@"立即生效，今天考勤结果将按新规则重算" message:nil preferredStyle:UIAlertControllerStyleAlert];
     __weak typeof (UIAlertController *) weakAlert = alertController;
     __weak typeof(self) weakself = self;
     UIAlertAction *sure = [UIAlertAction actionWithTitle:@"立即生效" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

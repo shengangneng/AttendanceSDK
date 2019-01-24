@@ -1006,6 +1006,7 @@
         if (![detailString isEqualToString:UITextViewPlaceHolder1] && ![detailString isEqualToString:UITextViewPlaceHolder2]) {
             cell.detailTextView.placeHolder.hidden = YES;
             cell.detailTextView.text = self.dealingModel.remark;
+            cell.textViewTotalLength.text = [NSString stringWithFormat:@"%ld",(30-self.dealingModel.remark.length)];
         } else {
             cell.detailTextView.placeHolder.hidden = NO;
             cell.detailTextView.placeHolder.text = [cellArr[indexPath.row] componentsSeparatedByString:@","].lastObject;

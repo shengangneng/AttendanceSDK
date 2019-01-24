@@ -266,7 +266,7 @@ typedef NS_ENUM(NSInteger, ApplyWay) {
     self.participants = participants;
     if (participants.count == 0 && self.delegate && [self.delegate respondsToSelector:@selector(taskContentViewDidChangePeople:canChangeDecition:)]) {
         BOOL hasPeople = (self.participants.count != 0);
-        BOOL canChangeDecition = (self.model.limitParticipants.count == 0);
+        BOOL canChangeDecition = (self.model.limitParticipants.count <= 1);
         [self.delegate taskContentViewDidChangePeople:hasPeople canChangeDecition:canChangeDecition];
     }
 }
