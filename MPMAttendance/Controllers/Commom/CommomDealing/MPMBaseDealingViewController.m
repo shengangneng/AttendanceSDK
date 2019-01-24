@@ -1179,11 +1179,13 @@
             ((UITextField *)cell.detailView).placeholder = [cellArr[indexPath.row] componentsSeparatedByString:@","].lastObject;
             if ([cellTitle isEqualToString:@"出差地点"]) {
                 [cell needCheckNumber:NO limitLength:0];
+                ((UITextField *)cell.detailView).keyboardType = UIKeyboardTypeDefault;
                 NSString *currentString = ((MPMCausationDetailModel *)self.dealingModel.causationDetail[indexPath.section]).address;
                 ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
             } else if ([cellTitle isEqualToString:@"预计费用"]) {
                 cell.startIcon.hidden = YES;// 预计费用非必填项
                 [cell needCheckNumber:YES limitLength:6];
+                ((UITextField *)cell.detailView).keyboardType = UIKeyboardTypeNumbersAndPunctuation;
                 NSString *currentString = ((MPMCausationDetailModel *)self.dealingModel.causationDetail[indexPath.section]).expectCost;
                 ((UITextField *)cell.detailView).text = kIsNilString(currentString)?@"":currentString;
             } else if ([cellTitle containsString:@"时长"]) {
