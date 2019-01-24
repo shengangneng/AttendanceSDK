@@ -7,6 +7,7 @@
 //
 
 #import "MPMCommomTool.h"
+#import <UIKit/UIKit.h>
 
 @implementation MPMCommomTool
 

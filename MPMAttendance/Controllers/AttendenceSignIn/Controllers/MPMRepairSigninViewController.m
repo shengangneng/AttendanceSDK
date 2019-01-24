@@ -77,6 +77,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
     [super setupAttributes];
     self.navigationItem.title = @"漏卡记录";
     [self.bottomRepairButton addTarget:self action:@selector(repair:) forControlEvents:UIControlEventTouchUpInside];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applyDealingComplete) name:APPLYDEALINGCOMPLETENOTIFICATION object:nil];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(left:)];
 }
 
@@ -114,6 +115,15 @@ const NSInteger MPMRepairSignLimitCount = 5;
         make.top.equalTo(self.bottomView.mpm_top).offset(BottomViewTopMargin);
         make.bottom.equalTo(self.bottomView.mpm_bottom).offset(-BottomViewBottomMargin);
     }];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Notification
+- (void)applyDealingComplete {
+    self.leadCardModel.thisMonthSelectIndexPaths = nil;
 }
 
 - (void)getDataWithThisMonth:(BOOL)thisMonth {

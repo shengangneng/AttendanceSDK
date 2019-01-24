@@ -757,6 +757,7 @@
                         // 如果是编辑，则往回跳两个控制器，跳回到流程审批首页
                         [strongself.navigationController popToViewController:strongself.navigationController.viewControllers[strongself.navigationController.viewControllers.count-3] animated:YES];
                     } else {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:APPLYDEALINGCOMPLETENOTIFICATION object:nil];
                         [strongself.navigationController popViewControllerAnimated:YES];
                     }
                 } needCancleButton:NO];

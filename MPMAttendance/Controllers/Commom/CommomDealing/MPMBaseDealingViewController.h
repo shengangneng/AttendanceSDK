@@ -10,6 +10,9 @@
 #import "MPMCausationTypeData.h"
 #import "MPMDealingModel.h"
 
+// 提交成功，发送通知
+static NSString *APPLYDEALINGCOMPLETENOTIFICATION = @"ApplyDealingCompleteNotification";
+
 // 跳入的类型
 typedef NS_ENUM(NSInteger, DealingFromType) {
     kDealingFromTypeChangeRepair,   // 从打卡页面的例外申请、改卡、补卡进入
