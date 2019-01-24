@@ -75,7 +75,7 @@ const NSInteger MPMRepairSignLimitCount = 5;
 
 - (void)setupAttributes {
     [super setupAttributes];
-    self.navigationItem.title = @"补卡";
+    self.navigationItem.title = @"漏卡记录";
     [self.bottomRepairButton addTarget:self action:@selector(repair:) forControlEvents:UIControlEventTouchUpInside];
     [self setLeftBarButtonWithTitle:@"返回" action:@selector(left:)];
 }
