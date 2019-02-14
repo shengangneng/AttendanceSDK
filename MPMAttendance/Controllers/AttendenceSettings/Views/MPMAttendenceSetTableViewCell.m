@@ -414,7 +414,9 @@
 // 底部视图
 - (UIImageView *)bottomImageView {
     if (!_bottomImageView) {
-        _bottomImageView = [[UIImageView alloc] initWithImage:ImageName(@"setting_bottom")];
+        _bottomImageView = [[UIImageView alloc] init];
+        _bottomImageView.backgroundColor = kWhiteColor;
+        _bottomImageView.layer.cornerRadius = 5;
         _bottomImageView.userInteractionEnabled = YES;
         _bottomImageView.layer.masksToBounds = NO;
         _bottomImageView.layer.shadowOffset = CGSizeMake(0, 0);
