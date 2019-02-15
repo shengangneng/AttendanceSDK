@@ -274,7 +274,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (section == 0) {
         MPMTableHeaderView *header = [[MPMTableHeaderView alloc] init];
-        header.headerTextLabel.text = [NSString stringWithFormat:@"对考勤组”%@”的规则进行设置",kSafeString(self.model.name)];
+        header.headerTextLabel.text = [NSString stringWithFormat:@"对考勤组\"%@\"的规则进行设置",kSafeString(self.model.name)];
         return header;
     } else {
         return [[UIView alloc] init];

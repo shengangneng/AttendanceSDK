@@ -12,6 +12,7 @@
 #define kResponseObjectKey  @"object"
 #define kResponseDataKey    @"responseData"
 #define kCode               @"code"
+#define kMessage            @"message"
 
 /** 一些常用的网络请求状态码 */
 typedef NS_ENUM(NSInteger, MPMRequestStatusCode) {

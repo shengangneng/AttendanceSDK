@@ -17,6 +17,7 @@
 #import "MPMAttendenceStatisticViewController.h"    // 考勤统计
 //#import "MPMAttendenceSettingViewController.h"      // 考勤设置
 #import "MPMAttendenceBaseSettingViewController.h"  // V1.1版本考勤设置
+#import "MPMApplyNewViewController.h"               // 2.1.4新例外申请
 
 @interface MPMMainTabBarViewController ()
 
@@ -75,7 +76,7 @@
          */
         MPMAttendenceSigninViewController *signin = [[MPMAttendenceSigninViewController alloc] init];
         [self setChildVC:signin title:@"考勤打卡" image:@"tab_punchingtimecard_nomal" selectedImage:@"tab_punchingtimecard_select" nav:YES];
-        MPMApplyAdditionViewController *apply = [[MPMApplyAdditionViewController alloc] init];
+        MPMApplyNewViewController *apply = [[MPMApplyNewViewController alloc] init];
         [self setChildVC:apply title:@"例外申请" image:@"tab_exceptionsapply_nomal" selectedImage:@"tab_exceptionsapply_select" nav:YES];
         MPMApprovalProcessViewController *statis = [[MPMApprovalProcessViewController alloc] init];
         [self setChildVC:statis title:@"流程审批" image:@"tab_approval_nomal" selectedImage:@"tab_approval_select" nav:YES];
@@ -99,7 +100,7 @@
     } else {
         MPMAttendenceSigninViewController *signin = [[MPMAttendenceSigninViewController alloc] init];
         [self setChildVC:signin title:@"考勤打卡" image:@"tab_punchingtimecard_nomal" selectedImage:@"tab_punchingtimecard_select" nav:YES];
-        MPMApplyAdditionViewController *apply = [[MPMApplyAdditionViewController alloc] init];
+        MPMApplyNewViewController *apply = [[MPMApplyNewViewController alloc] init];
         [self setChildVC:apply title:@"例外申请" image:@"tab_exceptionsapply_nomal" selectedImage:@"tab_exceptionsapply_select" nav:YES];
         MPMApprovalProcessViewController *statis = [[MPMApprovalProcessViewController alloc] init];
         [self setChildVC:statis title:@"流程审批" image:@"tab_approval_nomal" selectedImage:@"tab_approval_select" nav:YES];

@@ -405,6 +405,14 @@
 		CDE1D0B6217C58FD0047CF85 /* MPMRoundPeopleButton.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE1D0B2217C58FC0047CF85 /* MPMRoundPeopleButton.h */; };
 		CDE1D0B7217C58FD0047CF85 /* MPMRoundPeopleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D0B3217C58FC0047CF85 /* MPMRoundPeopleButton.m */; };
 		CDE1D0B8217C58FD0047CF85 /* MPMRoundPeopleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE1D0B4217C58FD0047CF85 /* MPMRoundPeopleView.m */; };
+		CDE4B0362216CC0F0045911A /* MPMApplyNewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE4B0342216CC0F0045911A /* MPMApplyNewViewController.h */; };
+		CDE4B0372216CC0F0045911A /* MPMApplyNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE4B0352216CC0F0045911A /* MPMApplyNewViewController.m */; };
+		CDE4B03E2216CC8B0045911A /* MPMCycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE4B0382216CC8B0045911A /* MPMCycleScrollView.m */; };
+		CDE4B03F2216CC8B0045911A /* MPMCycleScrollViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE4B0392216CC8B0045911A /* MPMCycleScrollViewCell.h */; };
+		CDE4B0402216CC8B0045911A /* MPMCycleScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE4B03A2216CC8B0045911A /* MPMCycleScrollView.h */; };
+		CDE4B0412216CC8B0045911A /* MPMCycleScrollViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE4B03B2216CC8B0045911A /* MPMCycleScrollViewCell.m */; };
+		CDE4B0422216CC8B0045911A /* MPMCycleScrollViewFlowlayout.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE4B03C2216CC8B0045911A /* MPMCycleScrollViewFlowlayout.h */; };
+		CDE4B0432216CC8B0045911A /* MPMCycleScrollViewFlowlayout.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE4B03D2216CC8B0045911A /* MPMCycleScrollViewFlowlayout.m */; };
 		CDF2AA5A21D4CE0400A2BCD3 /* MPMCustomProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = CDF2AA5821D4CE0400A2BCD3 /* MPMCustomProgressHUD.h */; };
 		CDF2AA5B21D4CE0400A2BCD3 /* MPMCustomProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CDF2AA5921D4CE0400A2BCD3 /* MPMCustomProgressHUD.m */; };
 /* End PBXBuildFile section */
@@ -810,6 +818,14 @@
 		CDE1D0B2217C58FC0047CF85 /* MPMRoundPeopleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMRoundPeopleButton.h; sourceTree = "<group>"; };
 		CDE1D0B3217C58FC0047CF85 /* MPMRoundPeopleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMRoundPeopleButton.m; sourceTree = "<group>"; };
 		CDE1D0B4217C58FD0047CF85 /* MPMRoundPeopleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMRoundPeopleView.m; sourceTree = "<group>"; };
+		CDE4B0342216CC0F0045911A /* MPMApplyNewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMApplyNewViewController.h; sourceTree = "<group>"; };
+		CDE4B0352216CC0F0045911A /* MPMApplyNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMApplyNewViewController.m; sourceTree = "<group>"; };
+		CDE4B0382216CC8B0045911A /* MPMCycleScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCycleScrollView.m; sourceTree = "<group>"; };
+		CDE4B0392216CC8B0045911A /* MPMCycleScrollViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCycleScrollViewCell.h; sourceTree = "<group>"; };
+		CDE4B03A2216CC8B0045911A /* MPMCycleScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCycleScrollView.h; sourceTree = "<group>"; };
+		CDE4B03B2216CC8B0045911A /* MPMCycleScrollViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCycleScrollViewCell.m; sourceTree = "<group>"; };
+		CDE4B03C2216CC8B0045911A /* MPMCycleScrollViewFlowlayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCycleScrollViewFlowlayout.h; sourceTree = "<group>"; };
+		CDE4B03D2216CC8B0045911A /* MPMCycleScrollViewFlowlayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCycleScrollViewFlowlayout.m; sourceTree = "<group>"; };
 		CDF2AA5821D4CE0400A2BCD3 /* MPMCustomProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMCustomProgressHUD.h; sourceTree = "<group>"; };
 		CDF2AA5921D4CE0400A2BCD3 /* MPMCustomProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMCustomProgressHUD.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1142,6 +1158,8 @@
 			children = (
 				CD4716592110536300401169 /* MPMApplyAdditionViewController.h */,
 				CD4716582110536300401169 /* MPMApplyAdditionViewController.m */,
+				CDE4B0342216CC0F0045911A /* MPMApplyNewViewController.h */,
+				CDE4B0352216CC0F0045911A /* MPMApplyNewViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1153,6 +1171,12 @@
 				CD47165C2110536300401169 /* MPMApplyImageView.m */,
 				CDCA796821BF5DA3007F8DBD /* MPMApplyCollectionViewCell.h */,
 				CDCA796721BF5DA3007F8DBD /* MPMApplyCollectionViewCell.m */,
+				CDE4B03A2216CC8B0045911A /* MPMCycleScrollView.h */,
+				CDE4B0382216CC8B0045911A /* MPMCycleScrollView.m */,
+				CDE4B0392216CC8B0045911A /* MPMCycleScrollViewCell.h */,
+				CDE4B03B2216CC8B0045911A /* MPMCycleScrollViewCell.m */,
+				CDE4B03C2216CC8B0045911A /* MPMCycleScrollViewFlowlayout.h */,
+				CDE4B03D2216CC8B0045911A /* MPMCycleScrollViewFlowlayout.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1875,7 +1899,9 @@
 				CD4717872110536400401169 /* MPMRepairSigninAddTimeTableViewCell.h in Headers */,
 				CD4717F72110536400401169 /* MPMAttendenceBaseTableViewCell.h in Headers */,
 				CDE1D05F217C2F0D0047CF85 /* MPMDealingModel.h in Headers */,
+				CDE4B03F2216CC8B0045911A /* MPMCycleScrollViewCell.h in Headers */,
 				CDE1D064217C2F0D0047CF85 /* MPMGetPeopleModel.h in Headers */,
+				CDE4B0402216CC8B0045911A /* MPMCycleScrollView.h in Headers */,
 				CD4717322110536400401169 /* MPMShareUser.h in Headers */,
 				CD4717842110536400401169 /* MPMAttendenceTableViewCell.h in Headers */,
 				CDE1CFEC217C26D30047CF85 /* MPMProcessDetailList.h in Headers */,
@@ -1947,8 +1973,10 @@
 				CDE1D085217C2F330047CF85 /* MPMDealingSeeTimeTableViewCell.h in Headers */,
 				CD47180E2110536400401169 /* MPMIntergralConfig.h in Headers */,
 				CD471884211053CF00401169 /* ViewController+MPMAdditions.h in Headers */,
+				CDE4B0422216CC8B0045911A /* MPMCycleScrollViewFlowlayout.h in Headers */,
 				CDE1D01C217C29F80047CF85 /* MPMProcessPeople.h in Headers */,
 				CD47172E2110536400401169 /* MPMCheckRegexTool.h in Headers */,
+				CDE4B0362216CC0F0045911A /* MPMApplyNewViewController.h in Headers */,
 				CDE1D09B217C2F690047CF85 /* MPMSelectDepartmentTableViewCell.h in Headers */,
 				CD471883211053CF00401169 /* NSArray+MPMShorthandAdditions.h in Headers */,
 				CD4717A32110536400401169 /* MPMSiderDrawerCollectionViewButtonCell.h in Headers */,
@@ -2092,6 +2120,7 @@
 				CD4717DA2110536400401169 /* MPMSettingCardAddressWifiModel.m in Sources */,
 				CD47180B2110536400401169 /* MPMBaseNavigationBar.m in Sources */,
 				CD4717382110536400401169 /* NSMutableArray+MPMExtention.m in Sources */,
+				CDE4B03E2216CC8B0045911A /* MPMCycleScrollView.m in Sources */,
 				CD4717972110536400401169 /* MPMApprovalProcessDetailViewController.m in Sources */,
 				CDE1CFA7217C18F20047CF85 /* MPMOauthUser.m in Sources */,
 				CD4717302110536400401169 /* MPMShareUser.m in Sources */,
@@ -2120,12 +2149,14 @@
 				CD47181A2110536400401169 /* MPMAttendencePickerView.m in Sources */,
 				CD4717C12110536400401169 /* MPMCreateOrangeClassViewController.m in Sources */,
 				CD4717A62110536400401169 /* MPMApprovalProcessHeaderSectionView.m in Sources */,
+				CDE4B0412216CC8B0045911A /* MPMCycleScrollViewCell.m in Sources */,
 				CD4717B32110536400401169 /* MPMStatisticTableViewCell.m in Sources */,
 				CDE1CFEA217C26D30047CF85 /* MPMProcessInst.m in Sources */,
 				CDE1D04A217C2B200047CF85 /* MPMSettingClassListTableViewCell.m in Sources */,
 				CDE1CFE0217C26B30047CF85 /* MPMProcessMyMetterModel.m in Sources */,
 				CD4717372110536400401169 /* NSDate+MPMExtention.m in Sources */,
 				CD47179C2110536400401169 /* MPMSiderDrawerCollectionViewButtonCell.m in Sources */,
+				CDE4B0372216CC0F0045911A /* MPMApplyNewViewController.m in Sources */,
 				CD4717792110536400401169 /* MPMAttendenceOneMonthModel.m in Sources */,
 				CD4717592110536400401169 /* MPMBaseDealingViewController.m in Sources */,
 				CD4717DD2110536400401169 /* MPMAddWiFiViewController.m in Sources */,
@@ -2247,6 +2278,7 @@
 				CD4717662110536400401169 /* MPMCommomGetPeopleViewController.m in Sources */,
 				CDE1CFBA217C1F9F0047CF85 /* MPMOfflineView.m in Sources */,
 				CD4717892110536400401169 /* MPMCalendarScrollView.m in Sources */,
+				CDE4B0432216CC8B0045911A /* MPMCycleScrollViewFlowlayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

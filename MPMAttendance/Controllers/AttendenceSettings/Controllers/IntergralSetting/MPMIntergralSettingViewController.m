@@ -139,6 +139,7 @@
         self.allAttenData[i].integralValue = kJiFenType0IntergralValueFromId[model.integralType];
         self.allAttenData[i].isTick = kJiFenType0IsTickFromId[model.integralType];
         self.allAttenData[i].typeCanChange = kJiFenType0CanChangeFromId[model.integralType];
+        self.allAttenData[i].mpm_description = kJiFenType0DescriptionFromId[model.integralType];
         self.allAttenData[i].isChange = @"1";
     }
     for (int i = 0; i < self.allExtraData.count; i++) {
@@ -148,6 +149,7 @@
         self.allExtraData[i].integralValue = kJiFenType1IntergralValueFromId[model.integralType];
         self.allExtraData[i].isTick = kJiFenType1IsTickFromId[model.integralType];
         self.allExtraData[i].typeCanChange = kJiFenType1CanChangeFromId[model.integralType];
+        self.allExtraData[i].mpm_description = kJiFenType1DescriptionFromId[model.integralType];
         self.allExtraData[i].isChange = @"1";
     }
     [self resetOrSaveIntegral:YES];

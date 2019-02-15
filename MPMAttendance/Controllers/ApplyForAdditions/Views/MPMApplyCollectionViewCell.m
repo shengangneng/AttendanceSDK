@@ -31,16 +31,23 @@
     return self;
 }
 
+- (void)setBorderColor:(UIColor *)borderColor {
+    _borderColor = borderColor;
+    if (!borderColor) {
+        _borderColor = kWhiteColor;
+    }
+    self.quickLabel.layer.borderColor = _borderColor.CGColor;
+}
+
 #pragma mark - Lazy Init
 - (UILabel *)quickLabel {
     if (!_quickLabel) {
         _quickLabel = [[UILabel alloc] init];
-        _quickLabel.textColor = kWhiteColor;
-        _quickLabel.font = SystemFont(16);
+        _quickLabel.textColor = kRGBA(255, 249, 240, 1);
+        _quickLabel.font = SystemFont(13);
         _quickLabel.text = @"上午";
         _quickLabel.textAlignment = NSTextAlignmentCenter;
-        _quickLabel.layer.cornerRadius = 15;
-        _quickLabel.layer.borderColor = kWhiteColor.CGColor;
+        _quickLabel.layer.cornerRadius = 12.5;
         _quickLabel.layer.borderWidth = 1;
     }
     return _quickLabel;

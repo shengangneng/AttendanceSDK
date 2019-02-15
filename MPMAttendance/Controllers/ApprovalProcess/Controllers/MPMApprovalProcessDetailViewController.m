@@ -681,6 +681,8 @@
                     [sself.taskView dismiss];
                     [sself updateViewAfterAddSignModel:taskModel];
                 } needCancleButton:NO];
+            } else if ([response[kResponseDataKey][kMessage] isKindOfClass:[NSString class]] && !kIsNilString(((NSString *)response[kResponseDataKey][kMessage]))) {
+                [strongself showAlertControllerToLogoutWithMessage:((NSString *)response[kResponseDataKey][kMessage]) sureAction:nil needCancleButton:NO];
             } else {
                 [strongself showAlertControllerToLogoutWithMessage:@"加签失败" sureAction:nil needCancleButton:NO];
             }

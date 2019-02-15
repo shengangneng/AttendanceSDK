@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MPMApplyCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, strong) UILabel *quickLabel;
+@property (nonatomic, strong) UIColor *borderColor;
 
 @end
 
