@@ -91,7 +91,7 @@ static NSString *const identifier = @"Cell";
     
     if (self.collectionView.contentOffset.x == 0 && _totalItems > 0) {
         NSInteger targeIndex = 0;
-        if (self.cycleLoop) {//无线循环
+        if (self.cycleLoop) {// 无线循环
             // 如果是无限循环，应该默认把 collection 的 item 滑动到 中间位置。
             // 注意：此处 totalItems 的数值，其实是图片数组数量的 100 倍。
             // 乘以 0.5 ，正好是取得中间位置的 item 。图片也恰好是图片数组里面的第 0 个。
@@ -109,15 +109,23 @@ static NSString *const identifier = @"Cell";
 
 #pragma mark - MPMCycleScrollViewCellDelegate
 - (void)scrollViewCell:(MPMCycleScrollViewCell *)scrollViewCell didSelectFastIndex:(NSInteger)index {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cycleScrollView:didSelectFastIndex:)]) {
-        [self.delegate cycleScrollView:self didSelectFastIndex:index];
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:scrollViewCell];
+    if (indexPath.row != self.currentIndex) {
+        // 判断如果点击的是左右的卡片上的快捷按钮，则切换卡片
+        if ([self.delegate respondsToSelector:@selector(cycleScrollView:currentPageIndex:)]) {
+            [self.delegate cycleScrollView:self currentPageIndex:indexPath.row % self.imageArray.count];
+        }
+    } else {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(cycleScrollView:didSelectFastIndex:)]) {
+            [self.delegate cycleScrollView:self didSelectFastIndex:index];
+        }
     }
 }
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     self.collectionView.userInteractionEnabled = NO;
-    if (!self.imageArray.count) return; // 解决清除timer时偶尔会出现的问题
+    if (!self.imageArray.count) return;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -133,7 +141,7 @@ static NSString *const identifier = @"Cell";
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     self.collectionView.userInteractionEnabled = YES;
-    if (!self.imageArray.count) return; // 解决清除timer时偶尔会出现的问题
+    if (!self.imageArray.count) return;
 }
 
 // 手离开屏幕的时候
@@ -174,7 +182,6 @@ static NSString *const identifier = @"Cell";
 }
 
 #pragma mark - UICollectionViewDataSource && UICollectionViewDelegate
-
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return _totalItems;
@@ -225,8 +232,15 @@ static NSString *const identifier = @"Cell";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cycleScrollView:didSelectFastIndex:)]) {
-        [self.delegate cycleScrollView:self didSelectFastIndex:-1];
+    if (indexPath.row != self.currentIndex) {
+        // 判断如果点击的是左右的卡片，则切换卡片
+        if ([self.delegate respondsToSelector:@selector(cycleScrollView:currentPageIndex:)]) {
+            [self.delegate cycleScrollView:self currentPageIndex:indexPath.row % self.imageArray.count];
+        }
+    } else {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(cycleScrollView:didSelectFastIndex:)]) {
+            [self.delegate cycleScrollView:self didSelectFastIndex:-1];
+        }
     }
 }
 

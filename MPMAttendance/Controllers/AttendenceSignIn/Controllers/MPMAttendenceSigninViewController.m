@@ -722,7 +722,12 @@ const double ContinueSigninInterval      = 15;  /** 15s内不允许重复点击�
         } else if (response[kResponseDataKey] &&
                    [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
                    ((NSString *)response[kResponseDataKey][@"code"]).integerValue != 200) {
-            NSString *message = (NSString *)response[kResponseDataKey][@"message"];
+            NSString *message;
+            if ([response[kResponseDataKey][@"message"] isKindOfClass:[NSString class]]) {
+                message = (NSString *)response[kResponseDataKey][@"message"];
+            } else {
+                message = @"请求失败，请稍后重试";
+            }
             [self showAlertControllerToLogoutWithMessage:kSafeString(message) sureAction:nil needCancleButton:NO];
         } else if (response[kResponseDataKey] &&
                    [response[kResponseDataKey] isKindOfClass:[NSDictionary class]] &&
