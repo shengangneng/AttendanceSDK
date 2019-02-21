@@ -1146,10 +1146,10 @@
         __weak typeof(self) weakself = self;
         [self customAlertControllerToLogoutWithTitle:@"选择规则生效时间" message:@"立即生效新班次：会影响当天考勤打卡状态，即按新排班规则重新计算" rightAction:^(UIAlertAction * _Nonnull action) {
             __strong typeof(weakself) strongself = weakself;
-            [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
+            [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"1"];
         } rightActionTitle:@"立即生效" leftAction:^(UIAlertAction * _Nonnull action) {
             __strong typeof(weakself) strongself = weakself;
-            [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"1"];
+            [strongself saveTimeSectionsWithisUpdate:@"1" isElective:@"0"];
         } leftActionTitle:@"明天生效"];
     } else {
         // 如果该班次没有关联的b排班，那么可以立即生效
